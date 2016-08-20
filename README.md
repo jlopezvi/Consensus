@@ -1,5 +1,5 @@
 # Consensus
-A customized Twitter to deal with social dilemmas
+A customized Twitter to deal with social dilemmas. Work initiated at CERN laboratory (Geneva, Switzerland).
 
 INSTRUCTIONS:
 -> The /venv directory is for a Python 3 virtual environment (the file requirements.txt exists already in order to create this environment)
