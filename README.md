@@ -14,4 +14,3 @@ API will then be active at localhost, port 5000
 Inside the /bin directory of the package, do
 > ./neo4j start
 Database will be active
-
