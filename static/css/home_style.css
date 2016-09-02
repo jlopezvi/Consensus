@@ -1,7 +1,18 @@
+@font-face {
+    font-family: lato_regular;
+    src: url("/static/fonts/Lato-Regular.ttf");
+}
+@font-face {
+    font-family: lato_bold;
+    src: url("/static/fonts/Lato-Bold.ttf");
+}
 input[type=text], input[type=password], select {
 	font-size: 12px!important;
 	padding: 2% 5%!important;
 	background-color: #e5e6e8!important;
+}
+body {
+	font-family: lato_regular;
 }
 .input--top {
   height: 6.5%;
@@ -30,14 +41,16 @@ input[type=text], input[type=password], select {
 .nav--style {
 	background-color: #3faf2e;
 	min-height: 10px!important;
-    height: 36px;
+  height: 36px;
 }
 .nav--style a{
 	color: #fff;
-	font-weight: bold;
-	font-family: Uni Sans Heavy;
 	height: 20px;
 	padding: 9px 15px!important;
+}
+.nav--style .navbar-header a{
+	letter-spacing: 1.5px;
+	font-family: lato_bold;
 }
 .home--content {
 	background-image: url("/static/images/concerns/meeting.jpg");
@@ -46,7 +59,6 @@ input[type=text], input[type=password], select {
 }
 .home--content--left {
 	color: #fff;
-	font-family: arial;
 	margin-top: 8%;
 }
 .home--content--left h1{
@@ -74,7 +86,7 @@ input[type=text], input[type=password], select {
 .home--register h4{
   background-color: #3faf2e;
   margin: -7% -10%;
-  height: 12%;
+  height: 80px;
   color: #f0f1f3;
   font-size: 16px;
   text-align: center;
@@ -83,12 +95,23 @@ input[type=text], input[type=password], select {
 .home--content--right {
 	margin-top: 9.5%;
 }
-.login--button, .register--button {
+.login--button, .register--button, .register--modal {
 	background-color: #cbe81b;
 	color: #5f6252;
 	font-size: 17px;
-	font-weight: bold;
+	font-family: lato_bold;
 	margin-top: 4%;
+	border: 1px solid #3faf2e;
+}
+.register--modal {
+	margin: 0;
+	font-size: 15px;
+}
+.cancel--modal {
+	margin: 0;
+	font-size: 15px;
+	background-color: #ff4d4d;
+	color: #fff;
 	border: 1px solid #3faf2e;
 }
 .register--button {
@@ -118,6 +141,44 @@ input[type=text], input[type=password], select {
 }
 .nav--style li a:hover {
 	background-color: transparent;
+}
+#modal_sign .modal-header, #modal_sign .modal-footer {
+	background-color: #3faf2e;
+	padding: 7px;
+}
+#modal_sign .modal-header h4 {
+	color: #fff;
+	text-align: center;
+}
+#modal_sign .modal-dialog {
+	top: 25%;
+	left: 25%;
+	position: absolute;
+	margin: 0;
+	color: #75787d;
+}
+#modal_sign .modal-body {
+	height: 300px;
+	padding: 35px;
+}
+#modal_sign .modal-body .fa-user {
+  font-size: 83px;
+  color: #cbe81b;
+  text-align: center;
+  height: 92px;
+  margin-top: -39px;
+  border: 3px solid #cbe81b;
+  border-radius: 46px;
+  width: 88px;
+}
+#modal_sign .modal-body div.input-group label.input-group-btn span.btn-success {
+	background-color: #cbe81b;
+	border-color: #3faf2e;
+	font-family: lato_bold;
+	color: #5f6252;
+}
+.register--check {
+	margin: 5px 0 15px 0;
 }
 .inner-addon { 
     position: relative; 
