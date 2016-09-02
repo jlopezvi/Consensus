@@ -1,12 +1,75 @@
 <html>
 <head>
-    H2 { text-align: center }
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/bootstrap.min.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/home_style.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/font-awesome.min.css') }}">
+	<title>Consensus</title>
 </head>
-<body>
-  <div style="background-image: url(./images/header_blue-green_color.png); height: 100px; width: 800px;">
-      <h2>Consensus</h2>
-  </div>
-  <div style="background-image: url(./images/a_warm_afternoon_in_athens_by_stamatisgr-d21jmue.jpg); height: 500px; width: 800px;"> Consensus </div>
+<body class="container home--content">
+  <nav class="navbar navbar-fixed-top nav--style">
+	  <div class="container">
+	    <div class="navbar-header">
+	      <a class="navbar-brand" href="#">CONSENSUS</a>
+	    </div>
+	    <ul class="nav navbar-nav navbar-right">
+	    	<li><a href="#">About us</a></li>
+	    </ul>
+	  </div>
+	</nav>	
+	<div class="row">
+		<div class="col-sm-7 home--content--left">
+			<h1>Welcome</h1>
+			<h3>Create your own proposals.</h3>
+			<h3>Share them securely and preserving your privacy.</h3>
+			<h3>Progress to a new level of satisfaction in your enviroment.</h3>
+		</div>	
+		<div class="col-sm-3 col-sm-offset-2 home--content--right">
+			<div class="col-sm-10 col-sm-offset-1 form-group home--login">
 
-</body>
+				<div class="inner-addon left-addon">
+				  <i class="fa fa-envelope"></i>
+			    <input class="form-control input--top" type="text" name="email" placeholder="Email">
+				</div>
+				<div class="inner-addon left-addon">
+			  	<i class="fa fa-lock"></i>
+					<input class="form-control input--bottom" type="password" name="password" placeholder="Password">
+				</div>
+					
+				<input class="form-control login--button" type="button" value="Log in">
+				<div class="col-sm-12 login--actions">
+					<div class="col-sm-6">
+						<input class="" type="checkbox" value="Remember"> Remember me
+					</div>
+					<div class="col-sm-6">
+						<a href="#">Forgot password?</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-3 col-sm-offset-2">
+			<div class="col-sm-10 col-sm-offset-1 form-group home--register">
+				<h4>New to Consensus? <br> Sign up</h4>
+				<input class="form-control input--top" type="text" name="fullname_r" placeholder="Full Name">
+				<input class="form-control input--middle" type="text" name="email_r" placeholder="Email">
+				<input class="form-control input--bottom" type="text" name="username_r" placeholder="Choose a Username">
+				<div class="col-sm-12 register--actions">
+					<div class="col-sm-6">
+						<input class="form-control" type="text" name="position_r" placeholder="Position"> 
+					</div>
+					<div class="col-sm-6">
+						<select class="form-control" name="group">
+							<option>Group</option>
+						</select>
+					</div>
+				</div>
+				<input class="form-control input--top" type="password" name="password_r" placeholder="Choose a Password">
+				<input class="form-control input--bottom" type="password" name="password2_r" placeholder="Confirm your Password">
+				<input class="form-control register--button" type="button" value="Sign up for Consensus">
+			</div>
+		</div>
+	</div>
+	<script src="{{ url_for('static',filename='js/jquery.min.js') }}"></script>
+	<script src="{{ url_for('static',filename='js/bootstrap.min.js') }}"></script>
+	<script src="{{ url_for('static',filename='js/angular.min.js') }}"></script>
+</body> 
 </html>
