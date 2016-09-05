@@ -1,21 +1,7 @@
-<html>
-<head>
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/bootstrap.min.css') }}">
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/home_style.css') }}">
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/font-awesome.min.css') }}">
-	<title>Consensus</title>
-</head>
-<body class="container home--content">
-  <nav class="navbar navbar-fixed-top nav--style">
-	  <div class="container">
-	    <div class="navbar-header">
-	      <a class="navbar-brand" href="#">CONSENSUS</a>
-	    </div>
-	    <ul class="nav navbar-nav navbar-right">
-	    	<li><a href="#">About us</a></li>
-	    </ul>
-	  </div>
-	</nav>	
+{% extends 'new_template.html' %}
+
+{% block content %}
+
 	<div class="row">
 		<div class="col-sm-7 home--content--left">
 			<h1>Welcome</h1>
@@ -25,7 +11,6 @@
 		</div>	
 		<div class="col-sm-3 col-sm-offset-2 home--content--right">
 			<div class="col-sm-10 col-sm-offset-1 form-group home--login">
-
 				<div class="inner-addon left-addon">
 				  <i class="fa fa-envelope"></i>
 			    <input class="form-control input--top" type="text" name="email" placeholder="Email">
@@ -93,7 +78,7 @@
               </div>
             </div>
             <div class="col-xs-4">
-	        		<i class="fa fa-user"></i>
+	        		<i class="fa fa-user user--icon"></i>
 	        	</div>
 	        	<div class="col-xs-12">
 	        		<br><p>Do you want a public profile? People will be able to look you up in a list.</p>
@@ -114,8 +99,5 @@
 	    </div>
 	  </div>
 	</div>
-	<script src="{{ url_for('static',filename='js/jquery.min.js') }}"></script>
-	<script src="{{ url_for('static',filename='js/bootstrap.min.js') }}"></script>
-	<script src="{{ url_for('static',filename='js/angular.min.js') }}"></script>
-</body> 
-</html>
+	<script src="{{ url_for('static',filename='js/home.js') }}"></script>
+{% endblock %}

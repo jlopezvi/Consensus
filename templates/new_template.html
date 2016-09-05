@@ -1,0 +1,27 @@
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/bootstrap.min.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/main_style.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/font-awesome.min.css') }}">
+    <script src="{{ url_for('static',filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/angular.min.js') }}"></script>
+	<title>Consensus</title>
+</head>
+<body class="container home--content">
+
+    <nav class="navbar navbar-fixed-top nav--style">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">CONSENSUS</a>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="#">About us</a></li>
+        </ul>
+      </div>
+    </nav>
+    {% block content %}
+    {% endblock %}
+
+</body>
+</html>

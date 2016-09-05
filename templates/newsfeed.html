@@ -1,0 +1,39 @@
+{% extends 'new_template.html' %}
+
+{% block content %}
+<div class="row newsfeed--content">
+{% for person in persons %}
+	<div class="col-sm-8 col-sm-offset-2">
+		<div class="row newsfeed--header">
+			<div class="col-sm-2">
+				<i class="fa fa-user user--icon"></i>
+			</div>
+			<div class="col-sm-1 newsfeed--name">
+				<a href="#">{{ person.name }}</a>
+			</div>
+			<div class="col-sm-2 newsfeed--duration">
+				<p><i class="fa fa-clock-o"></i>&nbsp;
+				{{ person.duration }}</p>
+			</div>
+			<div class="col-sm-4 col-sm-offset-3 newsfeed--goals">
+				<p>{{ person.supporters_goal }} supporters goals<br>
+				{{ person.volunters_goal }} volunteers goals</p>
+			</div>
+		</div>
+		<div class="row newsfeed--body">
+			<div class="col-sm-12">
+				<div class="col-sm-8 newsfeed--problem">
+					{{ person.problem }}<br>{{ person.problem }}<br>{{ person.problem }}
+				</div>
+			</div>
+			<div class="col-sm-12" style="margin-top: 190px;">
+				<div class="col-sm-8 col-sm-offset-4 newsfeed--proposal">
+					{{ person.proposal }}<br>{{ person.proposal }}<br>{{ person.proposal }}
+				</div>
+			</div>
+		</div>
+	</div>
+{% endfor %}
+</div>
+<script src="{{ url_for('static',filename='js/newsfeed.js') }}"></script>
+{% endblock %}

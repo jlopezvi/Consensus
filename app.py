@@ -19,6 +19,50 @@ app = Flask(__name__)
 def hello():
     return render_template('home.html')
 
+
+@app.route('/newsfeed')
+def newsfeed():
+    feed = [
+        {
+            'id': 'id',
+            'picture': 'url-to-picture',
+            'name': 'Daniela',
+            'duration': '2 Days',
+            'supporters_goal': '5/200',
+            'volunters_goal': '2/5',
+            'image': 'url-to-picture',
+            'problem':  'Some text for the problem',
+            'proposal': 'Some text for the proposal',
+            'liked':
+            [
+                {
+                    'id': 'id',
+                    'name': 'Maria'
+                },
+                {
+                    'id': 'id',
+                    'name': 'Pedro'
+                },
+                {
+                    'id': 'id',
+                    'name': 'Juan'
+                },
+                {
+                    'id': 'id',
+                    'name': 'Jesus'
+                }
+            ],
+            'disliked': 
+            [
+                {
+                    'id': 'id',
+                    'name': 'Jose'
+                }
+            ]
+        }
+    ]
+    return render_template('newsfeed.html', persons = feed)
+
 #TEST
 @app.route('/api/add_message/<uuid>', methods=['GET', 'POST'])
 def add_message(uuid):
