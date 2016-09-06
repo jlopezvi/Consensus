@@ -1,0 +1,92 @@
+@media only screen and (max-width: 1200px) {
+	.login--actions .col-sm-6 {
+	    font-size: 10px;
+	}
+	.register--button, .login--button {
+    	font-size: 13px;
+	}
+	.home--login .fa-envelope, .home--login .fa-lock {
+		font-size: 12px!important;
+	}
+}
+@media only screen and (max-width: 991px) {
+	.login--actions .col-sm-6 {
+	    font-size: 7px;
+	}
+	.login--actions .col-sm-6:nth-child(2) {
+	    padding: 13px 0 0 0;
+	}
+	.register--button, .login--button {
+	    height: 26px;
+	    padding: 0 5px;
+	    font-size: 10px;
+	}
+	.home--register h4 {
+	    padding-top: 17%;
+	    font-size: 14px;
+	}
+}
+@media only screen and (max-width: 767px) {
+	.home--login, .home--register {
+		width: 100%;
+	}
+	.login--actions .col-sm-6 {
+		display: inline-block;
+	}
+	.login--actions .col-sm-6:nth-child(2) {
+		float: right;
+	}
+	.home--register {
+		overflow: hidden;
+	}
+	.home--register h4 {
+		padding-top: 4.5%;
+	}
+	.nav--style .container {
+		display: inline-block;
+		width: 100%;
+	}
+	.nav--style, .nav--style .navbar-header, .nav--style ul {
+		display: inline-block;
+	}
+	.nav--style ul {
+		float: right;
+	}
+	.nav--style ul li a {
+		display: initial;
+	}
+	.home--content--left h1 {
+		font-size: 60px;
+	}
+	.home--content--left h3 {
+		font-size: 25px;
+	}
+	.home--login .fa-envelope, .home--login .fa-lock {
+    	font-size: 16px!important;
+    	padding-top: 12px!important;
+    	padding-left: 12px!important;
+	}
+	.register--button, .login--button {
+	    height: 34px;
+	    padding: 0px 5px;
+	    font-size: 17px;
+	}
+	.login--actions .col-sm-6 {
+    	font-size: 12px;
+	}
+}
+@media only screen and (max-width: 479px) {
+	.home--content--left h1 {
+		font-size: 50px;
+	}
+	.home--content--left h3 {
+		font-size: 20px;
+	}
+	.home--content--left {
+	    margin-top: 12%;
+	}
+	.home--register h4 {
+    	padding-top: 6%;
+    	font-size: 17px;
+	}
+}

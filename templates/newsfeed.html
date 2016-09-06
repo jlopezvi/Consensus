@@ -5,8 +5,14 @@
 {% for person in persons %}
 	<div class="col-sm-8 col-sm-offset-2">
 		<div class="row newsfeed--header">
-			<div class="col-sm-2">
+			<div class="col-sm-2" style="padding-left: 0px;">
+			{% if (person.picture == '') %}
 				<i class="fa fa-user user--icon"></i>
+			{% else %}
+				<div class="profile--picture">
+					<img src="{{ url_for('static',filename=person.picture) }}">
+				</div>
+			{% endif %}
 			</div>
 			<div class="col-sm-1 newsfeed--name">
 				<a href="#">{{ person.name }}</a>
@@ -26,9 +32,22 @@
 					{{ person.problem }}<br>{{ person.problem }}<br>{{ person.problem }}
 				</div>
 			</div>
-			<div class="col-sm-12" style="margin-top: 190px;">
+			<div class="col-sm-12" style="margin-top: 180px;">
 				<div class="col-sm-8 col-sm-offset-4 newsfeed--proposal">
 					{{ person.proposal }}<br>{{ person.proposal }}<br>{{ person.proposal }}
+				</div>
+			</div>
+		</div>
+		<div class="row newsfeed--footer">
+			<div class="col-sm-12" style="padding-right: 5px; padding-left: 0px;">
+				<div class="col-sm-1 redflag--img">
+					<img src="{{ url_for('static',filename='images/redflag-icon.svg') }}">
+				</div>
+				<div class="col-sm-9">
+					
+				</div>
+				<div class="col-sm-2" style="float:right;">
+					<input type="button" name="more-info" class="newsfeed--button" value="+More info">
 				</div>
 			</div>
 		</div>

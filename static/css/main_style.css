@@ -95,13 +95,17 @@ body {
 .home--content--right {
 	margin-top: 9.5%;
 }
-.login--button, .register--button, .register--modal {
+.login--button, .register--button, .register--modal, .newsfeed--button {
 	background-color: #cbe81b;
 	color: #5f6252;
 	font-size: 17px;
 	font-family: lato_bold;
 	margin-top: 4%;
 	border: 1px solid #3faf2e;
+}
+.newsfeed--button {
+	padding: 6px 17px;
+	margin-top: 15px;
 }
 .register--modal {
 	margin: 0;
@@ -208,7 +212,7 @@ body {
 	box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 .newsfeed--problem, .newsfeed--proposal {
-	background-color: #454545;
+	background-color: rgba(0, 0, 0, 0.6);
 	margin-top: 15px;
 	color: #fff;
 	font-size: 17px;
@@ -219,7 +223,39 @@ body {
 .newsfeed--proposal {
 	background-color: rgba(255, 255, 255, 0.68);
 	color: #000;
+	margin-top: 0px;
 }
+.profile--picture {
+	width: 100px;
+    height: 100px;
+    margin-top: -46px;
+    border-radius: 60px;
+	overflow: hidden;
+}
+.profile--picture img {
+	position: relative;
+  	left: 50%;
+	top: 50%;
+	height: 100%;
+	width: auto;
+	-webkit-transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+}
+.newsfeed--footer .redflag--img img {
+	width: 40px;
+	height: 40px;
+	padding: 3px;
+}
+.newsfeed--footer .redflag--img {
+	background-color: #e7e8ea;
+	border: 1px solid #c5c5c5;
+	padding: 0;
+	margin-top: 15px;
+	width: 40px;
+}
+
+
 /* END OF NEWSFEED STYLE */
 .register--check {
 	margin: 5px 0 15px 0;
@@ -234,9 +270,10 @@ body {
   color: grey;
   pointer-events: none;
 }
-.fa-envelope {
+.home--login .fa-envelope, .home--login .fa-lock {
 	font-size: 15px!important;
-  padding-top: 15px!important;
+  padding-top: 5px!important;
+  padding-left: 5px!important;
 }
 .left-addon .fa  { left:  0px;}
 .left-addon input  { padding-left:  35px!important; }

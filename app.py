@@ -25,7 +25,7 @@ def newsfeed():
     feed = [
         {
             'id': 'id',
-            'picture': 'url-to-picture',
+            'picture': 'assets/profile/images.jpg',
             'name': 'Daniela',
             'duration': '2 Days',
             'supporters_goal': '5/200',
