@@ -28,8 +28,10 @@ def newsfeed():
             'picture': 'assets/profile/images.jpg',
             'name': 'Daniela',
             'duration': '2 Days',
-            'supporters_goal': '5/200',
-            'volunters_goal': '2/5',
+            'supporters_goal': 200,
+            'supporters_current': 5,
+            'volunters_goal': 5,
+            'volunters_current': 2,
             'image': 'url-to-picture',
             'problem':  'Some text for the problem',
             'proposal': 'Some text for the proposal',
@@ -170,8 +172,8 @@ def getConcerns(current):
 if __name__ == '__main__':
 #    app.debug = True
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
-    #app.run(host='127.0.0.1', port=port)
+    #app.run(host='0.0.0.0', port=port)
+    app.run(host='127.0.0.1', port=port)
 
 
 #ERROR HANDLERS

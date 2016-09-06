@@ -74,6 +74,9 @@
 	.login--actions .col-sm-6 {
     	font-size: 12px;
 	}
+	.login--actions .col-sm-6:nth-child(2) {
+    	padding: 6px 0 0 0;
+	}
 }
 @media only screen and (max-width: 479px) {
 	.home--content--left h1 {
@@ -88,5 +91,21 @@
 	.home--register h4 {
     	padding-top: 6%;
     	font-size: 17px;
+	}
+	.home--login .fa-envelope, .home--login .fa-lock {
+	    font-size: 14px!important;
+	    padding-top: 9px!important;
+	    padding-left: 10px!important;
+	}
+}
+@media only screen and (max-width: 479px) {
+	.home--register h4 {
+	    padding-top: 8%;
+	}
+}
+@media only screen and (max-width: 320px) {
+	.home--login .fa-envelope, .home--login .fa-lock {
+    	padding-top: 7px!important;
+    	padding-left: 10px!important;
 	}
 }
