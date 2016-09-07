@@ -6,6 +6,11 @@ import logging
 from utils import NotFoundError,getGraph
 
 
+def registration1step_aux(inputjson):
+    pass
+    #return jsonify(result="user already exists")
+    #return jsonify(result="completed 1st step of registration")
+
 def addUser_aux(userjson):
     email = userjson.get('email')
     try:

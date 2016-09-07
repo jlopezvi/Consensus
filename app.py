@@ -7,7 +7,7 @@ import ast
 import json
 from communityManager import saveCommunity,deleteCommunity,addCommunityToContact,getCommunities
 from userManagement import __getUserByEmail,deleteUser,getAllUsers,addUser_aux, \
-    addFollowingContactToUser_aux,getContacts,getFullNameByEmail_aux
+    addFollowingContactToUser_aux,getContacts,getFullNameByEmail_aux,registration1step_aux
 from concernManager import addConcernToUser_aux,deleteOneConcern,getAllConcerns
 from utils import NotFoundError
 import logging
@@ -85,6 +85,13 @@ def signUp(host_email=None):
 
 
 #API
+
+#input: json {'fullname':'Juan Lopez','email': 'jj@gmail.com', 'username': 'jlopezvi',
+#              'position': 'employee', 'group': 'IT', 'password': 'asdssa'}
+#return: json {'result': 'completed 1st step of registration'/'user already exists'}
+@app.route('/registration1step', methods=['POST'])
+def registration1step():
+    return registration1step_aux(request.get_json())
 
 #return: Full Name (normal string) corresponding to e-mail
 @app.route('/getFullNameByEmail/<email>', methods=['GET'])
