@@ -96,7 +96,7 @@ body {
 	margin-top: 9.5%;
 }
 .login--button, .register--button, .register--modal, .newsfeed--button {
-	background-color: #cbe81b;
+	background-color: #c0ff00;
 	color: #5f6252;
 	font-size: 17px;
 	font-family: lato_bold;
@@ -166,16 +166,16 @@ body {
 }
 .user--icon {
   font-size: 83px!important;
-  color: #cbe81b;
+  color: #c0ff00;
   text-align: center;
   height: 92px;
   margin-top: -39px;
-  border: 3px solid #cbe81b;
+  border: 3px solid #c0ff00;
   border-radius: 46px;
   width: 88px;
 }
 #modal_sign .modal-body div.input-group label.input-group-btn span.btn-success {
-	background-color: #cbe81b;
+	background-color: #c0ff00;
 	border-color: #3faf2e;
 	font-family: lato_bold;
 	color: #5f6252;
@@ -223,6 +223,25 @@ body {
 	background-color: rgba(255, 255, 255, 0.68);
 	color: #000;
 	margin-bottom: 15px;
+}
+.newsfeed--progress, .newsfeed--progress2{
+	margin-top: 6px;
+    margin-right: -69px;
+    margin-left: 10px;
+    height: 12px;	
+    background-image: -webkit-linear-gradient(top,#737373 0,#a6a6a6 100%)!important;
+    background-image: -o-linear-gradient(top,#737373 0,#a6a6a6 100%)!important;
+    background-image: -webkit-gradient(linear,left top,left bottom,from(#737373),to(#a6a6a6))!important;
+    background-image: linear-gradient(to bottom,#737373 0,#a6a6a6 100%)!important;
+}
+.newsfeed--progress{
+    margin-bottom: 13px;
+}
+.newsfeed--bar, .newsfeed--bar2{
+	background-image: -webkit-linear-gradient(top,#c0ff00 0,#cfec1d 100%)!important;
+    background-image: -o-linear-gradient(top,#c0ff00 0,#cfec1d 100%)!important;
+    background-image: -webkit-gradient(linear,left top,left bottom,from(#c0ff00),to(#cfec1d))!important;
+    background-image: linear-gradient(to bottom,#c0ff00 0,#cfec1d 100%)!important;
 }
 .profile--picture {
 	width: 100px;
@@ -273,18 +292,34 @@ body {
 	margin-left: -15px;
 }
 .newsfeed--likes ul{
-	display: inline-block;
+	display: inline-block!important;
 	list-style: none;
 	padding-left: 10px;
-	font-size: 18px;
-  text-decoration: underline;
+	font-size: 20px;
 }
-.newsfeed--likes ul li a, .newsfeed--name a{
+.newsfeed--likes ul a li, .newsfeed--name a{
 	color: #1067fc;
+	display: inline-block!important;
+  	text-decoration: none;
+}
+.newsfeed--likes ul a li {
+	margin-right: 5px;
+    border-bottom: 1px solid;
+}
+.newsfeed--likes ul a.last--liked li{
+	text-decoration: none!important;
+	color: #000!important;
+	padding-left: 5px;
+	font-family: lato_bold;
+	font-size: 15px;
+	border-bottom: none;
 }
 .newsfeed--persons {
 	padding-left: 0;
 	margin-top: 15px;
+}
+.newsfeed--name a {
+	text-decoration: underline;
 }
 .newsfeed--persons .fa-check{
 	font-size: 40px;
@@ -293,6 +328,44 @@ body {
 .newsfeed--persons .fa-close{
 	font-size: 40px;
 	color: #f90e2b;
+}
+.newsfeed--followers {
+	padding-top: 20px;
+	display: inline-block;
+}
+.newsfeed--followers p{
+	display: inline-block;
+	font-family: lato_bold;
+	font-size: 17px;
+
+}
+.newsfeed--share i {
+	font-size: 70px;
+	padding-right: 15px;
+}
+.newsfeed--share {
+	margin-top: 20px;
+	margin-bottom: 50px;
+}
+.newsfeed--share i.fa-share-alt {
+	font-size: 30px;
+	position: relative;
+    top: 4px;
+}
+.newsfeed--share i.fa-times-circle {
+	color: #fb0023;
+}
+.newsfeed--share i.fa-check-circle {
+	color: #3faf2e;
+}
+.newsfeed--share i.fa-plus-circle {
+	color: #009cff;
+}
+.newsfeed--share i.fa-minus-circle {
+	color: #3c3c3c;
+}
+.newsfeed--share--icons {
+	padding-left: 0;
 }
 /* END OF NEWSFEED STYLE */
 .register--check {

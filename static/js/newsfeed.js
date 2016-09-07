@@ -3,6 +3,9 @@ $(document).ready(function(){
 	var percent = $('#percent').val();
 	var total = Math.floor(percent);
 	$('#percent').val(total + '%');
-	$('#newsfeed--progress .newsfeed--bar').css('width',$('#supporters--percent').val()+'%');
+	var support_percent = $('#supporters--percent').val();
+	$('.newsfeed--bar').css('width',support_percent+'%');
 
+	var volunter_percent = $('#volunters--percent').val();
+	$('.newsfeed--bar2').css('width',volunter_percent+'%');
 });
