@@ -149,6 +149,9 @@ body {
 	background-color: #3faf2e;
 	padding: 7px;
 }
+.modal-footer {
+	height: 39px;
+}
 #modal_sign .modal-header h4 {
 	color: #fff;
 	text-align: center;
@@ -161,7 +164,7 @@ body {
 	color: #75787d;
 }
 #modal_sign .modal-body {
-	height: 300px;
+	height: 350px;
 	padding: 35px;
 }
 .user--icon {
@@ -174,11 +177,19 @@ body {
   border-radius: 46px;
   width: 88px;
 }
-#modal_sign .modal-body div.input-group label.input-group-btn span.btn-success {
+.modal-cancel {
+	margin-top: 25px;
+	text-align: center;
+}
+#modal_sign .modal-body div.input-group label.input-group-btn span {
 	background-color: #c0ff00;
 	border-color: #3faf2e;
 	font-family: lato_bold;
 	color: #5f6252;
+}
+#modal_sign .modal-body div.input-group label.input-group-btn span:hover {
+	background-color: #c0ff00;
+	border-color: #3faf2e;
 }
 /* NEWSFEED STYLE */
 .newsfeed--content {
@@ -274,17 +285,23 @@ body {
 .newsfeed--footer {
 	margin-top: 15px;
 }
-.input--percent input{
-	font-size: 30px!important;
-  background-color: transparent!important;
+.input--percent label{
+	color: #555555;
+	margin-bottom: 0px;
+}
+.input--percent {
+	font-size: 17px!important;
+  background-color: #bebbbb!important;
   text-align: center;
   border: none!important;
   font-family: lato_bold;
   color: #3faf2e;
-  padding: 0!important;
-}
-.input--percent {
-	text-align: center;
+  text-align: center;
+  padding: 9px;
+  width: 50%;
+  margin-right: auto;
+  border-radius: 20px;
+  margin-left: auto;
 }
 .newsfeed--likes {
 	padding-left: 0;
@@ -362,7 +379,7 @@ body {
 	color: #009cff;
 }
 .newsfeed--share i.fa-minus-circle {
-	color: #3c3c3c;
+	color: #555555;
 }
 .newsfeed--share--icons {
 	padding-left: 0;

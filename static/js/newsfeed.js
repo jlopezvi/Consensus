@@ -2,7 +2,7 @@ $(document).ready(function(){
 	$('.home--content').css('background-image','url("")');
 	var percent = $('#percent').val();
 	var total = Math.floor(percent);
-	$('#percent').val(total + '%');
+	$('.input--percent').append(total + '%');
 	var support_percent = $('#supporters--percent').val();
 	$('.newsfeed--bar').css('width',support_percent+'%');
 

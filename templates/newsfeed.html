@@ -54,8 +54,11 @@
 				<div class="col-sm-1 redflag--img">
 					<img src="{{ url_for('static',filename='images/redflag-icon.svg') }}">
 				</div>
-				<div class="col-sm-9 input--percent">
-					<input type="text" value="{{ (person.liked|length * 100)/(person.liked|length + person.disliked|length) }}" id="percent" disabled>
+				<div class="col-sm-9" style="padding-right:0;padding-left:30px;">
+					<input type="text" value="{{ (person.liked|length * 100)/(person.liked|length + person.disliked|length) }}" id="percent" hidden>
+					<div class="input--percent">	
+						<label>	Support Rate: </label>
+					</div>
 				</div>
 				<div class="col-sm-2" style="float:right;">
 					<input type="button" name="more-info" class="newsfeed--button" value="+More info">
