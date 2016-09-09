@@ -146,11 +146,14 @@ body {
 	background-color: transparent;
 }
 #modal_sign .modal-header, #modal_sign .modal-footer {
-	background-color: #3faf2e;
+	background-color: rgba(63, 175, 46, 0.9);
 	padding: 7px;
 }
 .modal-footer {
 	height: 39px;
+}
+#modal_sign, #modal_sign .modal-dialog, #modal_sign .modal-content {
+	background: transparent;
 }
 #modal_sign .modal-header h4 {
 	color: #fff;
@@ -162,6 +165,9 @@ body {
 	position: absolute;
 	margin: 0;
 	color: #75787d;
+}
+#modal_sign .modal-body {
+	background: rgba(255,255,255,0.9);
 }
 #modal_sign .modal-body {
 	height: 350px;
