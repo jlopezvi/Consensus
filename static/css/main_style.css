@@ -106,9 +106,13 @@ body {
 .newsfeed--button {
 	padding: 6px 17px;
 }
+body.modal-open {
+	padding-right: 15px!important;
+}
 .register--modal {
 	margin: 0;
 	font-size: 15px;
+	padding: 1% 3%;
 }
 .cancel--modal {
 	margin: 0;
@@ -144,6 +148,9 @@ body {
 }
 .nav--style li a:hover {
 	background-color: transparent;
+}
+#modal_sign {
+	padding-right: 0px!important;
 }
 #modal_sign .modal-header, #modal_sign .modal-footer {
 	background-color: rgba(63, 175, 46, 0.9);
