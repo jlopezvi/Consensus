@@ -6,11 +6,22 @@ import logging
 from utils import NotFoundError,getGraph
 
 
-def registration1step_aux(inputjson):
-    pass
-    #return jsonify(result="user already exists")
-    #return jsonify(result="completed 1st step of registration")
+def registrationstep1_aux(inputdict):
+    email = inputdict.get('email')
+    try:
+        __getUserByEmail(email)
+        return jsonify(result="user already exists")
+    #except NotFoundError as e:
+    except NotFoundError:
+        inputdict.update({'ifpublicprofile':False,'image_url':'http://default.jpg'})
+        __newParticipant(inputdict)
+        return jsonify(result="completed 1st step of registration")
 
+def registrationstep2_aux(inputjson):
+    pass
+    #return jsonify(result="completed registration")
+
+#outdated. Not in Use
 def addUser_aux(userjson):
     email = userjson.get('email')
     try:
@@ -20,11 +31,19 @@ def addUser_aux(userjson):
        __newUser(userjson)
        return jsonify(result="User was added")
 
-def __newUser(userJson):
-    email = userJson.get('email')
-    newuser, = getGraph().create({"fullname" : userJson.get('fullname'), "username" : userJson.get('username'), "email" : email, "password" : userJson.get('password') })
-    newuser.add_labels("participant")
-    __addToUsersIndex(email, newuser)
+#input: python dict {'fullname':'Juan Lopez','email': 'jj@gmail.com', 'username': 'jlopezvi',
+#              'position': 'employee', 'group': 'IT', 'password': 'asdssa', 'ifpublicprofile': 'True',
+#              'image_url':'http://www.consensus..../userImages/default.jpg'}
+def __newParticipant(participantdict):
+    email = participantdict.get('email')
+    newparticipant, = getGraph().create({"fullname" : participantdict.get('fullname'), "email" : email,
+                                  "username" : participantdict.get('username'), "position" : participantdict.get('position'),
+                                  "group" : participantdict.get('group'), "password" : participantdict.get('password'),
+                                  "ifpublicprofile" : participantdict.get('ifpublicprofile'),
+                                  "image_url" : participantdict.get('image_url')
+                                  })
+    newparticipant.add_labels("participant")
+    __addToUsersIndex(email, newparticipant)
 
 
 def deleteUser(email) :

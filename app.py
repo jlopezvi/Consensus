@@ -7,7 +7,8 @@ import ast
 import json
 from communityManager import saveCommunity,deleteCommunity,addCommunityToContact,getCommunities
 from userManagement import __getUserByEmail,deleteUser,getAllUsers,addUser_aux, \
-    addFollowingContactToUser_aux,getContacts,getFullNameByEmail_aux,registration1step_aux
+    addFollowingContactToUser_aux,getContacts,getFullNameByEmail_aux,registrationstep1_aux, \
+    registrationstep2_aux
 from concernManager import addConcernToUser_aux,deleteOneConcern,getAllConcerns
 from utils import NotFoundError
 import logging
@@ -86,12 +87,17 @@ def signUp(host_email=None):
 
 #API
 
-#input: json {'fullname':'Juan Lopez','email': 'jj@gmail.com', 'username': 'jlopezvi',
-#              'position': 'employee', 'group': 'IT', 'password': 'asdssa'}
-#return: json {'result': 'completed 1st step of registration'/'user already exists'}
-@app.route('/registration1step', methods=['POST'])
-def registration1step():
-    return registration1step_aux(request.get_json())
+#input: json {"fullname":"Juan Lopez","email": "jj@gmail.com", "username": "jlopezvi",
+#              "position": "employee", "group": "IT", "password": "asdssa"}
+#return: json {"result": "completed 1st step of registration"/"user already exists"}
+@app.route('/registrationstep1', methods=['POST'])
+def registrationstep1():
+    #call with json converted to dictionary
+    return registrationstep1_aux(request.get_json())
+
+@app.route('/registrationstep2/<email>', methods=['POST'])
+def registrationstep2():
+    return registrationstep2_aux(request.get_json())
 
 #return: Full Name (normal string) corresponding to e-mail
 @app.route('/getFullNameByEmail/<email>', methods=['GET'])
@@ -177,10 +183,10 @@ def getConcerns(current):
 
 
 if __name__ == '__main__':
-#    app.debug = True
+    #app.debug = True
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
-    #app.run(host='127.0.0.1', port=port)
+    #app.run(host='0.0.0.0', port=port)
+    app.run(host='127.0.0.1', port=port)
 
 
 #ERROR HANDLERS
