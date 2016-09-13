@@ -1,6 +1,6 @@
 from utils import NotFoundError,getGraph
 from py2neo import neo4j
-from userManagement import __getUserByEmail
+from userManagement import __getParticipantByEmail
 
 def saveCommunity(community):
     try:
@@ -11,7 +11,7 @@ def saveCommunity(community):
        return "Community %s was successfully added" % community
 
 def addCommunityToContact(name, email):
-    userFound = __getUserByEmail(email)
+    userFound = __getParticipantByEmail(email)
     communityFound = __getCommunity(name)
     getGraph().create((userFound, "BELONGS_TO", communityFound))
 
