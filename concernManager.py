@@ -1,5 +1,5 @@
 from py2neo import neo4j
-from userManagement import __getUserByEmail
+from userManagement import __getParticipantByEmail
 from utils import NotFoundError,getGraph
 import json
 

@@ -6,9 +6,8 @@ from flask import request,render_template,redirect
 import ast
 import json
 from communityManager import saveCommunity,deleteCommunity,addCommunityToContact,getCommunities
-from userManagement import __getUserByEmail,deleteUser,getAllUsers,addUser_aux, \
-    addFollowingContactToUser_aux,getContacts,getFullNameByEmail_aux,registrationstep1_aux, \
-    registrationstep2_aux
+from userManagement import __getParticipantByEmail,deleteParticipant,getAllParticipants,addParticipant_aux, \
+    addFollowingContactToParticipant_aux,getContacts,getFullNameByEmail_aux,registration_aux
 from concernManager import addConcernToUser_aux,deleteOneConcern,getAllConcerns
 from utils import NotFoundError
 import logging
@@ -80,7 +79,7 @@ def add_message(uuid):
 @app.route('/signUp/<host_email>')
 def signUp(host_email=None):
     if host_email != None:
-        __getUserByEmail(host_email)
+        __getParticipantByEmail(host_email)
     return render_template('signUp.html',host_email=host_email)
 
 
@@ -88,49 +87,49 @@ def signUp(host_email=None):
 #API
 
 #input: json {"fullname":"Juan Lopez","email": "jj@gmail.com", "username": "jlopezvi",
-#              "position": "employee", "group": "IT", "password": "asdssa"}
-#return: json {"result": "completed 1st step of registration"/"user already exists"}
-@app.route('/registrationstep1', methods=['POST'])
-def registrationstep1():
-    #call with json converted to dictionary
-    return registrationstep1_aux(request.get_json())
-
-@app.route('/registrationstep2/<email>', methods=['POST'])
-def registrationstep2():
-    return registrationstep2_aux(request.get_json())
+#              "position": "employee", "group": "IT", "password": "MD5password",
+#              "image_url": "http://.... ", "ifpublicprofile": true / false,
+#              "host_email": "asdf@das" / null, "ifemailverified": true / false}
+#return: json {"result": "completed registration"
+#                        / "registration pending of email verification"
+#                        / "user already exists"}
+@app.route('/registration', methods=['POST'])
+def registration():
+    #call with json_data converted to python_dictionary_data
+    return registration_aux(request.get_json())
 
 #return: Full Name (normal string) corresponding to e-mail
 @app.route('/getFullNameByEmail/<email>', methods=['GET'])
 def getFullNameByEmail(email):
     return getFullNameByEmail_aux(email)
 
-@app.route('/addUser', methods=['POST'])
+@app.route('/addParticipant', methods=['POST'])
 #@crossdomain(origin='*', headers=['Content-Type'])
-def addUser():
-    return addUser_aux(request.get_json())
+def addParticipant():
+    return addParticipant_aux(request.get_json())
 
 #input: json with fields "current" (current user email), "newFollowingContact" (email)
-@app.route('/addFollowingContactToUser', methods=['POST'])
-def addFollowingContactToUser():
+@app.route('/addFollowingContactToParticipant', methods=['POST'])
+def addFollowingContactToParticipant():
     current=request.get_json()['current']
     newFollowingContact=request.get_json()['newFollowingContact']
-    return addFollowingContactToUser_aux(current, newFollowingContact)
-#@app.route('/addFollowingContactToUser/<string:current>/<string:newFollowingContact>', methods=['POST', 'OPTIONS'])
-#def addFollowingContactToUser(current, newFollowingContact) :
-#    addFollowingContactToUser_aux(current, newFollowingContact)
+    return addFollowingContactToParticipant_aux(current, newFollowingContact)
+#@app.route('/addFollowingContactToParticipant/<string:current>/<string:newFollowingContact>', methods=['POST', 'OPTIONS'])
+#def addFollowingContactToParticipant(current, newFollowingContact) :
+#    addFollowingContactToParticipant_aux(current, newFollowingContact)
 #    return "addFollowingContact was invoked"
 
 
-@app.route('/deleteUser/<string:email>', methods=['DELETE', 'OPTIONS'])
-def removeUser(email) :
-    deleteUser(email)
-    return "User with email %s was successfully removed" % email
+@app.route('/deleteParticipant/<string:email>', methods=['DELETE', 'OPTIONS'])
+def removeParticipant(email) :
+    deleteParticipant(email)
+    return "Participant with email %s was successfully removed" % email
 
-@app.route('/getUsers', methods=['GET','OPTIONS'])
-def getUsers():
-    return json.dumps(getAllUsers())
+@app.route('/getParticipants', methods=['GET','OPTIONS'])
+def getParticipants():
+    return json.dumps(getAllParticipants())
 
-@app.route('/getAllContactsForUser/<string:email>', methods=['GET', 'OPTIONS'])
+@app.route('/getAllContactsForParticipant/<string:email>', methods=['GET', 'OPTIONS'])
 def getAllContacts(email) :
     return json.dumps(getContacts(email))
 
@@ -185,8 +184,8 @@ def getConcerns(current):
 if __name__ == '__main__':
     #app.debug = True
     port = int(os.environ.get('PORT', 5000))
-    #app.run(host='0.0.0.0', port=port)
-    app.run(host='127.0.0.1', port=port)
+    app.run(host='0.0.0.0', port=port)
+    #app.run(host='127.0.0.1', port=port)
 
 
 #ERROR HANDLERS
