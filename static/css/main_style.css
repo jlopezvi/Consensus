@@ -41,7 +41,7 @@ body {
 .nav--style {
 	background-color: #3faf2e;
 	min-height: 10px!important;
-  height: 36px;
+  	height: 38px;
 }
 .nav--style a{
 	color: #fff;
@@ -181,14 +181,14 @@ body.modal-open {
 	padding: 35px;
 }
 .user--icon {
-  font-size: 83px!important;
-  color: #c0ff00;
-  text-align: center;
-  height: 92px;
-  margin-top: -39px;
-  border: 3px solid #c0ff00;
-  border-radius: 46px;
-  width: 88px;
+  	font-size: 75px!important;
+	color: #c0ff00;
+	text-align: center;
+	height: 100px;
+	margin-top: -39px;
+	border: 3px solid #c0ff00;
+	border-radius: 46px;
+	width: 90px;
 }
 .modal-cancel {
 	margin-top: 25px;
@@ -367,11 +367,7 @@ body.modal-open {
 	display: inline-block;
 	font-family: lato_bold;
 	font-size: 17px;
-
-}
-.newsfeed--share i {
-	font-size: 70px;
-	padding-right: 15px;
+	margin-left: 10px;
 }
 .newsfeed--share {
 	margin-top: 20px;
@@ -382,22 +378,36 @@ body.modal-open {
 	position: relative;
     top: 4px;
 }
-.newsfeed--share i.fa-times-circle {
-	color: #fb0023;
-}
-.newsfeed--share i.fa-check-circle {
-	color: #3faf2e;
-}
-.newsfeed--share i.fa-plus-circle {
-	color: #009cff;
-}
-.newsfeed--share i.fa-minus-circle {
-	color: #555555;
-}
 .newsfeed--share--icons {
 	padding-left: 0;
 }
+.newsfeed--share--icons img{
+	width: 70px;
+	margin-right: 15px;
+}
 /* END OF NEWSFEED STYLE */
+/* HOME STYLE */
+ .primary--header {
+	width: 40%;
+	text-align: center;
+}
+.primary--header a{
+	width: 100%;
+}
+a.add--proposal--button { 
+	background-color: #c0ff00!important;
+    color: #5f6252!important;
+    font-size: 13px!important;
+    font-family: lato_bold!important;
+    height: 38px!important;
+    border: 6px solid #3faf2e;
+    padding: 2px 12px 5px 12px!important;
+}
+.add--proposal--button i { 
+	font-size: 20px;
+	margin-right: 5px;
+}
+/* END OF HOME STYLE */
 .register--check {
 	margin: 5px 0 15px 0;
 }

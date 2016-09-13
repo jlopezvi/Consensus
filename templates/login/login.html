@@ -1,0 +1,106 @@
+{% extends 'login/new_template.html' %}
+
+{% block content %}
+
+	<div class="row">
+		<div class="col-sm-7 home--content--left">
+			<h1>Welcome</h1>
+			<h3>Create your own proposals.</h3>
+			<h3>Share them securely and preserving your privacy.</h3>
+			<h3>Progress to a new level of satisfaction in your enviroment.</h3>
+		</div>	
+		<div class="col-sm-3 col-sm-offset-2 home--content--right">
+			<div class="col-sm-10 col-sm-offset-1 form-group home--login">
+				<div class="inner-addon left-addon">
+				  <i class="fa fa-envelope"></i>
+			    <input class="form-control input--top" type="text" name="email" placeholder="Email">
+				</div>
+				<div class="inner-addon left-addon">
+			  	<i class="fa fa-lock"></i>
+					<input class="form-control input--bottom" type="password" name="password" placeholder="Password">
+				</div>
+					
+				<input class="form-control login--button" type="button" value="Log in">
+				<div class="col-sm-12 login--actions">
+					<div class="col-sm-6">
+						<input class="" type="checkbox" value="Remember"> Remember me
+					</div>
+					<div class="col-sm-6">
+						<a href="#">Forgot password?</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-3 col-sm-offset-2">
+			<div class="col-sm-10 col-sm-offset-1 form-group home--register">
+				<h4>New to Consensus? <br> Sign up</h4>
+				<input class="form-control input--top" type="text" name="fullname_r" placeholder="Full Name">
+				<input class="form-control input--middle" type="text" name="email_r" placeholder="Email">
+				<input class="form-control input--bottom" type="text" name="username_r" placeholder="Choose a Username">
+				<div class="col-sm-12 register--actions">
+					<div class="col-sm-6">
+						<input class="form-control" type="text" name="position_r" placeholder="Position"> 
+					</div>
+					<div class="col-sm-6">
+						<select class="form-control" name="group">
+							<option>Group</option>
+						</select>
+					</div>
+				</div>
+				<input class="form-control input--top" type="password" name="password_r" placeholder="Choose a Password">
+				<input class="form-control input--bottom" type="password" name="password2_r" placeholder="Confirm your Password">
+				<input class="form-control register--button" type="button" value="Sign up for Consensus" data-toggle="modal" data-target="#modal_sign">
+			</div>
+		</div>
+	</div>
+	<div id="modal_sign" class="modal fade" role="dialog">
+	  <div class="modal-dialog">
+	    <!-- Modal content-->
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        <h4 class="modal-title">Complete Registration</h4>
+	      </div>
+	      <div class="modal-body">
+	      	<div class="col-xs-12">
+	      		<div class="col-xs-8">
+	        		<p>Do you want to add a photo to your profile?</p><br>
+	        	</div>
+            <div class="col-xs-8">
+              <div class="input-group">
+                <label class="input-group-btn">
+                  <i class="fa fa-info" aria-hidden="true"></i>
+                  <span class="btn">
+                    Choose:<input type="file" style="display: none;" id="profile_photo">
+                  </span>
+                </label>
+                <input type="text" class="form-control" placeholder=".../Home/" readonly>
+              </div>
+            </div>
+            <div class="col-xs-4">
+	        		<span class="glyphicon glyphicon-user user--icon"></span>
+	        	</div>
+	        	<div class="col-xs-12">
+	        		<br><p>Do you want a public profile? People will be able to look you up in a list.</p>
+	        	</div>
+	        	<div class="col-xs-12 register--check">
+	        		<input type="checkbox" name="Public_p"> Public profile
+	        	</div>
+	        	<div class="col-xs-12">
+	        		<p>An e-mail has been sent to the address that you have provided. <br> 
+	        			Check your e-mail account to complete the registration</p>
+	        	</div>
+          </div>
+          <div class="col-sm-12 modal-cancel">
+          		<button type="button" class="register--modal" data-dismiss="modal">Confirm</button>
+	        	<!--<button type="button" class="cancel--modal" data-dismiss="modal">Close</button>-->
+	       </div>
+	      </div>
+	      <div class="modal-footer">
+	      	
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	<script src="{{ url_for('static',filename='js/home.js') }}"></script>
+{% endblock %}

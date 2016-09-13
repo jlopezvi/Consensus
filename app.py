@@ -18,7 +18,53 @@ app = Flask(__name__)
 
 @app.route('/')
 def hello():
-    return render_template('home.html')
+    return render_template('login/login.html')
+
+
+@app.route('/home')
+def home():  
+    feed_home = [
+        {
+            'id': 'id',
+            'picture': 'assets/profile/images.jpg',
+            'name': 'Daniela',
+            'duration': '2 Days',
+            'supporters_goal': 200,
+            'supporters_current': 5,
+            'volunters_goal': 5,
+            'volunters_current': 2,
+            'image': 'url-to-picture',
+            'problem':  'Some text for the problem',
+            'proposal': 'Some text for the proposal',
+            'liked':
+            [
+                {
+                    'id': 'id',
+                    'name': 'Maria'
+                },
+                {
+                    'id': 'id',
+                    'name': 'Pedro'
+                },
+                {
+                    'id': 'id',
+                    'name': 'Juan'
+                },
+                {
+                    'id': 'id',
+                    'name': 'Jesus'
+                }
+            ],
+            'disliked': 
+            [
+                {
+                    'id': 'id',
+                    'name': 'Jose'
+                }
+            ]
+        }
+    ]
+    return render_template('home.html', persons_home = feed_home) 
 
 
 @app.route('/newsfeed')
@@ -64,7 +110,7 @@ def newsfeed():
             ]
         }
     ]
-    return render_template('newsfeed.html', persons = feed)
+    return render_template('login/newsfeed.html', persons = feed)
 
 #TEST
 @app.route('/api/add_message/<uuid>', methods=['GET', 'POST'])
