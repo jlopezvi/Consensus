@@ -25,7 +25,7 @@ def home():
     feed_home = [
         {
             'id': 'id',
-            'picture': 'assets/profile/images.jpg',
+            'picture': 'assets/profile/perfil-mediano.png',
             'name': 'Daniela',
             'duration': '2 Days',
             'supporters_goal': 200,
@@ -71,7 +71,7 @@ def newsfeed():
     feed = [
         {
             'id': 'id',
-            'picture': 'assets/profile/images.jpg',
+            'picture': 'assets/profile/perfil-mediano.png',
             'name': 'Daniela',
             'duration': '2 Days',
             'supporters_goal': 200,

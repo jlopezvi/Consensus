@@ -95,7 +95,7 @@ body {
 .home--content--right {
 	margin-top: 9.5%;
 }
-.login--button, .register--button, .register--modal, .newsfeed--button {
+.login--button, .register--button, .register--modal, .newsfeed--button, .home--button {
 	background-color: #c0ff00;
 	color: #5f6252;
 	font-size: 17px;
@@ -230,7 +230,18 @@ body.modal-open {
 }
 .newsfeed--body {
 	height: 60%;
-	background-color: #eaeaea;
+	background-image: url('/static/images/fondo-c.png');
+	background-size: cover;
+	background-repeat: no-repeat;
+	margin-top: 2%;
+	box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.home--proposals--body {
+	height: 60%;
+	background-image: url('/static/images/fondo-c.png');
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
 	margin-top: 2%;
 	box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
@@ -303,8 +314,8 @@ body.modal-open {
 	margin-bottom: 0px;
 }
 .input--percent {
-	font-size: 17px!important;
-  background-color: #bebbbb!important;
+  font-size: 17px!important;
+  background-color: #d9d9d9!important;
   text-align: center;
   border: none!important;
   font-family: lato_bold;
@@ -382,12 +393,53 @@ body.modal-open {
 	padding-left: 0;
 }
 .newsfeed--share--icons img{
-	width: 70px;
-	margin-right: 15px;
+	width: 80px;
 }
 /* END OF NEWSFEED STYLE */
 /* HOME STYLE */
- .primary--header {
+.home--progress, .home--progress2{
+	margin-top: 6px;
+    margin-right: -27px;
+    margin-left: 3px;
+    height: 12px;	
+    background-image: -webkit-linear-gradient(top,#737373 0,#a6a6a6 100%)!important;
+    background-image: -o-linear-gradient(top,#737373 0,#a6a6a6 100%)!important;
+    background-image: -webkit-gradient(linear,left top,left bottom,from(#737373),to(#a6a6a6))!important;
+    background-image: linear-gradient(to bottom,#737373 0,#a6a6a6 100%)!important;
+}
+.home--button {
+    padding: 4px 10px;
+    margin-left: -20px;
+}
+.home--progress{
+    margin-bottom: 13px;
+}
+.home--followers {
+	padding-top: 20px;
+	display: inline-block;
+}
+.home--followers p{
+	display: inline-block;
+	font-family: lato_bold;
+	font-size: 17px;
+	margin-left: 10px;
+}
+.home--share--icons img{
+	width: 70px;
+}
+.home--share--icons {
+	padding-left: 0;
+}
+.home--share {
+	margin-top: 20px;
+	margin-bottom: 50px;
+}
+.home--share i.fa-share-alt {
+	font-size: 30px;
+	position: relative;
+    top: 4px;
+}
+.primary--header {
 	width: 40%;
 	text-align: center;
 }
@@ -408,6 +460,83 @@ a.add--proposal--button {
 	margin-right: 5px;
 }
 /* END OF HOME STYLE */
+/* HOME STYLE WHEN LOGGED */
+.home--profile--picture {
+	width: 100px;
+  	height: 100px;
+  	margin-top: -38px;
+  	border-radius: 60px;
+	overflow: hidden;
+}
+.home--profile--picture img {
+	position: relative;
+  	left: 50%;
+	top: 50%;
+	height: 90%;
+	width: auto;
+	-webkit-transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+  	transform: translate(-50%,-50%);
+}
+.home--header .fa-clock-o{
+	font-size: 25px;
+}
+.home--header{
+	font-family: lato_bold;
+	font-size: 15px;
+}
+.home--name a{
+	color: #1067fc;
+	display: inline-block!important;
+  	text-decoration: none;
+  	text-decoration: underline;
+}
+.home--name{
+	margin-left: -6px;
+	margin-right: 6px;
+	font-size: 16px;
+	text-decoration: underline;
+}
+.home--content--logged {
+	margin-top: 6%;
+}
+.home--voted h2 {
+	margin-top: 0;
+}
+.home--voted {
+	margin-bottom: 12%;
+	padding-left: 0;
+}
+.select--options {
+	position: absolute;
+	background: #cecece;
+	margin-left: 34px;
+}
+.active-triangle, .select--triangle:hover  {
+	background: #cecece;
+}
+.select--triangle {
+	float: right;
+    padding: 9px;
+    font-size: 12px;
+}
+.selected--option {
+	margin-bottom: 0px;
+}
+.selected--option img, .unselected--option img {
+	width: 30px;
+}
+.unselected--option img, .selected--option img{
+	margin: 0 2px 0 4px;
+}
+.select--triangle:hover, .unselected--option:hover {
+	cursor: pointer;
+}
+.home--voted, .select--options {
+	font-size: 17px;
+	font-family: lato_bold;
+}
+/* END OF HOME STYLE WHEN LOGGED */
 .register--check {
 	margin: 5px 0 15px 0;
 }
