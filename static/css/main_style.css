@@ -190,6 +190,14 @@ body.modal-open {
 	border-radius: 46px;
 	width: 90px;
 }
+.user--icon--login {
+	font-size: 75px!important;
+	color: #c0ff00;
+	text-align: center;
+	height: 100px;
+	margin-top: -39px;
+	border-radius: 46px;
+}
 .modal-cancel {
 	margin-top: 25px;
 	text-align: center;
