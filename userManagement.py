@@ -47,8 +47,8 @@ def addParticipant_aux(participantjson):
 
 
 #input: python dict {'fullname':'Juan Lopez','email': 'jj@gmail.com', 'username': 'jlopezvi',
-#              'position': 'employee', 'group': 'IT', 'password': 'asdssa', 'ifpublicprofile': 'True',
-#              'image_url':'http://www.consensus..../userImages/default.jpg'}
+#              'position': 'employee', 'group': 'IT', 'password': 'MD5password',
+#              'image_url': 'http://.... ', 'ifpublicprofile': True / False}
 def __newParticipant(participantdict):
     email = participantdict.get('email')
     newparticipant, = getGraph().create({"fullname" : participantdict.get('fullname'), "email" : email,
@@ -90,7 +90,7 @@ def __getUnverifiedParticipantsIndex():
 def __getParticipantByEmail(email) :
     participantFound = __getParticipantsIndex().get("email", email)
     if participantFound :
-         return participantFound[0]
+        return participantFound[0]
     raise NotFoundError("Participant not Found")
 def __getUnverifiedParticipantByEmail(email) :
     participantFound = __getUnverifiedParticipantsIndex().get("email", email)

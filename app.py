@@ -142,6 +142,7 @@ def signUp(host_email=None):
 @app.route('/registration', methods=['POST'])
 def registration():
     #call with json_data converted to python_dictionary_data
+    print(request.get_json())
     return registration_aux(request.get_json())
 
 #return: Full Name (normal string) corresponding to e-mail
