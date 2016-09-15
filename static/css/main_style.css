@@ -306,7 +306,6 @@ body.modal-open {
 .newsfeed--footer .redflag--img img {
 	width: 40px;
 	height: 40px;
-	padding: 3px;
 }
 .newsfeed--footer .redflag--img {
 	background-color: #e7e8ea;
@@ -543,6 +542,189 @@ a.add--proposal--button {
 .home--voted, .select--options {
 	font-size: 17px;
 	font-family: lato_bold;
+}
+/****** ADD PROPOSAL (1/3) STYLE *********/
+#modal_proposal1 .modal-body div.input-group label.input-group-btn span {
+	background-color: #c0ff00;
+	border-color: #3faf2e;
+	font-family: lato_bold;
+	color: #5f6252;
+}
+#modal_proposal1 .modal-body div.input-group label.input-group-btn span:hover {
+	background-color: #c0ff00;
+	border-color: #3faf2e;
+}
+#modal_proposal1 {
+	padding-right: 0px!important;
+}
+#modal_proposal1 .modal-header, #modal_proposal1 .modal-footer {
+	background-color: rgba(63, 175, 46, 0.9);
+	padding: 7px;
+}
+.modal-footer {
+	height: 39px;
+}
+#modal_proposal1, #modal_proposal1 .modal-dialog, #modal_proposal1 .modal-content {
+	background: transparent;
+}
+#modal_proposal1 .modal-header h4 {
+	color: #fff;
+	text-align: left;
+}
+#modal_proposal1 .modal-dialog {
+	top: 10%;
+    left: 20%;
+    position: absolute;
+    width: 60%;
+	margin: 0;
+	color: #75787d;
+}
+#modal_proposal1 .modal-body {
+	background: rgba(255,255,255,0.9);
+}
+#modal_proposal1 .modal-body {
+	height: 765px;
+	padding: 20px 50px;
+}
+#modal_proposal1 .modal-header .close {
+	color: #fff!important;
+	right: 7px;
+	opacity: 1;
+    position: relative;
+    top: 3px;
+}
+#modal_proposal1 .modal-next {
+	margin-top: 25px;
+	text-align: center;
+}
+#modal_proposal1 .modal-header h4.modal-title {
+	padding-left: 7%;
+}
+#modal_proposal1 textarea {
+	background-color: #e5e6e8!important;
+}
+/********* END OF ADD PROPOSAL 1 ***************/
+/*********** ADD PROPOSAL 2 STYLE *************/
+#modal_proposal2 .modal-body div.input-group label.input-group-btn span {
+	background-color: #c0ff00;
+	border-color: #3faf2e;
+	font-family: lato_bold;
+	color: #5f6252;
+}
+#modal_proposal2 .modal-body div.input-group label.input-group-btn span:hover {
+	background-color: #c0ff00;
+	border-color: #3faf2e;
+}
+#modal_proposal2 {
+	padding-right: 0px!important;
+}
+#modal_proposal2 .modal-header, #modal_proposal2 .modal-footer {
+	background-color: rgba(63, 175, 46, 0.9);
+	padding: 7px;
+}
+.modal-footer {
+	height: 39px;
+}
+#modal_proposal2, #modal_proposal2 .modal-dialog, #modal_proposal2 .modal-content {
+	background: transparent;
+}
+#modal_proposal2 .modal-header h4 {
+	color: #fff;
+	text-align: left;
+}
+#modal_proposal2 .modal-dialog {
+	top: 10%;
+    left: 20%;
+    position: absolute;
+    width: 60%;
+	margin: 0;
+	color: #75787d;
+}
+#modal_proposal2 .modal-body {
+	background: rgba(255,255,255,0.9);
+}
+#modal_proposal2 .modal-body {
+	height: 765px;
+	padding: 20px 50px;
+}
+#modal_proposal2 .modal-header .close {
+	color: #fff!important;
+	right: 7px;
+	opacity: 1;
+    position: relative;
+    top: 3px;
+}
+#modal_proposal2 .modal-next {
+	margin-top: 25px;
+	text-align: center;
+}
+#modal_proposal2 .modal-header h4.modal-title {
+	padding-left: 7%;
+}
+#modal_proposal2 textarea {
+	background-color: #e5e6e8!important;
+}
+.proposal--anonymous label {
+	font-weight: normal;
+	margin-left: 10px;
+}
+.addproposal--step2{
+	list-style: none;
+	background-color: #fff;
+	padding: 30px 0 30px 0;
+	border: 2px solid #cecece;
+}
+.addproposal--step2 li img{
+	width: auto;
+    height: 75px;
+    margin-right: 15px;
+}
+.addproposal--step2 li input {
+	display: inline-flex;
+	margin-right: 30px;
+}
+.addproposal--step2 li {
+	margin-left: 30px;
+}
+.addproposal--step2 li:not(:last-child) {
+	padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #cecece;
+}
+.addproposal--step2 li p {
+	display: inline-table;
+}
+/********** END OF ADD PROPOSAL 2 *************/
+.modal-controls .modal-next i, .modal-next i{
+	color: #c0ff00;
+	font-size: 50px;
+	float: right;
+	position: relative;
+    right: 30px;
+}
+.modal-controls .modal-prev i{
+	color: #c0ff00;
+	font-size: 50px;
+	float: left;
+	transform:rotateY(180deg);
+	position: relative;
+    left: 30px;
+}
+.addproposal--optional {
+	background-color: #3faf2e;
+	color: #fff;
+	text-align: center; 
+	padding: 1% 0;
+}
+.addproposal--summarize {
+	font-family: lato_bold;
+}
+.addproposal--img img{
+	width: 100%;
+    height: auto;
+}
+.addproposal--img {
+	border: 1px solid #cecece;
 }
 /* END OF HOME STYLE WHEN LOGGED */
 .register--check {
