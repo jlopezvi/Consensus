@@ -202,6 +202,22 @@ body.modal-open {
 	margin-top: 8px;
 	text-align: center;
 }
+.checkbox--selection p {
+	display: inline-block;
+}
+.checkbox--selection p a{
+	text-decoration: none;
+	color: #75787d;
+}
+.check-selection {
+	border-bottom: 1px solid;
+}
+.checkbox--selection p:nth-child(2) {
+	float: right;
+	position: relative;
+    right: 20px;
+    bottom: -5px;
+}
 #modal_sign .modal-body div.input-group label.input-group-btn span {
 	background-color: #c0ff00;
 	border-color: #3faf2e;
@@ -673,6 +689,8 @@ a.add--proposal--button {
 	background-color: #fff;
 	padding: 30px 0 30px 0;
 	border: 2px solid #cecece;
+	border-radius: 15px;
+	overflow-y: scroll;
 }
 .addproposal--step2 li img{
 	width: auto;
