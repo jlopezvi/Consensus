@@ -47,3 +47,10 @@ $('.checkbox').change(function(){
 });
   /** end of check all  ***/
 });
+
+
+function showModal(id) {
+    $('.modal').modal('hide');
+    $("#" + id).modal();
+
+  }
