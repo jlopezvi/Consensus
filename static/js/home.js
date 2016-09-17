@@ -29,21 +29,26 @@ $(document).ready( function() {
   $('.next--proposal1').on('click',function(){
     $('#modal_proposal1').css('visibility','hidden');
   });
-  /*** check all proposal step 2 ***/
-    $("#select_all").change(function(){  //"select all" change 
-    $(".checkbox").prop('checked', $(this).prop("checked")); //change all ".checkbox" checked status
-});
-
-//".checkbox" change 
-$('.checkbox').change(function(){ 
-    //uncheck "select all", if one of the listed checkbox item is unchecked
-    if(false == $(this).prop("checked")){ //if this item is unchecked
-        $("#select_all").prop('checked', false); //change "select all" checked status to false
-    }
-    //check "select all" if all checkbox items are checked
-    if ($('.checkbox:checked').length == $('.checkbox').length ){
-        $("#select_all").prop('checked', true);
-    }
-});
+  /** check all ***/
+  $('#select_all').on('click',function(){ 
+      $("#select_none").removeClass('check-selection'); 
+      $(this).addClass("check-selection");
+      $('.addproposal--step2').find('.check--followers').prop('checked',true);
+  });
+  $('#select_none').on('click',function(){ 
+      $("#select_all").removeClass('check-selection');
+      $(this).addClass("check-selection");
+      $("#select_all").prop('checked', true); 
+      $('.addproposal--step2').find('.check--followers').each(function(){
+          $(this).prop('checked',false);
+      });
+  });
   /** end of check all  ***/
 });
+
+
+function showModal(id) {
+    $('.modal').modal('hide');
+    $("#" + id).modal();
+
+  }

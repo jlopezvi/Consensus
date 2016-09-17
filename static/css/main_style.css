@@ -199,8 +199,24 @@ body.modal-open {
 	border-radius: 46px;
 }
 .modal-cancel {
-	margin-top: 25px;
+	margin-top: 8px;
 	text-align: center;
+}
+.checkbox--selection p {
+	display: inline-block;
+}
+.checkbox--selection p a{
+	text-decoration: none;
+	color: #75787d;
+}
+.check-selection {
+	border-bottom: 1px solid;
+}
+.checkbox--selection p:nth-child(2) {
+	float: right;
+	position: relative;
+    right: 20px;
+    bottom: -5px;
 }
 #modal_sign .modal-body div.input-group label.input-group-btn span {
 	background-color: #c0ff00;
@@ -644,7 +660,7 @@ a.add--proposal--button {
 	background: rgba(255,255,255,0.9);
 }
 #modal_proposal2 .modal-body {
-	height: 765px;
+	height: 780px;
 	padding: 20px 50px;
 }
 #modal_proposal2 .modal-header .close {
@@ -673,6 +689,8 @@ a.add--proposal--button {
 	background-color: #fff;
 	padding: 30px 0 30px 0;
 	border: 2px solid #cecece;
+	border-radius: 15px;
+	overflow-y: scroll;
 }
 .addproposal--step2 li img{
 	width: auto;
@@ -695,20 +713,102 @@ a.add--proposal--button {
 	display: inline-table;
 }
 /********** END OF ADD PROPOSAL 2 *************/
-.modal-controls .modal-next i, .modal-next i{
+/*********** ADD PROPOSAL 3 STYLE *************/
+#modal_proposal3 .modal-body div.input-group label.input-group-btn span {
+	background-color: #c0ff00;
+	border-color: #3faf2e;
+	font-family: lato_bold;
+	color: #5f6252;
+}
+#modal_proposal3 .modal-body div.input-group label.input-group-btn span:hover {
+	background-color: #c0ff00;
+	border-color: #3faf2e;
+}
+#modal_proposal3 {
+	padding-right: 0px!important;
+}
+#modal_proposal3 .modal-header, #modal_proposal3 .modal-footer {
+	background-color: rgba(63, 175, 46, 0.9);
+	padding: 7px;
+}
+#modal_proposal3, #modal_proposal3 .modal-dialog, #modal_proposal3 .modal-content {
+	background: transparent;
+}
+#modal_proposal3 .modal-header h4 {
+	color: #fff;
+	text-align: left;
+}
+#modal_proposal3 .modal-dialog {
+	top: 10%;
+    left: 20%;
+    position: absolute;
+    width: 60%;
+	margin: 0;
+	color: #75787d;
+}
+#modal_proposal3 .modal-body {
+	background: rgba(255,255,255,0.9);
+}
+#modal_proposal3 .modal-body {
+	height: 300px;
+	padding: 20px 50px;
+}
+.proposal3--volunteers {
+	display: inline-flex;
+}
+.proposal3--volunteers label{
+	margin-left: 10px;
+	font-family: lato_bold;
+	position: relative;
+	top: 5px;
+}
+#modal_proposal3 .modal-prev button {
+	left: 5px;
+    top: 10px;
+    float: left;
+}
+#modal_proposal3 .modal-header .close {
+	color: #fff!important;
+	right: 7px;
+	opacity: 1;
+    position: relative;
+    top: 3px;
+}
+#modal_proposal3 .modal-next {
+	margin-top: 25px;
+	text-align: center;
+}
+#modal_proposal3 .modal-header h4.modal-title {
+	padding-left: 7%;
+}
+#modal_proposal3 textarea {
+	background-color: #e5e6e8!important;
+}
+/********** END OF ADD PROPOSAL 3 *************/
+.modal-controls .modal-next button i, .modal-next button i{
 	color: #c0ff00;
 	font-size: 50px;
-	float: right;
 	position: relative;
-    right: 30px;
 }
-.modal-controls .modal-prev i{
+.modal-prev button, .modal-next button {
+	border: 0;
+	position: relative;
+    background: transparent;
+}
+.modal-next button {
+	right: 30px;
+	float: right;
+}
+.modal-prev button {
+	left: 30px;
+	float: left;
+}
+.modal-controls .modal-prev button i{
 	color: #c0ff00;
 	font-size: 50px;
 	float: left;
 	transform:rotateY(180deg);
 	position: relative;
-    left: 30px;
 }
 .addproposal--optional {
 	background-color: #3faf2e;
