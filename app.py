@@ -2,7 +2,7 @@ import os
 
 from flask import Flask,jsonify,json
 from crossdomain import crossdomain
-from flask import request,render_template,redirect
+from flask import request,render_template,redirect,url_for
 import ast
 import json
 from communityManager import saveCommunity,deleteCommunity,addCommunityToContact,getCommunities
@@ -63,6 +63,7 @@ def home():
             ]
         }
     ]
+    print(feed_home)
     return render_template('home.html', persons_home = feed_home) 
 
 
@@ -131,6 +132,30 @@ def signUp(host_email=None):
 
 
 #API
+
+#input: email to be verified as an argument
+#output: e-mail to the email account with a URL link for email verification
+@app.route('/registration_send_emailverification/<email>')
+def registration_send_emailverification(email):
+    pass
+
+#input: URL from an invitation e-mail with email to be verified
+#output: redirects to login page with message in json {"verified_email":"asd@asdf"}
+@app.route('/registration_receive_emailverification/<email>', methods=['POST'])
+def registration_receive_emailverification(email):
+    #__verifyEmail(email)
+    jsondata = jsonify({'verified_email': email})
+    return redirect(url_for('.hello', message=jsondata))
+
+#input: URL from an invitation e-mail with guest_email and host_email
+#output: redirects to login page with message in json {"current_email":"asd@asdf","host_email":"bd@asdf"}
+@app.route('/registration_from_invitation/<current_email>/<host_email>', methods=['GET'])
+def registration_from_invitation(current_email,host_email):
+    jsondata = jsonify({
+        'current_email': current_email,
+        'host_email': host_email
+    })
+    return redirect(url_for('.hello', message=jsondata))
 
 #input: json {"fullname":"Juan Lopez","email": "jj@gmail.com", "username": "jlopezvi",
 #              "position": "employee", "group": "IT", "password": "MD5password",
