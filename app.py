@@ -7,7 +7,7 @@ import ast
 import json
 from communityManager import saveCommunity,deleteCommunity,addCommunityToContact,getCommunities
 from userManagement import __getParticipantByEmail,deleteParticipant,getAllParticipants,addParticipant_aux, \
-    addFollowingContactToParticipant_aux,getContacts,getFullNameByEmail_aux,registration_aux
+    addFollowingContactToParticipant_aux,getContacts,getFullNameByEmail_aux,registration_aux,__verifyEmail
 from concernManager import addConcernToUser_aux,deleteOneConcern,getAllConcerns
 from utils import NotFoundError
 import logging
@@ -141,9 +141,9 @@ def registration_send_emailverification(email):
 
 #input: URL from an invitation e-mail with email to be verified
 #output: redirects to login page with message in json {"verified_email":"asd@asdf"}
-@app.route('/registration_receive_emailverification/<email>', methods=['POST'])
+@app.route('/registration_receive_emailverification/<email>')
 def registration_receive_emailverification(email):
-    #__verifyEmail(email)
+    __verifyEmail(email)
     jsondata = jsonify({'verified_email': email})
     return redirect(url_for('.hello', message=jsondata))
 

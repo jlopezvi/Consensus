@@ -70,6 +70,15 @@ def __newUnverifiedParticipant(participantdict):
     newparticipant.add_labels("unverified_participant")
     __addToUnverifiedParticipantsIndex(email, newparticipant)
 
+def __verifyEmail(email):
+    participant=__getUnverifiedParticipantByEmail(email)
+    __removeFromUnverifiedParticipantsIndex(email, participant)
+    __addToParticipantsIndex(email, participant)
+    participant.remove_labels("unverified_participant")
+    participant.add_labels("participant")
+    return jsonify({'result': 'OK'})
+
+
 def deleteParticipant(email) :
     participantFound = __getParticipantByEmail(email)
     participantFound.delete()
@@ -140,7 +149,7 @@ def getContacts(email) :
 
 def __addToParticipantsIndex(email, newparticipant) :
      getGraph().get_or_create_index(neo4j.Node, "Participants").add("email", email, newparticipant)
-
 def __addToUnverifiedParticipantsIndex(email, newparticipant):
     getGraph().get_or_create_index(neo4j.Node, "UnverifiedParticipants").add("email", email, newparticipant)
-
+def __removeFromUnverifiedParticipantsIndex(email, participant):
+    getGraph().get_or_create_index(neo4j.Node, "UnverifiedParticipants").remove("email", email, participant)
