@@ -6,18 +6,61 @@ from flask import request,render_template,redirect,url_for
 import ast
 import json
 from communityManager import saveCommunity,deleteCommunity,addCommunityToContact,getCommunities
-from userManagement import __getParticipantByEmail,deleteParticipant,getAllParticipants,addParticipant_aux, \
-    addFollowingContactToParticipant_aux,getContacts,getFullNameByEmail_aux,registration_aux,__verifyEmail
+from participantManagement import _getParticipantByEmail,deleteParticipant,getAllParticipants, \
+    addFollowingContactToParticipant_aux,getContacts,getFullNameByEmail_aux,registration_aux,_verifyEmail
 from concernManager import addConcernToUser_aux,deleteOneConcern,getAllConcerns
-from utils import NotFoundError
 import logging
+import flask_login
+from user_authentification import User
 
 #logging.basicConfig(level=logging.DEBUG)
 app = Flask(__name__)
 
+#flask_login
+login_manager = flask_login.LoginManager()
+login_manager.init_app(app)
+app.secret_key = 'super secret string'  # Change this!
+@login_manager.user_loader
+def user_loader(email):
+    return User(email)
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'GET':
+        return '''
+               <form action='login' method='POST'>
+                <input type='text' name='email' id='email' placeholder='email'></input>
+                <input type='password' name='pw' id='pw' placeholder='password'></input>
+                <input type='submit' name='submit'></input>
+               </form>
+               '''
+
+    email = request.form['email']
+    user_to_check=_getParticipantByEmail(email)
+    if user_to_check is None :
+        return jsonify(result ="Bad e-mail")
+    if request.form['pw'] == user_to_check['password']:
+        user = User(email)
+        flask_login.login_user(user)
+        return redirect(url_for('protected'))
+
+    return jsonify(result="Bad password")
+
+
+@app.route('/protected')
+@flask_login.login_required
+def protected():
+    return 'Logged in as: ' + flask_login.current_user.id
+
+
+
+
+
+
 @app.route('/')
 def hello():
     return render_template('login/login.html')
+
 
 
 @app.route('/home')
@@ -126,7 +169,7 @@ def add_message(uuid):
 @app.route('/signUp/<host_email>')
 def signUp(host_email=None):
     if host_email != None:
-        __getParticipantByEmail(host_email)
+        _getParticipantByEmail(host_email)
     return render_template('signUp.html',host_email=host_email)
 
 
@@ -143,7 +186,7 @@ def registration_send_emailverification(email):
 #output: redirects to login page with message in json {"verified_email":"asd@asdf"}
 @app.route('/registration_receive_emailverification/<email>')
 def registration_receive_emailverification(email):
-    __verifyEmail(email)
+    _verifyEmail(email)
     jsondata = jsonify({'verified_email': email})
     return redirect(url_for('.hello', message=jsondata))
 
@@ -252,17 +295,19 @@ def getConcerns(current):
        
 
 
+##ERROR HANDLERS
+#@app.errorhandler(NotFoundError)
+#def handle_NotFoundError(error):
+#    response = jsonify(error.to_dict())
+#    response.status_code = error.status_code
+#    return response
+
+
+
+
 
 if __name__ == '__main__':
     #app.debug = True
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
-    #app.run(host='127.0.0.1', port=port)
-
-
-#ERROR HANDLERS
-@app.errorhandler(NotFoundError)
-def handle_NotFoundError(error):
-    response = jsonify(error.to_dict())
-    response.status_code = error.status_code
-    return response
+    #app.run(host='0.0.0.0', port=port)
+    app.run(host='127.0.0.1', port=port)

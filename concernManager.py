@@ -1,6 +1,6 @@
 from py2neo import neo4j
-from userManagement import __getParticipantByEmail
-from utils import NotFoundError,getGraph
+from participantManagement import _getParticipantByEmail
+from utils import getGraph
 import json
 
 #input: current(current user email); concern (is a )
@@ -9,13 +9,13 @@ def addConcernToUser_aux(current, concern):
     title = concern.get('title')
     description = concern.get('description')
     image_url= concern.get('image_url')
-    user = __getUserByEmail(current)
+    user = _getParticipantByEmail(current)
     newConcern, = getGraph().create({"title" : title, "description" : description, "image_url" : image_url})
     newConcern.add_labels("idea")
-    __addConcernToIndex(title, newConcern)
+    _addConcernToIndex(title, newConcern)
     getGraph().create((user, "CREATES", newConcern))
 
-def __addConcernToIndex(title,newConcern):
+def _addConcernToIndex(title,newConcern):
     getConcernsIndex().add("title",title,newConcern)
     
 
@@ -29,7 +29,7 @@ def deleteOneConcern(id):
 
 def getAllConcerns(email):
     print ("getAllConcerns")
-    currentUser = __getUserByEmail(email)
+    currentUser = _getUserByEmail(email)
     rels = list(getGraph().match(start_node=currentUser, rel_type="CREATES"))
     concerns = []
     for rel in rels:
