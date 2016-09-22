@@ -50,7 +50,7 @@ body {
 }
 .nav--style .navbar-header a{
 	letter-spacing: 1.5px;
-	font-family: lato_bold;
+	font-family: Uni Sans Heavy;
 }
 .home--content {
 	background-image: url("/static/images/concerns/meeting.jpg");
@@ -141,10 +141,11 @@ body.modal-open {
 	padding: 1% 0;
 }
 .nav--style .navbar-header {
-	padding-left: 3%;
+	padding-left: 0;
 }
 .nav--style ul {
 	padding-right: 1%;
+	margin-left: 10%;
 }
 .nav--style li a:hover {
 	background-color: transparent;
@@ -164,6 +165,7 @@ body.modal-open {
 }
 #modal_sign .modal-header h4 {
 	color: #fff;
+	text-shadow: 1px 1px black;
 	text-align: center;
 }
 #modal_sign .modal-dialog {
@@ -320,14 +322,14 @@ body.modal-open {
   transform: translate(-50%,-50%);
 }
 .newsfeed--footer .redflag--img img {
-	width: 40px;
-	height: 40px;
+	width: 35px;
+	height: 35px;
 }
 .newsfeed--footer .redflag--img {
 	background-color: #e7e8ea;
 	border: 1px solid #c5c5c5;
 	padding: 0;
-	width: 40px;
+	width: 35px;
 }
 .newsfeed--footer {
 	margin-top: 15px;
@@ -359,7 +361,7 @@ body.modal-open {
 	display: inline-block!important;
 	list-style: none;
 	padding-left: 10px;
-	font-size: 20px;
+	font-size: 16px;
 }
 .newsfeed--likes ul a li, .newsfeed--name a{
 	color: #1067fc;
@@ -369,6 +371,7 @@ body.modal-open {
 .newsfeed--likes ul a li {
 	margin-right: 5px;
     border-bottom: 1px solid;
+    font-size: 18px;
 }
 .newsfeed--likes ul a.last--liked li{
 	text-decoration: none!important;
@@ -416,7 +419,10 @@ body.modal-open {
 	padding-left: 0;
 }
 .newsfeed--share--icons img{
-	width: 80px;
+	width: 75px;
+}
+.newsfeed--share--icons img:nth-child(4){
+	width: 60px;
 }
 /* END OF NEWSFEED STYLE */
 /* HOME STYLE */
@@ -448,7 +454,7 @@ body.modal-open {
 	margin-left: 10px;
 }
 .home--share--icons img{
-	width: 70px;
+	width: 60px;
 }
 .home--share--icons {
 	padding-left: 0;
@@ -477,6 +483,8 @@ a.add--proposal--button {
     height: 38px!important;
     border: 6px solid #3faf2e;
     padding: 2px 12px 5px 12px!important;
+    float: right;
+    margin-right: 10%;
 }
 .add--proposal--button i { 
 	font-size: 20px;
@@ -527,11 +535,11 @@ a.add--proposal--button {
 	margin-top: 0;
 }
 .home--voted {
-	margin-bottom: 12%;
+	margin-bottom: 5%;
 	padding-left: 0;
 }
 .select--options {
-	position: absolute;
+	position: relative;
 	background: #cecece;
 	margin-left: 34px;
 }
@@ -599,7 +607,7 @@ a.add--proposal--button {
 	background: rgba(255,255,255,0.9);
 }
 #modal_proposal1 .modal-body {
-	height: 765px;
+	height: 800px;
 	padding: 20px 50px;
 }
 #modal_proposal1 .modal-header .close {

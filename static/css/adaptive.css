@@ -8,6 +8,30 @@
 	.home--login .fa-envelope, .home--login .fa-lock {
 		font-size: 12px!important;
 	}
+	.newsfeed--header {
+    	font-size: 14px;
+	}
+	.newsfeed--header .fa-clock-o {
+    	font-size: 30px;
+	}
+	.profile--picture {
+	    width: 90px;
+	    height: 90px;
+	    margin-top: -40px;
+	}
+	.newsfeed--name {
+   		margin-left: -20px;
+   		margin-right: 20px;
+   		font-size: 23px;
+   	}
+   	.newsfeed--progress , .newsfeed--progress2 {
+   		width: 100%;
+   	}
+   	.newsfeed--footer input[type="button"]{
+   		float: inherit;
+   		left: 20px;
+    	position: relative;
+   	}
 }
 @media only screen and (max-width: 991px) {
 	.login--actions .col-sm-6 {
@@ -24,6 +48,50 @@
 	.home--register h4 {
 	    padding-top: 17%;
 	    font-size: 14px;
+	}
+	.newsfeed--body {
+		background-size: contain;
+    	background-position-y: bottom;
+	}
+	.profile--picture {
+    	width: 80px;
+    	height: 80px;
+   		margin-top: -20px;
+	}
+	.newsfeed--name {
+    	margin-left: -9px;
+    	margin-right: 25px;
+    	font-size: 19px;
+    	top: 20px;
+	}
+	.newsfeed--header {
+    	font-size: 12px;
+	}
+	.newsfeed--goals {
+		margin-left: -17px;
+    	top: 3px;
+    	line-height: 21px;
+	}
+	.newsfeed--duration {
+    	top: 9px;
+    	left: 10px;
+	}
+	.newsfeed--persons .fa-check, .newsfeed--persons .fa-close {
+	    font-size: 34px;
+	    position: relative;
+	    top: 6px;
+	}
+	.newsfeed--share--icons img {
+    	width: 60px;
+	}
+	.newsfeed--followers p {
+    	font-size: 16px;
+	}
+	.newsfeed--share i.fa-share-alt {
+   		font-size: 25px;
+   	}
+   	.newsfeed--share--icons img:nth-child(4) {
+    	width: 45px;
 	}
 }
 @media only screen and (max-width: 767px) {
@@ -51,9 +119,10 @@
 	}
 	.nav--style ul {
 		float: right;
+		margin-left: 0;
 	}
 	.nav--style ul li a {
-		display: initial;
+		display: none;
 	}
 	.home--content--left h1 {
 		font-size: 60px;
@@ -76,6 +145,48 @@
 	}
 	.login--actions .col-sm-6:nth-child(2) {
     	padding: 6px 0 0 0;
+	}
+	#menu--mobile {
+		display: none;
+	}
+	.newsfeed--header {
+		display: inline-flex;
+		font-size: 17px;
+		width: 100%;
+		margin-left: 3%;
+	}
+	.newsfeed--header .newsfeed--charge {
+		width: 30%;
+	}
+	.newsfeed--name {
+    	margin-left: -14px;
+    	margin-right: -18px;
+	}
+	.newsfeed--body {
+		margin-left: 2%;
+		margin-right: 2%;
+	}
+	.newsfeed--footer .redflag--img {
+		display: -webkit-inline-box;
+	}
+	.newsfeed--footer .newsfeed--support {
+		display: inline-flex;
+		width: 70%;
+	}
+	.newsfeed--footer, .newsfeed--persons, .newsfeed--share--icons {
+		margin-left: 2%;
+    	margin-right: 2%;
+	}
+	.newsfeed--content {
+		width: 100%;
+	}
+	.newsfeed--persons div > div{
+		display: -webkit-inline-box;
+		margin-right: 2%;
+	}
+	.newsfeed--share--icons > div {
+		display: -webkit-inline-box;
+		margin-right: 2%;
 	}
 }
 @media only screen and (max-width: 479px) {
