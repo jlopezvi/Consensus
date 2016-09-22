@@ -23,6 +23,7 @@ app.secret_key = 'super secret string'  # Change this!
 @login_manager.user_loader
 def user_loader(email):
     return User(email)
+
 @login_manager.unauthorized_handler
 def unauthorized_handler():
     return 'Unauthorized'
@@ -305,5 +306,5 @@ def getConcerns(current):
 if __name__ == '__main__':
     #app.debug = True
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
-    #app.run(host='127.0.0.1', port=port)
+    #app.run(host='0.0.0.0', port=port)
+    app.run(host='127.0.0.1', port=port)

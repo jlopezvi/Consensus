@@ -25,15 +25,29 @@
    		font-size: 23px;
    	}
    	.newsfeed--progress , .newsfeed--progress2 {
-   		width: 100%;
+   		width: 120%;
    	}
    	.newsfeed--footer input[type="button"]{
    		float: inherit;
    		left: 20px;
     	position: relative;
    	}
+   	.nav--style .primary--header {
+   		padding-left: 15%;
+   	}
+}
+@media only screen and (max-width: 1024px) {
+	.nav--style ul {
+	    margin-left: 5%;
+	}
+	.newsfeed--progress , .newsfeed--progress2 {
+   		width: 110%;
+   	}
 }
 @media only screen and (max-width: 991px) {
+	.newsfeed--progress , .newsfeed--progress2 {
+   		width: 100%;
+   	}
 	.login--actions .col-sm-6 {
 	    font-size: 7px;
 	}
@@ -94,7 +108,18 @@
     	width: 45px;
 	}
 }
+@media only screen and (max-width: 870px) {
+	.nav--style ul {
+	    margin-left: 3%;
+	}
+}
 @media only screen and (max-width: 767px) {
+	.newsfeed--goals {
+    	margin-left: 0px;
+	}
+	.nav--style .primary--header {
+   		padding-left: 0%;
+   	}
 	.home--login, .home--register {
 		width: 100%;
 	}
@@ -152,11 +177,11 @@
 	.newsfeed--header {
 		display: inline-flex;
 		font-size: 17px;
-		width: 100%;
+		width: 97%;
 		margin-left: 3%;
 	}
 	.newsfeed--header .newsfeed--charge {
-		width: 30%;
+		width: 27%;
 	}
 	.newsfeed--name {
     	margin-left: -14px;
@@ -171,7 +196,7 @@
 	}
 	.newsfeed--footer .newsfeed--support {
 		display: inline-flex;
-		width: 70%;
+		width: 65%;
 	}
 	.newsfeed--footer, .newsfeed--persons, .newsfeed--share--icons {
 		margin-left: 2%;
@@ -179,6 +204,7 @@
 	}
 	.newsfeed--content {
 		width: 100%;
+		margin-left: 0!important;
 	}
 	.newsfeed--persons div > div{
 		display: -webkit-inline-box;
@@ -187,6 +213,26 @@
 	.newsfeed--share--icons > div {
 		display: -webkit-inline-box;
 		margin-right: 2%;
+	}
+}
+@media only screen and (max-width: 711px) {
+	.newsfeed--duration {
+	    left: 0;
+	    text-align: left;
+	    font-size: 14px;
+	}
+	.newsfeed--goals {
+    	font-size: 14px;
+    	margin-left: 10px;
+	}
+}
+@media only screen and (max-width: 686px) {
+	.newsfeed--duration {
+	    font-size: 13px;
+	}
+	.newsfeed--button {
+    	padding: 5px 12px;
+    	font-size: 16px;
 	}
 }
 @media only screen and (max-width: 479px) {
@@ -200,18 +246,13 @@
 	    margin-top: 12%;
 	}
 	.home--register h4 {
-    	padding-top: 6%;
+    	padding-top: 8%;
     	font-size: 17px;
 	}
 	.home--login .fa-envelope, .home--login .fa-lock {
 	    font-size: 14px!important;
 	    padding-top: 9px!important;
 	    padding-left: 10px!important;
-	}
-}
-@media only screen and (max-width: 479px) {
-	.home--register h4 {
-	    padding-top: 8%;
 	}
 }
 @media only screen and (max-width: 320px) {

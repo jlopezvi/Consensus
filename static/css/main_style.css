@@ -60,6 +60,7 @@ body {
 .home--content--left {
 	color: #fff;
 	margin-top: 8%;
+	text-shadow: 0px 0px 3px black;
 }
 .home--content--left h1{
 	font-size: 70px;
@@ -68,7 +69,7 @@ body {
 }
 .home--content--left h3{
 	font-size: 30px;
-	line-height: 0.8;
+	line-height: 1;
 	margin-bottom: 4%;
 }
 .home--login, .home--register {
@@ -255,9 +256,10 @@ body.modal-open {
 	text-align: right;
 }
 .newsfeed--body {
-	height: 60%;
+	height: 500px;
 	background-image: url('/static/images/fondo-c.png');
-	background-size: cover;
+	background-size: contain;
+	background-position-y: bottom;
 	background-repeat: no-repeat;
 	margin-top: 2%;
 	box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -371,7 +373,7 @@ body.modal-open {
 .newsfeed--likes ul a li {
 	margin-right: 5px;
     border-bottom: 1px solid;
-    font-size: 18px;
+    font-size: 16px;
 }
 .newsfeed--likes ul a.last--liked li{
 	text-decoration: none!important;
@@ -469,7 +471,8 @@ body.modal-open {
     top: 4px;
 }
 .primary--header {
-	width: 40%;
+	width: 100%;
+	position: absolute;
 	text-align: center;
 }
 .primary--header a{
