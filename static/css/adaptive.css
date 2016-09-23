@@ -114,8 +114,8 @@
 	}
 }
 @media only screen and (max-width: 767px) {
-	.newsfeed--goals {
-    	margin-left: 0px;
+	.menu--mobile--icon {
+		display: block;
 	}
 	.nav--style .primary--header {
    		padding-left: 0%;
@@ -143,11 +143,21 @@
 		display: inline-block;
 	}
 	.nav--style ul {
-		float: right;
 		margin-left: 0;
+	    float: left;
+	    position: relative;
+	    margin: 0;
+	    padding: 0;
+	    z-index: 7;
+	    width: 100%;
+	    background: #3faf2e;
 	}
 	.nav--style ul li a {
 		display: none;
+		border: 1px solid;
+		height: 100%;
+		text-align: center;
+    	width: 100%;
 	}
 	.home--content--left h1 {
 		font-size: 60px;
@@ -175,19 +185,42 @@
 		display: none;
 	}
 	.newsfeed--header {
-		display: inline-flex;
 		font-size: 17px;
-		width: 97%;
+		width: 90%;
 		margin-left: 3%;
 	}
+	.newsfeed--header div:nth-child(1),.newsfeed--header div:nth-child(2) {
+		display: inline-table;
+	}
+	.newsfeed--header > div:nth-child(1){
+		padding-left: 15px!important;
+	}
+	.newsfeed--duration {
+		display: inline-table;
+	    float: right;
+	    top: 25px;
+	    padding-right: 25px;
+	}
+	.profile--picture img {
+		top: 40px;
+	}
+	.newsfeed--charge {
+		position: absolute;
+		margin-top: 20px;
+	}
 	.newsfeed--header .newsfeed--charge {
-		width: 27%;
+		width: 50%;
 	}
 	.newsfeed--name {
+		font-size: 20px;
     	margin-left: -14px;
     	margin-right: -18px;
 	}
+	.newsfeed--likes ul a li {
+    	font-size: 18px;
+	}
 	.newsfeed--body {
+		margin-top: 55px;
 		margin-left: 2%;
 		margin-right: 2%;
 	}
@@ -214,25 +247,83 @@
 		display: -webkit-inline-box;
 		margin-right: 2%;
 	}
-}
-@media only screen and (max-width: 711px) {
-	.newsfeed--duration {
-	    left: 0;
-	    text-align: left;
-	    font-size: 14px;
-	}
 	.newsfeed--goals {
-    	font-size: 14px;
-    	margin-left: 10px;
+		top: 18px;
+    	line-height: 28px;
+    	margin-left: 0px;
+	}
+	.newsfeed--content {
+    	margin-top: 15%;
+	}
+	.newsfeed--footer input[type="button"] {
+		font-size: 15px;
+	}
+	.input--percent label {
+		font-size: 15px;
+	}
+	.newsfeed--problem, .newsfeed--proposal {
+		font-size: 15px;
+	}
+	.newsfeed--footer .redflag--img img {
+    	width: 33px;
+    	height: 33px;
+	}
+	a.add--proposal--button {
+		margin-right: 0;
 	}
 }
-@media only screen and (max-width: 686px) {
-	.newsfeed--duration {
-	    font-size: 13px;
+@media only screen and (max-width: 620px) {
+	.newsfeed--header .newsfeed--charge {
+    	width: 40%;
 	}
-	.newsfeed--button {
-    	padding: 5px 12px;
-    	font-size: 16px;
+	.neewsfeed--moreinfo {
+		padding-left: 0!important;
+		padding-right: 0;
+    	right: 15px;
+	}
+	.newsfeed--footer .newsfeed--support {
+		padding-left: 0!important;
+	}
+	.input--percent {
+		position: relative;
+		width: 50%;
+		margin: 0!important;
+		left: 30%;
+	}
+	.newsfeed--support {
+		margin-left: -7px;
+	}
+}
+@media only screen and (max-width: 560px){
+	.input--percent {
+	    width: 60%;
+	    left: 25%;
+	}
+	.newsfeed--share--icons {
+		padding-right: 0;
+	}
+	.newsfeed--share--icons > div {
+		margin-right: 0;
+	}
+	.newsfeed--content {
+    	margin-top: 20%;
+	}
+}
+@media only screen and (max-width: 510px){
+	.newsfeed--support {
+    	margin-left: -27px;
+	}
+	.input--percent {
+    	width: 70%;
+	}
+}
+@media only screen and (max-width: 497px){
+	.newsfeed--goals {
+	    font-size: 16px;
+	}
+	.newsfeed--header {
+	    width: 100%;
+	    margin-left: 0;
 	}
 }
 @media only screen and (max-width: 479px) {
@@ -253,6 +344,136 @@
 	    font-size: 14px!important;
 	    padding-top: 9px!important;
 	    padding-left: 10px!important;
+	}
+	.newsfeed--name {
+    	margin-left: -24px;
+	}
+	.newsfeed--goals {
+    	font-size: 14px;
+	}
+	.newsfeed--duration {
+		font-size: 15px;
+	}
+	.input--percent label {
+    	font-size: 13px;
+	}
+	.newsfeed--footer input[type="button"] {
+    	font-size: 14px;
+	}
+	.newsfeed--button {
+    	padding: 6px 10px;
+	}
+	a.add--proposal--button {
+		padding: 2px 7px 5px 4px!important;
+	}
+	.newsfeed--likes ul a li {
+    	font-size: 16px;
+	}
+	.primary--header a {
+    	width: 70%;
+	}
+}
+@media only screen and (max-width: 410px) {
+	.newsfeed--header .newsfeed--charge {
+    	width: 45%;
+	}
+	.newsfeed--persons > div {
+		padding: 0;
+	}
+	.newsfeed--likes {
+		padding-right: 0;
+	}
+	.newsfeed--persons div > div {
+   		margin-left: -8px;
+   		margin-right: 0;
+	}
+	.input--percent {
+    	font-size: 12px!important;
+	}
+	.newsfeed--button {
+    	padding: 4px 5px;
+	}
+	.newsfeed--footer .redflag--img img {
+    	width: 30px;
+    	height: 30px;
+	}
+	.newsfeed--footer .redflag--img{
+		width: 30px;
+	}
+}
+@media only screen and (max-width: 400px) {
+	.newsfeed--header .newsfeed--charge{
+		padding-left: 0;
+	}
+	.newsfeed--header .newsfeed--charge {
+    	width: 42%;
+	}
+	.newsfeed--goals {
+		padding-right: 0;
+	}
+	.newsfeed--duration {
+    	padding-right: 10px;
+	}
+	.newsfeed--goals {
+    font-size: 13px;
+	}
+	.newsfeed--persons .fa-check, .newsfeed--persons .fa-close {
+    	font-size: 30px;
+	}
+	.newsfeed--likes ul a.last--liked li {
+    	font-size: 12px;
+	}
+}
+@media only screen and (max-width: 340px){
+	.newsfeed--persons .fa-check, .newsfeed--persons .fa-close {
+	    font-size: 25px;
+	}
+}
+@media only screen and (max-width: 370px){
+	.input--percent label {
+	    font-size: 11px;
+	}
+	.newsfeed--footer input[type="button"] {
+    	font-size: 12px;
+	}
+	.newsfeed--button {
+    	padding: 5px 5px;
+	}
+	.input--percent {
+    	width: 80%;
+    	left: 22%;
+	}
+	.newsfeed--duration {
+	    padding-left: 0;
+	}
+	.newsfeed--header .fa-clock-o {
+	    font-size: 25px;
+	}
+	.newsfeed--header .newsfeed--charge {
+    	width: 46%;
+	}
+	.newsfeed--header > div:nth-child(1) {
+    	padding-left: 0px!important;
+	}
+}
+@media only screen and (max-width: 350px){
+	.newsfeed--header .newsfeed--charge {
+	    width: 45%;
+	    margin-left: -10px;
+	}
+	.newsfeed--content {
+	    margin-top: 25%;
+	}
+}
+@media only screen and (max-width: 340px){
+	.newsfeed--header .newsfeed--charge {
+	    width: 48%;
+	    margin-left: -14px;
+	}
+}
+@media only screen and (max-width: 330px){
+	.newsfeed--content > div{
+		padding: 0;
 	}
 }
 @media only screen and (max-width: 320px) {

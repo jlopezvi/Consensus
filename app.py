@@ -24,9 +24,9 @@ app.secret_key = 'super secret string'  # Change this!
 def user_loader(email):
     return User(email)
 
-@login_manager.unauthorized_handler
-def unauthorized_handler():
-    return 'Unauthorized'
+#@login_manager.unauthorized_handler
+#def unauthorized_handler():
+ #   return 'Unauthorized'
 
 #input: json {"email":"asdf@asdf", "password":"MD5password"}
 #output:
@@ -106,7 +106,7 @@ def home():
 
 
 @app.route('/newsfeed')
-@flask_login.login_required
+#@flask_login.login_required
 def newsfeed():
     #print('Logged in as: ' + flask_login.current_user.id)
     feed = [

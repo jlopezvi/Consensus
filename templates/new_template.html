@@ -10,12 +10,13 @@
     <script src="{{ url_for('static',filename='js/jquery-3.1.0.min.js') }}"></script>
     <script src="{{ url_for('static',filename='js/bootstrap.min.js') }}"></script>
     <script src="{{ url_for('static',filename='js/angular.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/main.js') }}"></script>
 	<title>Consensus</title>
 </head>
 <body class="container">
 
     <nav class="navbar navbar-fixed-top nav--style">
-    <!--<a data-toggle="collapse" href="#menu--mobile"><span class="glyphicon glyphicon-menu-hamburger"></span></a>-->
+    <div class="menu--mobile--icon"><span class="glyphicon glyphicon-menu-hamburger"></span></div>
     <a href="#" data-toggle="modal" data-target="#modal_proposal1" class="add--proposal--button"><i class="fa fa-lightbulb-o"></i> Create Proposal</a>
   <div id="#menu--mobile">
     <ul class="nav navbar-nav">

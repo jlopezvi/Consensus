@@ -858,3 +858,29 @@ a.add--proposal--button {
 }
 .left-addon .fa  { left:  0px;}
 .left-addon input  { padding-left:  35px!important; }
+.menu--mobile--icon {
+	display: none;
+	position: absolute;
+    font-size: 20px;
+    top: 8px;
+    left: 20px;
+    color: #fff;
+    z-index: 5;
+    opacity: 1;
+}
+.menu--mobile--icon: {
+	display: none;
+	position: absolute;
+    font-size: 20px;
+    top: 8px;
+    left: 20px;
+    color: #fff;
+    z-index: 5;
+    opacity: 1;
+}
+.nav--style ul li a:focus {
+    background: transparent;
+}
+.menu--mobile--icon:hover, .menu--mobile--icon:focus {
+	color: #fff!important;
+}
