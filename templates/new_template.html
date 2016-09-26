@@ -29,7 +29,161 @@
           <a class="navbar-brand" href="#">CONSENSUS</a>
     </div>
     </nav>
+    <!--  ************************** ADD PROPOSAL 1 ******************-->
+    <div id="modal_proposal1" class="modal" role="dialog">
+      <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Add Proposal (1/3)</h4>
+          </div>
+          <div class="modal-body">
+            <div class="col-xs-12">
+                <div class="col-xs-12">
+                    <p class="addproposal--summarize">Firts: Summarize your proposal</p>
+                    <p>OPTIONAL: A shared issue that you feel strongly about and for which you have proposal (140 characters).</p>
+                    <div class="form-group">
+                        <input type="text" name="" class="form-control">
+                        <br><p>A proposal that may be consensual (140 characters). </p>
+                        <input type="text" name="" class="form-control">
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div class="col-xs-5" style="padding-left:0;">
+                    <p>Do you want to add a background photo?</p>
+                        <div class="input-group">
+                            <label class="input-group-btn">
+                              <i class="fa fa-info" aria-hidden="true"></i>
+                              <span class="btn">
+                                Choose:<input type="file" style="display: none;" id="profile_photo">
+                              </span>
+                            </label>
+                            <input type="text" style="margin-left:10px;" class="form-control" placeholder=".../Home/" readonly>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 col-xs-offset-1" style="padding-right:0;">
+                        <div class="addproposal--img">
+                            <img src="{{ url_for('static',filename='images/fondo-c.png') }}">
+                        </div>  
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div class="col-xs-8 col-xs-offset-2">
+                        <br><br><p class="addproposal--optional">OPTIONAL: write more information about the proposal</p>
+                    </div>
+                    <div class="col-xs-12">
+                        <br><p>OPTIONAL: more info on the shared issue that you feel strongly about.</p>
+                        <textarea class="form-control"></textarea>
+                    </div>
+                    <div class="col-xs-12">
+                        <br><p>OPTIONAL: more info on your proposal and why you think others will agree as well</p>
+                        <textarea class="form-control"></textarea>
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="col-sm-12 modal-next">
+                <button onclick="showModal('modal_proposal2')"><i class="fa fa-play-circle"></i></button>
+           </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--  ************************** END ADD PROPOSAL 1 ******************-->
+    <!--  ************************** ADD PROPOSAL 2 ******************-->
+    <div id="modal_proposal2" class="modal" role="dialog">
+      <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Add Proposal (2/3)</h4>
+          </div>
+          <div class="modal-body">
+            <div class="col-xs-12">
+                <div class="col-xs-12">
+                    <p class="addproposal--summarize">Second: Select your audience</p>
+                    <p>In first place, only your followers will receive your proposal <br>
+                    They will vote on it and, if they agree, the proposal will be diffused to their contacts. <br>
+                    Eventually, your proposal may reach a big number of participants in Consensus.</p>
+                </div>
+                <div class="col-xs-12 checkbox--selection">
+                    <p>Select what followers will receive your proposal</p>
+                    <p>Select: 
+                        <a href="#" id="select_all">All</a> | 
+                        <a href="#" id="select_none">None</a>
+                    </p>
+                    <div class="col-xs-12">
+                        <ul class="addproposal--step2">
+                            <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="{{ url_for('static',filename='assets/profile/perfil-mediano.png') }}"><p><a href="#">Emile</a> <br>Emile Godard </p></li>
+                            <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="{{ url_for('static',filename='assets/profile/perfil-mediano.png') }}"><p><a href="#">JJacques</a> <br>Jean Jacques Richelieu </p></li>
+                            <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="{{ url_for('static',filename='assets/profile/perfil-mediano.png') }}"><p><a href="#">Zoe</a> <br>Zoe Martin Pescador </p></li>
+                            <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="{{ url_for('static',filename='assets/profile/perfil-mediano.png') }}"><p><a href="#">Joe</a> <br>Joe Black</p></li>
+                        </ul>
+                        
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div class="col-xs-12 proposal--anonymous">
+                        <br><p>Define whether you want your name attached to the proposal, or you prefer to be anonymous.</p>
+                        <input type="checkbox" name="proposal-anon"> 
+                        <label>Display my name in the proposal</label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 modal-controls">
+                <div class="modal-next">
+                    <button onclick="showModal('modal_proposal3')"><i class="fa fa-play-circle"></i></button>
+                </div>
+                <div class="modal-prev">
+                    <button onclick="showModal('modal_proposal1')"><i class="fa fa-play-circle"></i></button>
+                </div>
+           </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--  ************************** ADD PROPOSAL 2 ******************-->
+    <!--  ************************** ADD PROPOSAL 3 ******************-->
+    <div id="modal_proposal3" class="modal" role="dialog">
+      <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Add Proposal (3/3)</h4>
+          </div>
+          <div class="modal-body">
+            <div class="col-xs-12">
+                <div class="col-xs-12">
+                    <p class="addproposal--summarize">Third: Establish your goals.</p>
+                    <p>
+                        The target number of supporters with which a proposal is labelled "Consencual" has been set to 200 supporters <br><br>      
+                        OPTIONAL: define the target number of volunteers that may be helping to make proposal reality.
+                    </p>
+                </div>
+                <div class="col-xs-4">
+                <br>    
+                    <div class="form-group proposal3--volunteers">
+                        <input type="text" name="" class="form-control">
+                        <label>Volunteers</label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 modal-controls">
+                <div class="modal-prev">
+                    <button onclick="showModal('modal_proposal2')"><i class="fa fa-play-circle"></i></button>
+                </div>
+           </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--  ************************** ADD PROPOSAL 3 ******************-->
+
     {% block content %}
+    
     {% endblock %}
 
 </body>

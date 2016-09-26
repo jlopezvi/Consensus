@@ -35,8 +35,15 @@
    	.nav--style .primary--header {
    		padding-left: 15%;
    	}
+   	.newsfeed--body {
+   		background-position-x: -180px;
+   	}
 }
 @media only screen and (max-width: 1024px) {
+	#modal_sign .modal-dialog {
+    	top: 15%;
+    	left: 15%;
+	}
 	.nav--style ul {
 	    margin-left: 5%;
 	}
@@ -64,8 +71,8 @@
 	    font-size: 14px;
 	}
 	.newsfeed--body {
-		background-size: contain;
-    	background-position-y: bottom;
+		background-size: cover;
+   	    background-position-x: -340px;
 	}
 	.profile--picture {
     	width: 80px;
@@ -114,6 +121,9 @@
 	}
 }
 @media only screen and (max-width: 767px) {
+	.newsfeed--body {
+   	    background-position-x: -239px;
+	}	
 	.menu--mobile--icon {
 		display: block;
 	}
@@ -272,6 +282,11 @@
 		margin-right: 0;
 	}
 }
+@media only screen and (max-width: 720px) {
+	.newsfeed--body {
+    	background-position-x: -305px;
+	}
+}
 @media only screen and (max-width: 620px) {
 	.newsfeed--header .newsfeed--charge {
     	width: 40%;
@@ -294,6 +309,11 @@
 		margin-left: -7px;
 	}
 }
+@media only screen and (max-width: 580px) {
+	.newsfeed--body {
+    	background-position-x: -350px;
+	}
+}
 @media only screen and (max-width: 560px){
 	.input--percent {
 	    width: 60%;
@@ -307,6 +327,11 @@
 	}
 	.newsfeed--content {
     	margin-top: 20%;
+	}
+}
+@media only screen and (max-width: 535px) {
+	.newsfeed--body {
+    	background-position-x: -410px;
 	}
 }
 @media only screen and (max-width: 510px){
@@ -401,6 +426,16 @@
 		width: 30px;
 	}
 }
+@media only screen and (max-width: 470px) {
+	.newsfeed--body {
+    	background-position-x: -468px;
+	}
+}
+@media only screen and (max-width: 410px) {
+	.newsfeed--body {
+    	background-position-x: -525px;
+	}
+}
 @media only screen and (max-width: 400px) {
 	.newsfeed--header .newsfeed--charge{
 		padding-left: 0;
@@ -473,7 +508,7 @@
 }
 @media only screen and (max-width: 330px){
 	.newsfeed--content > div{
-		padding: 0;
+		padding: 0;s
 	}
 }
 @media only screen and (max-width: 320px) {
