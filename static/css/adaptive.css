@@ -38,6 +38,125 @@
    	.newsfeed--body {
    		background-position-x: -180px;
    	}
+   	/*.home--profile--picture img {
+   		height: 80%;
+   	}
+   	.home--header .fa-clock-o {
+    	font-size: 23px;
+	}
+	.home--header {
+    	font-size: 13px;
+	}*/
+
+	.home--header {
+		font-size: 14px;
+		width: 100%;
+		margin-left: 0;
+	}
+	.home--header div:nth-child(1),.home--header div:nth-child(2) {
+		display: inline-table;
+	}
+	.home--header > div:nth-child(1){
+		padding-left: 0px!important;
+	}
+	.home--duration {
+		display: inline-table;
+	    float: right;
+	    top: 25px;
+	    padding-right: 25px;
+	}
+	.profile--picture img {
+		top: 40px;
+	}
+	.home--charge {
+		position: absolute;
+	}
+	.home--header .home--charge {
+		width: 50%;
+		padding-left: 0;
+	}
+	.home--name {
+		font-size: 20px;
+    	margin-left: -14px;
+    	margin-right: -18px;
+	}
+	.home--likes ul a li {
+    	font-size: 18px;
+	}
+	.home--body {
+		margin-top: 55px;
+		margin-left: 2%;
+		margin-right: 2%;
+	}
+	.home--footer .redflag--img {
+		display: -webkit-inline-box;
+	}
+	.home--footer .home--support {
+		display: inline-flex;
+		width: 65%;
+	}
+	.home--footer, .home--persons, .home--share--icons {
+		margin-left: 2%;
+    	margin-right: 2%;
+	}
+	.home--content {
+		width: 100%;
+		margin-left: 0!important;
+	}
+	.home--persons div > div{
+		display: -webkit-inline-box;
+		margin-right: 2%;
+	}
+	.home--share--icons > div {
+		display: -webkit-inline-box;
+		margin-right: 2%;
+	}
+	.home--goals {
+		top: 18px;
+    	line-height: 28px;
+    	margin-left: 0px;
+	}
+	.home--content {
+    	margin-top: 15%;
+	}
+	.home--footer input[type="button"] {
+		font-size: 15px;
+	}
+	.input--percent label {
+		font-size: 15px;
+	}
+	.home--problem, .home--proposal {
+		font-size: 15px;
+	}
+	.home--footer .redflag--img img {
+    	width: 33px;
+    	height: 33px;
+	}
+	.home--progress , .home--progress2 {
+   		width: 100%;
+   	}
+   	.home--header .newsfeed--duration {
+   		float: right;
+   		width: 46%;
+   	}
+   	.home--header .newsfeed--goals {
+   		float: right;
+   		padding-right: 0;
+   		top: 30px;
+   		width: 50%;
+   	}
+   	.home--charge {
+   		margin-top: 64px;
+   	}
+   	.home--progress {
+   		margin-bottom: 5px;
+   	}
+   	.home--proposals--body {
+   		margin-top: 10%;
+   	}
+   	.home--profile--picture img {
+   		top: 45px;
+   	}
 }
 @media only screen and (max-width: 1024px) {
 	#modal_sign .modal-dialog {
@@ -113,6 +232,23 @@
    	}
    	.newsfeed--share--icons img:nth-child(4) {
     	width: 45px;
+	}
+	.home--header .newsfeed--duration {
+    	width: 30%;
+    	padding-right: 15px;
+	}
+	.home--header {
+		margin-top: 20px;
+	}
+	.home--content--logged .newsfeed--support {
+		width: 70%;
+		padding-left: 0px!important;
+	}
+	.home--content--logged .input--percent, .home--content--logged .input--percent label{
+		font-size: 12px!important;
+	}
+	.home--proposals--body {
+		background-position-x: -292px;
 	}
 }
 @media only screen and (max-width: 870px) {
@@ -211,6 +347,10 @@
 	    top: 25px;
 	    padding-right: 25px;
 	}
+	.home--header .newsfeed--duration {
+	    top: 9px;
+	    padding-left: 0;
+	}
 	.profile--picture img {
 		top: 40px;
 	}
@@ -239,6 +379,7 @@
 	}
 	.newsfeed--footer .newsfeed--support {
 		display: inline-flex;
+		padding-left: 30px!important;
 		width: 65%;
 	}
 	.newsfeed--footer, .newsfeed--persons, .newsfeed--share--icons {
@@ -281,11 +422,38 @@
 	a.add--proposal--button {
 		margin-right: 0;
 	}
+	.home--header {
+    	font-size: 16px;
+    }
+    .home--charge {
+    	margin-top: 0px;
+	}
+	.home--header .newsfeed--goals {
+		top: -3px;
+	}
+	.home--content--proposal {
+		width: 90%;
+		margin-right: auto;
+		margin-left: auto;
+	}
+	.home--progress {
+    	margin-bottom: 10px; 
+	}
+	.home--proposals--body {
+    	margin-top: 2%;
+    	background-position-x: 0px;
+	}
+	.home--voted h2 {
+    	margin-top: 20px;
+	}
 }
 @media only screen and (max-width: 720px) {
 	.newsfeed--body {
     	background-position-x: -305px;
 	}
+	 .home--proposals--body {
+	 	background-position-x: -65px;
+	 }
 }
 @media only screen and (max-width: 620px) {
 	.newsfeed--header .newsfeed--charge {
@@ -307,6 +475,11 @@
 	}
 	.newsfeed--support {
 		margin-left: -7px;
+	}
+}
+@media only screen and (max-width: 600px) {
+	.home--proposals--body {
+		background-position-x: -125px;
 	}
 }
 @media only screen and (max-width: 580px) {
@@ -333,6 +506,9 @@
 	.newsfeed--body {
     	background-position-x: -410px;
 	}
+	.home--proposals--body {
+    	background-position-x: -200px;
+	}
 }
 @media only screen and (max-width: 510px){
 	.newsfeed--support {
@@ -349,6 +525,9 @@
 	.newsfeed--header {
 	    width: 100%;
 	    margin-left: 0;
+	}
+	.home--header {
+    	margin-top: 40px;
 	}
 }
 @media only screen and (max-width: 479px) {
@@ -399,16 +578,16 @@
 	}
 }
 @media only screen and (max-width: 410px) {
-	.newsfeed--header .newsfeed--charge {
+	.newsfeed--header .newsfeed--charge, .home--header .home--charge {
     	width: 45%;
 	}
-	.newsfeed--persons > div {
+	.newsfeed--persons > div, .home--persons > div {
 		padding: 0;
 	}
-	.newsfeed--likes {
+	.newsfeed--likes, .home--likes {
 		padding-right: 0;
 	}
-	.newsfeed--persons div > div {
+	.newsfeed--persons div > div, .home--persons div > div {
    		margin-left: -8px;
    		margin-right: 0;
 	}
@@ -430,10 +609,16 @@
 	.newsfeed--body {
     	background-position-x: -468px;
 	}
+	.home--proposals--body {
+    	background-position-x: -245px;
+	}
 }
 @media only screen and (max-width: 410px) {
 	.newsfeed--body {
     	background-position-x: -525px;
+	}
+	.home--proposals--body {
+    	background-position-x: -335px;
 	}
 }
 @media only screen and (max-width: 400px) {
@@ -458,11 +643,41 @@
 	.newsfeed--likes ul a.last--liked li {
     	font-size: 12px;
 	}
+	.home--name {
+		padding-left: 0;
+    	top: 7px;
+	}
+	.home--header .newsfeed--duration {
+    	width: 35%;
+    }
+    .home--header .newsfeed--goals {
+    	padding-left: 0;
+    	width: 60%;
+	}
+	.home--profile--picture {
+		margin-left: -20px;
+	}
+	.home--voted h2 {
+    	margin-top: 40px;
+	}
+
 }
 @media only screen and (max-width: 340px){
 	.newsfeed--persons .fa-check, .newsfeed--persons .fa-close {
 	    font-size: 25px;
 	}
+	.home--header .newsfeed--duration {
+    	font-size: 12px;
+	}
+	.home--header .home--charge {
+    	margin-left: -12px;
+	}
+	.home--voted, .select--options {
+    	font-size: 15px;
+    }
+    .home--select {
+    	width: 90%;
+    }
 }
 @media only screen and (max-width: 370px){
 	.input--percent label {

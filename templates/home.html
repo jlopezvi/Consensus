@@ -17,7 +17,7 @@
 		</div>
 	</div>
 	
-	<div class="col-sm-6">
+	<div class="col-sm-6 home--content--proposal">
 		<div class="row home--header">
 			<div class="col-sm-2" style="padding-left: 0px;">
 			{% if (person_h.picture == '') %}
@@ -35,7 +35,7 @@
 				<p><i class="fa fa-clock-o"></i>&nbsp;
 				{{ person_h.duration }}</p>
 			</div>
-			<div class="col-sm-3">
+			<div class="col-sm-3 home--charge">
 				<div class="progress home--progress">
 					<input type="text" value="{{ (person_h.supporters_current * 100)/ person_h.supporters_goal }}" id="supporters--percent" hidden>
 					<div class="progress-bar newsfeed--bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style=""></div>
@@ -68,13 +68,13 @@
 				<div class="col-sm-1 redflag--img">
 					<img src="{{ url_for('static',filename='images/flag.png') }}">
 				</div>
-				<div class="col-sm-9" style="padding-right:0;padding-left:30px;">
+				<div class="col-sm-9 newsfeed--support" style="padding-right:0;padding-left:30px;">
 					<input type="text" value="{{ (person_h.liked|length * 100)/(person_h.liked|length + person_h.disliked|length) }}" id="percent" hidden>
 					<div class="input--percent">	
 						<label>	Support Rate: </label>
 					</div>
 				</div>
-				<div class="col-sm-2" style="float:right;">
+				<div class="col-sm-2 neewsfeed--moreinfo" style="float:right;">
 					<input type="button" name="more-info" class="home--button" value="+More info">
 				</div>
 			</div>
@@ -111,8 +111,8 @@
 		<div class="row home--share">
 			<div class="col-sm-12 home--share--icons">
 				<div class="col-sm-6" style="padding:0;">
-					<img src="{{ url_for('static',filename='images/check-icon.png') }}">
 					<img src="{{ url_for('static',filename='images/x-icon.png') }}">
+					<img src="{{ url_for('static',filename='images/check-icon.png') }}">
 					<img src="{{ url_for('static',filename='images/check-plus.png') }}">
 				</div>
 				<div class="col-sm-6 home--followers">

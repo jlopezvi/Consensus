@@ -26,3 +26,4 @@ $(document).ready( function() {
   var volunter_percent = $('#volunters--percent').val();
   $('.newsfeed--bar2').css('width',volunter_percent+'%');
 
+}); 
