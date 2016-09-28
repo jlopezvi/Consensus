@@ -6,6 +6,22 @@
     font-family: lato_bold;
     src: url("/static/fonts/Lato-Bold.ttf");
 }
+@font-face {
+    font-family: uni_sans_heavy;
+    src: url("/static/fonts/uni-sans-heavy.otf");
+}
+@font-face {
+    font-family: uni_sans_heavy_italic;
+    src: url("/static/fonts/uni-sans-heavy-italic.otf");
+}
+@font-face {
+    font-family: uni_sans_thin;
+    src: url("/static/fonts/uni-sans-thin.otf");
+}
+@font-face {
+    font-family: uni_sans_thin_italic;
+    src: url("/static/fonts/uni-sans-thin_italic.otf");
+}
 input[type=text], input[type=password], select {
 	font-size: 12px!important;
 	padding: 2% 5%!important;
@@ -53,7 +69,7 @@ html {
 }
 .nav--style .navbar-header a{
 	letter-spacing: 1.5px;
-	font-family: Uni Sans Heavy;
+	font-family: uni-sans-heavy;
 }
 .home--content {
 	background-image: url("/static/images/concerns/meeting.jpg");
