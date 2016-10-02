@@ -20,7 +20,7 @@
 }
 @font-face {
     font-family: uni_sans_thin_italic;
-    src: url("/static/fonts/uni-sans-thin_italic.otf");
+    src: url("/static/fonts/uni-sans-thin-italic.otf");
 }
 input[type=text], input[type=password], select {
 	font-size: 12px!important;
@@ -880,16 +880,6 @@ a.add--proposal--button {
 .left-addon .fa  { left:  0px;}
 .left-addon input  { padding-left:  35px!important; }
 .menu--mobile--icon {
-	display: none;
-	position: absolute;
-    font-size: 20px;
-    top: 8px;
-    left: 20px;
-    color: #fff;
-    z-index: 5;
-    opacity: 1;
-}
-.menu--mobile--icon: {
 	display: none;
 	position: absolute;
     font-size: 20px;
