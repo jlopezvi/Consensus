@@ -8,7 +8,7 @@
 }
 @font-face {
     font-family: uni_sans_heavy;
-    src: url("/static/fonts/Uni-Sans-Heavy.otf");
+    src: url("/static/fonts/Uni_Sans_Heavy.ttf");
 }
 @font-face {
     font-family: uni_sans_heavy_italic;
@@ -69,7 +69,7 @@ html {
 }
 .nav--style .navbar-header a{
 	letter-spacing: 1.5px;
-	font-family: uni-sans-heavy;
+	font-family: uni_sans_heavy;
 }
 .home--content {
 	background-image: url("/static/images/concerns/meeting.jpg");
