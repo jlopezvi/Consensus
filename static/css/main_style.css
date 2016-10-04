@@ -8,19 +8,19 @@
 }
 @font-face {
     font-family: uni_sans_heavy;
-    src: url("/static/fonts/uni-sans-heavy.otf");
+    src: url("/static/fonts/Uni-Sans-Heavy.otf");
 }
 @font-face {
     font-family: uni_sans_heavy_italic;
-    src: url("/static/fonts/uni-sans-heavy-italic.otf");
+    src: url("/static/fonts/Uni-Sans-Heavy-Italic.otf");
 }
 @font-face {
     font-family: uni_sans_thin;
-    src: url("/static/fonts/uni-sans-thin.otf");
+    src: url("/static/fonts/Uni-Sans-Thin.otf");
 }
 @font-face {
     font-family: uni_sans_thin_italic;
-    src: url("/static/fonts/uni-sans-thin-italic.otf");
+    src: url("/static/fonts/Uni-Sans-Thin-Italic.otf");
 }
 input[type=text], input[type=password], select {
 	font-size: 12px!important;
@@ -445,7 +445,7 @@ body.modal-open {
 	width: 75px;
 }
 .newsfeed--share--icons img:nth-child(4){
-	width: 60px;
+	width: 75px;
 }
 /* END OF NEWSFEED STYLE */
 /* HOME STYLE */
