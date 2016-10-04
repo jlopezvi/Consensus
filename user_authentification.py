@@ -1,5 +1,5 @@
 import flask_login
-from participantManagement import _getParticipantByEmail
+from participantManager import _getParticipantByEmail
 
 
 class User(flask_login.UserMixin):

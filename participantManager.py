@@ -124,15 +124,21 @@ def addFollowingContactToUnverifiedParticipant_aux(currentparticipantemail, newf
          return jsonify(result="Following contact was added")
     return jsonify(result="Following contact exists already")
 
-def getContacts(email) :
-    currentParticipant = _getParticipantByEmail(email)
-    rels = list(getGraph().match(start_node=currentParticipant, rel_type="FOLLOWS"))
-    contacts = []
+def getFollowingContacts(participant_email) :
+    participant = _getParticipantByEmail(participant_email)
+    rels = list(getGraph().match(start_node=participant, rel_type="FOLLOWS"))
+    following_contacts = []
     for rel in rels:
-        contacts.append(rel.end_node.get_properties())
-        #print getGraph().node(rel.end_node)
-    return contacts
+        following_contacts.append(rel.end_node)
+    return following_contacts
 
+def getFollowerContacts(participant_email) :
+    participant = _getParticipantByEmail(participant_email)
+    rels = list(getGraph().match(end_node=participant, rel_type="FOLLOWS"))
+    follower_contacts = []
+    for rel in rels:
+        follower_contacts.append(rel.start_node)
+    return follower_contacts
 
 def _addToParticipantsIndex(email, newparticipant) :
      getGraph().get_or_create_index(neo4j.Node, "Participants").add("email", email, newparticipant)

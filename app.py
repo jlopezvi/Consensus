@@ -6,9 +6,11 @@ from flask import request,render_template,redirect,url_for
 import ast
 import json
 from communityManager import saveCommunity,deleteCommunity,addCommunityToContact,getCommunities
-from participantManagement import _getParticipantByEmail,deleteParticipant,getAllParticipants, \
-    addFollowingContactToParticipant_aux,getContacts,getFullNameByEmail_aux,registration_aux,_verifyEmail
-from concernManager import addConcernToUser_aux,deleteOneConcern,getAllConcerns
+from participantManager import _getParticipantByEmail,deleteParticipant,getAllParticipants, \
+    addFollowingContactToParticipant_aux,getFollowerContacts,getFollowingContacts,getFullNameByEmail_aux,\
+    registration_aux,_verifyEmail
+from ideaManager import Idea, addIdeaToUser_aux,deleteOneIdea,getAllIdeas, spreadIdeaToFollowers_aux, \
+    _getIdeaByIdeaIndex
 import logging
 import flask_login
 from user_authentification import User
@@ -32,6 +34,33 @@ def user_loader(email):
 #output:
 #   json {"result":"Bad e-mail"} / json {"result": "Bad password"}
 #   / login cookie and redirection to '/newsfeed'
+@app.route('/login2', methods=['POST','GET'])
+def login2():
+    if request.method == 'GET':
+        return '''
+               <form action='login2' method='POST'>
+                <input type='text' name='email' id='email' placeholder='email'></input>
+                <input type='password' name='password' id='password' placeholder='password'></input>
+                <input type='submit' name='submit'></input>
+               </form>
+               '''
+
+    email = request.form['email']
+    user_to_check=_getParticipantByEmail(email)
+    if user_to_check is None :
+        return jsonify(result ="Bad e-mail")
+
+    if request.form['password'] == user_to_check['password']:
+        user = User(email)
+        flask_login.login_user(user)
+        return redirect(url_for('newsfeed2'))
+    else:
+        return jsonify(result="Bad password")
+
+#input: json {"email":"asdf@asdf", "password":"MD5password"}
+#output:
+#   json {"result":"Bad e-mail"} / json {"result": "Bad password"}
+#   / login cookie and redirection to '/newsfeed'
 @app.route('/login', methods=['POST'])
 def login():
     email =request.get_json()['email']
@@ -42,7 +71,7 @@ def login():
     if request.get_json()['password'] == user_to_check['password']:
         user = User(email)
         flask_login.login_user(user)
-        return redirect(url_for('newsfeed'))
+        return redirect(url_for('newsfeed2'))
     else:
         return jsonify(result="Bad password")
 
@@ -103,6 +132,71 @@ def home():
     ]
     print(feed_home)
     return render_template('home.html', persons_home = feed_home) 
+
+
+#input: user_email(URL); idea (json)
+#    {"concern" :"we are not social enough in the office",
+#     "proposal": "social coffee pause at 4 p.m.",
+#     "image_url" : "static/images/concerns/social_coffee_break.jpg",
+#     "datestamp":"01.10.2016",
+#     "moreinfo":"I have to say as well this and this and this...",
+#     "supporters_goal": 500, "volunteers_goal": 5}
+@app.route('/addIdeaToUser/<string:user_email>', methods=['POST'])
+def addIdeaToUser(user_email) :
+    idea_dict = request.get_json()
+    idea_object = Idea(idea_dict)
+    return addIdeaToUser_aux(user_email, idea_object)
+
+
+@app.route('/newsfeed2')
+@flask_login.login_required
+def newsfeed2():
+    print('Logged in as: ' + flask_login.current_user.id)
+    #load 1 concern
+    #feed = concern
+
+    feed = [
+        {
+            'id': 'id',
+            'picture': 'assets/profile/perfil-mediano.png',
+            'name': 'Daniela',
+            'duration': '2 Days',
+            'supporters_goal': 200,
+            'supporters_current': 5,
+            'volunters_goal': 5,
+            'volunters_current': 2,
+            'image': 'url-to-picture',
+            'problem':  'Some text for the problem',
+            'proposal': 'Some text for the proposal',
+            'liked':
+            [
+                {
+                    'id': 'id',
+                    'name': 'Maria'
+                },
+                {
+                    'id': 'id',
+                    'name': 'Pedro'
+                },
+                {
+                    'id': 'id',
+                    'name': 'Juan'
+                },
+                {
+                    'id': 'id',
+                    'name': 'Jesus'
+                }
+            ],
+            'disliked':
+            [
+                {
+                    'id': 'id',
+                    'name': 'Jose'
+                }
+            ]
+        }
+    ]
+    return render_template('login/newsfeed.html', persons = feed)
 
 
 @app.route('/newsfeed')
@@ -215,10 +309,6 @@ def registration():
 def getFullNameByEmail(email):
     return getFullNameByEmail_aux(email)
 
-@app.route('/addParticipant', methods=['POST'])
-#@crossdomain(origin='*', headers=['Content-Type'])
-def addParticipant():
-    return addParticipant_aux(request.get_json())
 
 #input: json with fields "current" (current user email), "newFollowingContact" (email)
 @app.route('/addFollowingContactToParticipant', methods=['POST'])
@@ -271,13 +361,7 @@ def getAllCommunitiesForUser(email):
 
 #CONCERNS
 
-#input: current (currentUser's email); concern (json with fields "title", "description", "image_url")
-#output: newConcern is added and linked to currentUser
-@app.route('/addConcernToUser/<string:current>', methods=['POST', 'OPTIONS'])
-def addConcernToUser(current) :
-    concern = request.get_json()
-    addConcernToUser_aux(current, concern)
-    return "addConcern was invoked"
+
 
 @app.route('/deleteConcern/<string:idConcern>', methods=['DELETE', 'OPTIONS'])
 def deleteConcern(idConcern) :

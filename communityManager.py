@@ -1,6 +1,6 @@
 from utils import getGraph
 from py2neo import neo4j
-from participantManagement import _getParticipantByEmail
+from participantManager import _getParticipantByEmail
 
 def saveCommunity(community):
     if _getCommunity(community) :
