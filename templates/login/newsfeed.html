@@ -52,7 +52,7 @@
 		<div class="row newsfeed--footer">
 			<div class="col-sm-12" style="padding-right: 5px; padding-left: 0px;">
 				<div class="col-sm-1 redflag--img">
-					<img src="{{ url_for('static',filename='images/flag.png') }}">
+					<img src="{{ url_for('static',filename='images/redflag.png') }}">
 				</div>
 				<div class="col-sm-9 newsfeed--support" style="padding-right:0;padding-left:30px;">
 					<input type="text" value="{{ (person.liked|length * 100)/(person.liked|length + person.disliked|length) }}" id="percent" hidden>
@@ -68,7 +68,7 @@
 		<div class="row newsfeed--persons">
 			<div class="col-sm-12">
 				<div class="col-sm-1" style="padding:0;">
-					<i class="fa fa-check"></i>
+					<img src="{{ url_for('static',filename='images/check-small.png') }}">
 				</div>
 				<div class="col-sm-11 newsfeed--likes">
 					<ul>
@@ -83,7 +83,7 @@
 			</div>
 			<div class="col-sm-12">
 				<div class="col-sm-1" style="padding:0;">
-					<i class="fa fa-close"></i>
+					<img src="{{ url_for('static',filename='images/x-small.png') }}">
 				</div>
 				<div class="col-sm-11 newsfeed--likes">
 					{% for dislikes in person.disliked %}
@@ -97,9 +97,9 @@
 		<div class="row newsfeed--share">
 				<div class="col-sm-12 newsfeed--share--icons">
 					<div class="col-sm-6" style="padding:0;">
-						<img src="{{ url_for('static',filename='images/check-icon.png') }}">
 						<img src="{{ url_for('static',filename='images/x-icon.png') }}">
-						<img src="{{ url_for('static',filename='images/check-plus.png') }}">
+						<img src="{{ url_for('static',filename='images/check-icon.png') }}">
+						<img src="{{ url_for('static',filename='images/checkmark.png') }}">
 						<img src="{{ url_for('static',filename='images/ignore-icon.png') }}">
 					</div>
 					<div class="col-sm-6 newsfeed--followers">

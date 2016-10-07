@@ -345,14 +345,13 @@ body.modal-open {
   transform: translate(-50%,-50%);
 }
 .newsfeed--footer .redflag--img img {
-	width: 35px;
-	height: 35px;
+	width: auto;
+	height: auto;
 }
 .newsfeed--footer .redflag--img {
-	background-color: #e7e8ea;
-	border: 1px solid #c5c5c5;
 	padding: 0;
 	width: 35px;
+	text-align: center;
 }
 .newsfeed--footer {
 	margin-top: 15px;
@@ -411,13 +410,8 @@ body.modal-open {
 .newsfeed--name a {
 	text-decoration: underline;
 }
-.newsfeed--persons .fa-check{
-	font-size: 40px;
-	color: #3faf2e;
-}
-.newsfeed--persons .fa-close{
-	font-size: 40px;
-	color: #f90e2b;
+.newsfeed--persons img {
+    margin-top: 8px;
 }
 .newsfeed--followers {
 	padding-top: 20px;
@@ -498,6 +492,7 @@ body.modal-open {
 }
 .primary--header a{
 	width: 100%;
+	z-index: 0;
 }
 a.add--proposal--button { 
 	background-color: #c0ff00!important;
