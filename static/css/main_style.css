@@ -68,6 +68,8 @@ body {
 .nav--style .navbar-header a{
 	letter-spacing: 1.5px;
 	font-family: uni_sans_heavy;
+	position: relative;
+    width: auto;
 }
 .home--content {
 	background-image: url("/static/images/concerns/meeting.jpg");
@@ -486,7 +488,7 @@ body.modal-open {
 .primary--header {
 	width: 100%;
 	position: absolute;
-	text-align: center;
+	left: 50%;
 }
 .primary--header a{
 	width: 100%;
@@ -502,6 +504,9 @@ a.add--proposal--button {
     padding: 2px 12px 5px 12px!important;
     float: right;
     margin-right: 10%;
+}
+a.add--proposal--button:hover, a.add--proposal--button:active, a.add--proposal--button:focus {
+	text-decoration: none;
 }
 .add--proposal--button i { 
 	font-size: 20px;

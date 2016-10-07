@@ -32,9 +32,6 @@
    		left: 20px;
     	position: relative;
    	}
-   	.nav--style .primary--header {
-   		padding-left: 15%;
-   	}
    	.newsfeed--body {
    		background-position-x: -180px;
    	}
@@ -285,6 +282,7 @@
 	}
 	.nav--style .primary--header {
    		padding-left: 0%;
+   		left: 35%;
    	}
 	.home--login, .home--register {
 		width: 100%;
@@ -507,6 +505,9 @@
 	.home--proposals--body {
 		background-position-x: -125px;
 	}
+	.nav--style .primary--header {
+    	left: 30%;
+	}
 }
 @media only screen and (max-width: 580px) {
 	.newsfeed--body {
@@ -554,6 +555,9 @@
 	}
 	.home--header {
     	margin-top: 40px;
+	}
+	.nav--style .primary--header {
+    	left: 20%;
 	}
 }
 @media only screen and (max-width: 479px) {
@@ -688,23 +692,6 @@
 	}
 
 }
-@media only screen and (max-width: 340px){
-	.newsfeed--persons .fa-check, .newsfeed--persons .fa-close {
-	    font-size: 25px;
-	}
-	.home--header .newsfeed--duration {
-    	font-size: 12px;
-	}
-	.home--header .home--charge {
-    	margin-left: -12px;
-	}
-	.home--voted, .select--options {
-    	font-size: 15px;
-    }
-    .home--select {
-    	width: 90%;
-    }
-}
 @media only screen and (max-width: 370px){
 	.input--percent label {
 	    font-size: 11px;
@@ -731,6 +718,9 @@
 	.newsfeed--header > div:nth-child(1) {
     	padding-left: 0px!important;
 	}
+	.nav--style .primary--header {
+    	left: 10%;
+	}
 }
 @media only screen and (max-width: 350px){
 	.newsfeed--header .newsfeed--charge {
@@ -746,6 +736,21 @@
 	    width: 48%;
 	    margin-left: -14px;
 	}
+	.newsfeed--persons .fa-check, .newsfeed--persons .fa-close {
+	    font-size: 25px;
+	}
+	.home--header .newsfeed--duration {
+    	font-size: 12px;
+	}
+	.home--header .home--charge {
+    	margin-left: -12px;
+	}
+	.home--voted, .select--options {
+    	font-size: 15px;
+    }
+    .home--select {
+    	width: 90%;
+    }
 }
 @media only screen and (max-width: 330px){
 	.newsfeed--content > div{
