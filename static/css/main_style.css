@@ -30,9 +30,7 @@ input[type=text], input[type=password], select {
 body {
 	font-family: lato_regular;
 }
-html {
-	overflow-x: hidden;
-}
+
 .input--top {
   height: 6.5%;
   border-radius: 4px;

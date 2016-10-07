@@ -157,6 +157,9 @@
    	.home--profile--picture img {
    		top: 45px;
    	}
+   	#modal_proposal2 .modal-body {
+    	height: 810px;
+    }
 }
 @media only screen and (max-width: 1024px) {
 	#modal_sign .modal-dialog {
@@ -251,9 +254,26 @@
 		background-position-x: -292px;
 	}
 }
+@media only screen and (max-width: 950px) {
+	.modal-dialog {
+	    width: 550px!important;
+	}
+	#modal_proposal1, #modal_proposal2, #modal_proposal3, #modal_sign {
+		overflow-x: scroll;
+	}
+	#modal_proposal2 .modal-body {
+		height: 845px;
+	}
+	#modal_sign .modal-body {
+    	height: 390px;
+	}
+}
 @media only screen and (max-width: 870px) {
 	.nav--style ul {
 	    margin-left: 3%;
+	}
+	.modal-dialog {
+	   left: 13%!important;
 	}
 }
 @media only screen and (max-width: 767px) {
@@ -454,10 +474,16 @@
 	 .home--proposals--body {
 	 	background-position-x: -65px;
 	 }
+	.modal-dialog {
+		left: 7%!important;
+	}
 }
 @media only screen and (max-width: 620px) {
 	.newsfeed--header .newsfeed--charge {
     	width: 40%;
+	}
+	.modal-dialog {
+    	left: 2%!important;
 	}
 	.neewsfeed--moreinfo {
 		padding-left: 0!important;
