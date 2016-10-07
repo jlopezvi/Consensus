@@ -489,6 +489,7 @@ body.modal-open {
 	width: 100%;
 	position: absolute;
 	left: 50%;
+	z-index: -1;
 }
 .primary--header a{
 	width: 100%;
@@ -503,6 +504,7 @@ a.add--proposal--button {
     border: 6px solid #3faf2e;
     padding: 2px 12px 5px 12px!important;
     float: right;
+    z-index: 9;
     margin-right: 10%;
 }
 a.add--proposal--button:hover, a.add--proposal--button:active, a.add--proposal--button:focus {
@@ -815,10 +817,8 @@ a.add--proposal--button:hover, a.add--proposal--button:active, a.add--proposal--
 	background-color: #e5e6e8!important;
 }
 /********** END OF ADD PROPOSAL 3 *************/
-.modal-controls .modal-next button i, .modal-next button i{
-	color: #c0ff00;
-	font-size: 50px;
-	position: relative;
+.modal-controls .modal-next button img, .modal-next button img{
+	width: 50px;
 }
 .modal-prev button, .modal-next button {
 	border: 0;
@@ -833,12 +833,8 @@ a.add--proposal--button:hover, a.add--proposal--button:active, a.add--proposal--
 	left: 30px;
 	float: left;
 }
-.modal-controls .modal-prev button i{
-	color: #c0ff00;
-	font-size: 50px;
-	float: left;
-	transform:rotateY(180deg);
-	position: relative;
+.modal-controls .modal-prev button img{
+	width: 50px;
 }
 .addproposal--optional {
 	background-color: #3faf2e;
