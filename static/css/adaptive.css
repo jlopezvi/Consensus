@@ -210,6 +210,12 @@
 	.newsfeed--header {
     	font-size: 12px;
 	}
+	.home--followers {
+		width: 75%;
+	}
+	.home--share--icons div:first-child{
+		width: 70%;
+	}
 	.newsfeed--goals {
 		margin-left: -17px;
     	top: 3px;
@@ -226,6 +232,12 @@
 	}
 	.newsfeed--share--icons img {
     	width: 60px;
+	}
+	.newsfeed--share--icons img:nth-child(2) {
+    	width: 50px!important;
+	}
+	.newsfeed--share--icons img:nth-child(3) {
+		width: 47px!important;
 	}
 	.newsfeed--followers p {
     	font-size: 16px;
@@ -612,6 +624,14 @@
 	}
 	.primary--header a {
     	width: 70%;
+	}
+}
+@media only screen and (max-width: 420px) {
+	.home--followers {
+		width: 100%;
+	}
+	.home--share--icons div:first-child{
+		width: 100%;
 	}
 }
 @media only screen and (max-width: 410px) {
