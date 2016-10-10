@@ -509,6 +509,7 @@ a.add--proposal--button {
 }
 a.add--proposal--button:hover, a.add--proposal--button:active, a.add--proposal--button:focus {
 	text-decoration: none;
+	outline: none;
 }
 .add--proposal--button i { 
 	font-size: 20px;
