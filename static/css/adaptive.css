@@ -177,6 +177,9 @@
 	.login--actions .col-sm-6 {
 	    font-size: 7px;
 	}
+	.newsfeed--duration img {
+    	width: 20px;
+	}
 	.login--actions .col-sm-6:nth-child(2) {
 	    padding: 13px 0 0 0;
 	}
@@ -279,6 +282,9 @@
 	}	
 	.menu--mobile--icon {
 		display: block;
+	}
+	.newsfeed--duration img {
+    	width: 27px;
 	}
 	.nav--style .primary--header {
    		padding-left: 0%;
@@ -424,9 +430,6 @@
 	.newsfeed--content {
     	margin-top: 15%;
 	}
-	.newsfeed--footer input[type="button"] {
-		font-size: 15px;
-	}
 	.input--percent label {
 		font-size: 15px;
 	}
@@ -536,6 +539,10 @@
 	.home--proposals--body {
     	background-position-x: -200px;
 	}
+	.newsfeed--button {
+		width: 110px;
+		height: auto;
+	}
 }
 @media only screen and (max-width: 510px){
 	.newsfeed--support {
@@ -592,7 +599,7 @@
     	font-size: 13px;
 	}
 	.newsfeed--footer input[type="button"] {
-    	font-size: 14px;
+    	width: 95px;
 	}
 	.newsfeed--button {
     	padding: 6px 10px;
@@ -652,6 +659,10 @@
 	}
 }
 @media only screen and (max-width: 400px) {
+
+	.newsfeed--footer input[type="button"] {
+	    width: 87px;
+	}
 	.newsfeed--header .newsfeed--charge{
 		padding-left: 0;
 	}
@@ -697,7 +708,7 @@
 	    font-size: 11px;
 	}
 	.newsfeed--footer input[type="button"] {
-    	font-size: 12px;
+    	width: 75px;
 	}
 	.newsfeed--button {
     	padding: 5px 5px;

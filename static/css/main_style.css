@@ -125,6 +125,15 @@ body {
 }
 .newsfeed--button {
 	padding: 6px 17px;
+	background-image: url("/static/images/more-info.png");
+	background-size: contain;
+	background-repeat: no-repeat;
+	width: 115px;
+	border: none;
+	background-color: transparent;
+}
+.newsfeed--button:focus {
+	outline: none;
 }
 body.modal-open {
 	padding-right: 15px!important;
@@ -244,7 +253,7 @@ body.modal-open {
 	background-color: #c0ff00;
 	border-color: #3faf2e;
 	font-family: lato_bold;
-	color: #5f6252;
+	color: #2d2d2d;
 }
 #modal_sign .modal-body div.input-group label.input-group-btn span:hover {
 	background-color: #c0ff00;
@@ -497,6 +506,7 @@ body.modal-open {
 }
 a.add--proposal--button { 
 	background-color: #c0ff00!important;
+	background-image: url("/static/images/create-proposal-btn.png");
     color: #5f6252!important;
     font-size: 13px!important;
     font-family: lato_bold!important;
@@ -506,6 +516,10 @@ a.add--proposal--button {
     float: right;
     z-index: 9;
     margin-right: 10%;
+        width: 145px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 a.add--proposal--button:hover, a.add--proposal--button:active, a.add--proposal--button:focus {
 	text-decoration: none;
