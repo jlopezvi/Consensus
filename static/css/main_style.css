@@ -132,7 +132,7 @@ body {
 	border: none;
 	background-color: transparent;
 }
-.newsfeed--button:focus {
+.newsfeed--button:focus, .home--button:focus {
 	outline: none;
 }
 body.modal-open {
@@ -464,7 +464,13 @@ body.modal-open {
 }
 .home--button {
     padding: 4px 10px;
-    margin-left: -20px;
+    margin-left: -10px;
+    background-image: url("/static/images/more-info.png");
+	background-size: contain;
+	background-repeat: no-repeat;
+	width: 95px;
+	border: none;
+	background-color: transparent;
 }
 .home--progress{
     margin-bottom: 13px;

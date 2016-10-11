@@ -11,6 +11,7 @@ from participantManager import _getParticipantByEmail,deleteParticipant,getAllPa
     registration_aux,_verifyEmail
 from ideaManager import Idea, addIdeaToUser_aux,deleteOneIdea,getAllIdeas, spreadIdeaToFollowers_aux, \
     _getIdeaByIdeaIndex
+from webManager import newsfeed2_aux
 import logging
 import flask_login
 from user_authentification import User
@@ -152,51 +153,7 @@ def addIdeaToUser(user_email) :
 @flask_login.login_required
 def newsfeed2():
     print('Logged in as: ' + flask_login.current_user.id)
-    #load 1 concern
-    #feed = concern
-
-    feed = [
-        {
-            'id': 'id',
-            'picture': 'assets/profile/perfil-mediano.png',
-            'name': 'Daniela',
-            'duration': '2 Days',
-            'supporters_goal': 200,
-            'supporters_current': 5,
-            'volunters_goal': 5,
-            'volunters_current': 2,
-            'image': 'url-to-picture',
-            'problem':  'Some text for the problem',
-            'proposal': 'Some text for the proposal',
-            'liked':
-            [
-                {
-                    'id': 'id',
-                    'name': 'Maria'
-                },
-                {
-                    'id': 'id',
-                    'name': 'Pedro'
-                },
-                {
-                    'id': 'id',
-                    'name': 'Juan'
-                },
-                {
-                    'id': 'id',
-                    'name': 'Jesus'
-                }
-            ],
-            'disliked':
-            [
-                {
-                    'id': 'id',
-                    'name': 'Jose'
-                }
-            ]
-        }
-    ]
-    return render_template('login/newsfeed.html', persons = feed)
+    return newsfeed2_aux(flask_login.current_user.id)
 
 
 @app.route('/newsfeed')
