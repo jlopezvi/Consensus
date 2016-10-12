@@ -87,6 +87,10 @@ def hello():
     return render_template('login/login.html')
 
 
+@app.route('/participants')
+def participants():
+    return render_template('login/participants.html')
+
 
 @app.route('/home')
 def home():  

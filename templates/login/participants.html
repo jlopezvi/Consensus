@@ -1,0 +1,26 @@
+{% extends 'new_template.html' %}
+{% block content %}
+
+<div class="container__participants" style="margin-top: 8%;">
+ <h3 style="font-family: lato_bold; margin-bottom: 0;">Participants</h3>
+    <div class="col-md-6 col-md-offset-3">
+        <form role="form">
+            <div class="row">
+                <div class="form-group">
+                    <div class="input-group search__div--participants">
+                        <span class="span__search"><span class="glyphicon glyphicon-search search__icon--participants"></span><input class="form-control" type="text" name="search" placeholder="Search..." required/></span>
+                        <span class="input-group-btn" style="padding-right: 10px;">
+                            <button class="btn btn__search" type="submit"><span>Go!</button>
+                        </span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            
+        </form>
+        <!-- End of Search Form -->
+            
+    </div>
+</div>
+
+{% endblock %}
