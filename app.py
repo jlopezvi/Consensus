@@ -87,6 +87,20 @@ def hello():
     return render_template('login/login.html')
 
 
+@app.route('/participants')
+def participants():
+    participants_p = [
+        {
+            'id': 'id',
+            'picture': 'assets/profile/perfil-mediano.png',
+            'name': 'Daniela',
+            'active_publications': 5,
+            'followers': 5,
+            'following': 2
+        }
+    ]
+    return render_template('login/participants.html', participant = participants_p)
+
 
 @app.route('/home')
 def home():  
