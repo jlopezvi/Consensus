@@ -177,6 +177,9 @@
 	.login--actions .col-sm-6 {
 	    font-size: 7px;
 	}
+	.newsfeed--duration img {
+    	width: 20px;
+	}
 	.login--actions .col-sm-6:nth-child(2) {
 	    padding: 13px 0 0 0;
 	}
@@ -207,6 +210,12 @@
 	.newsfeed--header {
     	font-size: 12px;
 	}
+	.home--followers {
+		width: 75%;
+	}
+	.home--share--icons div:first-child{
+		width: 70%;
+	}
 	.newsfeed--goals {
 		margin-left: -17px;
     	top: 3px;
@@ -223,6 +232,12 @@
 	}
 	.newsfeed--share--icons img {
     	width: 60px;
+	}
+	.newsfeed--share--icons img:nth-child(2) {
+    	width: 50px!important;
+	}
+	.newsfeed--share--icons img:nth-child(3) {
+		width: 47px!important;
 	}
 	.newsfeed--followers p {
     	font-size: 16px;
@@ -279,6 +294,9 @@
 	}	
 	.menu--mobile--icon {
 		display: block;
+	}
+	.newsfeed--duration img {
+    	width: 27px;
 	}
 	.nav--style .primary--header {
    		padding-left: 0%;
@@ -424,9 +442,6 @@
 	.newsfeed--content {
     	margin-top: 15%;
 	}
-	.newsfeed--footer input[type="button"] {
-		font-size: 15px;
-	}
 	.input--percent label {
 		font-size: 15px;
 	}
@@ -536,6 +551,10 @@
 	.home--proposals--body {
     	background-position-x: -200px;
 	}
+	.newsfeed--button {
+		width: 110px;
+		height: auto;
+	}
 }
 @media only screen and (max-width: 510px){
 	.newsfeed--support {
@@ -592,7 +611,7 @@
     	font-size: 13px;
 	}
 	.newsfeed--footer input[type="button"] {
-    	font-size: 14px;
+    	width: 95px;
 	}
 	.newsfeed--button {
     	padding: 6px 10px;
@@ -605,6 +624,14 @@
 	}
 	.primary--header a {
     	width: 70%;
+	}
+}
+@media only screen and (max-width: 420px) {
+	.home--followers {
+		width: 100%;
+	}
+	.home--share--icons div:first-child{
+		width: 100%;
 	}
 }
 @media only screen and (max-width: 410px) {
@@ -652,6 +679,10 @@
 	}
 }
 @media only screen and (max-width: 400px) {
+
+	.newsfeed--footer input[type="button"] {
+	    width: 87px;
+	}
 	.newsfeed--header .newsfeed--charge{
 		padding-left: 0;
 	}
@@ -697,7 +728,7 @@
 	    font-size: 11px;
 	}
 	.newsfeed--footer input[type="button"] {
-    	font-size: 12px;
+    	width: 75px;
 	}
 	.newsfeed--button {
     	padding: 5px 5px;

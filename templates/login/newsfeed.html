@@ -18,7 +18,7 @@
 				<a href="#">{{ person.name }}</a>
 			</div>
 			<div class="col-sm-2 newsfeed--duration">
-				<p><i class="fa fa-clock-o"></i>&nbsp;
+				<p><img src="{{ url_for('static',filename='images/clock-icon.png') }}">&nbsp;
 				{{ person.duration }}</p>
 			</div>
 			<div class="col-sm-3 newsfeed--charge">
@@ -50,7 +50,7 @@
 			</div>
 		</div>
 		<div class="row newsfeed--footer">
-			<div class="col-sm-12" style="padding-right: 5px; padding-left: 0px;">
+			<div class="col-sm-12" style="padding-right: 0px; padding-left: 0px;">
 				<div class="col-sm-1 redflag--img">
 					<img src="{{ url_for('static',filename='images/redflag.png') }}">
 				</div>
@@ -61,7 +61,7 @@
 					</div>
 				</div>
 				<div class="col-sm-2 neewsfeed--moreinfo" style="float:right;">
-					<input type="button" name="more-info" class="newsfeed--button" value="+More info">
+					<input type="button" name="more-info" class="newsfeed--button">
 				</div>
 			</div>
 		</div>
@@ -98,8 +98,8 @@
 				<div class="col-sm-12 newsfeed--share--icons">
 					<div class="col-sm-6" style="padding:0;">
 						<img src="{{ url_for('static',filename='images/x-icon.png') }}">
-						<img src="{{ url_for('static',filename='images/check-icon.png') }}">
-						<img src="{{ url_for('static',filename='images/checkmark.png') }}">
+						<img style="width: 65px;" src="{{ url_for('static',filename='images/check-icon.png') }}">
+						<img style="width: 62px;" src="{{ url_for('static',filename='images/checkmark.png') }}">
 						<img src="{{ url_for('static',filename='images/ignore-icon.png') }}">
 					</div>
 					<div class="col-sm-6 newsfeed--followers">
