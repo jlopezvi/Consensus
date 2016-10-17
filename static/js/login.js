@@ -1,3 +1,14 @@
+function getCookie(cname) {
+  var name = cname + "=";
+  var ca = document.cookie.split(';');
+  for(var i=0; i<ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0)==' ') c = c.substring(1);
+    if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+  }
+  return "";
+};
+
 $(document).ready( function() {
 	$(document).on('change', ':file', function() {
     var input = $(this),
@@ -15,6 +26,32 @@ $(document).ready( function() {
         input.val(log);
       } else {
         if( log ) alert(log);
+      }
+    });
+  });
+
+  $(document).on('click', '.login--button', function(){
+    var data = {
+      'email': $('#email').val(),
+      'password' : $('#password').val()
+    };
+    console.log(data);
+    $.ajax({
+      url: 'login',
+      type: 'POST',
+      data: {
+        'email': $('#email').val(),
+        'password' : $('#password').val()
+      },
+      headers: {
+        'X-CSRFToken': getCookie("csrftoken")
+      },
+      dataType: 'json',
+      success: function (json) {
+        console.log(json);
+      },
+      error: function(response){
+        console.log(response);
       }
     });
   });
