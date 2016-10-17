@@ -1,4 +1,23 @@
 @media only screen and (max-width: 1200px) {
+	.participant__body .home--proposals--body {
+    	background-position-x: -283px;
+	}
+	div.participant__body div.newsfeed--goals {
+		top: 37px;
+	}
+	.participant__body .newsfeed--support {
+	    padding: 0;
+	    margin-left: -20px;
+	}
+	.participant__body .newsfeed--footer input[type="button"] {
+	    left: 15px;
+	}
+	.participant__body .newsfeed--likes {
+		margin-left: 0;
+	}
+	.participant__profile--pic .profile--picture img {
+    	top: 61px;
+	}
 	.login--actions .col-sm-6 {
 	    font-size: 10px;
 	}
@@ -10,6 +29,10 @@
 	}
 	.newsfeed--header {
     	font-size: 14px;
+	}
+	.container__participants {
+		padding-right: 66px;
+   		margin-left: -59px;
 	}
 	.newsfeed--header .fa-clock-o {
     	font-size: 30px;
@@ -169,6 +192,13 @@
 	.newsfeed--progress , .newsfeed--progress2 {
    		width: 110%;
    	}
+   	.search__participant ul li input[type="button"] {
+    	padding: 5px 15px;
+    	font-size: 14px;
+	}
+	.invite__button {
+    	width: 75px;
+	}
 }
 @media only screen and (max-width: 991px) {
 	.newsfeed--progress , .newsfeed--progress2 {
@@ -289,6 +319,13 @@
 	}
 }
 @media only screen and (max-width: 767px) {
+	.search__participant ul li input[type="button"] {
+		padding: 5px 15px;
+    	font-size: 14px;
+	}
+	.invite__button {
+    	width: 75px;
+	}
 	.newsfeed--body {
    	    background-position-x: -239px;
 	}	
@@ -491,6 +528,16 @@
 		left: 7%!important;
 	}
 }
+@media only screen and (max-width: 650px) {
+	.search__participant ul li input[type="button"] {
+	    padding: 5px 5px;
+	    font-size: 13px;
+	    margin-right: 0;
+	}
+	.invite__button {
+    	width: 50px;
+	}
+}
 @media only screen and (max-width: 620px) {
 	.newsfeed--header .newsfeed--charge {
     	width: 40%;
@@ -515,6 +562,9 @@
 	.newsfeed--support {
 		margin-left: -7px;
 	}
+	.search__div--participants {
+		margin-top: 20px;
+	}
 }
 @media only screen and (max-width: 600px) {
 	.home--proposals--body {
@@ -527,6 +577,9 @@
 @media only screen and (max-width: 580px) {
 	.newsfeed--body {
     	background-position-x: -350px;
+	}
+	.search__participant .addproposal--step2 {
+    	padding: 30px 20px;
 	}
 }
 @media only screen and (max-width: 560px){
@@ -554,6 +607,12 @@
 	.newsfeed--button {
 		width: 110px;
 		height: auto;
+	}
+	.search__participant ul li {
+    	margin-left: 0!important;
+	}
+	.search__div--participants {
+		width: 345px;
 	}
 }
 @media only screen and (max-width: 510px){
@@ -625,6 +684,40 @@
 	.primary--header a {
     	width: 70%;
 	}
+	.search__participant .addproposal--step2 li img {
+    	height: 50px;
+	}
+	.search__participant .addproposal--step2 li p {
+	    position: relative;
+	    top: -7px;
+	}
+	.search__participant .addproposal--step2 li input {
+	    margin-right: 10px;
+	}
+	.search__participant ul li input[type="button"] {
+    	margin-top: 8px;
+	}
+}
+@media only screen and (max-width: 470px) {
+	.newsfeed--body {
+    	background-position-x: -468px;
+	}
+	.home--proposals--body {
+    	background-position-x: -245px;
+	}
+}
+@media only screen and (max-width: 430px) {
+	.search__participant ul li {
+    	font-size: 12px;
+	}
+	.search__participant ul li input[type="button"] {
+    	padding: 2px 3px;
+    	font-size: 11px;
+	}
+	.invite__button {
+    	width: 40px;
+    	height: 25px;
+	}
 }
 @media only screen and (max-width: 420px) {
 	.home--followers {
@@ -661,16 +754,6 @@
 	.newsfeed--footer .redflag--img{
 		width: 30px;
 	}
-}
-@media only screen and (max-width: 470px) {
-	.newsfeed--body {
-    	background-position-x: -468px;
-	}
-	.home--proposals--body {
-    	background-position-x: -245px;
-	}
-}
-@media only screen and (max-width: 410px) {
 	.newsfeed--body {
     	background-position-x: -525px;
 	}
@@ -678,6 +761,7 @@
     	background-position-x: -335px;
 	}
 }
+
 @media only screen and (max-width: 400px) {
 
 	.newsfeed--footer input[type="button"] {

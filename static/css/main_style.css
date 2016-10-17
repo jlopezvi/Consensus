@@ -179,35 +179,35 @@ body.modal-open {
 .nav--style li a:hover {
 	background-color: transparent;
 }
-#modal_sign {
+#modal_sign, #modal_participant{
 	padding-right: 0px!important;
 }
-#modal_sign .modal-header, #modal_sign .modal-footer {
+#modal_sign .modal-header, #modal_sign .modal-footer, #modal_participant .modal-header, #modal_participant .modal-footer{
 	background-color: rgba(63, 175, 46, 0.9);
 	padding: 7px;
 }
 .modal-footer {
 	height: 39px;
 }
-#modal_sign, #modal_sign .modal-dialog, #modal_sign .modal-content {
+#modal_sign, #modal_sign .modal-dialog, #modal_sign .modal-content, #modal_participant, #modal_participant .modal-dialog, #modal_participant .modal-content {
 	background: transparent;
 }
-#modal_sign .modal-header h4 {
+#modal_sign .modal-header h4, #modal_participant .modal-header h4 {
 	color: #fff;
 	text-shadow: 1px 1px black;
 	text-align: center;
 }
-#modal_sign .modal-dialog {
+#modal_sign .modal-dialog, #modal_participant .modal-dialog {
 	top: 25%;
 	left: 25%;
 	position: absolute;
 	margin: 0;
 	color: #75787d;
 }
-#modal_sign .modal-body {
+#modal_sign .modal-body, #modal_participant .modal-body {
 	background: rgba(255,255,255,0.9);
 }
-#modal_sign .modal-body {
+#modal_sign .modal-body, #modal_participant .modal-body {
 	height: 350px;
 	padding: 35px;
 }
@@ -249,13 +249,13 @@ body.modal-open {
     right: 20px;
     bottom: -5px;
 }
-#modal_sign .modal-body div.input-group label.input-group-btn span {
+#modal_sign .modal-body div.input-group label.input-group-btn span, #modal_participant .modal-body div.input-group label.input-group-btn span {
 	background-color: #c0ff00;
 	border-color: #3faf2e;
 	font-family: lato_bold;
 	color: #2d2d2d;
 }
-#modal_sign .modal-body div.input-group label.input-group-btn span:hover {
+#modal_sign .modal-body div.input-group label.input-group-btn span:hover, #modal_participant .modal-body div.input-group label.input-group-btn span:hover  {
 	background-color: #c0ff00;
 	border-color: #3faf2e;
 }
@@ -918,11 +918,24 @@ a.add--proposal--button:hover, a.add--proposal--button:active, a.add--proposal--
 }
 .search__div--participants {
 	height: 50px;
+	width: 450px;
 	background-color: #E3EEF6;
 	border-radius: 5px;
+	margin-left: auto;
+    margin-right: auto;
+}
+input.form-control.invite__button:focus {
+    border-color: transparent!important;
+    outline: transparent!important;
+    box-shadow: none;
 }
 .container__participants {
 	font-family: lato_regular;
+	min-width: 1200px;
+}
+.container__search--participants {
+	font-family: lato_regular;
+	min-width: 400px;
 }
 .span__search input {
 	background-color: #d8e6ef!important;
@@ -1032,25 +1045,19 @@ a.add--proposal--button:hover, a.add--proposal--button:active, a.add--proposal--
     top: 1px;
     position: relative;
 }
-.participant__follow ul.nav-tabs li.active {
-	border: 2px solid #cecece;
-    border-bottom: 2px solid #fff;
-}
 .participant__follow ul.nav-tabs li.active a {
 	color: #000;
-}
-.participant__follow ul.nav-tabs li {
-	border: 1px solid #cecece;
-	background: #e5e6e8;
+	background-color: transparent;
 }
 .participant__follow ul.nav-tabs li a {
-	padding: 4px 15px;
+	padding: 14px 80px 7px 33px;
 	border: none;
 	color: #000;
 	font-family: lato_bold;
 }
 .participant__follow ul.nav-tabs li a:hover, .participant__follow ul.nav-tabs li a:focus {
 	border:none;
+	background: transparent;
 }
 .participant__follow .addproposal--step2 {
 	border-radius: 0;
@@ -1081,5 +1088,83 @@ a.add--proposal--button:hover, a.add--proposal--button:active, a.add--proposal--
 .tabs__follow {
     display: inline-flex;
     width: 100%;
+}
+ul.nav-tabs li a:before {
+	content: '';
+    position: absolute;
+    top: -20px;
+    right: 0;
+    bottom: .5em;
+    height: 149%;
+    left: 0;
+    z-index: -1;
+    border-bottom: 2px solid #fff;
+    border-top: 2px solid #cecece;
+    border-left: 2px solid #cecece;
+    border-right: 2px solid #cecece;
+    background: #fff;
+    box-shadow: 0 2px hsla(0,0%,100%,.5) inset;
+    transform: perspective(5px) rotateX(2deg);
+    transform-origin: bottom;
+}
+ul.nav-tabs li {
+	position: relative;
+	z-index: 1;
+	white-space: nowrap;
+}
+
+nav.nav-tabs li a {
+	position: relative;
+	display: inline-block;
+	padding: 1.5em 1.5em 1em;
+	color: inherit;
+	text-decoration: none;
+	margin: 0 -7px;
+} 
+
+ul.nav-tabs li a {
+	padding: 1.5em 2em 1em 1em;
+}
+
+ul.nav-tabs li a:before {
+	transform-origin: bottom left;
+}
+
+ul.nav-tabs li a.selected {
+	z-index: 2;
+}
+
+ul.nav-tabs li a:before {
+	margin-bottom: -1px;
+	border-top-width: 1px;
+	background-color: #e6e7e9;
+
+}
+ul.nav-tabs li.active a:before {
+	background-color: transparent;
+}
+.tab-content>.tab-pane.selected {
+    display: block;
+}
+.participant__body .home--profile--picture img {
+    height: 70%;
+}
+.participant__body .home--header {
+	font-size: 12px;
+}
+.participant__body .home--name {
+	font-size: 13px;
+}
+.participant__body .newsfeed--goals {
+	line-height: 23px;
+}
+.participant__body .home--proposals--body {
+	background-position-x: -185px;
+}
+.participant__body .home--button {
+	margin-left: -30px;
+}
+#modal_participant div.modal-header h4 {
+	text-align: left;
 }
 /***** END OF PARTICIPANTS STYLE *******/
