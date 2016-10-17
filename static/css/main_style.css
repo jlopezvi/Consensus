@@ -989,7 +989,6 @@ a.add--proposal--button:hover, a.add--proposal--button:active, a.add--proposal--
 	border: 1px solid #3faf2e;
 }
 .participant__content {
-	padding: 0;
     color: #707175;
 }
 .participant__content textarea {
@@ -1018,83 +1017,69 @@ a.add--proposal--button:hover, a.add--proposal--button:active, a.add--proposal--
 .participant__body {
     margin-top: 60px;
 }
-nav.tabs {
+.participant__follow {
+    margin-top: 50px;
+}
+.participant__newsfeed {
+	border: 1px solid #c6c6c8;
+    padding: 50px 40px;
+    overflow-y: scroll;
+}
+.nav-tabs {
+	border-bottom: none!important;
+	border-bottom: none!important;
+    padding-left: 40px;
+    top: 1px;
     position: relative;
-    z-index: 1;
-    white-space: nowrap;
-  }
-
-  nav.tabs a {
-    position: relative;
-    display: inline-block;
-    padding: 1.5em 1.5em 1em;
-    color: white;
-    text-decoration: none;
-    margin: 0 -7px;
-    font-size: 18px;
-  }
-
-  nav.tabs a::before,
-  div.tab-pane {
-    border: .1em solid #aaa;
-  }
-
-  nav.tabs a::before {
-    content: ''; /* To generate the box */
-    position: absolute;
-    top: 0; right: 0; bottom: 0.4em;
-    left: 0;
-    z-index: -1;
-    border-bottom: none;
-    border-radius: 10px 10px 0 0;
-    background-image: -webkit-linear-gradient(left, #5b5b5b, #9f9e9e);
-    background-image: -o-linear-gradient(left, #5b5b5b, #9f9e9e); /* For Opera 11.1 to 12.0 */
-    background-image: -moz-linear-gradient(left, #5b5b5b, #9f9e9e); /* For Firefox 3.6 to 15 */
-    background-image: linear-gradient(left, #5b5b5b, #9f9e9e); /* Standard syntax */
-    background-image: -ms-linear-gradient(left, #5b5b5b, #9f9e9e); /* IE */
-    /*color: white !important;*/
-    box-shadow: 0 2px hsla(0,0%,100%,.5) inset;
-    transform: perspective(5px) rotateX(2deg);
-    transform-origin: bottom;
-  }
-
-  select {
-    background: -webkit-linear-gradient(left, #5b5b5b, #9f9e9e);
-    background: -o-linear-gradient(left, #5b5b5b, #9f9e9e); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(left, #5b5b5b, #9f9e9e); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(left, #5b5b5b, #9f9e9e); /* Standard syntax */
-  }
-
-  nav.left a {
-    padding: 1.5em 4em 1em 1em;
-  }
-
-  nav.left a::before {
-    transform-origin: bottom left;
-  }
-
-  nav.right a {
-    padding: 1.5em 1em 1em 2em;
-  }
-
-  nav.right a::before {
-    transform-origin: bottom right;
-  }
-
-  nav a.active {
-    z-index: 2;
-    color: black !important;
-  }
-
-  nav a.active::before {
-    margin-bottom: -1px;
-    border-top-width: 1px;
-    background: white;
-  }
-
-  nav a.active::before,
-  main {
-    /*background: #eee;*/
-
-  }
+}
+.participant__follow ul.nav-tabs li.active {
+	border: 2px solid #cecece;
+    border-bottom: 2px solid #fff;
+}
+.participant__follow ul.nav-tabs li.active a {
+	color: #000;
+}
+.participant__follow ul.nav-tabs li {
+	border: 1px solid #cecece;
+	background: #e5e6e8;
+}
+.participant__follow ul.nav-tabs li a {
+	padding: 4px 15px;
+	border: none;
+	color: #000;
+	font-family: lato_bold;
+}
+.participant__follow ul.nav-tabs li a:hover, .participant__follow ul.nav-tabs li a:focus {
+	border:none;
+}
+.participant__follow .addproposal--step2 {
+	border-radius: 0;
+}
+.search__participant ul li input[type="button"] {
+	float: right;
+    text-align: center!important;
+    padding: 5px 45px;
+}
+.search__participant .addproposal--step2 {
+	padding: 30px 50px;
+	margin-bottom: 8%;
+	border-radius: 0;
+}
+.search__participant p:first-child {
+    text-align: center;
+    margin: 45px 0 20px 0;
+    color: #6c6f74;
+}
+.search__participant ul li {
+	border-bottom: none!important;
+}
+.search__participant legend{
+	color: #6c6f74;
+	font-size: 17px;
+	font-family: lato_bold;
+}
+.tabs__follow {
+    display: inline-flex;
+    width: 100%;
+}
 /***** END OF PARTICIPANTS STYLE *******/

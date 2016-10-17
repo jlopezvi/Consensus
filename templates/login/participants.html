@@ -1,7 +1,7 @@
 {% extends 'new_template.html' %}
 {% block content %}
 
-<div class="container__participants" style="margin-top: 8%;">
+<div class="container__participants" style="margin-top: 8%; margin-bottom: 8%;">
  <h3 style="font-family: lato_bold; margin-bottom: 0;">Participants</h3>
     <div class="col-md-6 col-md-offset-3">
         <form role="form">
@@ -79,18 +79,147 @@
 	    			<input class="form-control invite__button" type="button" value="Send Invitation">
     			</div>
     		</div>
-    		<div class="participant__followers">
-		        <nav class="left tabs">
-		            <a data-toggle="tab" id="tabDomestic" class="active" href="#local">Following</a>
-		            <a data-toggle="tab" id="tabInternational" href="#international">Followers</a>
-		        </nav>
-		        <div class="tab-content">
-		            
-		    	</div>
-		    </div>
+    		<div class="participant__follow">
+            <ul class="nav nav-tabs">    
+                <li class="active"><a data-toggle="tab" href="#home">Following</a></li>
+                <li><a data-toggle="tab" href="#menu1">Followers</a></li>
+            </ul>
+
+            <div class="tab-content">
+                <div id="home" class="tab-pane active">
+                  <ul class="addproposal--step2">
+                    <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="{{ url_for('static',filename='assets/profile/perfil-mediano.png') }}"><p><a href="#">Emile</a> <br>Emile Godard </p></li>
+                    <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="{{ url_for('static',filename='assets/profile/perfil-mediano.png') }}"><p><a href="#">JJacques</a> <br>Jean Jacques Richelieu </p></li>
+                    <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="{{ url_for('static',filename='assets/profile/perfil-mediano.png') }}"><p><a href="#">Zoe</a> <br>Zoe Martin Pescador </p></li>
+                    <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="{{ url_for('static',filename='assets/profile/perfil-mediano.png') }}"><p><a href="#">Joe</a> <br>Joe Black</p></li>
+                  </ul>
+                </div>
+            <div id="menu1" class="tab-pane">
+              <ul class="addproposal--step2">
+                <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="{{ url_for('static',filename='assets/profile/perfil-mediano.png') }}"><p><a href="#">Emile</a> <br>Emile Godard </p></li>
+                <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="{{ url_for('static',filename='assets/profile/perfil-mediano.png') }}"><p><a href="#">JJacques</a> <br>Jean Jacques Richelieu </p></li>
+                <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="{{ url_for('static',filename='assets/profile/perfil-mediano.png') }}"><p><a href="#">Zoe</a> <br>Zoe Martin Pescador </p></li>
+                <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="{{ url_for('static',filename='assets/profile/perfil-mediano.png') }}"><p><a href="#">Joe</a> <br>Joe Black</p></li>
+              </ul>
+            </div>
+          </div>
+          <div class="tabs__follow"> 
+            <input class="form-control invite__button" style="margin-right: -35px;" type="button" value="Follow">
+            <input class="form-control invite__button" type="button" value="Stop following">
+          </div>
+        </div>
 		</div>
+
     	<div class="col-sm-6 participant__newsfeed">
-    		
+    	{% for feed_p in feed %}
+        <div class="col-sm-12">  
+            <div class="row home--header">
+                <div class="col-sm-2" style="padding-left: 0px;">
+                {% if (feed_p.picture == '') %}
+                    <i class="fa fa-user user--icon"></i>
+                {% else %}
+                    <div class="home--profile--picture">
+                        <img src="{{ url_for('static',filename=feed_p.picture) }}">
+                    </div>
+                {% endif %}
+                </div>
+                <div class="col-sm-1 home--name">
+                    <a href="#">{{ feed_p.name }}</a>
+                </div>
+                <div class="col-sm-2 newsfeed--duration">
+                    <p><img style="width: 19px;position: relative;top: -3px;" src="{{ url_for('static',filename='images/clock-icon.png') }}">&nbsp;
+                    {{ feed_p.duration }}</p>
+                </div>
+                <div class="col-sm-3 home--charge">
+                    <div class="progress home--progress">
+                        <input type="text" value="{{ (feed_p.supporters_current * 100)/ feed_p.supporters_goal }}" id="supporters--percent" hidden>
+                        <div class="progress-bar newsfeed--bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style=""></div>
+                    </div>
+
+                    <div class="progress home--progress2">
+                        <input type="text" value="{{ (feed_p.volunters_current * 100)/ feed_p.volunters_goal }}" id="volunters--percent" hidden>
+                        <div class="progress-bar newsfeed--bar2" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style=""></div>
+                    </div>
+                </div>
+                <div class="col-sm-4 newsfeed--goals">
+                    <p>{{ feed_p.supporters_current }}/{{ feed_p.supporters_goal }} supporters goals<br>
+                    {{ feed_p.volunters_current }}/{{ feed_p.volunters_goal }} volunteers goals</p>
+                </div>
+            </div>
+            <div class="row home--proposals--body">
+                <div class="col-sm-12">
+                    <div class="col-sm-8 newsfeed--problem">
+                        {{ feed_p.problem }}<br>{{ feed_p.problem }}<br>{{ feed_p.problem }}
+                    </div>
+                </div>
+                <div class="col-sm-12" style="margin-top: 180px;">
+                    <div class="col-sm-8 col-sm-offset-4 newsfeed--proposal">
+                        {{ feed_p.proposal }}<br>{{ feed_p.proposal }}<br>{{ feed_p.proposal }}
+                    </div>
+                </div>
+            </div>
+            <div class="row newsfeed--footer">
+                <div class="col-sm-12" style="padding-right: 0px; padding-left: 0px;">
+                    <div class="col-sm-1 redflag--img">
+                        <img src="{{ url_for('static',filename='images/redflag.png') }}">
+                    </div>
+                    <div class="col-sm-9 newsfeed--support" style="padding-right:0;padding-left:30px;">
+                        <input type="text" value="{{ (feed_p.liked|length * 100)/(feed_p.liked|length + feed_p.disliked|length) }}" id="percent" hidden>
+                        <div class="input--percent">    
+                            <label> Support Rate: </label>
+                        </div>
+                    </div>
+                    <div class="col-sm-2 neewsfeed--moreinfo" style="float:right;">
+                        <input type="button" name="more-info" class="home--button">
+                    </div>
+                </div>
+            </div>
+            <div class="row newsfeed--persons">
+                <div class="col-sm-12">
+                    <div class="col-sm-1" style="padding:0;">
+                        <img src="{{ url_for('static',filename='images/check-small.png') }}">
+                    </div>
+                    <div class="col-sm-11 newsfeed--likes">
+                        <ul>
+                        {% for likes in feed_p.liked %}
+                            {% if loop.index <= 3 %}
+                                <a href="#"><li>{{ likes.name }}</li></a>
+                            {% endif %}
+                        {% endfor %}
+                            <a href="#" class="last--liked"><li>+ {{ feed_p.liked|length -3 }} people</li></a>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="col-sm-1" style="padding:0;">
+                        <img src="{{ url_for('static',filename='images/x-small.png') }}">
+                    </div>
+                    <div class="col-sm-11 newsfeed--likes">
+                        {% for dislikes in feed_p.disliked %}
+                        <ul>
+                            <a href="#"><li>{{ dislikes.name }}</li></a>
+                        </ul>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="row home--share">
+                <div class="col-sm-12 home--share--icons">
+                    <div class="col-sm-6" style="padding:0;">
+                        <img src="{{ url_for('static',filename='images/x-icon.png') }}">
+                        <img style="width: 50px;" src="{{ url_for('static',filename='images/check-icon.png') }}">
+                        <img style="width: 48px;" src="{{ url_for('static',filename='images/checkmark.png') }}">
+                        <img style="width: 50px;" src="{{ url_for('static',filename='images/ignore-icon.png') }}">
+                    </div>
+                    <div class="col-sm-6 home--followers">
+                        <i class="fa fa-share-alt"></i>
+                        <p>Share with: followers</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
     	</div>
     </div>
 </div>

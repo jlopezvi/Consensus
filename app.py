@@ -87,6 +87,11 @@ def hello():
     return render_template('login/login.html')
 
 
+@app.route('/search-participant')
+def search_p():
+    return render_template('/search_participant.html')
+
+
 @app.route('/participants')
 def participants():
     participants_p = [
@@ -101,7 +106,48 @@ def participants():
             'following': 2
         }
     ]
-    return render_template('login/participants.html', participants = participants_p)
+    feed = [
+        {
+            'id': 'id',
+            'picture': 'assets/profile/perfil-mediano.png',
+            'name': 'Daniela',
+            'duration': '2 Days',
+            'supporters_goal': 200,
+            'supporters_current': 5,
+            'volunters_goal': 5,
+            'volunters_current': 2,
+            'image': 'url-to-picture',
+            'problem':  'Some text for the problem',
+            'proposal': 'Some text for the proposal',
+            'liked':
+            [
+                {
+                    'id': 'id',
+                    'name': 'Maria'
+                },
+                {
+                    'id': 'id',
+                    'name': 'Pedro'
+                },
+                {
+                    'id': 'id',
+                    'name': 'Juan'
+                },
+                {
+                    'id': 'id',
+                    'name': 'Jesus'
+                }
+            ],
+            'disliked': 
+            [
+                {
+                    'id': 'id',
+                    'name': 'Jose'
+                }
+            ]
+        }
+    ]
+    return render_template('login/participants.html', participants = participants_p, feed = feed)
 
 
 @app.route('/home')
@@ -363,5 +409,5 @@ def getConcerns(current):
 if __name__ == '__main__':
     app.debug = True
     port = int(os.environ.get('PORT', 5000))
-    #app.run(host='0.0.0.0', port=port)
-    app.run(host='127.0.0.1', port=port)
+    app.run(host='0.0.0.0', port=port)
+    #app.run(host='127.0.0.1', port=port)
