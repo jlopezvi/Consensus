@@ -93,13 +93,15 @@ def participants():
         {
             'id': 'id',
             'picture': 'assets/profile/perfil-mediano.png',
-            'name': 'Daniela',
+            'username': 'John',
+            'name': 'Juan J.',
+            'lastname': 'Lopez Villarejo',
             'active_publications': 5,
             'followers': 5,
             'following': 2
         }
     ]
-    return render_template('login/participants.html', participant = participants_p)
+    return render_template('login/participants.html', participants = participants_p)
 
 
 @app.route('/home')
@@ -361,5 +363,5 @@ def getConcerns(current):
 if __name__ == '__main__':
     app.debug = True
     port = int(os.environ.get('PORT', 5000))
-    #app.run(host='0.0.0.0', port=port)
-    app.run(host='127.0.0.1', port=port)
+    app.run(host='0.0.0.0', port=port)
+    #app.run(host='127.0.0.1', port=port)

@@ -115,7 +115,7 @@ body {
 .home--content--right {
 	margin-top: 9.5%;
 }
-.login--button, .register--button, .register--modal, .newsfeed--button, .home--button {
+.login--button, .register--button, .register--modal, .newsfeed--button, .home--button, .invite__button {
 	background-color: #c0ff00;
 	color: #5f6252;
 	font-size: 17px;
@@ -942,6 +942,7 @@ a.add--proposal--button:hover, a.add--proposal--button:active, a.add--proposal--
 	border-color: #b2c5d2!important;
 	box-shadow: none!important;
 }
+/***** PARTICIPANTS STYLE  ******/
 .search__icon--participants {
 	position: absolute!important;
     top: 18px!important;
@@ -955,3 +956,145 @@ a.add--proposal--button:hover, a.add--proposal--button:active, a.add--proposal--
 	width: 120px;
 	font-family: lato_bold!important;
 }
+.participant__info {
+	margin-top: 150px;
+	font-size: 17px;
+	margin-left: 30px;
+}
+.participant__profile--pic .profile--picture {
+	width: 125px;
+	height: 125px;
+}
+.participant__name a{
+	font-size: 25px;
+	text-decoration: underline;
+	color: #1067fc;
+}
+.participant__name {
+	margin-left: -38px;
+	margin-top: -20px;
+    line-height: 35px;
+}
+.participant__active--p, .participant__followers, .participant__following {
+	margin-top: -20px;
+    line-height: 33px;
+    text-align: center;
+}
+.participant__setting span {
+	font-size: 33px;
+	color: #828282;
+	top: -14px;
+}
+.participant__invite {
+	border: 1px solid #3faf2e;
+}
+.participant__content {
+	padding: 0;
+    color: #707175;
+}
+.participant__content textarea {
+	width: 90%;
+    height: 150px;
+    margin: 0 20px;
+}
+.invite__button {
+	width: 150px;
+    height: 35px;
+    margin: 0 auto;
+    margin-top: 20px;
+}
+.invite__header {
+	background: #c0ff00;
+}
+.invite__header p {
+    padding: 5px 0;
+    text-align: center;
+    font-family: lato_bold;
+    font-size: 15px;
+}
+.invite__body {
+	padding: 10px 22px 35px 22px;
+}
+.participant__body {
+    margin-top: 60px;
+}
+nav.tabs {
+    position: relative;
+    z-index: 1;
+    white-space: nowrap;
+  }
+
+  nav.tabs a {
+    position: relative;
+    display: inline-block;
+    padding: 1.5em 1.5em 1em;
+    color: white;
+    text-decoration: none;
+    margin: 0 -7px;
+    font-size: 18px;
+  }
+
+  nav.tabs a::before,
+  div.tab-pane {
+    border: .1em solid #aaa;
+  }
+
+  nav.tabs a::before {
+    content: ''; /* To generate the box */
+    position: absolute;
+    top: 0; right: 0; bottom: 0.4em;
+    left: 0;
+    z-index: -1;
+    border-bottom: none;
+    border-radius: 10px 10px 0 0;
+    background-image: -webkit-linear-gradient(left, #5b5b5b, #9f9e9e);
+    background-image: -o-linear-gradient(left, #5b5b5b, #9f9e9e); /* For Opera 11.1 to 12.0 */
+    background-image: -moz-linear-gradient(left, #5b5b5b, #9f9e9e); /* For Firefox 3.6 to 15 */
+    background-image: linear-gradient(left, #5b5b5b, #9f9e9e); /* Standard syntax */
+    background-image: -ms-linear-gradient(left, #5b5b5b, #9f9e9e); /* IE */
+    /*color: white !important;*/
+    box-shadow: 0 2px hsla(0,0%,100%,.5) inset;
+    transform: perspective(5px) rotateX(2deg);
+    transform-origin: bottom;
+  }
+
+  select {
+    background: -webkit-linear-gradient(left, #5b5b5b, #9f9e9e);
+    background: -o-linear-gradient(left, #5b5b5b, #9f9e9e); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(left, #5b5b5b, #9f9e9e); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(left, #5b5b5b, #9f9e9e); /* Standard syntax */
+  }
+
+  nav.left a {
+    padding: 1.5em 4em 1em 1em;
+  }
+
+  nav.left a::before {
+    transform-origin: bottom left;
+  }
+
+  nav.right a {
+    padding: 1.5em 1em 1em 2em;
+  }
+
+  nav.right a::before {
+    transform-origin: bottom right;
+  }
+
+  nav a.active {
+    z-index: 2;
+    color: black !important;
+  }
+
+  nav a.active::before {
+    margin-bottom: -1px;
+    border-top-width: 1px;
+    background: white;
+  }
+
+  nav a.active::before,
+  main {
+    /*background: #eee;*/
+
+  }
+/***** END OF PARTICIPANTS STYLE *******/
