@@ -115,6 +115,13 @@ body {
 .home--content--right {
 	margin-top: 9.5%;
 }
+.login--message, .register--message {
+    position: relative;
+    top: 9px;
+    display: none;
+    font-size: 12px;
+    padding: 5px 12px;
+}
 .login--button, .register--button, .register--modal, .newsfeed--button, .home--button, .invite__button {
 	background-color: #c0ff00;
 	color: #5f6252;

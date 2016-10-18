@@ -72,7 +72,7 @@ def login():
     if request.get_json()['password'] == user_to_check['password']:
         user = User(email)
         flask_login.login_user(user)
-        return redirect(url_for('newsfeed2'))
+        return jsonify(result="Login validated")
     else:
         return jsonify(result="Bad password")
 
