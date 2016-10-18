@@ -1,9 +1,9 @@
 from py2neo import neo4j
 import os
 try:
-    from urllib.parse import urlparse
+     from urlparse import urlparse
 except ImportError:
-     from urlparse import urlparseere
+     from urllib.parse import urljoin
 
 
 def getGraph():
@@ -12,7 +12,10 @@ def getGraph():
      #return neo4j.GraphDatabaseService("http://app55594714-V1ivYS:QZgiH1f3jWNWOC2yUYZK@hobby-kjjhomhijildgbkehfaomgol.dbs.graphenedb.com:24789")
 
      if os.environ.get('GRAPHENEDB_URL'):
-          graph_db_url = urljoin(os.environ.get('GRAPHENEDB_URL'))
+          try:
+               graph_db_url = urlparse(os.environ.get('GRAPHENEDB_URL'))
+          except ImportError:
+               graph_db_url = urljoin(os.environ.get('GRAPHENEDB_URL'))
           graph_db = neo4j.GraphDatabaseService(
                'http://{host}:{port}{path}'.format(
                     host=graph_db_url.hostname,
