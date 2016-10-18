@@ -109,7 +109,7 @@ $(document).ready( function() {
       'group': 'IT', //$('#group_r').val(),
       'password': $('#password_r').val(),
       'image_url': '', //$('#password').val(),
-      'ifpublicprofile': $('#public_r').val(),
+      'ifpublicprofile': false, //$('#public_r').val(),
       'host_email': null,
       'ifemailverified': false
     };

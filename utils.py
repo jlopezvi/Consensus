@@ -21,7 +21,7 @@ def getGraph():
                     host=graph_db_url.hostname,
                     port=graph_db_url.port,
                     path=graph_db_url.path
-               ), user_name=graph_db_url.username, password=graph_db_url.password)
+               ), username=graph_db_url.username, password=graph_db_url.password)
      else:
           graph_db = neo4j.GraphDatabaseService('http://localhost:7474/db/data')
      return graph_db
