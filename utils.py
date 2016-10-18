@@ -17,11 +17,12 @@ def getGraph():
           except ImportError:
                graph_db_url = urljoin(os.environ.get('GRAPHENEDB_URL'))
           graph_db = neo4j.GraphDatabaseService(
-               'http://{host}:{port}{path}'.format(
-                    host=graph_db_url.hostname,
-                    port=graph_db_url.port,
-                    path=graph_db_url.path
-               ))
+               'GRAPHENEDB_URL')
+               #     .format(
+               #     host=graph_db_url.hostname,
+               #     port=graph_db_url.port,
+               #     path=graph_db_url.path
+               #))
      else:
           graph_db = neo4j.GraphDatabaseService('http://localhost:7474/db/data')
      return graph_db
