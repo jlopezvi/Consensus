@@ -1,6 +1,6 @@
 from py2neo import neo4j
 import os
-from urlparse import urlparse
+from urllib.parse import urljoin
 
 
 def getGraph():
@@ -8,8 +8,8 @@ def getGraph():
      #return neo4j.GraphDatabaseService("http://localhost:7474/db/data")
      #return neo4j.GraphDatabaseService("http://app55594714-V1ivYS:QZgiH1f3jWNWOC2yUYZK@hobby-kjjhomhijildgbkehfaomgol.dbs.graphenedb.com:24789")
 
-     if os.environ.get('NEO4J_REST_URL'):
-          graph_db_url = urlparse(os.environ.get('NEO4J_REST_URL'))
+     if os.environ.get('GRAPHENEDB_URL'):
+          graph_db_url = urljoin(os.environ.get('GRAPHENEDB_URL'))
           graph_db = neo4j.GraphDatabaseService(
                'http://{host}:{port}{path}'.format(
                     host=graph_db_url.hostname,
