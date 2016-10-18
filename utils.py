@@ -1,6 +1,9 @@
 from py2neo import neo4j
 import os
-from urllib.parse import urljoin
+try:
+    from urllib.parse import urlparse
+except ImportError:
+     from urlparse import urlparseere
 
 
 def getGraph():
