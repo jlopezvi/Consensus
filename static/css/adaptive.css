@@ -1,4 +1,7 @@
 @media only screen and (max-width: 1200px) {
+	#modal_participant .modal-dialog {
+		left: 5%;
+	}
 	.participant__body .home--proposals--body {
     	background-position-x: -283px;
 	}
@@ -181,13 +184,27 @@
     	height: 810px;
     }
 }
+@media only screen and (max-width: 1060px) {
+	#modal_participant .modal-dialog {
+    	left: 2%;
+	}
+}
 @media only screen and (max-width: 1024px) {
+	#modal_participant .modal-dialog {
+    	width: 950px!important;
+    	left: 2%!important;
+
+	}
+	#modal_participant {
+    	overflow-x: scroll;
+
+	}
 	#modal_sign .modal-dialog {
     	top: 15%;
     	left: 15%;
 	}
 	.nav--style ul {
-	    margin-left: 5%;
+	    margin-left: 0%;
 	}
 	.newsfeed--progress , .newsfeed--progress2 {
    		width: 110%;
@@ -300,7 +317,7 @@
 	.modal-dialog {
 	    width: 550px!important;
 	}
-	#modal_proposal1, #modal_proposal2, #modal_proposal3, #modal_sign {
+	#modal_proposal1, #modal_proposal2, #modal_proposal3, #modal_sign, #moda_participant {
 		overflow-x: scroll;
 	}
 	#modal_proposal2 .modal-body {
@@ -312,10 +329,13 @@
 }
 @media only screen and (max-width: 870px) {
 	.nav--style ul {
-	    margin-left: 3%;
+	    margin-left: 0%;
 	}
 	.modal-dialog {
 	   left: 13%!important;
+	}
+	.primary--header {
+		left: 48%;
 	}
 }
 @media only screen and (max-width: 767px) {

@@ -181,7 +181,7 @@ body.modal-open {
 }
 .nav--style ul {
 	padding-right: 1%;
-	margin-left: 10%;
+	margin-left: 5%;
 }
 .nav--style li a:hover {
 	background-color: transparent;
@@ -510,7 +510,7 @@ body.modal-open {
 .primary--header {
 	width: 100%;
 	position: absolute;
-	left: 50%;
+	left: 45%;
 	z-index: -1;
 }
 .primary--header a{
@@ -1201,9 +1201,9 @@ ul.nav-tabs li.active a:before {
 }
 .p__mail-img {
 	height: 20px;
-    position: relative;
-    top: 10px;
-    left: 10px;
+    position: absolute;
+    top: 115px;
+    right: -17px;
 }
 .p__titles--p {
 	margin-left: -15px;
