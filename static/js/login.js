@@ -114,7 +114,7 @@ $(document).ready( function() {
       'group': 'IT', //$('#group_r').val(),
       'password': $('#password_r').val(),
       'image_url': '', //$('#password').val(),
-      'ifpublicprofile': opt
+      'ifpublicprofile': opt,
       'host_email': null,
       'ifemailverified': false
     };
