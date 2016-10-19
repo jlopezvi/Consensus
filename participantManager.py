@@ -22,7 +22,7 @@ def registration_aux(inputdict):
         host_email=inputdict.get('host_email')
         if ifemailverified is True :
             _newParticipant(inputdict)
-            if host_email:
+            if host_email and (host_email is not email):
                 addFollowingContactToParticipant_aux(email, host_email)
             return jsonify(result="completed registration")
         elif ifemailverified is False :

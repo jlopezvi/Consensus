@@ -203,20 +203,55 @@ def home():
 #     "image_url" : "static/images/concerns/social_coffee_break.jpg",
 #     "datestamp":"01.10.2016",
 #     "moreinfo":"I have to say as well this and this and this...",
-#     "supporters_goal": 500, "volunteers_goal": 5}
+#     "supporters_goal_num": 500, "volunteers_goal_num": 5}
 @app.route('/addIdeaToUser/<string:user_email>', methods=['POST'])
 def addIdeaToUser(user_email) :
     idea_dict = request.get_json()
     idea_object = Idea(idea_dict)
     return addIdeaToUser_aux(user_email, idea_object)
 
-
+#output : python dictionary sent by render_template
+# feed = {
+# 'idea_id' : id#,
+# 'author_photo_url' : 'assets/profile/perfil-mediano.png', 'author_username' : 'Daniela', 'author_email' : 'a@',
+# 'duration' : '2 days',
+# 'supporters_goal_num' : 200, 'supporters_num' : 5, 'volunteers_goal_num' : 5, 'volunteers_num' : 2,
+# 'image_url' : 'url-to-picture',
+# 'concern': 'Some text for the concern',
+# 'proposal': 'Some text for the proposal',
+# 'support_rate' : 95,
+# 'support_rate_MIN' : 90,
+# 'supporters': [
+# { 'email': 'b@', 'username': 'Maria' }, { 'email': 'c@', 'username': 'Pedro' }
+#             ],
+# 'rejectors':[
+# { 'email': 'd@', 'username': 'Elisa' }
+#               ]
+# }
 @app.route('/newsfeed2')
 @flask_login.login_required
 def newsfeed2():
     print('Logged in as: ' + flask_login.current_user.id)
     return newsfeed2_aux(flask_login.current_user.id)
 
+#TODO: change 'feed' to this format, python dictionnary, and then replace /newsfeed by /newsfeed2
+# feed = {
+# 'idea_id' : id#,
+# 'author_photo_url' : 'assets/profile/perfil-mediano.png', 'author_username' : 'Daniela', 'author_email' : 'a@',
+# 'duration' : '2 days',
+# 'supporters_goal_num' : 200, 'supporters_num' : 5, 'volunteers_goal_num' : 5, 'volunteers_num' : 2,
+# 'image_url' : 'url-to-picture',
+# 'concern': 'Some text for the concern',
+# 'proposal': 'Some text for the proposal',
+# 'support_rate' : 95,
+# 'support_rate_MIN' : 90,
+# 'supporters': [
+# { 'email': 'b@', 'username': 'Maria' }, { 'email': 'c@', 'username': 'Pedro' }
+#             ],
+# 'rejectors':[
+# { 'email': 'd@', 'username': 'Elisa' }
+#               ]
+# }
 
 @app.route('/newsfeed')
 #@flask_login.login_required
@@ -407,7 +442,7 @@ def getConcerns(current):
 
 
 if __name__ == '__main__':
-    app.debug = True
+    #app.debug = True
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
     #app.run(host='127.0.0.1', port=port)

@@ -15,7 +15,7 @@ def newsfeed2_aux(user_email):
 
 
     # feed = {
-    # 'idea_id' : id#,
+    # 'idea_id' : 12343,
     # 'author_photo_url' : 'assets/profile/perfil-mediano.png', 'author_username' : 'Daniela', 'author_email' : 'a@',
     # 'duration' : '2 days',
     # 'supporters_goal_num' : 200, 'supporters_num' : 5, 'volunteers_goal_num' : 5, 'volunteers_num' : 2,
@@ -36,7 +36,8 @@ def newsfeed2_aux(user_email):
     author_email = user_email
     author_photo_url = _getParticipantByEmail(user_email).get_properties()['image_url']
     author_username = _getParticipantByEmail(user_email).get_properties()['username']
-    #idea_id =
+    #TODO: add numerical index to ideas
+    idea_id=0
     #duration = time today - _getParticipantByEmail(user_email).get_properties()['timestamp']
     supporters_num = len(list(getGraph().match(end_node=new_idea_node, rel_type="SUPPORTS")))
     volunteers_num = len(list(getGraph().match(end_node=new_idea_node, rel_type="VOLUNTEERS")))
@@ -59,11 +60,15 @@ def newsfeed2_aux(user_email):
         rejectors.append({'email' : email, 'username':username })
 
     feed=new_idea_node.get_properties()
-    feed.append({'author_photo_url': author_photo_url, 'author_username' : author_username,
+    feed.update({'idea_id' : idea_id,
+                 'author_photo_url': author_photo_url, 'author_username' : author_username,
                  'author_email' : author_email, 'supporters_num' : supporters_num,
                  'volunteers_num': volunteers_num,
                  'support_rate': support_rate, 'support_rate_MIN': support_rate_MIN,
                  'supporters' : supporters, 'rejectors' : rejectors})
+
+    return "there is a new idea"
+    # return render_template('login/newsfeed.html', persons=feed)
 
     # feed = [
     #     {
@@ -107,8 +112,6 @@ def newsfeed2_aux(user_email):
     #     }
     # ]
 
-    return "there is a new idea"
-    # return render_template('login/newsfeed.html', persons=feed)
 
 def getNewIdeaForParticipant(participant_email):
     participant=_getParticipantByEmail(participant_email)
