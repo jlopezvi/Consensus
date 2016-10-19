@@ -3,7 +3,7 @@
 
 <div class="container__participants" style="margin-top: 8%; margin-bottom: 8%;">
  <h3 style="font-family: lato_bold; margin-bottom: 0;">Participants</h3>
-    <div class="col-md-6 col-md-offset-4">
+    <div class="col-md-6 col-md-offset-3">
         <form role="form">
             <div class="row">
                 <div class="form-group">
@@ -228,40 +228,72 @@
 	    <div class="modal-content">
 	      <div class="modal-header">
 	        <button type="button" class="close" data-dismiss="modal">&times;</button>
-	        <h4 class="modal-title"><span class="glyphicon glyphicon-cog"></span>Participants</h4>
+	        <h4 class="modal-title"><span class="glyphicon glyphicon-cog" style="margin: 0 10px 0 10px;"></span>Participants</h4>
 	      </div>
 	      <div class="modal-body">
 	      	<div class="col-xs-12">
 	      		<div class="col-xs-8">
-	        		<p>Do you want to add a photo to your profile?</p><br>
+	        		<p class="p__titles--p"><i class="fa fa-sort-desc p_down-icon" aria-hidden="true"></i>Edit your personal data</p><br>
 	        	</div>
-            <div class="col-xs-8">
-              <div class="input-group">
-                <label class="input-group-btn">
-                  <i class="fa fa-info" aria-hidden="true"></i>
-                  <span class="btn">
-                    Choose:<input type="file" style="display: none;" id="profile_photo">
-                  </span>
-                </label>
-                <input type="text" class="form-control" placeholder=".../Home/" readonly>
-              </div>
-            </div>
-            <div class="col-xs-4">
-	        		<img src="{{ url_for('static',filename='assets/profile/perfil-mediano.png') }}" class="user--icon--login">
-	        	</div>
+		        <div class="col-xs-12">
+		        	<div class="col-sm-6">
+		        	<div class="p__div">
+		        		<span class="p__span">Full name: </span><input class="form-control" type="text" id="p_fullname" name="p_fullname" placeholder="Full name">
+		        	</div>
+		        	<div class="p__div">
+		        		<span class="p__span">Username: </span><input class="form-control" type="text" id="p_username" name="p_username" placeholder="Username">
+		        	</div>
+		        	<div class="p__div">
+		        		<span class="p__span">E-mail: </span><input class="form-control" type="text" id="p_email" name="p_email" placeholder="example@example.com">
+		        		<img class="p__mail-img" src="{{ url_for('static',filename='images/mail-icon.jpg') }}">
+		        	</div>
+		        	<div class="p__div">
+		        		<span class="p__span">Confirm E-mail: </span><input class="form-control" type="text" id="p_confirm-e" name="p_confirm-e" placeholder="example@example.com">
+		        	</div>
+		        	</div>
+		        	<div class="col-sm-6">
+		        		<div class="input-group">
+		        			<img src="{{ url_for('static',filename='assets/profile/perfil-mediano.png') }}" class="user--icon--login" style="height: 65px;top: 10px;position: relative;">
+				                <label class="input-group-btn">
+				                  <i class="fa fa-info" aria-hidden="true"></i>
+				                  <span class="btn" style="font-size: 11px;">
+				                    Choose:<input type="file" style="display: none;" id="profile_photo">
+				                  </span>
+				                </label>
+				                <input style="height: 29px;top: -1px;" type="text" class="form-control" placeholder=".../Home/" readonly>
+				                <br>
+			            </div>
+			            <div class="p__div" style="margin-top: 78px;padding-left: 35px;">
+		                	<span class="p__span">Position:</span><input class="form-control" type="text" id="p_position" name="p_position" placeholder="Position">
+		                </div>
+		                <div class="p__div" style="padding-left: 35px;">
+		                	<span class="p__span">Group:</span><select class="form-control" id="p_group" name="p_group" placeholder="Group">Group</select>
+		                </div>
+		        	</div>
+		        </div>
 	        	<div class="col-xs-12">
-	        		<br><p>Do you want a public profile? People will be able to look you up in a list.</p>
+	        		<br><p class="p__titles--p"><i class="fa fa-sort-desc p_down-icon" aria-hidden="true"></i>Privacy options</p>
 	        	</div>
 	        	<div class="col-xs-12 register--check">
-	        		<input type="checkbox" name="Public_p"> Public profile
+	        		<input type="checkbox" name="Public_p"> Go fully public
+	        		<input type="checkbox" style="margin-left: 300px;" name="Public_p"> Go fully anonymous
 	        	</div>
 	        	<div class="col-xs-12">
-	        		<p>An e-mail has been sent to the address that you have provided. <br>
-	        			Check your e-mail account to complete the registration</p>
+	        		<input type="checkbox" name="Public_p"> Public profile: users will be able to look you up in a public list<br><br>
+	        		<input type="checkbox" name="Public_p"> Supporting proposals visible: your followers will see your name<br><br>
+	        		<input type="checkbox" name="Public_p"> Rejecting proposals visible: your followers will see your name in the list of proposal oponents
 	        	</div>
-          </div>
-          <div class="col-sm-12 modal-cancel">
-          		<button type="button" class="register--modal" data-dismiss="modal">Confirm</button>
+	        	<div class="col-xs-12">
+	        	<br>
+	        		<p class="p__titles--p"><i class="fa fa-sort-desc p_down-icon" aria-hidden="true"></i>E-mail options</p>
+	       		</div>
+		       <div class="col-xs-12 register--check">
+	        		<input type="checkbox" name="Public_p"> Send notifications of new follower by e-mail
+	        	</div>
+
+          	</div>
+            <div class="col-sm-12 modal-cancel" style="margin-top: 25px;">
+          		<button type="button" class="register--modal" data-dismiss="modal">Update info</button>
 	        	<!--<button type="button" class="cancel--modal" data-dismiss="modal">Close</button>-->
 	       </div>
 	      </div>

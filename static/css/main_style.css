@@ -1003,6 +1003,7 @@ input.form-control.invite__button:focus {
 .participant__setting span {
 	font-size: 33px;
 	color: #828282;
+	cursor: pointer;
 	top: -14px;
 }
 .participant__invite {
@@ -1173,5 +1174,41 @@ ul.nav-tabs li.active a:before {
 }
 #modal_participant div.modal-header h4 {
 	text-align: left;
+}
+#modal_participant .modal-dialog {
+	width: 950px;
+    left: 14%;
+    top: 5%;
+}
+#modal_participant div.modal-body {
+	height: 750px;
+	border-left: 2px solid #3faf2e;
+	border-right: 2px solid #3faf2e;
+	border-bottom: 2px solid #3faf2e;
+}
+.p_down-icon {
+	margin-right: 7px;
+    position: relative;
+    top: -3px;
+}
+.p__div {
+	display: inline-flex;
+	width: 100%;
+	margin-bottom: 20px;
+}
+.p__span {
+	width: 185px;
+}
+.p__mail-img {
+	height: 20px;
+    position: relative;
+    top: 10px;
+    left: 10px;
+}
+.p__titles--p {
+	margin-left: -15px;
+    color: #000;
+    font-family: lato_bold;
+    font-size: 16px;
 }
 /***** END OF PARTICIPANTS STYLE *******/
