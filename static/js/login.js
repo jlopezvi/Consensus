@@ -111,7 +111,7 @@ $(document).ready( function() {
       'image_url': '', //$('#password').val(),
       'ifpublicprofile': false, //$('#public_r').val(),
       'host_email': null,
-      'ifemailverified': false
+      'ifemailverified': true
     };
     $.ajax({
       url: 'registration',
