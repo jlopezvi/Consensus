@@ -86,11 +86,15 @@
             </ul>
 
             <div class="tab-content">
-                <div id="home" class="tab-pane active">
+                <div id="home" class="tab-pane active addproposal--step2__div">
                   <ul class="addproposal--step2">
                     <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="{{ url_for('static',filename='assets/profile/perfil-mediano.png') }}"><p><a href="#">Emile</a> <br>Emile Godard </p></li>
                     <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="{{ url_for('static',filename='assets/profile/perfil-mediano.png') }}"><p><a href="#">JJacques</a> <br>Jean Jacques Richelieu </p></li>
                     <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="{{ url_for('static',filename='assets/profile/perfil-mediano.png') }}"><p><a href="#">Zoe</a> <br>Zoe Martin Pescador </p></li>
+                    <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="{{ url_for('static',filename='assets/profile/perfil-mediano.png') }}"><p><a href="#">Joe</a> <br>Joe Black</p></li>
+                    <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="{{ url_for('static',filename='assets/profile/perfil-mediano.png') }}"><p><a href="#">Joe</a> <br>Joe Black</p></li>
+                    <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="{{ url_for('static',filename='assets/profile/perfil-mediano.png') }}"><p><a href="#">Joe</a> <br>Joe Black</p></li>
+                    <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="{{ url_for('static',filename='assets/profile/perfil-mediano.png') }}"><p><a href="#">Joe</a> <br>Joe Black</p></li>
                     <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="{{ url_for('static',filename='assets/profile/perfil-mediano.png') }}"><p><a href="#">Joe</a> <br>Joe Black</p></li>
                   </ul>
                 </div>
@@ -110,7 +114,7 @@
         </div>
 		</div>
 
-    	<div class="col-sm-6 participant__newsfeed">
+    	<div class="col-sm-6 participant__newsfeed" style="min-height: 1024px;">
     	{% for feed_p in feed %}
         <div class="col-sm-12">  
             <div class="row home--header">
