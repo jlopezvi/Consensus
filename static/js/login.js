@@ -101,6 +101,11 @@ $(document).ready( function() {
   });
 
   $(document).on('click', '.register--modal', function(){
+    if ($('#public_r').is(":checked"))
+        opt = true;
+    else
+        opt = false;
+    console.log(opt);
     var data = {
       'fullname': $('#fullname_r').val(),
       'email': $('#email_r').val(),
@@ -109,7 +114,7 @@ $(document).ready( function() {
       'group': 'IT', //$('#group_r').val(),
       'password': $('#password_r').val(),
       'image_url': '', //$('#password').val(),
-      'ifpublicprofile': false, //$('#public_r').val(),
+      'ifpublicprofile': opt
       'host_email': null,
       'ifemailverified': true
     };
