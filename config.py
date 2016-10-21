@@ -18,11 +18,11 @@ class BaseConfig(object):
     MAIL_USE_SSL = True
 
     # gmail authentication
-    MAIL_USERNAME = "consensus.info@gmail.com"
-    MAIL_PASSWORD = "consensusadmin"
+    MAIL_USERNAME = 'consensus.info@gmail.com'
+    MAIL_PASSWORD = 'consensusadmin'
 
     # mail accounts
-    MAIL_DEFAULT_SENDER = 'from@example.com'
+    MAIL_DEFAULT_SENDER = 'consensus.info@gmail.com'
 
 
 class DevelopmentConfig(BaseConfig):

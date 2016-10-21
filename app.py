@@ -15,17 +15,26 @@ from webManager import newsfeed2_aux
 import logging
 import flask_login
 from user_authentification import User
+from uuid_token import generate_confirmation_token, confirm_token
 
 
 #TODO: logging, sending emails when errors take place.
 #logging.basicConfig(level=logging.DEBUG)
 
+#__init__
 app = Flask(__name__)
+# app.debug = True
+app.config.from_object('config.BaseConfig')
+try:
+    os.environ['APP_SETTINGS']
+    app.config.from_object(os.environ['APP_SETTINGS'])
+except KeyError:
+    pass
 
 #flask_login
 login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
-app.secret_key = 'super secret string'  # Change this!
+#app.secret_key = 'super secret string'  # Change this!
 @login_manager.user_loader
 def user_loader(email):
     return User(email)
@@ -328,7 +337,9 @@ def signUp(host_email=None):
 #output: e-mail to the email account with a URL link for email verification
 @app.route('/registration_send_emailverification/<email>')
 def registration_send_emailverification(email):
-    pass
+    token = generate_confirmation_token(email)
+    return token
+
 
 #input: URL from an invitation e-mail with email to be verified
 #output: redirects to login page with message in json {"verified_email":"asd@asdf"}
@@ -445,13 +456,6 @@ def getConcerns(current):
 
 
 if __name__ == '__main__':
-    #app.debug = True
-    app.config.from_object('config.BaseConfig')
-    try:
-        os.environ['APP_SETTINGS']
-        app.config.from_object(os.environ['APP_SETTINGS'])
-    except KeyError:
-        pass
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
     #app.run(host='127.0.0.1', port=port)
