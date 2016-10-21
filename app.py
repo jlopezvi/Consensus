@@ -347,10 +347,13 @@ def signUp(host_email=None):
 
 
 
+############################################
 #API
+############################################
 
 #input: email to be verified as an argument
 #output: e-mail to the email account with a URL link for email verification
+#         and json {"response": "email sent"}
 @app.route('/registration_send_emailverification/<email>')
 def registration_send_emailverification(email):
     token = generate_confirmation_token(email)
@@ -358,8 +361,7 @@ def registration_send_emailverification(email):
     html = render_template('login/verificationemail.html', confirm_url=confirm_url)
     subject = "Please confirm your email"
     send_email(email, subject, html)
-
-    return token
+    return jsonify({'response': 'email sent'})
 
 
 #input: URL from an invitation e-mail with email to be verified
@@ -478,5 +480,5 @@ def getConcerns(current):
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
-    #app.run(host='127.0.0.1', port=port)
+    #app.run(host='0.0.0.0', port=port)
+    app.run(host='127.0.0.1', port=port)
