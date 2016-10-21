@@ -16,3 +16,16 @@ def getGraph():
      else:
          graph_db = neo4j.GraphDatabaseService('http://localhost:7474/db/data')
      return graph_db
+
+
+from flask.ext.mail import Message
+
+def send_email(to, subject, template):
+    from app import app,mail
+    msg = Message(
+        subject,
+        recipients=[to],
+        html=template,
+        sender=app.config['MAIL_DEFAULT_SENDER']
+    )
+    mail.send(msg)

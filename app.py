@@ -16,12 +16,15 @@ import logging
 import flask_login
 from user_authentification import User
 from uuid_token import generate_confirmation_token, confirm_token
-
+from flask_mail import Mail
+from utils import send_email
 
 #TODO: logging, sending emails when errors take place.
 #logging.basicConfig(level=logging.DEBUG)
 
-#__init__
+################
+#### config ####
+################
 app = Flask(__name__)
 # app.debug = True
 app.config.from_object('config.BaseConfig')
@@ -30,6 +33,14 @@ try:
     app.config.from_object(os.environ['APP_SETTINGS'])
 except KeyError:
     pass
+
+
+####################
+#### extensions ####
+####################
+
+#flask-mail
+mail = Mail(app)
 
 #flask_login
 login_manager = flask_login.LoginManager()
@@ -42,6 +53,11 @@ def user_loader(email):
 #@login_manager.unauthorized_handler
 #def unauthorized_handler():
  #   return 'Unauthorized'
+
+
+####################
+####     API    ####
+####################
 
 #input: json {"email":"asdf@asdf", "password":"MD5password"}
 #output:
@@ -338,6 +354,11 @@ def signUp(host_email=None):
 @app.route('/registration_send_emailverification/<email>')
 def registration_send_emailverification(email):
     token = generate_confirmation_token(email)
+    confirm_url = url_for('.registration_receive_emailverification', email=token, _external=True)
+    html = render_template('login/verificationemail.html', confirm_url=confirm_url)
+    subject = "Please confirm your email"
+    send_email(email, subject, html)
+
     return token
 
 
