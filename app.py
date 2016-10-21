@@ -357,7 +357,7 @@ def signUp(host_email=None):
 @app.route('/registration_send_emailverification/<email>')
 def registration_send_emailverification(email):
     token = generate_confirmation_token(email)
-    confirm_url = url_for('.registration_receive_emailverification', email=token, _external=True)
+    confirm_url = url_for('.registration_receive_emailverification', token=token, _external=True)
     html = render_template('login/verificationemail.html', confirm_url=confirm_url)
     subject = "Please confirm your email"
     send_email(email, subject, html)
@@ -366,11 +366,19 @@ def registration_send_emailverification(email):
 
 #input: URL from an invitation e-mail with email to be verified
 #output: redirects to login page with message in json {"verified_email":"asd@asdf"}
-@app.route('/registration_receive_emailverification/<email>')
-def registration_receive_emailverification(email):
-    _verifyEmail(email)
-    jsondata = jsonify({'verified_email': email})
-    return redirect(url_for('.hello', message=jsondata))
+@app.route('/registration_receive_emailverification/<token>')
+def registration_receive_emailverification(token):
+    try:
+        email = confirm_token(token)
+    except:
+        return jsonify({'result': 'The confirmation link is invalid or has expired'})
+
+    result_dict=_verifyEmail(email)
+    if result_dict['result'] == 'OK' :
+        jsondata = jsonify({'verified_email': email})
+        return redirect(url_for('.hello', message=jsondata))
+    else:
+        return jsonify(result_dict)
 
 #input: URL from an invitation e-mail with guest_email and host_email
 #output: redirects to login page with message in json {"current_email":"asd@asdf","host_email":"bd@asdf"}
