@@ -16,7 +16,10 @@ import logging
 import flask_login
 from user_authentification import User
 
+
+#TODO: logging, sending emails when errors take place.
 #logging.basicConfig(level=logging.DEBUG)
+
 app = Flask(__name__)
 
 #flask_login
@@ -443,6 +446,12 @@ def getConcerns(current):
 
 if __name__ == '__main__':
     #app.debug = True
+    app.config.from_object('config.BaseConfig')
+    try:
+        os.environ['APP_SETTINGS']
+        app.config.from_object(os.environ['APP_SETTINGS'])
+    except KeyError:
+        pass
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
     #app.run(host='127.0.0.1', port=port)
