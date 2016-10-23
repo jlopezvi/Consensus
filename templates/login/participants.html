@@ -60,7 +60,7 @@
         		</div>
         		<div class="col-sm-2">
         			<div class="participant__setting">
-        				<span class="glyphicon glyphicon-cog"></span>
+        				<span data-toggle="modal" data-target="#modal_participant" class="glyphicon glyphicon-cog"></span>
         			</div>
         		</div>
         	</div>
@@ -86,11 +86,15 @@
             </ul>
 
             <div class="tab-content">
-                <div id="home" class="tab-pane active">
+                <div id="home" class="tab-pane active addproposal--step2__div">
                   <ul class="addproposal--step2">
                     <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="{{ url_for('static',filename='assets/profile/perfil-mediano.png') }}"><p><a href="#">Emile</a> <br>Emile Godard </p></li>
                     <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="{{ url_for('static',filename='assets/profile/perfil-mediano.png') }}"><p><a href="#">JJacques</a> <br>Jean Jacques Richelieu </p></li>
                     <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="{{ url_for('static',filename='assets/profile/perfil-mediano.png') }}"><p><a href="#">Zoe</a> <br>Zoe Martin Pescador </p></li>
+                    <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="{{ url_for('static',filename='assets/profile/perfil-mediano.png') }}"><p><a href="#">Joe</a> <br>Joe Black</p></li>
+                    <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="{{ url_for('static',filename='assets/profile/perfil-mediano.png') }}"><p><a href="#">Joe</a> <br>Joe Black</p></li>
+                    <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="{{ url_for('static',filename='assets/profile/perfil-mediano.png') }}"><p><a href="#">Joe</a> <br>Joe Black</p></li>
+                    <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="{{ url_for('static',filename='assets/profile/perfil-mediano.png') }}"><p><a href="#">Joe</a> <br>Joe Black</p></li>
                     <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="{{ url_for('static',filename='assets/profile/perfil-mediano.png') }}"><p><a href="#">Joe</a> <br>Joe Black</p></li>
                   </ul>
                 </div>
@@ -110,11 +114,11 @@
         </div>
 		</div>
 
-    	<div class="col-sm-6 participant__newsfeed">
+    	<div class="col-sm-6 participant__newsfeed" style="min-height: 1024px;">
     	{% for feed_p in feed %}
         <div class="col-sm-12">  
             <div class="row home--header">
-                <div class="col-sm-2" style="padding-left: 0px;">
+                <div class="col-sm-2" style="padding-left: 0px;margin-left: -15px;">
                 {% if (feed_p.picture == '') %}
                     <i class="fa fa-user user--icon"></i>
                 {% else %}
@@ -127,7 +131,7 @@
                     <a href="#">{{ feed_p.name }}</a>
                 </div>
                 <div class="col-sm-2 newsfeed--duration">
-                    <p><img style="width: 19px;position: relative;top: -3px;" src="{{ url_for('static',filename='images/clock-icon.png') }}">&nbsp;
+                    <p><img style="width: 15px;position: relative;top: -3px;" src="{{ url_for('static',filename='images/clock-icon.png') }}">&nbsp;
                     {{ feed_p.duration }}</p>
                 </div>
                 <div class="col-sm-3 home--charge">
@@ -205,13 +209,13 @@
             </div>
             <div class="row home--share">
                 <div class="col-sm-12 home--share--icons">
-                    <div class="col-sm-6" style="padding:0;">
+                    <div class="col-sm-6" style="padding:0;width: 100%;">
                         <img src="{{ url_for('static',filename='images/x-icon.png') }}">
                         <img style="width: 50px;" src="{{ url_for('static',filename='images/check-icon.png') }}">
                         <img style="width: 48px;" src="{{ url_for('static',filename='images/checkmark.png') }}">
                         <img style="width: 50px;" src="{{ url_for('static',filename='images/ignore-icon.png') }}">
                     </div>
-                    <div class="col-sm-6 home--followers">
+                    <div class="col-sm-6 home--followers" style="width: 100%;">
                         <i class="fa fa-share-alt"></i>
                         <p>Share with: followers</p>
                     </div>
@@ -222,6 +226,83 @@
     {% endfor %}
     	</div>
     </div>
+    <div id="modal_participant" class="modal fade" role="dialog">
+	  <div class="modal-dialog">
+	    <!-- Modal content-->
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        <h4 class="modal-title"><span class="glyphicon glyphicon-cog" style="margin: 0 10px 0 10px;"></span>Participants</h4>
+	      </div>
+	      <div class="modal-body">
+	      	<div class="col-xs-12">
+	      		<div class="col-xs-8">
+	        		<p class="p__titles--p"><i class="fa fa-sort-desc p_down-icon" aria-hidden="true"></i>Edit your personal data</p><br>
+	        	</div>
+		        <div class="col-xs-12">
+		        	<div class="col-sm-6">
+		        	<div class="p__div">
+		        		<span class="p__span">Full name: </span><input class="form-control" type="text" id="p_fullname" name="p_fullname" placeholder="Full name">
+		        	</div>
+		        	<div class="p__div">
+		        		<span class="p__span">Username: </span><input class="form-control" type="text" id="p_username" name="p_username" placeholder="Username">
+		        	</div>
+		        	<div class="p__div">
+		        		<span class="p__span">E-mail: </span><input class="form-control" type="text" id="p_email" name="p_email" placeholder="example@example.com">
+		        		<img class="p__mail-img" src="{{ url_for('static',filename='images/mail-icon.jpg') }}">
+		        	</div>
+		        	<div class="p__div">
+		        		<span class="p__span">Confirm E-mail: </span><input class="form-control" type="text" id="p_confirm-e" name="p_confirm-e" placeholder="example@example.com">
+		        	</div>
+		        	</div>
+		        	<div class="col-sm-6">
+		        		<div class="input-group">
+		        			<img src="{{ url_for('static',filename='assets/profile/perfil-mediano.png') }}" class="user--icon--login" style="height: 65px;top: 10px;position: relative;">
+				                <label class="input-group-btn">
+				                  <i class="fa fa-info" aria-hidden="true"></i>
+				                  <span class="btn" style="font-size: 11px;">
+				                    Choose:<input type="file" style="display: none;" id="profile_photo">
+				                  </span>
+				                </label>
+				                <input style="height: 29px;top: -1px;" type="text" class="form-control" placeholder=".../Home/" readonly>
+				                <br>
+			            </div>
+			            <div class="p__div" style="margin-top: 78px;padding-left: 35px;">
+		                	<span class="p__span">Position:</span><input class="form-control" type="text" id="p_position" name="p_position" placeholder="Position">
+		                </div>
+		                <div class="p__div" style="padding-left: 35px;">
+		                	<span class="p__span">Group:</span><select class="form-control" id="p_group" name="p_group" placeholder="Group">Group</select>
+		                </div>
+		        	</div>
+		        </div>
+	        	<div class="col-xs-12">
+	        		<br><p class="p__titles--p"><i class="fa fa-sort-desc p_down-icon" aria-hidden="true"></i>Privacy options</p>
+	        	</div>
+	        	<div class="col-xs-12 register--check">
+	        		<input type="checkbox" name="Public_p"> Go fully public
+	        		<input type="checkbox" style="margin-left: 300px;" name="Public_p"> Go fully anonymous
+	        	</div>
+	        	<div class="col-xs-12" style="padding-left: 35px;">
+	        		<input type="checkbox" name="Public_p"> Public profile: users will be able to look you up in a public list<br><br>
+	        		<input type="checkbox" name="Public_p"> Supporting proposals visible: your followers will see your name<br><br>
+	        		<input type="checkbox" name="Public_p"> Rejecting proposals visible: your followers will see your name in the list of proposal oponents
+	        	</div>
+	        	<div class="col-xs-12">
+	        	<br>
+	        		<p class="p__titles--p"><i class="fa fa-sort-desc p_down-icon" aria-hidden="true"></i>E-mail options</p>
+	       		</div>
+		       <div class="col-xs-12 register--check" style="padding-left: 35px;">
+	        		<input type="checkbox" name="Public_p"> Send notifications of new follower by e-mail
+	        	</div>
+
+          	</div>
+            <div class="col-sm-12 modal-cancel" style="margin-top: 25px;">
+          		<button type="button" class="register--modal" data-dismiss="modal">Update info</button>
+	        	<!--<button type="button" class="cancel--modal" data-dismiss="modal">Close</button>-->
+	       </div>
+	      </div>
+	    </div>
+	  </div>
 </div>
 
 {% endblock %}

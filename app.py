@@ -15,14 +15,37 @@ from webManager import newsfeed2_aux
 import logging
 import flask_login
 from user_authentification import User
+from uuid_token import generate_confirmation_token, confirm_token
+from flask_mail import Mail
+from utils import send_email
 
+#TODO: logging, sending emails when errors take place.
 #logging.basicConfig(level=logging.DEBUG)
+
+################
+#### config ####
+################
 app = Flask(__name__)
+# app.debug = True
+app.config.from_object('config.BaseConfig')
+try:
+    os.environ['APP_SETTINGS']
+    app.config.from_object(os.environ['APP_SETTINGS'])
+except KeyError:
+    pass
+
+
+####################
+#### extensions ####
+####################
+
+#flask-mail
+mail = Mail(app)
 
 #flask_login
 login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
-app.secret_key = 'super secret string'  # Change this!
+#app.secret_key = 'super secret string'  # Change this!
 @login_manager.user_loader
 def user_loader(email):
     return User(email)
@@ -30,6 +53,11 @@ def user_loader(email):
 #@login_manager.unauthorized_handler
 #def unauthorized_handler():
  #   return 'Unauthorized'
+
+
+####################
+####     API    ####
+####################
 
 #input: json {"email":"asdf@asdf", "password":"MD5password"}
 #output:
@@ -74,7 +102,7 @@ def login():
     if login['password'] == user_to_check['password']:
         user = User(login['email'])
         flask_login.login_user(user)
-        return redirect(url_for('newsfeed2'))
+        return jsonify(result="Login validated")
     else:
         return jsonify(result="Bad password")
     '''
@@ -206,20 +234,55 @@ def home():
 #     "image_url" : "static/images/concerns/social_coffee_break.jpg",
 #     "datestamp":"01.10.2016",
 #     "moreinfo":"I have to say as well this and this and this...",
-#     "supporters_goal": 500, "volunteers_goal": 5}
+#     "supporters_goal_num": 500, "volunteers_goal_num": 5}
 @app.route('/addIdeaToUser/<string:user_email>', methods=['POST'])
 def addIdeaToUser(user_email) :
     idea_dict = request.get_json()
     idea_object = Idea(idea_dict)
     return addIdeaToUser_aux(user_email, idea_object)
 
-
+#output : python dictionary sent by render_template
+# feed = {
+# 'idea_id' : id#,
+# 'author_photo_url' : 'assets/profile/perfil-mediano.png', 'author_username' : 'Daniela', 'author_email' : 'a@',
+# 'duration' : '2 days',
+# 'supporters_goal_num' : 200, 'supporters_num' : 5, 'volunteers_goal_num' : 5, 'volunteers_num' : 2,
+# 'image_url' : 'url-to-picture',
+# 'concern': 'Some text for the concern',
+# 'proposal': 'Some text for the proposal',
+# 'support_rate' : 95,
+# 'support_rate_MIN' : 90,
+# 'supporters': [
+# { 'email': 'b@', 'username': 'Maria' }, { 'email': 'c@', 'username': 'Pedro' }
+#             ],
+# 'rejectors':[
+# { 'email': 'd@', 'username': 'Elisa' }
+#               ]
+# }
 @app.route('/newsfeed2')
 @flask_login.login_required
 def newsfeed2():
     print('Logged in as: ' + flask_login.current_user.id)
     return newsfeed2_aux(flask_login.current_user.id)
 
+#TODO: change 'feed' to this format, python dictionnary, and then replace /newsfeed by /newsfeed2
+# feed = {
+# 'idea_id' : id#,
+# 'author_photo_url' : 'assets/profile/perfil-mediano.png', 'author_username' : 'Daniela', 'author_email' : 'a@',
+# 'duration' : '2 days',
+# 'supporters_goal_num' : 200, 'supporters_num' : 5, 'volunteers_goal_num' : 5, 'volunteers_num' : 2,
+# 'image_url' : 'url-to-picture',
+# 'concern': 'Some text for the concern',
+# 'proposal': 'Some text for the proposal',
+# 'support_rate' : 95,
+# 'support_rate_MIN' : 90,
+# 'supporters': [
+# { 'email': 'b@', 'username': 'Maria' }, { 'email': 'c@', 'username': 'Pedro' }
+#             ],
+# 'rejectors':[
+# { 'email': 'd@', 'username': 'Elisa' }
+#               ]
+# }
 
 @app.route('/newsfeed')
 #@flask_login.login_required
@@ -287,21 +350,38 @@ def signUp(host_email=None):
 
 
 
+############################################
 #API
+############################################
 
 #input: email to be verified as an argument
 #output: e-mail to the email account with a URL link for email verification
+#         and json {"response": "email sent"}
 @app.route('/registration_send_emailverification/<email>')
 def registration_send_emailverification(email):
-    pass
+    token = generate_confirmation_token(email)
+    confirm_url = url_for('.registration_receive_emailverification', token=token, _external=True)
+    html = render_template('login/verificationemail.html', confirm_url=confirm_url)
+    subject = "Please confirm your email"
+    send_email(email, subject, html)
+    return jsonify({'response': 'email sent'})
+
 
 #input: URL from an invitation e-mail with email to be verified
 #output: redirects to login page with message in json {"verified_email":"asd@asdf"}
-@app.route('/registration_receive_emailverification/<email>')
-def registration_receive_emailverification(email):
-    _verifyEmail(email)
-    jsondata = jsonify({'verified_email': email})
-    return redirect(url_for('.hello', message=jsondata))
+@app.route('/registration_receive_emailverification/<token>')
+def registration_receive_emailverification(token):
+    try:
+        email = confirm_token(token)
+    except:
+        return jsonify({'result': 'The confirmation link is invalid or has expired'})
+
+    result_dict=_verifyEmail(email)
+    if result_dict['result'] == 'OK' :
+        jsondata = jsonify({'verified_email': email})
+        return redirect(url_for('.hello', message=jsondata))
+    else:
+        return jsonify(result_dict)
 
 #input: URL from an invitation e-mail with guest_email and host_email
 #output: redirects to login page with message in json {"current_email":"asd@asdf","host_email":"bd@asdf"}
@@ -410,7 +490,6 @@ def getConcerns(current):
 
 
 if __name__ == '__main__':
-    app.debug = True
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
     #app.run(host='127.0.0.1', port=port)

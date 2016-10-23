@@ -1,4 +1,26 @@
 @media only screen and (max-width: 1200px) {
+	#modal_participant .modal-dialog {
+		left: 5%;
+	}
+	.participant__body .home--proposals--body {
+    	background-position-x: -283px;
+	}
+	div.participant__body div.newsfeed--goals {
+		top: 37px;
+	}
+	.participant__body .newsfeed--support {
+	    padding: 0;
+	    margin-left: -20px;
+	}
+	.participant__body .newsfeed--footer input[type="button"] {
+	    left: 15px;
+	}
+	.participant__body .newsfeed--likes {
+		margin-left: 0;
+	}
+	.participant__profile--pic .profile--picture img {
+    	top: 61px;
+	}
 	.login--actions .col-sm-6 {
 	    font-size: 10px;
 	}
@@ -10,6 +32,10 @@
 	}
 	.newsfeed--header {
     	font-size: 14px;
+	}
+	.container__participants {
+		padding-right: 66px;
+   		margin-left: 30px;
 	}
 	.newsfeed--header .fa-clock-o {
     	font-size: 30px;
@@ -158,17 +184,38 @@
     	height: 810px;
     }
 }
+@media only screen and (max-width: 1060px) {
+	#modal_participant .modal-dialog {
+    	left: 2%;
+	}
+}
 @media only screen and (max-width: 1024px) {
+	#modal_participant .modal-dialog {
+    	width: 950px!important;
+    	left: 2%!important;
+
+	}
+	#modal_participant {
+    	overflow-x: scroll;
+
+	}
 	#modal_sign .modal-dialog {
     	top: 15%;
     	left: 15%;
 	}
 	.nav--style ul {
-	    margin-left: 5%;
+	    margin-left: 0%;
 	}
 	.newsfeed--progress , .newsfeed--progress2 {
    		width: 110%;
    	}
+   	.search__participant ul li input[type="button"] {
+    	padding: 5px 15px;
+    	font-size: 14px;
+	}
+	.invite__button {
+    	width: 75px;
+	}
 }
 @media only screen and (max-width: 991px) {
 	.newsfeed--progress , .newsfeed--progress2 {
@@ -270,7 +317,7 @@
 	.modal-dialog {
 	    width: 550px!important;
 	}
-	#modal_proposal1, #modal_proposal2, #modal_proposal3, #modal_sign {
+	#modal_proposal1, #modal_proposal2, #modal_proposal3, #modal_sign, #moda_participant {
 		overflow-x: scroll;
 	}
 	#modal_proposal2 .modal-body {
@@ -282,13 +329,23 @@
 }
 @media only screen and (max-width: 870px) {
 	.nav--style ul {
-	    margin-left: 3%;
+	    margin-left: 0%;
 	}
 	.modal-dialog {
 	   left: 13%!important;
 	}
+	.primary--header {
+		left: 48%;
+	}
 }
 @media only screen and (max-width: 767px) {
+	.search__participant ul li input[type="button"] {
+		padding: 5px 15px;
+    	font-size: 14px;
+	}
+	.invite__button {
+    	width: 75px;
+	}
 	.newsfeed--body {
    	    background-position-x: -239px;
 	}	
@@ -491,6 +548,16 @@
 		left: 7%!important;
 	}
 }
+@media only screen and (max-width: 650px) {
+	.search__participant ul li input[type="button"] {
+	    padding: 5px 5px;
+	    font-size: 13px;
+	    margin-right: 0;
+	}
+	.invite__button {
+    	width: 50px;
+	}
+}
 @media only screen and (max-width: 620px) {
 	.newsfeed--header .newsfeed--charge {
     	width: 40%;
@@ -515,6 +582,9 @@
 	.newsfeed--support {
 		margin-left: -7px;
 	}
+	.search__div--participants {
+		margin-top: 20px;
+	}
 }
 @media only screen and (max-width: 600px) {
 	.home--proposals--body {
@@ -527,6 +597,9 @@
 @media only screen and (max-width: 580px) {
 	.newsfeed--body {
     	background-position-x: -350px;
+	}
+	.search__participant .addproposal--step2 {
+    	padding: 30px 20px;
 	}
 }
 @media only screen and (max-width: 560px){
@@ -554,6 +627,12 @@
 	.newsfeed--button {
 		width: 110px;
 		height: auto;
+	}
+	.search__participant ul li {
+    	margin-left: 0!important;
+	}
+	.search__div--participants {
+		width: 345px;
 	}
 }
 @media only screen and (max-width: 510px){
@@ -625,6 +704,40 @@
 	.primary--header a {
     	width: 70%;
 	}
+	.search__participant .addproposal--step2 li img {
+    	height: 50px;
+	}
+	.search__participant .addproposal--step2 li p {
+	    position: relative;
+	    top: -7px;
+	}
+	.search__participant .addproposal--step2 li input {
+	    margin-right: 10px;
+	}
+	.search__participant ul li input[type="button"] {
+    	margin-top: 8px;
+	}
+}
+@media only screen and (max-width: 470px) {
+	.newsfeed--body {
+    	background-position-x: -468px;
+	}
+	.home--proposals--body {
+    	background-position-x: -245px;
+	}
+}
+@media only screen and (max-width: 430px) {
+	.search__participant ul li {
+    	font-size: 12px;
+	}
+	.search__participant ul li input[type="button"] {
+    	padding: 2px 3px;
+    	font-size: 11px;
+	}
+	.invite__button {
+    	width: 40px;
+    	height: 25px;
+	}
 }
 @media only screen and (max-width: 420px) {
 	.home--followers {
@@ -661,16 +774,6 @@
 	.newsfeed--footer .redflag--img{
 		width: 30px;
 	}
-}
-@media only screen and (max-width: 470px) {
-	.newsfeed--body {
-    	background-position-x: -468px;
-	}
-	.home--proposals--body {
-    	background-position-x: -245px;
-	}
-}
-@media only screen and (max-width: 410px) {
 	.newsfeed--body {
     	background-position-x: -525px;
 	}
@@ -678,6 +781,7 @@
     	background-position-x: -335px;
 	}
 }
+
 @media only screen and (max-width: 400px) {
 
 	.newsfeed--footer input[type="button"] {
@@ -785,7 +889,7 @@
 }
 @media only screen and (max-width: 330px){
 	.newsfeed--content > div{
-		padding: 0;s
+		padding: 0;
 	}
 }
 @media only screen and (max-width: 320px) {

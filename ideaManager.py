@@ -10,45 +10,44 @@ class Idea:
     #                           'proposal':'this is my proposal <140',
     #                            'image_url':'.../image.jpg', 'datestamp':'01.12.2012',
     #                            'moreinfo':'I have to say this and this and this...',
-    #                            'supporters_goal': 500, 'volunteers_goal': 5}
+    #                            'supporters_goal_num': 500, 'volunteers_goal_num': 5}
     def __init__(self, idea_dict):
         self.concern = idea_dict['concern']
         self.proposal = idea_dict['proposal']
         self.image_url = idea_dict['image_url']
         self.datestamp = idea_dict['datestamp']
         self.moreinfo = idea_dict['moreinfo']
-        self.supporters_goal = idea_dict['supporters_goal']
-        self.volunteers_goal = idea_dict['volunteers_goal']
+        self.supporters_goal_num = idea_dict['supporters_goal_num']
+        self.volunteers_goal_num = idea_dict['volunteers_goal_num']
 
 
-# input: user_email, idea (object from class Idea)
-# output: json {"result"="added idea to database"}/{"result"="idea already exists"}
-def addIdeaToUser_aux(user_email, idea):
-    print("1")
+# input: user_email, idea_obj (object from class Idea)
+# output: json {"result"="added idea to database"}/{"result"="proposal already exists"}
+def addIdeaToUser_aux(user_email, newidea_obj):
     user = _getParticipantByEmail(user_email)
-    idea_index = idea.proposal
-    print("2")
-    if _getIdeaByIdeaIndex(idea_index) :
-        return jsonify(result="idea already exists")
-    newIdea, = getGraph().create({"concern": idea.concern, "proposal": idea.proposal, "image_url": idea.image_url,
-                                  "datestamp": idea.datestamp, "moreinfo": idea.moreinfo,
-                                  "supporters_goal": idea.supporters_goal, "volunteers_goal": idea.volunteers_goal})
-    newIdea.add_labels("idea")
-    print("3")
-    _addIdeaToIndex(idea_index, newIdea)
-    getGraph().create((user, "CREATES", newIdea))
+    newidea_index = newidea_obj.proposal
+    if _getIdeaByIdeaIndex(newidea_index) :
+        return jsonify(result="proposal already exists")
+    #TODO: create numerical index. For the moment the index is the proposal, which must be unique.
+    # The numerical index could be an integer field in the idea. In the launching of the app,
+    # the last assigned index would be retrieved, then each idea would be assigned with an ascending integer.
+    newidea_node, = getGraph().create({"concern": newidea_obj.concern, "proposal": newidea_obj.proposal,
+                                       "image_url": newidea_obj.image_url,
+                                       "datestamp": newidea_obj.datestamp, "moreinfo": newidea_obj.moreinfo,
+                                       "supporters_goal_num": newidea_obj.supporters_goal_num,
+                                       "volunteers_goal_num": newidea_obj.volunteers_goal_num})
+    newidea_node.add_labels("idea")
+    _addIdeaToIndex(newidea_index, newidea_node)
+    getGraph().create((user, "CREATES", newidea_node))
     #calls dynamic function to spread idea
-    spreadIdeaToFollowers_aux(user_email, idea_index)
-    print("5")
+    spreadIdeaToFollowers_aux(user_email, newidea_index)
     return jsonify(result="added idea to database")
 
 def spreadIdeaToFollowers_aux(participant_email, idea_index) :
     followers = getFollowerContacts(participant_email)
     idea=_getIdeaByIdeaIndex(idea_index)
-    print("6")
     for follower in followers :
         if _getIfVotingRelationshipExists(follower,idea) is False:
-            print("7")
             _ideaIsNewForParticipant(idea,follower)
     return "spreadIdeaToFollowers invoked"
 
@@ -60,18 +59,18 @@ def _getIfVotingRelationshipExists(participant, idea) :
          return True
     return False
 
+
 def _ideaIsNewForParticipant(idea,participant) :
     getGraph().create((idea, "IS NEW FOR", participant))
 
-def _addIdeaToIndex(proposal, newIdea):
-    _getIdeasIndex().add("proposal", proposal, newIdea)
+def _addIdeaToIndex(proposal, new_idea_node):
+    _getIdeasIndex().add("proposal", proposal, new_idea_node)
 
 def _getIdeaByIdeaIndex(idea_index) :
     ideaFound = _getIdeasIndex().get("proposal", idea_index)
     if ideaFound :
         return ideaFound[0]
     return None
-
 
 def _getIdeasIndex():
     return getGraph().get_or_create_index(neo4j.Node, "Ideas")

@@ -4,6 +4,7 @@ import ast
 import json
 import logging
 from utils import getGraph
+import datetime
 
 
 #input: python dict {'fullname':'Juan Lopez','email': 'jj@gmail.com', 'username': 'jlopezvi',
@@ -17,15 +18,15 @@ def registration_aux(inputdict):
     email = inputdict.get('email')
     if _getParticipantByEmail(email) :
         return jsonify(result="participant already exists")
-    if _getParticipantByEmail(email) is None :
+    else : #registration
         ifemailverified=inputdict.get('ifemailverified')
         host_email=inputdict.get('host_email')
         if ifemailverified is True :
             _newParticipant(inputdict)
-            if host_email:
+            if host_email and (host_email is not email):
                 addFollowingContactToParticipant_aux(email, host_email)
             return jsonify(result="completed registration")
-        elif ifemailverified is False :
+        else :
             _newUnverifiedParticipant(inputdict)
             if host_email:
                 addFollowingContactToUnverifiedParticipant_aux(email, host_email)
@@ -58,12 +59,22 @@ def _newUnverifiedParticipant(participantdict):
     _addToUnverifiedParticipantsIndex(email, newparticipant)
 
 def _verifyEmail(email):
-    participant=_getUnverifiedParticipantByEmail(email)
-    _removeFromUnverifiedParticipantsIndex(email, participant)
-    _addToParticipantsIndex(email, participant)
-    participant.remove_labels("unverified_participant")
-    participant.add_labels("participant")
-    return jsonify({'result': 'OK'})
+    unverifiedparticipant = _getUnverifiedParticipantByEmail(email)
+    if unverifiedparticipant is None:
+       if _getParticipantByEmail(email):
+           return {'result': 'email already confirmed'}
+       else:
+           return {'result': 'email not registered'}
+    else:
+        unverifiedparticipant = _getUnverifiedParticipantByEmail(email)
+        _removeFromUnverifiedParticipantsIndex(email, unverifiedparticipant)
+        _addToParticipantsIndex(email, unverifiedparticipant)
+        unverifiedparticipant.remove_labels("unverified_participant")
+        unverifiedparticipant.add_labels("participant")
+        #TODO datestamp for registration
+        #registered_on=datetime.datetime.now()
+        return {'result': 'OK'}
+
 
 
 def deleteParticipant(email) :
