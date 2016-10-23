@@ -51,8 +51,8 @@ $(document).ready( function() {
         'email': $('#email').val(),
         'password' : $('#password').val()
       },
-      headers: {
-        'X-CSRFToken': getCookie("csrftoken")
+      headers:{
+        'Content-Type': 'application/json'
       },
       dataType: 'json',
       success: function (json) {
@@ -62,28 +62,5 @@ $(document).ready( function() {
         console.log(response);
       }
     });
-       var data = {
-         'email': $('#email').val(),
-         'password' : $('#password').val()
-       };
-       console.log(data);
-       $.ajax({
-         url: 'login',
-         type: 'POST',
-         data: {
-           'email': $('#email').val(),
-           'password' : $('#password').val()
-         },
-         headers: {
-           'X-CSRFToken': getCookie("csrftoken")
-         },
-         dataType: 'json',
-         success: function (json) {
-           console.log(json);
-         },
-         error: function(response){
-           console.log(response);
-         }
-       });
   });
 });

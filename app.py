@@ -64,17 +64,20 @@ def login2():
 #   / login cookie and redirection to '/newsfeed'
 @app.route('/login', methods=['POST'])
 def login():
-    email =request.get_json()['email']
-    user_to_check=_getParticipantByEmail(email)
+    login = request.get_json(force=True)
+    return jsonify(login)
+    '''
+    user_to_check=_getParticipantByEmail(login['email'])
     if user_to_check is None :
         return jsonify(result ="Bad e-mail")
 
-    if request.get_json()['password'] == user_to_check['password']:
-        user = User(email)
+    if login['password'] == user_to_check['password']:
+        user = User(login['email'])
         flask_login.login_user(user)
         return redirect(url_for('newsfeed2'))
     else:
         return jsonify(result="Bad password")
+    '''
 
 @app.route('/logout')
 def logout():
