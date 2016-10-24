@@ -949,11 +949,10 @@ input.form-control.invite__button:focus {
 }
 .container__participants {
 	font-family: lato_regular;
-	min-width: 1200px;
+	padding: 0 15px;
 }
 .container__search--participants {
 	font-family: lato_regular;
-	min-width: 400px;
 }
 .span__search input {
 	background-color: #d8e6ef!important;
