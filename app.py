@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask,jsonify,json
+from flask import Flask,jsonify,json, flash
 from crossdomain import crossdomain
 from flask import request,render_template,redirect,url_for
 import ast
@@ -352,8 +352,8 @@ def signUp(host_email=None):
 ############################################
 
 #input: email to be verified as an argument
-#output: e-mail to the email account with a URL link for email verification
-#         and json {"response": "email sent"}
+#output: e-mail to the email account with a URL token link for email verification
+#         and json {"result": "email sent"}
 @app.route('/registration_send_emailverification/<email>')
 def registration_send_emailverification(email):
     token = generate_confirmation_token(email)
@@ -361,11 +361,15 @@ def registration_send_emailverification(email):
     html = render_template('login/verificationemail.html', confirm_url=confirm_url)
     subject = "Please confirm your email"
     send_email(email, subject, html)
-    return jsonify({'response': 'email sent'})
+    return jsonify({'result': 'email sent'})
 
 
-#input: URL from an invitation e-mail with email to be verified
-#output: redirects to login page with message in json {"verified_email":"asd@asdf"}
+#input: URL token link from an invitation e-mail
+#output:
+#  -> json {"result": "email already confirmed"}
+#  -> json {"result": "email not registered"}
+#TODO: redirects to a place with a message of "email verified" and then, login user and redirection to newsfeed.
+#  -> logs in user (possible redundancy with registration_aux!) and redirects to newsfeed.
 @app.route('/registration_receive_emailverification/<token>')
 def registration_receive_emailverification(token):
     try:
@@ -375,8 +379,12 @@ def registration_receive_emailverification(token):
 
     result_dict=_verifyEmail(email)
     if result_dict['result'] == 'OK' :
-        jsondata = jsonify({'verified_email': email})
-        return redirect(url_for('.hello', message=jsondata))
+        #TODO: possibly redundant user_login: see function registration_aux
+        #user login
+        user = User(email)
+        flask_login.login_user(user)
+        flash ('email registered')
+        return redirect(url_for('.newsfeed2'))
     else:
         return jsonify(result_dict)
 
@@ -394,13 +402,13 @@ def registration_from_invitation(current_email,host_email):
 #              "position": "employee", "group": "IT", "password": "MD5password",
 #              "image_url": "http://.... ", "ifpublicprofile": true / false,
 #              "host_email": "asdf@das" / null, "ifemailverified": true / false}
-#return: json {"result": "completed registration"
-#                        / "registration pending of email verification"
-#                        / "user already exists"}
+#output:
+#     -> json {"result": "participant already exists""}
+#     -> login and redirect to registration_send_emailverification (on registration pending of email verification)
+#     -> login and redirect to newsfeed (on registration completed)
 @app.route('/registration', methods=['POST'])
 def registration():
     #call with json_data converted to python_dictionary_data
-    print(request.get_json())
     return registration_aux(request.get_json())
 
 #return: Full Name (normal string) corresponding to e-mail
