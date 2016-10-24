@@ -351,6 +351,14 @@ def signUp(host_email=None):
 #API
 ############################################
 
+#input: email
+#output: json {"result" : "Participant found" / "Participant not found" }
+@app.route('/get_participant_by_email/<email>')
+def getParticipantByEmail(email):
+    if _getParticipantByEmail(email,'all'):
+        return jsonify(result="Participant found")
+    return jsonify(result="Participant not found")
+
 #input: email to be verified as an argument
 #output: e-mail to the email account with a URL token link for email verification
 #         and json {"result": "email sent"}
@@ -403,9 +411,9 @@ def registration_from_invitation(current_email,host_email):
 #              "image_url": "http://.... ", "ifpublicprofile": true / false,
 #              "host_email": "asdf@das" / null, "ifemailverified": true / false}
 #output:
-#     -> json {"result": "participant already exists""}
-#     -> login and redirect to registration_send_emailverification (on registration pending of email verification)
-#     -> login and redirect to newsfeed (on registration completed)
+#     -> NOT USED BY FRONTEND json {"result": "participant already exists""}
+#     -> login and json {"result": "email not verified"} (on registration pending of email verification)
+#     -> login and json {"result": "OK"} (on registration completed)
 @app.route('/registration', methods=['POST'])
 def registration():
     #call with json_data converted to python_dictionary_data

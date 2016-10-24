@@ -14,9 +14,9 @@ import flask_login
 #              'image_url': 'http://.... ', 'ifpublicprofile': True / False,
 #              'host_email': 'asdf@das' / None, 'ifemailverified': True / False}
 #output:
-#     -> json {"result": "participant already exists""}
-#     -> login and redirect to registration_send_emailverification (on registration pending of email verification)
-#     -> login and redirect to newsfeed (on registration completed)
+#     -> NOT USED BY FRONTEND  json {"result": "participant already exists""}
+#     -> login and json {"result": "email not verified"} (on registration pending of email verification)
+#     -> login and json {"result": "OK"} (on registration completed)
 def registration_aux(inputdict):
     email = inputdict['email']
     if _getParticipantByEmail(email,'all') :
@@ -31,9 +31,12 @@ def registration_aux(inputdict):
         flask_login.login_user(user)
         #routes depending on whether the email has been verified or not
         if inputdict['ifemailverified'] is True:
-            return redirect(url_for('newsfeed'))
+            return jsonify(result="OK")
+            #return redirect(url_for('newsfeed'))
         else :
+            return jsonify(result="email not verified")
             return redirect(url_for('registration_send_emailverification', email=email))
+
             #return jsonify(result="registration pending of email verification")
         # else :
         #     _newUnverifiedParticipant(inputdict)
