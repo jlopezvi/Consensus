@@ -35,7 +35,7 @@ def registration_aux(inputdict):
             #return redirect(url_for('newsfeed'))
         else :
             return jsonify(result="email not verified")
-            return redirect(url_for('registration_send_emailverification', email=email))
+            #return redirect(url_for('registration_send_emailverification', email=email))
 
             #return jsonify(result="registration pending of email verification")
         # else :

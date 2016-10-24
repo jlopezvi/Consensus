@@ -56,7 +56,6 @@ $(document).ready( function() {
           },
           dataType: 'json',
           success: function (json) {
-            console.log(json);
             if(json.result == 'Bad password'){
               $('.login--message').empty().append('Email or Password wrong!').show();
             } else if(json.result == 'Bad e-mail'){
@@ -67,7 +66,6 @@ $(document).ready( function() {
           },
           error: function(response){
             console.log('error');
-            console.log(response);
           }
         });
     }
@@ -92,7 +90,26 @@ $(document).ready( function() {
         $('.register--message').empty().append('All fields must be fills!').show();
     } else {
         if($('#password_r').val() == $('#password2_r').val()){
-            $('#modal_sign').modal('show');
+            $.ajax({
+              url: 'get_participant_by_email/'+data.email,
+              type: 'GET',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              dataType: 'json',
+              success: function (json) {
+                if(json.result == 'Participant found'){
+                  $('.register--message').removeClass('alert-success').addClass('alert-danger');
+                  $('.register--message').empty().append('Email already taken').show();
+                } else {
+                    $('#modal_sign').modal('show');
+                }
+              },
+              error: function(response){
+                console.log('error');
+              }
+            });
+
         } else {
             $('.register--message').removeClass('alert-success').addClass('alert-danger');
             $('.register--message').empty().append('Passwords must be the same!').show();
@@ -110,7 +127,7 @@ $(document).ready( function() {
       'email': $('#email_r').val(),
       'username': $('#username_r').val(),
       'position': $('#position_r').val(),
-      'group': 'IT', //$('#group_r').val(),
+      'group': $('#group_r').val(),
       'password': $('#password_r').val(),
       'image_url': '', //$('#password').val(),
       'ifpublicprofile': opt,
@@ -120,23 +137,37 @@ $(document).ready( function() {
     $.ajax({
       url: 'registration',
       type: 'POST',
-      data: {
-        'email': $('#email').val(),
-        'password' : $('#password').val()
-      },
       data: JSON.stringify(data),
       headers: {
         'Content-Type': 'application/json'
       },
       dataType: 'json',
       success: function (json) {
-        if(json.result == 'registration pending of email verification'){
-            $('.register--message').removeClass('alert-danger').addClass('alert-success');
-            $('.register--message').empty().append('Registration completed. <br> Check your email and validate your account!').show();
+        if(json.result == 'email not verified'){
+            $.ajax({
+              url: 'registration_send_emailverification/'+data.email,
+              type: 'GET',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              dataType: 'json',
+              success: function (json) {
+                if (json.result == 'email sent'){
+                    $('.register--message').removeClass('alert-danger').addClass('alert-success');
+                    $('.register--message').empty().append('Registration completed. <br> Check your email and validate your account!').show();
+                }
+              },
+              error: function(response){
+                console.log('error');
+                console.log(response);
+              }
+            });
+        } else if (json.result == 'OK'){
+            window.location = '/newsfeed';
         }
       },
       error: function(response){
-        console.log(response);
+        console.log('error');
       }
     });
   });
