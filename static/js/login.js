@@ -133,7 +133,7 @@ $(document).ready( function() {
       'image_url': '', //$('#password').val(),
       'ifpublicprofile': opt,
       'host_email': null,
-      'ifemailverified': false
+      'ifemailverified': true
     };
     $.ajax({
       url: 'registration',
