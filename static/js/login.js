@@ -118,6 +118,7 @@ $(document).ready( function() {
   });
 
   $(document).on('click', '.register--modal', function(){
+    $('.register--button').prop('disabled', 'true');
     if ($('#public_r').is(":checked"))
         opt = true;
     else
@@ -152,14 +153,15 @@ $(document).ready( function() {
               },
               dataType: 'json',
               success: function (json) {
+                $('.register--button').prop('disabled', false);
                 if (json.result == 'email sent'){
                     $('.register--message').removeClass('alert-danger').addClass('alert-success');
                     $('.register--message').empty().append('Registration completed. <br> Check your email and validate your account!').show();
                 }
               },
               error: function(response){
+                $('.register--button').prop('disabled', false);
                 console.log('error');
-                console.log(response);
               }
             });
         } else if (json.result == 'OK'){

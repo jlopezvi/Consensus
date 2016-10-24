@@ -266,6 +266,9 @@ body.modal-open {
 	background-color: #c0ff00;
 	border-color: #3faf2e;
 }
+.register--button[disabled]{
+    background-color: #c0ff00 !important;
+}
 /* NEWSFEED STYLE */
 .newsfeed--content {
 	margin-top: 10%;
