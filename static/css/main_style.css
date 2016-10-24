@@ -266,8 +266,14 @@ body.modal-open {
 	background-color: #c0ff00;
 	border-color: #3faf2e;
 }
-.register--button[disabled]{
+.register--button[disabled],
+.login--button[disabled]{
     background-color: #c0ff00 !important;
+}
+.errorInput{
+    border-color: RED;
+    border-bottom: 2px solid red;
+    border-top: 2px solid red;
 }
 /* NEWSFEED STYLE */
 .newsfeed--content {
