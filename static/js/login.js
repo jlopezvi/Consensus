@@ -56,7 +56,7 @@ $(document).ready( function() {
           },
           dataType: 'json',
           success: function (json) {
-            console.log();
+            console.log(json);
             if(json.result == 'Bad password'){
               $('.login--message').empty().append('Email or Password wrong!').show();
             } else if(json.result == 'Bad e-mail'){
@@ -105,7 +105,6 @@ $(document).ready( function() {
         opt = true;
     else
         opt = false;
-    console.log(opt);
     var data = {
       'fullname': $('#fullname_r').val(),
       'email': $('#email_r').val(),
@@ -125,7 +124,6 @@ $(document).ready( function() {
         'email': $('#email').val(),
         'password' : $('#password').val()
       },
-      headers:{
       data: JSON.stringify(data),
       headers: {
         'Content-Type': 'application/json'

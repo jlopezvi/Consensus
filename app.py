@@ -93,8 +93,6 @@ def login2():
 @app.route('/login', methods=['POST'])
 def login():
     login = request.get_json(force=True)
-    return jsonify(login)
-    '''
     user_to_check=_getParticipantByEmail(login['email'])
     if user_to_check is None :
         return jsonify(result ="Bad e-mail")
@@ -105,7 +103,6 @@ def login():
         return jsonify(result="Login validated")
     else:
         return jsonify(result="Bad password")
-    '''
 
 @app.route('/logout')
 def logout():
