@@ -55,9 +55,9 @@ def user_loader(email):
  #   return 'Unauthorized'
 
 
-####################
-####     API    ####
-####################
+################################
+####    API, WORKING NOW    ####
+################################
 
 #input: json {"email":"asdf@asdf", "password":"MD5password"}
 #output:
@@ -328,52 +328,11 @@ def newsfeed():
     ]
     return render_template('login/newsfeed.html', persons = feed)
 
-#TEST
-@app.route('/api/add_message/<uuid>', methods=['GET', 'POST'])
-def add_message(uuid):
-    content = request.get_json()
-    print (content['mytext'])
-    #return jsonify({"uuid":uuid})
-    #return "uuid"
-    #return content['mytext']
-    return content
-
-@app.route('/signUp')
-@app.route('/signUp/<host_email>')
-def signUp(host_email=None):
-    if host_email != None:
-        _getParticipantByEmail(host_email)
-    return render_template('signUp.html',host_email=host_email)
-
-
-
-############################################
-#API
-############################################
-
-#input: email
-#output: json {"result" : "Participant found" / "Participant not found" }
-@app.route('/get_participant_by_email/<email>')
-def getParticipantByEmail(email):
-    if _getParticipantByEmail(email,'all'):
-        return jsonify(result="Participant found")
-    return jsonify(result="Participant not found")
-
-#input: email to be verified as an argument
-#output: e-mail to the email account with a URL token link for email verification
-#         and json {"result": "email sent"}
-@app.route('/registration_send_emailverification/<email>')
-def registration_send_emailverification(email):
-    token = generate_confirmation_token(email)
-    confirm_url = url_for('.registration_receive_emailverification', token=token, _external=True)
-    html = render_template('login/verificationemail.html', confirm_url=confirm_url)
-    subject = "Please confirm your email"
-    send_email(email, subject, html)
-    return jsonify({'result': 'email sent'})
 
 
 #input: URL token link from an invitation e-mail
 #output:
+#  -> json {"result": "The confirmation link is invalid or has expired"}
 #  -> json {"result": "email already confirmed"}
 #  -> json {"result": "email not registered"}
 #TODO: redirects to a place with a message of "email verified" and then, login user and redirection to newsfeed.
@@ -396,15 +355,59 @@ def registration_receive_emailverification(token):
     else:
         return jsonify(result_dict)
 
-#input: URL from an invitation e-mail with guest_email and host_email
+
+#input: URL token link from an invitation e-mail
 #output: redirects to login page with message in json {"current_email":"asd@asdf","host_email":"bd@asdf"}
-@app.route('/registration_from_invitation/<current_email>/<host_email>', methods=['GET'])
-def registration_from_invitation(current_email,host_email):
+@app.route('/registration_from_invitation/<token>/<guest_email>')
+def registration_from_invitation(token,guest_email):
+    try:
+        host_email = confirm_token(token)
+    except:
+        #TODO: change expiration date
+        return jsonify({'result': 'The confirmation link is invalid or has expired'})
     jsondata = jsonify({
-        'current_email': current_email,
+        'current_email': guest_email,
         'host_email': host_email
     })
     return redirect(url_for('.hello', message=jsondata))
+
+
+@app.route('/registration_send_invitation/<host_email>/<guest_email>', methods=['GET'])
+def registration_send_invitation(host_email, guest_email):
+    token = generate_confirmation_token(host_email)
+    confirm_url = url_for('.registration_from_invitation',token=token, host_email=host_email, _external=True)
+    html = render_template('login/invitation_email.html', confirm_url=confirm_url)
+    subject = getFullNameByEmail(host_email) + "invites you to join Consensus"
+    send_email(guest_email, subject, html)
+    return jsonify({'result': 'email sent'})
+
+############################################
+#   API
+############################################
+
+#PARTICIPANTS
+
+#input: email
+#output: json {"result" : "Participant found" / "Participant not found" }
+@app.route('/get_participant_by_email/<email>')
+def getParticipantByEmail(email):
+    if _getParticipantByEmail(email,'all'):
+        return jsonify(result="Participant found")
+    return jsonify(result="Participant not found")
+
+
+#input: email to be verified as an argument
+#output: e-mail to the email account with a URL token link for email verification
+#         and json {"result": "email sent"}
+@app.route('/registration_send_emailverification/<email>')
+def registration_send_emailverification(email):
+    token = generate_confirmation_token(email)
+    confirm_url = url_for('.registration_receive_emailverification', token=token, _external=True)
+    html = render_template('login/verification_email.html', confirm_url=confirm_url)
+    subject = "Please confirm your email"
+    send_email(email, subject, html)
+    return jsonify({'result': 'email sent'})
+
 
 #input: json {"fullname":"Juan Lopez","email": "jj@gmail.com", "username": "jlopezvi",
 #              "position": "employee", "group": "IT", "password": "MD5password",
@@ -418,6 +421,7 @@ def registration_from_invitation(current_email,host_email):
 def registration():
     #call with json_data converted to python_dictionary_data
     return registration_aux(request.get_json())
+
 
 #return: Full Name (normal string) corresponding to e-mail
 @app.route('/getFullNameByEmail/<email>', methods=['GET'])
@@ -437,22 +441,25 @@ def addFollowingContactToParticipant():
 #    return "addFollowingContact was invoked"
 
 
+#Not used
 @app.route('/deleteParticipant/<string:email>', methods=['DELETE', 'OPTIONS'])
 def removeParticipant(email) :
     deleteParticipant(email)
     return "Participant with email %s was successfully removed" % email
 
+#Not used
 @app.route('/getParticipants', methods=['GET','OPTIONS'])
 def getParticipants():
     return json.dumps(getAllParticipants())
 
+#Not used
 @app.route('/getAllContactsForParticipant/<string:email>', methods=['GET', 'OPTIONS'])
 def getAllContacts(email) :
     return json.dumps(getContacts(email))
 
 
 
-#COMMUNITIES
+#COMMUNITIES (NOT USED)
 @app.route('/addCommunity', methods=['POST'])
 def addComunity():
     return saveCommunity(request.get_json())
@@ -474,10 +481,7 @@ def getAllCommunitiesForUser(email):
 
 
 
-#CONCERNS
-
-
-
+#IDEAS (NOT USED)
 @app.route('/deleteConcern/<string:idConcern>', methods=['DELETE', 'OPTIONS'])
 def deleteConcern(idConcern) :
     print (idConcern)

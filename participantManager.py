@@ -84,7 +84,8 @@ def _newParticipant(participantdict):
 #input: email
 #output: python dictionary
 #  -> {'result': 'email already confirmed'}
-#  ->
+#  -> {'result': 'email not registered'}
+#  -> {'result': 'OK'}
 def _verifyEmail(email):
     unverifiedparticipant = _getParticipantByEmail(email,False)
     if unverifiedparticipant is None:
