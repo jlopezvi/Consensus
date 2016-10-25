@@ -375,9 +375,9 @@ def registration_from_invitation(token,guest_email):
 @app.route('/registration_send_invitation/<host_email>/<guest_email>', methods=['GET'])
 def registration_send_invitation(host_email, guest_email):
     token = generate_confirmation_token(host_email)
-    confirm_url = url_for('.registration_from_invitation',token=token, host_email=host_email, _external=True)
+    confirm_url = url_for('.registration_from_invitation',token=token, guest_email=guest_email, _external=True)
     html = render_template('login/invitation_email.html', confirm_url=confirm_url)
-    subject = getFullNameByEmail(host_email) + "invites you to join Consensus"
+    subject = ''.join([getFullNameByEmail(host_email)," invites you to join Consensus"])
     send_email(guest_email, subject, html)
     return jsonify({'result': 'email sent'})
 
