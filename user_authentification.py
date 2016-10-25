@@ -1,14 +1,23 @@
 import flask_login
-from participantManager import _getParticipantByEmail
-
+#import datetime
 
 class User(flask_login.UserMixin):
 
+    #def __init__(self, email, password, ifemailverified=None) :
     def __init__(self, email) :
-        if _getParticipantByEmail(email) :
-            self.id = email
-        if _getParticipantByEmail(email) is None :
+        #TODO: distinguish unverified and verified participants
+        from participantManager import _getParticipantByEmail
+        if _getParticipantByEmail(email,'all') is None:
             self = None
+        else:
+            self.id = email
+            #self.email = email
+            ##the password should be encrypted MD5password already at the frontend
+            #self.password = password
+            #self.registered_on = datetime.datetime.now()
+            #self.ifemailverified = ifemailverified
+
+
 
     #def get_by(self, email):
     #    try:

@@ -266,6 +266,15 @@ body.modal-open {
 	background-color: #c0ff00;
 	border-color: #3faf2e;
 }
+.register--button[disabled],
+.login--button[disabled]{
+    background-color: #c0ff00 !important;
+}
+.errorInput{
+    border-color: RED;
+    border-bottom: 2px solid red;
+    border-top: 2px solid red;
+}
 /* NEWSFEED STYLE */
 .newsfeed--content {
 	margin-top: 10%;
@@ -949,11 +958,10 @@ input.form-control.invite__button:focus {
 }
 .container__participants {
 	font-family: lato_regular;
-	min-width: 1200px;
+	padding: 0 15px;
 }
 .container__search--participants {
 	font-family: lato_regular;
-	min-width: 400px;
 }
 .span__search input {
 	background-color: #d8e6ef!important;
