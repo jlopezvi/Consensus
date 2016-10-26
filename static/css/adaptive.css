@@ -895,6 +895,12 @@
 	.participant__follow ul.nav-tabs li a {
     	padding: 6px 40px 15px 25px;
 	}
+	.addproposal--step2 li input {
+	    margin-right: 5px;
+	}
+	.addproposal--step2 li img {
+	    height: 60px;
+	}
 }
 @media only screen and (max-width: 410px) {
 	.newsfeed--header .newsfeed--charge, .home--header .home--charge {
@@ -928,6 +934,9 @@
 	}
 	.home--proposals--body {
     	background-position-x: -335px;
+	}
+	.addproposal--step2 li {
+	    margin-left: 6px;
 	}
 }
 
@@ -995,6 +1004,17 @@
 	.profile__col {
 	    margin-left: -20px;
 	}		
+	.newsfeed--persons img {
+	    margin-top: 0px;
+	    width: 20px;
+	}
+	.newsfeed--likes ul a li {
+	    font-size: 13px;
+	}
+	.tabs__follow .invite__button, .invite__body .invite__button {
+	    width: 90px;
+	    font-size: 10px;
+	}
 }
 @media only screen and (max-width: 370px){
 	.participant__name {
