@@ -392,6 +392,10 @@
 	}
 }
 @media only screen and (max-width: 767px) {
+	.participant__newsfeed .newsfeed--footer .redflag--img img {
+	    width: auto;
+	    height: auto;
+	}
 	.modal__participants {
 		top: 45px;
 	}
@@ -941,6 +945,9 @@
 }
 
 @media only screen and (max-width: 400px) {
+	.participant__body .home--header .newsfeed--duration {
+	   padding: 0;
+	}
 	.private__prof {
 	    margin-left: 10px!important;
 	}
@@ -1057,6 +1064,12 @@
 	.nav--style .primary--header {
     	left: 10%;
 	}
+	.participant__body .input--percent label {
+	    font-size: 10px;
+	}
+	.participant__body .home--share--icons {
+		padding: 0;
+	}
 }
 @media only screen and (max-width: 350px){
 	.newsfeed--header .newsfeed--charge {
@@ -1090,8 +1103,17 @@
     .addproposal--step2 li img {
     	margin-right: 3px;
 	}
+	.participant__body .home--profile--picture img {
+	    height: 80%;
+	}
+	.participant__body .home--name {
+	    font-size: 18px;
+	}
 }
 @media only screen and (max-width: 330px){
+	.newsfeed--likes ul a li {
+	    font-size: 11px;
+	}
 	.newsfeed--content > div{
 		padding: 0;
 	}
@@ -1101,7 +1123,22 @@
 	.participant__follow .nav-tabs {
 		padding-left: 5px;
 	}
-
+	.addproposal--step2 li img {
+	    height: 46px;
+	}
+	.addproposal--step2 li img {
+	    height: 45px;
+	}
+	.addproposal--step2 li p {
+	    font-size: 12px;
+	}
+	.participant__body .home--name {
+	    padding: 0;
+	}
+	 div.participant__body div.newsfeed--goals {
+	    width: 160px;
+	    right: -15px;
+	}
 }
 @media only screen and (max-width: 320px) {
 	.home--login .fa-envelope, .home--login .fa-lock {
