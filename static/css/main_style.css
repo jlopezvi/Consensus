@@ -325,7 +325,7 @@ body.modal-open {
 	font-size: 17px;
 	letter-spacing: 1px;
 	padding:5px;
-	height: auto;
+	height: 82px;
 }
 .newsfeed--proposal {
 	background-color: rgba(255, 255, 255, 0.68);

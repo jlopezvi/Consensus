@@ -1,9 +1,9 @@
 from py2neo import neo4j
 import os
-from urllib.parse import urlparse
+
 
 def getGraph():
-     #return neseService("http://localhost:7474/db/data")
+     #return neo4j.GraphDatabaseService("http://localhost:7474/db/data")
      #return neo4j.GraphDatabaseService("http://app55594714-V1ivYS:QZgiH1f3jWNWOC2yUYZK@hobby-kjjhomhijildgbkehfaomgol.dbs.graphenedb.com:24789")
 
      if os.environ.get('GRAPHENEDB_URL'):
@@ -15,6 +15,7 @@ def getGraph():
      else:
          graph_db = neo4j.GraphDatabaseService('http://localhost:7474/db/data')
      return graph_db
+
 
 from flask.ext.mail import Message
 

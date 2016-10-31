@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask,jsonify,json
+from flask import Flask,jsonify,json, flash
 from crossdomain import crossdomain
 from flask import request,render_template,redirect,url_for
 import ast
@@ -15,14 +15,37 @@ from webManager import newsfeed2_aux
 import logging
 import flask_login
 from user_authentification import User
+from uuid_token import generate_confirmation_token, confirm_token
+from flask_mail import Mail
+from utils import send_email
 
+#TODO: logging, sending emails when errors take place.
 #logging.basicConfig(level=logging.DEBUG)
+
+################
+#### config ####
+################
 app = Flask(__name__)
+# app.debug = True
+app.config.from_object('config.BaseConfig')
+try:
+    os.environ['APP_SETTINGS']
+    app.config.from_object(os.environ['APP_SETTINGS'])
+except KeyError:
+    pass
+
+
+####################
+#### extensions ####
+####################
+
+#flask-mail
+mail = Mail(app)
 
 #flask_login
 login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
-app.secret_key = 'super secret string'  # Change this!
+#app.secret_key = 'super secret string'  # Change this!
 @login_manager.user_loader
 def user_loader(email):
     return User(email)
@@ -30,6 +53,11 @@ def user_loader(email):
 #@login_manager.unauthorized_handler
 #def unauthorized_handler():
  #   return 'Unauthorized'
+
+
+################################
+####    API, WORKING NOW    ####
+################################
 
 #input: json {"email":"asdf@asdf", "password":"MD5password"}
 #output:
@@ -64,13 +92,13 @@ def login2():
 #   / login cookie and redirection to '/newsfeed'
 @app.route('/login', methods=['POST'])
 def login():
-    email =request.get_json()['email']
-    user_to_check=_getParticipantByEmail(email)
+    login = request.get_json(force=True)
+    user_to_check=_getParticipantByEmail(login['email'])
     if user_to_check is None :
         return jsonify(result ="Bad e-mail")
 
-    if request.get_json()['password'] == user_to_check['password']:
-        user = User(email)
+    if login['password'] == user_to_check['password']:
+        user = User(login['email'])
         flask_login.login_user(user)
         return jsonify(result="Login validated")
     else:
@@ -300,63 +328,100 @@ def newsfeed():
     ]
     return render_template('login/newsfeed.html', persons = feed)
 
-#TEST
-@app.route('/api/add_message/<uuid>', methods=['GET', 'POST'])
-def add_message(uuid):
-    content = request.get_json()
-    print (content['mytext'])
-    #return jsonify({"uuid":uuid})
-    #return "uuid"
-    #return content['mytext']
-    return content
-
-@app.route('/signUp')
-@app.route('/signUp/<host_email>')
-def signUp(host_email=None):
-    if host_email != None:
-        _getParticipantByEmail(host_email)
-    return render_template('signUp.html',host_email=host_email)
 
 
+#input: URL token link from an invitation e-mail
+#output:
+#  -> json {"result": "The confirmation link is invalid or has expired"}
+#  -> json {"result": "email already confirmed"}
+#  -> json {"result": "email not registered"}
+#TODO: redirects to a place with a message of "email verified" and then, login user and redirection to newsfeed.
+#  -> logs in user (possible redundancy with registration_aux!) and redirects to newsfeed.
+@app.route('/registration_receive_emailverification/<token>')
+def registration_receive_emailverification(token):
+    try:
+        email = confirm_token(token)
+    except:
+        return jsonify({'result': 'The confirmation link is invalid or has expired'})
 
-#API
+    result_dict=_verifyEmail(email)
+    if result_dict['result'] == 'OK' :
+        #TODO: possibly redundant user_login: see function registration_aux
+        #user login
+        user = User(email)
+        flask_login.login_user(user)
+        flash ('email registered')
+        return redirect(url_for('.newsfeed2'))
+    else:
+        return jsonify(result_dict)
 
-#input: email to be verified as an argument
-#output: e-mail to the email account with a URL link for email verification
-@app.route('/registration_send_emailverification/<email>')
-def registration_send_emailverification(email):
-    pass
 
-#input: URL from an invitation e-mail with email to be verified
-#output: redirects to login page with message in json {"verified_email":"asd@asdf"}
-@app.route('/registration_receive_emailverification/<email>')
-def registration_receive_emailverification(email):
-    _verifyEmail(email)
-    jsondata = jsonify({'verified_email': email})
-    return redirect(url_for('.hello', message=jsondata))
-
-#input: URL from an invitation e-mail with guest_email and host_email
+#input: URL token link from an invitation e-mail
 #output: redirects to login page with message in json {"current_email":"asd@asdf","host_email":"bd@asdf"}
-@app.route('/registration_from_invitation/<current_email>/<host_email>', methods=['GET'])
-def registration_from_invitation(current_email,host_email):
+@app.route('/registration_from_invitation/<token>/<guest_email>')
+def registration_from_invitation(token,guest_email):
+    try:
+        host_email = confirm_token(token)
+    except:
+        #TODO: change expiration date
+        return jsonify({'result': 'The confirmation link is invalid or has expired'})
     jsondata = jsonify({
-        'current_email': current_email,
+        'current_email': guest_email,
         'host_email': host_email
     })
     return redirect(url_for('.hello', message=jsondata))
+
+
+@app.route('/registration_send_invitation/<host_email>/<guest_email>', methods=['GET'])
+def registration_send_invitation(host_email, guest_email):
+    token = generate_confirmation_token(host_email)
+    confirm_url = url_for('.registration_from_invitation',token=token, guest_email=guest_email, _external=True)
+    html = render_template('login/invitation_email.html', confirm_url=confirm_url)
+    subject = ''.join([getFullNameByEmail(host_email)," invites you to join Consensus"])
+    send_email(guest_email, subject, html)
+    return jsonify({'result': 'email sent'})
+
+############################################
+#   API
+############################################
+
+#PARTICIPANTS
+
+#input: email
+#output: json {"result" : "Participant found" / "Participant not found" }
+@app.route('/get_participant_by_email/<email>')
+def getParticipantByEmail(email):
+    if _getParticipantByEmail(email,'all'):
+        return jsonify(result="Participant found")
+    return jsonify(result="Participant not found")
+
+
+#input: email to be verified as an argument
+#output: e-mail to the email account with a URL token link for email verification
+#         and json {"result": "email sent"}
+@app.route('/registration_send_emailverification/<email>')
+def registration_send_emailverification(email):
+    token = generate_confirmation_token(email)
+    confirm_url = url_for('.registration_receive_emailverification', token=token, _external=True)
+    html = render_template('login/verification_email.html', confirm_url=confirm_url)
+    subject = "Please confirm your email"
+    send_email(email, subject, html)
+    return jsonify({'result': 'email sent'})
+
 
 #input: json {"fullname":"Juan Lopez","email": "jj@gmail.com", "username": "jlopezvi",
 #              "position": "employee", "group": "IT", "password": "MD5password",
 #              "image_url": "http://.... ", "ifpublicprofile": true / false,
 #              "host_email": "asdf@das" / null, "ifemailverified": true / false}
-#return: json {"result": "completed registration"
-#                        / "registration pending of email verification"
-#                        / "user already exists"}
+#output:
+#     -> NOT USED BY FRONTEND json {"result": "participant already exists""}
+#     -> login and json {"result": "email not verified"} (on registration pending of email verification)
+#     -> login and json {"result": "OK"} (on registration completed)
 @app.route('/registration', methods=['POST'])
 def registration():
     #call with json_data converted to python_dictionary_data
-    print(request.get_json())
     return registration_aux(request.get_json())
+
 
 #return: Full Name (normal string) corresponding to e-mail
 @app.route('/getFullNameByEmail/<email>', methods=['GET'])
@@ -376,22 +441,25 @@ def addFollowingContactToParticipant():
 #    return "addFollowingContact was invoked"
 
 
+#Not used
 @app.route('/deleteParticipant/<string:email>', methods=['DELETE', 'OPTIONS'])
 def removeParticipant(email) :
     deleteParticipant(email)
     return "Participant with email %s was successfully removed" % email
 
+#Not used
 @app.route('/getParticipants', methods=['GET','OPTIONS'])
 def getParticipants():
     return json.dumps(getAllParticipants())
 
+#Not used
 @app.route('/getAllContactsForParticipant/<string:email>', methods=['GET', 'OPTIONS'])
 def getAllContacts(email) :
     return json.dumps(getContacts(email))
 
 
 
-#COMMUNITIES
+#COMMUNITIES (NOT USED)
 @app.route('/addCommunity', methods=['POST'])
 def addComunity():
     return saveCommunity(request.get_json())
@@ -413,10 +481,7 @@ def getAllCommunitiesForUser(email):
 
 
 
-#CONCERNS
-
-
-
+#IDEAS (NOT USED)
 @app.route('/deleteConcern/<string:idConcern>', methods=['DELETE', 'OPTIONS'])
 def deleteConcern(idConcern) :
     print (idConcern)
@@ -442,7 +507,8 @@ def getConcerns(current):
 
 
 if __name__ == '__main__':
-    #app.debug = True
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
-    #app.run(host='127.0.0.1', port=port)
+    if os.environ.get('GRAPHENEDB_URL'):
+        app.run(host='0.0.0.0', port=port)
+    else:
+        app.run(host='127.0.0.1', port=port)

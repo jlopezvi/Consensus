@@ -392,10 +392,6 @@
 	}
 }
 @media only screen and (max-width: 767px) {
-	.participant__newsfeed .newsfeed--footer .redflag--img img {
-	    width: auto;
-	    height: auto;
-	}
 	.modal__participants {
 		top: 45px;
 	}
@@ -772,15 +768,6 @@
 	}
 }
 @media only screen and (max-width: 479px) {
-	#modal_participant .modal-body {
-		padding: 10px;
-	}
-	#modal_participant .modal-body .col-xs-12 {
-		padding-left: 10px;
-	}
-	#modal_participant .modal-body .col-xs-12 .col-xs-12 .col-sm-6 {
-		padding-left: 0;
-	}
 	.container__participants {
 		margin-top: 15%!important;
 	}
@@ -899,12 +886,6 @@
 	.participant__follow ul.nav-tabs li a {
     	padding: 6px 40px 15px 25px;
 	}
-	.addproposal--step2 li input {
-	    margin-right: 5px;
-	}
-	.addproposal--step2 li img {
-	    height: 60px;
-	}
 }
 @media only screen and (max-width: 410px) {
 	.newsfeed--header .newsfeed--charge, .home--header .home--charge {
@@ -939,18 +920,9 @@
 	.home--proposals--body {
     	background-position-x: -335px;
 	}
-	.addproposal--step2 li {
-	    margin-left: 6px;
-	}
 }
 
 @media only screen and (max-width: 400px) {
-	.participant__body .home--header .newsfeed--duration {
-	   padding: 0;
-	}
-	.private__prof {
-	    margin-left: 10px!important;
-	}
 	.participant__newsfeed .home--profile--picture {
     	margin-left: 0;
 	}
@@ -1011,17 +983,6 @@
 	.profile__col {
 	    margin-left: -20px;
 	}		
-	.newsfeed--persons img {
-	    margin-top: 0px;
-	    width: 20px;
-	}
-	.newsfeed--likes ul a li {
-	    font-size: 13px;
-	}
-	.tabs__follow .invite__button, .invite__body .invite__button {
-	    width: 90px;
-	    font-size: 10px;
-	}
 }
 @media only screen and (max-width: 370px){
 	.participant__name {
@@ -1064,12 +1025,6 @@
 	.nav--style .primary--header {
     	left: 10%;
 	}
-	.participant__body .input--percent label {
-	    font-size: 10px;
-	}
-	.participant__body .home--share--icons {
-		padding: 0;
-	}
 }
 @media only screen and (max-width: 350px){
 	.newsfeed--header .newsfeed--charge {
@@ -1103,41 +1058,10 @@
     .addproposal--step2 li img {
     	margin-right: 3px;
 	}
-	.participant__body .home--profile--picture img {
-	    height: 80%;
-	}
-	.participant__body .home--name {
-	    font-size: 18px;
-	}
 }
 @media only screen and (max-width: 330px){
-	.newsfeed--likes ul a li {
-	    font-size: 11px;
-	}
 	.newsfeed--content > div{
 		padding: 0;
-	}
-	#modal_participant div.modal-body {
-	    height: 1020px;
-	}
-	.participant__follow .nav-tabs {
-		padding-left: 5px;
-	}
-	.addproposal--step2 li img {
-	    height: 46px;
-	}
-	.addproposal--step2 li img {
-	    height: 45px;
-	}
-	.addproposal--step2 li p {
-	    font-size: 12px;
-	}
-	.participant__body .home--name {
-	    padding: 0;
-	}
-	 div.participant__body div.newsfeed--goals {
-	    width: 160px;
-	    right: -15px;
 	}
 }
 @media only screen and (max-width: 320px) {
