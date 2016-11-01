@@ -331,29 +331,33 @@ def newsfeed():
 
 
 #input: URL token link from an invitation e-mail
-#output:
+#output: redirects to login with a json called "message"
 #  -> json {"result": "The confirmation link is invalid or has expired"}
 #  -> json {"result": "email already confirmed"}
 #  -> json {"result": "email not registered"}
 #TODO: redirects to a place with a message of "email verified" and then, login user and redirection to newsfeed.
-#  -> logs in user (possible redundancy with registration_aux!) and redirects to newsfeed.
+#TODO: should I login user when email verified? review registration_aux where I log in user? what's the interplay
+#among the two of them?
 @app.route('/registration_receive_emailverification/<token>')
 def registration_receive_emailverification(token):
     try:
         email = confirm_token(token)
     except:
-        return jsonify({'result': 'The confirmation link is invalid or has expired'})
+        jsondata = jsonify({'result': 'The confirmation link is invalid or has expired'})
+        return redirect(url_for('.hello'), message=jsondata)
 
     result_dict=_verifyEmail(email)
     if result_dict['result'] == 'OK' :
         #TODO: possibly redundant user_login: see function registration_aux
-        #user login
-        user = User(email)
-        flask_login.login_user(user)
-        flash ('email registered')
-        return redirect(url_for('.newsfeed2'))
+        ##user login
+        #user = User(email)
+        #flask_login.login_user(user)
+        #flash ('email registered')
+        jsondata = {"result":"OK", "email":email }
+        return redirect(url_for('.hello'),message=jsondata)
     else:
-        return jsonify(result_dict)
+        jsondata = jsonify(result_dict)
+        return redirect(url_for('.hello'),message=jsondata)
 
 
 #input: URL token link from an invitation e-mail
