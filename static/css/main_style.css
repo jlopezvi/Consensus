@@ -30,7 +30,6 @@ input[type=text], input[type=password], select {
 body {
 	font-family: lato_regular;
 }
-
 .input--top {
   height: 6.5%;
   border-radius: 4px;
@@ -115,12 +114,16 @@ body {
 .home--content--right {
 	margin-top: 9.5%;
 }
-.login--message, .register--message {
+.login--message, .register--message,
+.login--message2 {
     position: relative;
     top: 9px;
     display: none;
     font-size: 12px;
     padding: 5px 12px;
+}
+.login--message2{
+    display: block;
 }
 .login--button, .register--button, .register--modal, .newsfeed--button, .home--button, .invite__button {
 	background-color: #c0ff00;

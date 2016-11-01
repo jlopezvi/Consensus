@@ -6,16 +6,16 @@
 	<div class="col-sm-8 col-sm-offset-2">
 		<div class="row newsfeed--header">
 			<div class="col-sm-2" style="padding-left: 0px;">
-			{% if (person.picture == '') %}
+			{% if (person.author_photo_url == '') %}
 				<i class="fa fa-user user--icon"></i>
 			{% else %}
 				<div class="profile--picture">
-					<img src="{{ url_for('static',filename=person.picture) }}">
+					<img src="{{ url_for('static',filename=person.author_photo_url) }}">
 				</div>
 			{% endif %}
 			</div>
 			<div class="col-sm-1 newsfeed--name">
-				<a href="#">{{ person.name }}</a>
+				<a href="#">{{ person.author_username }}</a>
 			</div>
 			<div class="col-sm-2 newsfeed--duration">
 				<p><img src="{{ url_for('static',filename='images/clock-icon.png') }}">&nbsp;
@@ -23,24 +23,24 @@
 			</div>
 			<div class="col-sm-3 newsfeed--charge">
 				<div class="progress newsfeed--progress">
-					<input type="text" value="{{ (person.supporters_current * 100)/ person.supporters_goal }}" id="supporters--percent" hidden>
+					<input type="text" value="{{ (person.supporters_num * 100)/ person.supporters_goal_num }}" id="supporters--percent" hidden>
 					<div class="progress-bar newsfeed--bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style=""></div>
 				</div>
 
 				<div class="progress newsfeed--progress2">
-					<input type="text" value="{{ (person.volunters_current * 100)/ person.volunters_goal }}" id="volunters--percent" hidden>
+					<input type="text" value="{{ (person.volunteers_num * 100)/ person.volunteers_goal_num }}" id="volunters--percent" hidden>
 					<div class="progress-bar newsfeed--bar2" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style=""></div>
 				</div>
 			</div>
 			<div class="col-sm-4 newsfeed--goals">
-				<p>{{ person.supporters_current }}/{{ person.supporters_goal }} supporters goals<br>
-				{{ person.volunters_current }}/{{ person.volunters_goal }} volunteers goals</p>
+				<p>{{ person.supporters_num }}/{{ person.supporters_goal_num }} supporters goals<br>
+				{{ person.volunteers_num }}/{{ person.volunteers_goal_num }} volunteers goals</p>
 			</div>
 		</div>
 		<div class="row newsfeed--body">
 			<div class="col-sm-12">
 				<div class="col-sm-8 newsfeed--problem">
-					{{ person.problem }}<br>{{ person.problem }}<br>{{ person.problem }}
+					{{ person.concern }}<br>{{ person.concern }}<br>{{ person.concern }}
 				</div>
 			</div>
 			<div class="col-sm-12" style="margin-top: 291px;">
@@ -55,8 +55,8 @@
 					<img src="{{ url_for('static',filename='images/redflag.png') }}">
 				</div>
 				<div class="col-sm-9 newsfeed--support" style="padding-right:0;padding-left:30px;">
-					<input type="text" value="{{ (person.liked|length * 100)/(person.liked|length + person.disliked|length) }}" id="percent" hidden>
-					<div class="input--percent">	
+					<input type="text" value="{{ (person.supporters|length * 100)/(person.supporters|length + person.rejectors|length) }}" id="percent" hidden>
+					<div class="input--percent">
 						<label>	Support Rate: </label>
 					</div>
 				</div>
@@ -72,12 +72,14 @@
 				</div>
 				<div class="col-sm-11 newsfeed--likes">
 					<ul>
-					{% for likes in person.liked %}
+					{% for supporter in person.supporters %}
 						{% if loop.index <= 3 %}
-							<a href="#"><li>{{ likes.name }}</li></a>
+							<a href="#"><li>{{ supporter.username }}</li></a>
 						{% endif %}
 					{% endfor %}
-						<a href="#" class="last--liked"><li>+ {{ person.liked|length -3 }} people</li></a>
+					{% if person.supporters|length > 3 %}
+						<a href="#" class="last--liked"><li>+ {{ person.supporters|length -3 }} people</li></a>
+					{% endif %}
 					</ul>
 				</div>
 			</div>
@@ -86,11 +88,16 @@
 					<img src="{{ url_for('static',filename='images/x-small.png') }}">
 				</div>
 				<div class="col-sm-11 newsfeed--likes">
-					{% for dislikes in person.disliked %}
 					<ul>
-						<a href="#"><li>{{ dislikes.name }}</li></a>
-					</ul>
+					{% for rejector in person.rejectors %}
+						{% if loop.index <= 3 %}
+							<a href="#"><li>{{ rejector.username }}</li></a>
+						{% endif %}
 					{% endfor %}
+					{% if person.rejectors|length > 3 %}
+						<a href="#" class="last--liked"><li>+ {{ person.rejectors|length -3 }} people</li></a>
+					{% endif %}
+					</ul>
 				</div>
 			</div>
 		</div>

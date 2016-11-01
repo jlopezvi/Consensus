@@ -288,45 +288,48 @@ def newsfeed():
     feed = [
         {
             'id': 'id',
-            'picture': 'assets/profile/perfil-mediano.png',
-            'name': 'Daniela',
+            'author_photo_url': 'assets/profile/perfil-mediano.png',
+            'author_username': 'Daniela',
+            'author_email': 'a@',
             'duration': '2 Days',
-            'supporters_goal': 200,
-            'supporters_current': 5,
-            'volunters_goal': 5,
-            'volunters_current': 2,
-            'image': 'url-to-picture',
-            'problem':  'Some text for the problem',
+            'supporters_goal_num': 200,
+            'supporters_num': 5,
+            'volunteers_goal_num': 5,
+            'volunteers_num': 2,
+            'image_url': 'url-to-picture',
+            'concern':  'Some text for the problem',
             'proposal': 'Some text for the proposal',
-            'liked':
+            'support_rate': 95,
+            'support_rate_MIN': 90,
+            'supporters':
             [
                 {
-                    'id': 'id',
-                    'name': 'Maria'
+                    'email': 'id',
+                    'username': 'Maria'
                 },
                 {
-                    'id': 'id',
-                    'name': 'Pedro'
+                    'email': 'id',
+                    'username': 'Pedro'
                 },
                 {
-                    'id': 'id',
-                    'name': 'Juan'
+                    'email': 'id',
+                    'username': 'Juan'
                 },
                 {
-                    'id': 'id',
-                    'name': 'Jesus'
+                    'email': 'id',
+                    'username': 'Jesus'
                 }
             ],
-            'disliked': 
+            'rejectors':
             [
                 {
-                    'id': 'id',
-                    'name': 'Jose'
+                    'email': 'id',
+                    'username': 'Jose'
                 }
             ]
         }
     ]
-    return render_template('login/newsfeed.html', persons = feed)
+    return render_template('login/newsfeed.html', persons=feed)
 
 
 
@@ -363,25 +366,27 @@ def registration_receive_emailverification(token):
 #input: URL token link from an invitation e-mail
 #output: redirects to login page with message in json {"current_email":"asd@asdf","host_email":"bd@asdf"}
 @app.route('/registration_from_invitation/<token>/<guest_email>')
-def registration_from_invitation(token,guest_email):
+def registration_from_invitation(token, guest_email):
     try:
         host_email = confirm_token(token)
     except:
         #TODO: change expiration date
-        return jsonify({'result': 'The confirmation link is invalid or has expired'})
-    jsondata = jsonify({
+        json = {'result': 'The confirmation link is invalid or has expired'}
+        return render_template('login/login.html', message=json)
+    json = {
+        'result': 'OK',
         'current_email': guest_email,
         'host_email': host_email
-    })
-    return redirect(url_for('.hello', message=jsondata))
+    }
+    return render_template('login/login.html', message=json)
 
 
 @app.route('/registration_send_invitation/<host_email>/<guest_email>', methods=['GET'])
 def registration_send_invitation(host_email, guest_email):
     token = generate_confirmation_token(host_email)
-    confirm_url = url_for('.registration_from_invitation',token=token, guest_email=guest_email, _external=True)
+    confirm_url = url_for('.registration_from_invitation', token=token, guest_email=guest_email, _external=True)
     html = render_template('login/invitation_email.html', confirm_url=confirm_url)
-    subject = ''.join([getFullNameByEmail(host_email)," invites you to join Consensus"])
+    subject = ''.join([getFullNameByEmail(host_email), " invites you to join Consensus"])
     send_email(guest_email, subject, html)
     return jsonify({'result': 'email sent'})
 

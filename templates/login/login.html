@@ -21,6 +21,18 @@
 					<input class="form-control input--bottom" type="password" name="password" 
 					id='password' placeholder="Password">
 				</div>
+
+				{% if message.result != 'OK' %}
+					<div class="col-sm-12 alert login--message2 alert-danger">
+						 {{ message.result }}
+					</div>
+				{% else %}
+					<div class="col-sm-12 alert login--message2 alert-success">
+						<input type="text" value="{{ message.host_email }}">
+						<input type="text" value="{{ message.current_email }}">
+					</div>
+				{% endif %}
+
 				<div class="col-sm-12 login--message alert alert-danger"></div>
 				<input class="form-control login--button" type="button" value="Log in">
 				<div class="col-sm-12 login--actions">
