@@ -111,8 +111,8 @@ def logout():
 
 
 @app.route('/')
-def hello():
-    return render_template('login/login.html')
+def hello(message=None):
+    return render_template('login/login.html',message=message)
 
 
 @app.route('/search-participant')
@@ -332,7 +332,7 @@ def newsfeed():
     return render_template('login/newsfeed.html', persons=feed)
 
 
-
+#TODO: update info
 #input: URL token link from an invitation e-mail
 #output: redirects to login with a json called "message"
 #  -> json {"result": "The confirmation link is invalid or has expired"}
@@ -343,42 +343,41 @@ def newsfeed():
 #among the two of them?
 @app.route('/registration_receive_emailverification/<token>')
 def registration_receive_emailverification(token):
-    try:
+    if not confirm_token(token,10):
+        jsondata = {"result": "The confirmation link is invalid or has expired"}
+        return redirect(url_for('.hello', message=jsondata))
+    if confirm_token(token,10):
         email = confirm_token(token)
-    except:
-        jsondata = jsonify({'result': 'The confirmation link is invalid or has expired'})
-        return redirect(url_for('.hello'), message=jsondata)
-
-    result_dict=_verifyEmail(email)
-    if result_dict['result'] == 'OK' :
-        #TODO: possibly redundant user_login: see function registration_aux
-        ##user login
-        #user = User(email)
-        #flask_login.login_user(user)
-        #flash ('email registered')
-        jsondata = {"result":"OK", "email":email }
-        return redirect(url_for('.hello'),message=jsondata)
-    else:
-        jsondata = jsonify(result_dict)
-        return redirect(url_for('.hello'),message=jsondata)
+        result_dict=_verifyEmail(email)
+        if result_dict['result'] == 'OK' :
+            #TODO: possibly redundant user_login: see function registration_aux
+            ##user login
+            #user = User(email)
+            #flask_login.login_user(user)
+            #flash ('email registered')
+            jsondata = {"result":"OK", "email":email }
+            return redirect(url_for('.hello',message=jsondata))
+        else:
+            jsondata = json.dumps(result_dict)
+            return redirect(url_for('.hello',message=jsondata))
 
 
+#TODO: update info
 #input: URL token link from an invitation e-mail
 #output: redirects to login page with message in json {"current_email":"asd@asdf","host_email":"bd@asdf"}
 @app.route('/registration_from_invitation/<token>/<guest_email>')
 def registration_from_invitation(token, guest_email):
-    try:
+    if not confirm_token(token, 10000):
+        jsondata = {"result": "The confirmation link is invalid or has expired"}
+        return redirect(url_for('.hello', message=jsondata))
+    if confirm_token(token, 10000):
         host_email = confirm_token(token)
-    except:
-        #TODO: change expiration date
-        json = {'result': 'The confirmation link is invalid or has expired'}
-        return render_template('login/login.html', message=json)
-    json = {
-        'result': 'OK',
-        'current_email': guest_email,
-        'host_email': host_email
-    }
-    return render_template('login/login.html', message=json)
+        jsondata = {
+            "result": "OK",
+            "current_email": guest_email,
+            "host_email": host_email
+        }
+        return redirect(url_for('.hello', message=jsondata))
 
 
 @app.route('/registration_send_invitation/<host_email>/<guest_email>', methods=['GET'])
