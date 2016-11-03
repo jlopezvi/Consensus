@@ -231,8 +231,8 @@ $( window ).load(function(){
   /*********** READY WHEN INVITATION **************/
   hostEmail = $('#hostEmail').val();
   guestEmail = $('#guestEmail').val();
-  $('#email_r').val(guestEmail).prop('disabled', true);
   if(hostEmail != null){
+    $('#email_r').val(guestEmail).prop('disabled', true);
     $.ajax({
       url: url[0] + "//" + url[2] + '/getFullNameByEmail/'+hostEmail,
       type: 'GET',
