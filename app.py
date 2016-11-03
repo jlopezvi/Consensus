@@ -369,7 +369,7 @@ def registration_receive_emailverification(token):
 def registration_from_invitation(token, guest_email):
     if not confirm_token(token, 10000):
         jsondata = {"result": "The confirmation link is invalid or has expired"}
-        return redirect(url_for('.hello', message=jsondata))
+        return render_template('login/login.html', message=jsondata)
     if confirm_token(token, 10000):
         host_email = confirm_token(token)
         jsondata = {
@@ -377,7 +377,7 @@ def registration_from_invitation(token, guest_email):
             "current_email": guest_email,
             "host_email": host_email
         }
-        return redirect(url_for('.hello', message=jsondata))
+        return render_template('login/login.html', message=jsondata)
 
 
 @app.route('/registration_send_invitation/<host_email>/<guest_email>', methods=['GET'])

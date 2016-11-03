@@ -16,7 +16,8 @@ function getCookie(cname) {
  }
  return "";
 };
-
+var hostEmail = '';
+var guestEmail = '';
 $(document).ready( function() {
   $(document).on('change', ':file', function() {
     var input = $(this),
@@ -131,7 +132,7 @@ $(document).ready( function() {
     } else {
         if($('#password_r').val() == $('#password2_r').val()){
             $.ajax({
-              url: 'get_participant_by_email/'+data.email,
+              url: url[0] + "//" + url[2] + '/get_participant_by_email/'+data.email,
               type: 'GET',
               headers: {
                 'Content-Type': 'application/json'
@@ -175,8 +176,15 @@ $(document).ready( function() {
       'host_email': null,
       'ifemailverified': false
     };
+
+    hostEmail = $('#hostEmail').val();
+    if(hostEmail != null){
+      data.host_email = hostEmail;
+      data.ifemailverified = true;
+    }
+
     $.ajax({
-      url: 'registration',
+      url: url[0] + "//" + url[2] + '/registration',
       type: 'POST',
       data: JSON.stringify(data),
       headers: {
@@ -186,7 +194,7 @@ $(document).ready( function() {
       success: function (json) {
         if(json.result == 'email not verified'){
             $.ajax({
-              url: 'registration_send_emailverification/'+data.email,
+              url: url[0] + "//" + url[2] + '/registration_send_emailverification/'+data.email,
               type: 'GET',
               headers: {
                 'Content-Type': 'application/json'
@@ -213,4 +221,32 @@ $(document).ready( function() {
       }
     });
   });
+
+});
+
+var url = window.location.href;
+url = url.split("/");
+
+$( window ).load(function(){
+  /*********** READY WHEN INVITATION **************/
+  hostEmail = $('#hostEmail').val();
+  guestEmail = $('#guestEmail').val();
+  $('#email_r').val(guestEmail).prop('disabled', true);
+  if(hostEmail != null){
+    $.ajax({
+      url: url[0] + "//" + url[2] + '/getFullNameByEmail/'+hostEmail,
+      type: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      dataType: 'json',
+      success: function (json) {
+        console.log(json);
+      },
+      error: function(response){
+        //console.log(response.responseText);
+        $('.login--message2').append('You have been invited by <strong>'+ response.responseText +'</strong>');
+      }
+    });
+  }
 });
