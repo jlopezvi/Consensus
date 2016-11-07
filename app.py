@@ -343,10 +343,10 @@ def newsfeed():
 #among the two of them?
 @app.route('/registration_receive_emailverification/<token>')
 def registration_receive_emailverification(token):
-    if not confirm_token(token,10):
+    if not confirm_token(token,3600):
         jsondata = {"result": "The confirmation link is invalid or has expired"}
-        return redirect(url_for('.hello', message=jsondata))
-    if confirm_token(token,10):
+        return render_template('login/login.html', message=jsondata)
+    if confirm_token(token,3600):
         email = confirm_token(token)
         result_dict=_verifyEmail(email)
         if result_dict['result'] == 'OK' :
@@ -355,12 +355,15 @@ def registration_receive_emailverification(token):
             #user = User(email)
             #flask_login.login_user(user)
             #flash ('email registered')
-            jsondata = {"result":"OK", "email":email }
-            return redirect(url_for('.hello',message=jsondata))
+            jsondata = {
+                "result": "OK",
+                "email": email
+            }
+            return render_template('login/login.html', message=jsondata)
         else:
             jsondata = json.dumps(result_dict)
-            return redirect(url_for('.hello',message=jsondata))
-
+            #return redirect(url_for('.hello',message=jsondata))
+            return render_template('login/login.html', message=jsondata)
 
 #TODO: update info
 #input: URL token link from an invitation e-mail
