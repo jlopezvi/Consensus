@@ -343,10 +343,10 @@ def newsfeed():
 #among the two of them?
 @app.route('/registration_receive_emailverification/<token>')
 def registration_receive_emailverification(token):
-    if not confirm_token(token,3600):
+    if not confirm_token(token, 3600):
         jsondata = {"result": "The confirmation link is invalid or has expired"}
-        return render_template('login/login.html', message=jsondata)
-    if confirm_token(token,3600):
+        return redirect(url_for('.hello', message=jsondata))
+    if confirm_token(token, 3600):
         email = confirm_token(token)
         result_dict=_verifyEmail(email)
         if result_dict['result'] == 'OK' :
@@ -356,14 +356,14 @@ def registration_receive_emailverification(token):
             #flask_login.login_user(user)
             #flash ('email registered')
             jsondata = {
-                "result": "OK",
+                "result": "emailverification:OK",
                 "email": email
             }
-            return render_template('login/login.html', message=jsondata)
+            return redirect(url_for('.hello', message=jsondata))
         else:
             jsondata = json.dumps(result_dict)
-            #return redirect(url_for('.hello',message=jsondata))
-            return render_template('login/login.html', message=jsondata)
+            return redirect(url_for('.hello',message=jsondata))
+            #return render_template('login/login.html', message=jsondata)
 
 #TODO: update info
 #input: URL token link from an invitation e-mail
@@ -372,15 +372,15 @@ def registration_receive_emailverification(token):
 def registration_from_invitation(token, guest_email):
     if not confirm_token(token, 10000):
         jsondata = {"result": "The confirmation link is invalid or has expired"}
-        return render_template('login/login.html', message=jsondata)
+        return redirect(url_for('.hello', message=jsondata))
     if confirm_token(token, 10000):
         host_email = confirm_token(token)
         jsondata = {
-            "result": "OK",
+            "result": "invitation:OK",
             "current_email": guest_email,
             "host_email": host_email
         }
-        return render_template('login/login.html', message=jsondata)
+        return redirect(url_for('.hello', message=jsondata))
 
 
 @app.route('/registration_send_invitation/<host_email>/<guest_email>', methods=['GET'])

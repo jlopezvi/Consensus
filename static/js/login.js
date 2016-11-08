@@ -89,7 +89,7 @@ $(document).ready( function() {
       $('.login--message').empty().append('All fields must be fills!').show();
     } else {
         $.ajax({
-          url: 'login',
+          url: url[0] + "//" + url[2] + '/login',
           type: 'POST',
           data: JSON.stringify(data),
           headers: {
@@ -232,7 +232,7 @@ $( window ).load(function(){
   hostEmail = $('#hostEmail').val();
   guestEmail = $('#guestEmail').val();
   if(hostEmail != null){
-    $('#email_r').val(guestEmail).prop('disabled', true);
+    //$('#email_r').val(guestEmail).prop('disabled', true);
     $.ajax({
       url: url[0] + "//" + url[2] + '/getFullNameByEmail/'+hostEmail,
       type: 'GET',
@@ -245,7 +245,8 @@ $( window ).load(function(){
       },
       error: function(response){
         //console.log(response.responseText);
-        $('.login--message2').append('You have been invited by <strong>'+ response.responseText +'</strong>');
+        //$('.login--message2').append('You have been invited by <strong>'+ response.responseText +'</strong>');
+        $('.home--content--left h1').empty().append(response.responseText + ' Welcomes You!')
       }
     });
   }
