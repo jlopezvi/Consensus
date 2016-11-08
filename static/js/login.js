@@ -53,14 +53,14 @@ $(document).ready( function() {
   });
 
   $('#fullname_r').keypress(function(e){
-    var r = /^[a-zA-ZäöüÄÖÜáéíóúÁÉÚÍÓÑñ ]+$/;
+    var r = /^[a-zA-ZäöüÄÖÜáéíóúÁÉÚÍÓÑñ\b ]+$/;
     var verified = r.test(String.fromCharCode(e.which));
     if (!verified)
       e.preventDefault();
   });
 
   $('#position_r').keypress(function(e){
-    var r = /^[a-zA-ZäöüÄÖÜáéíóúÁÉÚÍÓÑñ ]+$/;
+    var r = /^[a-zA-ZäöüÄÖÜáéíóúÁÉÚÍÓÑñ\b ]+$/;
     var verified = r.test(String.fromCharCode(e.which));
     if (!verified)
       e.preventDefault();
