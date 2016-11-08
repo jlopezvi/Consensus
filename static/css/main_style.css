@@ -238,6 +238,8 @@ body.modal-open {
 	height: 100px;
 	margin-top: -39px;
 	border-radius: 46px;
+	background-size: 100px 100px;
+	width: 100px;
 }
 .modal-cancel {
 	margin-top: 8px;

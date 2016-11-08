@@ -222,6 +222,24 @@ $(document).ready( function() {
     });
   });
 
+  function archive(evt) {
+	var files = evt.target.files;
+	for (var i = 0, f; f = files[i]; i++) {
+	if (!f.type.match('image.*')) {
+	  continue;
+	}
+	var reader = new FileReader();
+	reader.onload = (function(theFile) {
+	return function(e) {
+	  //$('.user--icon--login').css('background-image', 'url("'+e.target.result+'")');
+	  $('.user--icon--login').attr('src', e.target.result);
+	};
+	})(f);
+      reader.readAsDataURL(f);
+    }
+  }
+  document.getElementById('profile_photo').addEventListener('change', archive, false);
+
 });
 
 var url = window.location.href;
