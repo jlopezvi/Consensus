@@ -11,7 +11,7 @@ from participantManager import _getParticipantByEmail,deleteParticipant,getAllPa
     registration_aux,_verifyEmail
 from ideaManager import Idea, addIdeaToUser_aux,deleteOneIdea,getAllIdeas, spreadIdeaToFollowers_aux, \
     _getIdeaByIdeaIndex
-from webManager import newsfeed2_aux
+from webManager import ideas_for_newsfeed_aux
 import logging
 import flask_login
 from user_authentification import User
@@ -238,7 +238,16 @@ def addIdeaToUser(user_email) :
     idea_object = Idea(idea_dict)
     return addIdeaToUser_aux(user_email, idea_object)
 
-#output : python dictionary sent by render_template
+#input: nothing
+#output: render_template to newsfeed
+@app.route('/newsfeed')
+@flask_login.login_required
+#user_email=flask_login.current_user.id
+def newsfeed():
+    return render_template('login/newsfeed.html')
+
+#input : NOTHING
+#output : json named "feed"
 # feed = {
 # 'idea_id' : id#,
 # 'author_photo_url' : 'assets/profile/perfil-mediano.png', 'author_username' : 'Daniela', 'author_email' : 'a@',
@@ -256,12 +265,12 @@ def addIdeaToUser(user_email) :
 # { 'email': 'd@', 'username': 'Elisa' }
 #               ]
 # }
-@app.route('/newsfeed')
+@app.route('/ideas_for_newsfeed')
 @flask_login.login_required
-def newsfeed():
-    print('Logged in as: ' + flask_login.current_user.id)
-    return newsfeed2_aux(flask_login.current_user.id)
+def ideas_for_newsfeed():
+    return ideas_for_newsfeed_aux(flask_login.current_user.id)
 
+#not used, static
 @app.route('/newsfeed2')
 #@flask_login.login_required
 def newsfeed2():

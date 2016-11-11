@@ -6,7 +6,7 @@ from flask import jsonify, render_template
 #Global variable support_rate_MIN = 90%
 support_rate_MIN = 90
 
-def newsfeed2_aux(user_email):
+def ideas_for_newsfeed_aux(user_email):
     # load 1 concern
     # feed = concern
     new_idea_node=getNewIdeaForParticipant(user_email)
@@ -67,50 +67,8 @@ def newsfeed2_aux(user_email):
                  'support_rate': support_rate, 'support_rate_MIN': support_rate_MIN,
                  'supporters' : supporters, 'rejectors' : rejectors})
 
-    return "there is a new idea"
+    return jsonify(feed)
     # return render_template('login/newsfeed.html', persons=feed)
-
-    # feed = [
-    #     {
-    #         'id': 'id',
-    #         'picture': 'assets/profile/perfil-mediano.png',
-    #         'name': 'Daniela',
-    #         'duration': '2 Days',
-    #         'supporters_goal': 200,
-    #         'supporters_current': 5,
-    #         'volunters_goal': 5,
-    #         'volunters_current': 2,
-    #         'image': 'url-to-picture',
-    #         'problem': 'Some text for the problem',
-    #         'proposal': 'Some text for the proposal',
-    #         'liked':
-    #             [
-    #                 {
-    #                     'id': 'id',
-    #                     'name': 'Maria'
-    #                 },
-    #                 {
-    #                     'id': 'id',
-    #                     'name': 'Pedro'
-    #                 },
-    #                 {
-    #                     'id': 'id',
-    #                     'name': 'Juan'
-    #                 },
-    #                 {
-    #                     'id': 'id',
-    #                     'name': 'Jesus'
-    #                 }
-    #             ],
-    #         'disliked':
-    #             [
-    #                 {
-    #                     'id': 'id',
-    #                     'name': 'Jose'
-    #                 }
-    #             ]
-    #     }
-    # ]
 
 
 def getNewIdeaForParticipant(participant_email):
