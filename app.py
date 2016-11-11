@@ -256,9 +256,9 @@ def addIdeaToUser(user_email) :
 # { 'email': 'd@', 'username': 'Elisa' }
 #               ]
 # }
-@app.route('/newsfeed2')
+@app.route('/newsfeed')
 @flask_login.login_required
-def newsfeed2():
+def newsfeed():
     print('Logged in as: ' + flask_login.current_user.id)
     return newsfeed2_aux(flask_login.current_user.id)
 
@@ -281,55 +281,53 @@ def newsfeed2():
 #               ]
 # }
 
-@app.route('/newsfeed')
+@app.route('/newsfeed2')
 #@flask_login.login_required
-def newsfeed():
+def newsfeed2():
     #print('Logged in as: ' + flask_login.current_user.id)
-    feed = [
-        {
-            'id': 'id',
-            'author_photo_url': 'assets/profile/perfil-mediano.png',
-            'author_username': 'Daniela',
-            'author_email': 'a@',
-            'duration': '2 Days',
-            'supporters_goal_num': 200,
-            'supporters_num': 5,
-            'volunteers_goal_num': 5,
-            'volunteers_num': 2,
-            'image_url': 'url-to-picture',
-            'concern':  'Some text for the problem',
-            'proposal': 'Some text for the proposal',
-            'support_rate': 95,
-            'support_rate_MIN': 90,
-            'supporters':
-            [
-                {
-                    'email': 'id',
-                    'username': 'Maria'
-                },
-                {
-                    'email': 'id',
-                    'username': 'Pedro'
-                },
-                {
-                    'email': 'id',
-                    'username': 'Juan'
-                },
-                {
-                    'email': 'id',
-                    'username': 'Jesus'
-                }
-            ],
-            'rejectors':
-            [
-                {
-                    'email': 'id',
-                    'username': 'Jose'
-                }
-            ]
-        }
-    ]
-    return render_template('login/newsfeed.html', persons=feed)
+    feed = {
+        'id': 'id',
+        'author_photo_url': 'assets/profile/perfil-mediano.png',
+        'author_username': 'Daniela',
+        'author_email': 'a@',
+        'duration': '2 Days',
+        'supporters_goal_num': 200,
+        'supporters_num': 5,
+        'volunteers_goal_num': 5,
+        'volunteers_num': 2,
+        'image_url': 'url-to-picture',
+        'concern':  'Some text for the problem',
+        'proposal': 'Some text for the proposal',
+        'support_rate': 95,
+        'support_rate_MIN': 90,
+        'supporters':
+        [
+            {
+                'email': 'id',
+                'username': 'Maria'
+            },
+            {
+                'email': 'id',
+                'username': 'Pedro'
+            },
+            {
+                'email': 'id',
+                'username': 'Juan'
+            },
+            {
+                'email': 'id',
+                'username': 'Jesus'
+            }
+        ],
+        'rejectors':
+        [
+            {
+                'email': 'id',
+                'username': 'Jose'
+            }
+        ]
+    }
+    return render_template('login/newsfeed.html', person=feed)
 
 
 #TODO: update info
