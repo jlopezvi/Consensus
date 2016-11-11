@@ -262,25 +262,6 @@ def newsfeed():
     print('Logged in as: ' + flask_login.current_user.id)
     return newsfeed2_aux(flask_login.current_user.id)
 
-#TODO: change 'feed' to this format, python dictionnary, and then replace /newsfeed by /newsfeed2
-# feed = {
-# 'idea_id' : id#,
-# 'author_photo_url' : 'assets/profile/perfil-mediano.png', 'author_username' : 'Daniela', 'author_email' : 'a@',
-# 'duration' : '2 days',
-# 'supporters_goal_num' : 200, 'supporters_num' : 5, 'volunteers_goal_num' : 5, 'volunteers_num' : 2,
-# 'image_url' : 'url-to-picture',
-# 'concern': 'Some text for the concern',
-# 'proposal': 'Some text for the proposal',
-# 'support_rate' : 95,
-# 'support_rate_MIN' : 90,
-# 'supporters': [
-# { 'email': 'b@', 'username': 'Maria' }, { 'email': 'c@', 'username': 'Pedro' }
-#             ],
-# 'rejectors':[
-# { 'email': 'd@', 'username': 'Elisa' }
-#               ]
-# }
-
 @app.route('/newsfeed2')
 #@flask_login.login_required
 def newsfeed2():
@@ -330,7 +311,7 @@ def newsfeed2():
     return render_template('login/newsfeed.html', person=feed)
 
 
-#TODO: update info
+#TODO: try with redirect instead of render_template
 #input: URL token link from an invitation e-mail
 #output: redirects to login with a json called "message"
 #  -> json {"result": "The confirmation link is invalid or has expired"}
@@ -339,6 +320,7 @@ def newsfeed2():
 #TODO: redirects to a place with a message of "email verified" and then, login user and redirection to newsfeed.
 #TODO: should I login user when email verified? review registration_aux where I log in user? what's the interplay
 #among the two of them?
+#  -> json {"result": "emailverification:OK", "email": "asdf@dasdf.com"}
 @app.route('/registration_receive_emailverification/<token>')
 def registration_receive_emailverification(token):
     if not confirm_token(token, 3600):
@@ -365,9 +347,12 @@ def registration_receive_emailverification(token):
             #return redirect(url_for('.hello',message=jsondata))
             return render_template('login/login.html', message=jsondata)
 
-#TODO: update info
+
+#TODO: try with redirect instead of render_template
 #input: URL token link from an invitation e-mail
-#output: redirects to login page with message in json {"current_email":"asd@asdf","host_email":"bd@asdf"}
+#output: redirects to login with a json called "message"
+#  -> json {"result": "The confirmation link is invalid or has expired"}
+#  -> json {"result": "invitation:OK", "current_email": "guestemail@com", "host_email": host_email@com"}
 @app.route('/registration_from_invitation/<token>/<guest_email>')
 def registration_from_invitation(token, guest_email):
     if not confirm_token(token, 10000):
