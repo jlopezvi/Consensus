@@ -269,6 +269,7 @@ def newsfeed():
 @flask_login.login_required
 def ideas_for_newsfeed():
     return ideas_for_newsfeed_aux(flask_login.current_user.id)
+    #return ideas_for_newsfeed_aux(email)
 
 #not used, static
 @app.route('/newsfeed2')
@@ -317,7 +318,7 @@ def newsfeed2():
             }
         ]
     }
-    return render_template('login/newsfeed.html', person=feed)
+    return render_template('login/newsfeed2.html', person=feed)
 
 
 #TODO: try with redirect instead of render_template

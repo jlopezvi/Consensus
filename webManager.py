@@ -68,7 +68,7 @@ def ideas_for_newsfeed_aux(user_email):
                  'supporters' : supporters, 'rejectors' : rejectors})
 
     return jsonify(feed)
-    # return render_template('login/newsfeed.html', persons=feed)
+    # return render_template('login/newsfeed2.html', persons=feed)
 
 
 def getNewIdeaForParticipant(participant_email):
