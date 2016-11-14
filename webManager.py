@@ -33,9 +33,9 @@ def ideas_for_newsfeed_aux(user_email):
     # }
 
 
-    author_email = user_email
-    author_photo_url = _getParticipantByEmail(user_email).get_properties()['image_url']
-    author_username = _getParticipantByEmail(user_email).get_properties()['username']
+    author_email = getGraph().match_one(end_node=new_idea_node, rel_type="CREATES").start_node.get_properties()['email']
+    author_photo_url = _getParticipantByEmail(author_email).get_properties()['image_url']
+    author_username = _getParticipantByEmail(author_email).get_properties()['username']
     #TODO: add numerical index to ideas
     idea_id=0
     #duration = time today - _getParticipantByEmail(user_email).get_properties()['timestamp']
@@ -71,9 +71,29 @@ def ideas_for_newsfeed_aux(user_email):
     # return render_template('login/newsfeed2.html', persons=feed)
 
 
+# def getNewIdeaForParticipant(participant_email):
+#     participant=_getParticipantByEmail(participant_email)
+#     rels = list(getGraph().match(end_node=participant, rel_type="IS NEW FOR"))
+#     if len(rels) is 0:
+#         return None
+#     return rels[0].start_node
+
 def getNewIdeaForParticipant(participant_email):
-    participant=_getParticipantByEmail(participant_email)
-    rels = list(getGraph().match(end_node=participant, rel_type="IS NEW FOR"))
-    if len(rels) is 0:
-        return None
-    return rels[0].start_node
+     participant=_getParticipantByEmail(participant_email)
+     followings_rels = list(getGraph().match(start_node=participant, rel_type="FOLLOWS"))
+     if len(followings_rels) is 0:
+         return None
+     for following_rel in followings_rels :
+         #TODO: ADD "HAS VOTED ON"
+         following=following_rel.end_node
+         ideas_rels=list(getGraph().match(start_node=following, rel_type="CREATES"))
+         if len(ideas_rels) is 0:
+             continue
+         for idea_rel in ideas_rels :
+             idea=idea_rel.end_node
+             idea_id=idea['proposal']
+             if ifIsNewIdeaForParticipant(idea_id,participant_email):
+                 return idea
+
+def ifIsNewIdeaForParticipant(idea_id,participant_email):
+    return True

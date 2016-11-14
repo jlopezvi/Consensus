@@ -1,3 +1,4 @@
+#TODO: change system of looking for new ideas. Erase tagging "IS_NEW_FOR". DIRECT SEARCH
 import os
 
 from flask import Flask,jsonify,json, flash
