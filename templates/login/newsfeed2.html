@@ -69,7 +69,7 @@
 				<div class="col-sm-1" style="padding:0;">
 					<img src="{{ url_for('static',filename='images/check-small.png') }}">
 				</div>
-				<div class="col-sm-11 newsfeed--likes">
+				<div class="col-sm-11 newsfeed--likes" id="newsfeed--supporters">
 					<ul>
 					{% for supporter in person.supporters %}
 						{% if loop.index <= 3 %}
@@ -86,7 +86,7 @@
 				<div class="col-sm-1" style="padding:0;">
 					<img src="{{ url_for('static',filename='images/x-small.png') }}">
 				</div>
-				<div class="col-sm-11 newsfeed--likes">
+				<div class="col-sm-11 newsfeed--likes" id="newsfeed--rejectors">
 					<ul>
 					{% for rejector in person.rejectors %}
 						{% if loop.index <= 3 %}

@@ -14,7 +14,10 @@
 				<a href="#"></a>
 			</div>
 			<div class="col-sm-2 newsfeed--duration">
-				<p><img src="{{ url_for('static',filename='images/clock-icon.png') }}">&nbsp;</p>
+				<p>
+					<img src="{{ url_for('static',filename='images/clock-icon.png') }}">&nbsp;
+					<p class="duration--info"></p>
+				</p>
 			</div>
 			<div class="col-sm-3 newsfeed--charge">
 				<div class="progress newsfeed--progress">
@@ -28,15 +31,13 @@
 				</div>
 			</div>
 			<div class="col-sm-4 newsfeed--goals">
-				<p>supporters goals<br>
-				volunteers goals</p>
+				<p></p>
 			</div>
 		</div>
 
         <div class="row newsfeed--body">
 			<div class="col-sm-12">
 				<div class="col-sm-8 newsfeed--problem">
-					<br><br>
 				</div>
 			</div>
 			<div class="col-sm-12" style="margin-top: 291px;">
@@ -52,9 +53,8 @@
 					<img src="{{ url_for('static',filename='images/redflag.png') }}">
 				</div>
 				<div class="col-sm-9 newsfeed--support" style="padding-right:0;padding-left:30px;">
-					<input type="text" value="" id="percent" hidden>
 					<div class="input--percent">
-						<label>	Support Rate: </label>
+						<label></label>
 					</div>
 				</div>
 				<div class="col-sm-2 neewsfeed--moreinfo" style="float:right;">
@@ -68,7 +68,7 @@
 				<div class="col-sm-1" style="padding:0;">
 					<img src="{{ url_for('static',filename='images/check-small.png') }}">
 				</div>
-				<div class="col-sm-11 newsfeed--likes">
+				<div class="col-sm-11 newsfeed--likes" id="newsfeed--supporters">
 					<ul>
 					</ul>
 				</div>
@@ -77,7 +77,7 @@
 				<div class="col-sm-1" style="padding:0;">
 					<img src="{{ url_for('static',filename='images/x-small.png') }}">
 				</div>
-				<div class="col-sm-11 newsfeed--likes">
+				<div class="col-sm-11 newsfeed--likes" id="newsfeed--rejectors">
 					<ul>
 					</ul>
 				</div>

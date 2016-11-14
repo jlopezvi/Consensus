@@ -303,6 +303,7 @@ body.modal-open {
 }
 .newsfeed--goals {
 	text-align: right;
+	right: -12px;
 }
 .newsfeed--body {
 	height: 500px;
