@@ -267,10 +267,9 @@ def newsfeed():
 #               ]
 # }
 @app.route('/ideas_for_newsfeed')
-#@flask_login.login_required
+@flask_login.login_required
 def ideas_for_newsfeed():
-    return ideas_for_newsfeed_aux("juan.jose.lopez.villarejo@gmail.com")
-    #return ideas_for_newsfeed_aux(flask_login.current_user.id)
+    return ideas_for_newsfeed_aux(flask_login.current_user.id)
 
 #not used, static
 @app.route('/newsfeed2')
