@@ -38,6 +38,7 @@ def ideas_for_newsfeed_aux(user_email):
     author_username = _getParticipantByEmail(author_email).get_properties()['username']
     #TODO: add numerical index to ideas
     idea_id=0
+    duration = "2 days"
     #duration = time today - _getParticipantByEmail(user_email).get_properties()['timestamp']
     supporters_num = len(list(getGraph().match(end_node=new_idea_node, rel_type="SUPPORTS")))
     volunteers_num = len(list(getGraph().match(end_node=new_idea_node, rel_type="VOLUNTEERS")))
@@ -62,6 +63,7 @@ def ideas_for_newsfeed_aux(user_email):
     feed=new_idea_node.get_properties()
     feed.update({'idea_id' : idea_id,
                  'author_photo_url': author_photo_url, 'author_username' : author_username,
+                 'duration': duration,
                  'author_email' : author_email, 'supporters_num' : supporters_num,
                  'volunteers_num': volunteers_num,
                  'support_rate': support_rate, 'support_rate_MIN': support_rate_MIN,
