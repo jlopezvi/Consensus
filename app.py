@@ -11,7 +11,7 @@ from participantManager import _getParticipantByEmail,deleteParticipant,getAllPa
     addFollowingContactToParticipant_aux,getFollowerContacts,getFollowingContacts,getFullNameByEmail_aux,\
     registration_aux,_verifyEmail
 from ideaManager import Idea, addIdeaToUser_aux,deleteOneIdea,getAllIdeas, spreadIdeaToFollowers_aux, \
-    _getIdeaByIdeaIndex
+    _getIdeaByIdeaIndex, vote_on_idea_aux
 from webManager import ideas_for_newsfeed_aux
 import logging
 import flask_login
@@ -59,61 +59,6 @@ def user_loader(email):
 ################################
 ####    API, WORKING NOW    ####
 ################################
-
-#input: json {"email":"asdf@asdf", "password":"MD5password"}
-#output:
-#   json {"result":"Bad e-mail"} / json {"result": "Bad password"}
-#   / login cookie and redirection to '/newsfeed'
-@app.route('/login2', methods=['POST','GET'])
-def login2():
-    if request.method == 'GET':
-        return '''
-               <form action='login2' method='POST'>
-                <input type='text' name='email' id='email' placeholder='email'></input>
-                <input type='password' name='password' id='password' placeholder='password'></input>
-                <input type='submit' name='submit'></input>
-               </form>
-               '''
-
-    email = request.form['email']
-    user_to_check=_getParticipantByEmail(email)
-    if user_to_check is None :
-        return jsonify(result ="Bad e-mail")
-
-    if request.form['password'] == user_to_check['password']:
-        user = User(email)
-        flask_login.login_user(user)
-        return redirect(url_for('newsfeed2'))
-    else:
-        return jsonify(result="Bad password")
-
-#input: json {"email":"asdf@asdf", "password":"MD5password"}
-#output:
-#   json {"result":"Bad e-mail"} / json {"result": "Bad password"}
-#   / login cookie and redirection to '/newsfeed'
-@app.route('/login', methods=['POST'])
-def login():
-    login = request.get_json(force=True)
-    user_to_check=_getParticipantByEmail(login['email'])
-    if user_to_check is None :
-        return jsonify(result ="Bad e-mail")
-
-    if login['password'] == user_to_check['password']:
-        user = User(login['email'])
-        flask_login.login_user(user)
-        return jsonify(result="Login validated")
-    else:
-        return jsonify(result="Bad password")
-
-@app.route('/logout')
-def logout():
-    flask_login.logout_user()
-    return 'Logged out'
-
-
-@app.route('/')
-def hello(message=None):
-    return render_template('login/login.html',message=message)
 
 
 @app.route('/search-participant')
@@ -250,7 +195,7 @@ def newsfeed():
 #input : NOTHING
 #output : json named "feed"
 # feed = {
-# 'idea_id' : id#,
+# 'idea_id' : 120,
 # 'author_photo_url' : 'assets/profile/perfil-mediano.png', 'author_username' : 'Daniela', 'author_email' : 'a@',
 # 'duration' : '2 days',
 # 'supporters_goal_num' : 200, 'supporters_num' : 5, 'volunteers_goal_num' : 5, 'volunteers_num' : 2,
@@ -272,54 +217,6 @@ def ideas_for_newsfeed():
     return ideas_for_newsfeed_aux(flask_login.current_user.id)
     #return ideas_for_newsfeed_aux(email)
 
-#not used, static
-@app.route('/newsfeed2')
-#@flask_login.login_required
-def newsfeed2():
-    #print('Logged in as: ' + flask_login.current_user.id)
-    feed = {
-        'id': 'id',
-        'author_photo_url': 'assets/profile/perfil-mediano.png',
-        'author_username': 'Daniela',
-        'author_email': 'a@',
-        'duration': '2 Days',
-        'supporters_goal_num': 200,
-        'supporters_num': 5,
-        'volunteers_goal_num': 5,
-        'volunteers_num': 2,
-        'image_url': 'url-to-picture',
-        'concern':  'Some text for the problem',
-        'proposal': 'Some text for the proposal',
-        'support_rate': 95,
-        'support_rate_MIN': 90,
-        'supporters':
-        [
-            {
-                'email': 'id',
-                'username': 'Maria'
-            },
-            {
-                'email': 'id',
-                'username': 'Pedro'
-            },
-            {
-                'email': 'id',
-                'username': 'Juan'
-            },
-            {
-                'email': 'id',
-                'username': 'Jesus'
-            }
-        ],
-        'rejectors':
-        [
-            {
-                'email': 'id',
-                'username': 'Jose'
-            }
-        ]
-    }
-    return render_template('login/newsfeed2.html', person=feed)
 
 
 #TODO: try with redirect instead of render_template
@@ -388,11 +285,56 @@ def registration_send_invitation(host_email, guest_email):
     send_email(guest_email, subject, html)
     return jsonify({'result': 'email sent'})
 
+#TODO: format for timestamp!
+#input json {"user_email":"asd@asd.com", "idea_proposal":"let's do this", "vote_timestamp":"time", "vote_type":"supports/rejects"}
+#output json  {"result" : "Success : User vote was added"}
+#             {"result" : "Failure : idea or participant non existings"}
+#             {"result" : "Failure : User vote exists already"}
+@app.route('/vote_on_idea',methods=['POST'])
+def vote_on_idea():
+   return vote_on_idea_aux(request.get_json())
+
+
+
+
+
+
+
+
 ############################################
-#   API
+#####   API
 ############################################
 
+
+@app.route('/')
+def hello(message=None):
+    return render_template('login/login.html',message=message)
+
+
 #PARTICIPANTS
+
+#input: json {"email":"asdf@asdf", "password":"MD5password"}
+#output:
+#   json {"result":"Bad e-mail"} / json {"result": "Bad password"}
+#   / login cookie and redirection to '/newsfeed'
+@app.route('/login', methods=['POST'])
+def login():
+    login = request.get_json(force=True)
+    user_to_check=_getParticipantByEmail(login['email'])
+    if user_to_check is None :
+        return jsonify(result ="Bad e-mail")
+
+    if login['password'] == user_to_check['password']:
+        user = User(login['email'])
+        flask_login.login_user(user)
+        return jsonify(result="Login validated")
+    else:
+        return jsonify(result="Bad password")
+
+@app.route('/logout')
+def logout():
+    flask_login.logout_user()
+    return 'Logged out'
 
 #input: email
 #output: json {"result" : "Participant found" / "Participant not found" }
@@ -420,6 +362,8 @@ def registration_send_emailverification(email):
 #              "position": "employee", "group": "IT", "password": "MD5password",
 #              "image_url": "http://.... ", "ifpublicprofile": true / false,
 #              "host_email": "asdf@das" / null, "ifemailverified": true / false}
+#       file  file.tar.gz
+# multipart/form-data : curl -F "metadata=<metadata.json" -F "file=@my-file.tar.gz" http://example.com/add-file
 #output:
 #     -> NOT USED BY FRONTEND json {"result": "participant already exists""}
 #     -> login and json {"result": "email not verified"} (on registration pending of email verification)
@@ -427,8 +371,13 @@ def registration_send_emailverification(email):
 @app.route('/registration', methods=['POST'])
 def registration():
     #call with json_data converted to python_dictionary_data
-    return registration_aux(request.get_json())
-
+    inputdict=request.get_json()
+    profilepic_file_body=None
+    profilepic_file_body=request.files['fileUpload']
+    print('b')
+    #if request.args['files']:
+    #    profilepic_file_body = request.args['files'][0]
+    return registration_aux(inputdict,profilepic_file_body)
 
 #return: Full Name (normal string) corresponding to e-mail
 @app.route('/getFullNameByEmail/<email>', methods=['GET'])

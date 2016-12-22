@@ -17,7 +17,7 @@ import flask_login
 #     -> NOT USED BY FRONTEND  json {"result": "participant already exists""}
 #     -> login and json {"result": "email not verified"} (on registration pending of email verification)
 #     -> login and json {"result": "OK"} (on registration completed)
-def registration_aux(inputdict):
+def registration_aux(inputdict,profilepic_file_body=None):
     email = inputdict['email']
     if _getParticipantByEmail(email,'all') :
         return jsonify(result="participant already exists")

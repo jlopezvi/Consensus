@@ -92,3 +92,23 @@ def getAllIdeas(email):
         currentIdea["id"] = rel.end_node._id
         ideas.append(currentIdea)
     return ideas
+
+def vote_on_idea_aux(inputdict):
+   user_email=inputdict['user_email']
+   idea_proposal=inputdict['idea_proposal']
+   vote_timestamp=inputdict['vote_timestamp']
+   vote_type=inputdict['vote_type']
+   currentParticipant = _getParticipantByEmail(user_email)
+   idea = _getIdeaByIdeaIndex(idea_proposal)
+   if currentParticipant==None or idea==None :
+       return jsonify(result="Failure : idea or participant non existing")
+   #TODO: CASE where voting relationship exists but it is another type!
+   if _getIfVotingRelationshipExists(currentParticipant, idea, vote_type)==True:
+       return jsonify(result="Failure : User vote exists already")
+   getGraph().create((currentParticipant, "VOTED_ON", idea, {"type":vote_type, "timestamp":vote_timestamp}))
+   return jsonify(result="Success : User vote was added")
+
+
+#TODO
+def _getIfVotingRelationshipExists(currentParticipant, idea, vote_type):
+    return False

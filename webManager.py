@@ -86,7 +86,7 @@ def getNewIdeaForParticipant(participant_email):
      if len(followings_rels) is 0:
          return None
      for following_rel in followings_rels :
-         #TODO: ADD "HAS VOTED ON"
+         #TODO: ADD "HAS_VOTED_ON"
          following=following_rel.end_node
          ideas_rels=list(getGraph().match(start_node=following, rel_type="CREATES"))
          if len(ideas_rels) is 0:
