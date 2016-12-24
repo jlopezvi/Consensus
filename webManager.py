@@ -33,33 +33,30 @@ def ideas_for_newsfeed_aux(user_email):
     # }
 
 
-    author_email = getGraph().match_one(end_node=new_idea_node, rel_type="CREATES").start_node.get_properties()['email']
+    author_email = getGraph().match_one(end_node=new_idea_node, rel_type="CREATED").start_node.get_properties()['email']
     author_photo_url = _getParticipantByEmail(author_email).get_properties()['image_url']
     author_username = _getParticipantByEmail(author_email).get_properties()['username']
     #TODO: add numerical index to ideas
     idea_id=0
     duration = "2 days"
     #duration = time today - _getParticipantByEmail(user_email).get_properties()['timestamp']
-    supporters_num = len(list(getGraph().match(end_node=new_idea_node, rel_type="SUPPORTS")))
-    volunteers_num = len(list(getGraph().match(end_node=new_idea_node, rel_type="VOLUNTEERS")))
-    voters_num = len(list(getGraph().match(end_node=new_idea_node, rel_type="HAS_VOTED_ON")))
+    voters_num = len(list(getGraph().match(end_node=new_idea_node, rel_type="VOTED_ON")))
+    supporters_num = _get_vote_statistics_for_idea(new_idea_node)[0]
+    #rejectors_num = _get_vote_statistics_for_idea(new_idea_node)[1]
+    volunteers_num = _get_vote_statistics_for_idea(new_idea_node)[2]
     if voters_num == 0 :
         support_rate = 100
     else:
         support_rate = (supporters_num / voters_num)*100
-    supporters_rels = list(getGraph().match(end_node=new_idea_node, rel_type="SUPPORTS"))
     supporters = []
-    for supporter_rel in supporters_rels:
-        email = supporter_rel.start_node.get_properties()['email']
-        username = supporter_rel.start_node.get_properties()['username']
-        supporters.append({'email' : email, 'username':username })
-    rejectors_rels = list(getGraph().match(end_node=new_idea_node, rel_type="REJECTS"))
     rejectors = []
-    for rejector_rel in rejectors_rels:
-        email = rejector_rel.start_node.get_properties()['email']
-        username = rejector_rel.start_node.get_properties()['username']
-        rejectors.append({'email' : email, 'username':username })
-
+    for vote_rel in (list(getGraph().match(end_node=new_idea_node, rel_type="VOTED_ON"))):
+        email = vote_rel.start_node.get_properties()['email']
+        username = vote_rel.start_node.get_properties()['username']
+        if vote_rel["type"] == "supporter":
+            supporters.append({'email': email, 'username': username})
+        else:
+            rejectors.append({'email': email, 'username': username})
     feed=new_idea_node.get_properties()
     feed.update({'idea_id' : idea_id,
                  'author_photo_url': author_photo_url, 'author_username' : author_username,
@@ -72,6 +69,19 @@ def ideas_for_newsfeed_aux(user_email):
     return jsonify(feed)
     # return render_template('login/newsfeed2.html', persons=feed)
 
+#used by ideas_for_newsfeed_aux
+def _get_vote_statistics_for_idea(node_idea):
+   rejectors_num=0
+   supporters_num=0
+   volunteers_num=0
+   for vote_rel in (list(getGraph().match(end_node=node_idea, rel_type="VOTED_ON"))):
+       if vote_rel["type"] == "supporter":
+           supporters_num+=1
+       else:
+           rejectors_num+=1
+       if vote_rel["volunteered"] == "yes":
+           volunteers_num+=1
+   return (supporters_num,rejectors_num,volunteers_num)
 
 # def getNewIdeaForParticipant(participant_email):
 #     participant=_getParticipantByEmail(participant_email)
@@ -88,7 +98,7 @@ def getNewIdeaForParticipant(participant_email):
      for following_rel in followings_rels :
          #TODO: ADD "HAS_VOTED_ON"
          following=following_rel.end_node
-         ideas_rels=list(getGraph().match(start_node=following, rel_type="CREATES"))
+         ideas_rels=list(getGraph().match(start_node=following, rel_type="CREATED"))
          if len(ideas_rels) is 0:
              continue
          for idea_rel in ideas_rels :

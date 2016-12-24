@@ -217,7 +217,9 @@ def ideas_for_newsfeed():
     return ideas_for_newsfeed_aux(flask_login.current_user.id)
     #return ideas_for_newsfeed_aux(email)
 
-
+@app.route('/TEST_ideas_for_newsfeed/<email>')
+def TEST_ideas_for_newsfeed(email) :
+    return ideas_for_newsfeed_aux(email)
 
 #TODO: try with redirect instead of render_template
 #input: URL token link from an invitation e-mail
@@ -286,9 +288,9 @@ def registration_send_invitation(host_email, guest_email):
     return jsonify({'result': 'email sent'})
 
 #TODO: format for timestamp!
-#input json {"user_email":"asd@asd.com", "idea_proposal":"let's do this", "vote_timestamp":"time", "vote_type":"supports/rejects"}
+#input json {"user_email":"asd@asd.com", "idea_proposal":"let's do this", "vote_timestamp":"time", "vote_type":"supporter/rejector"}
 #output json  {"result" : "Success : User vote was added"}
-#             {"result" : "Failure : idea or participant non existings"}
+#             {"result" : "Failure : Idea or participant non existings"}
 #             {"result" : "Failure : User vote exists already"}
 @app.route('/vote_on_idea',methods=['POST'])
 def vote_on_idea():

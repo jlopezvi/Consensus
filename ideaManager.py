@@ -38,7 +38,7 @@ def addIdeaToUser_aux(user_email, newidea_obj):
                                        "volunteers_goal_num": newidea_obj.volunteers_goal_num})
     newidea_node.add_labels("idea")
     _addIdeaToIndex(newidea_index, newidea_node)
-    getGraph().create((user, "CREATES", newidea_node))
+    getGraph().create((user, "CREATED", newidea_node))
     #calls dynamic function to spread idea
     spreadIdeaToFollowers_aux(user_email, newidea_index)
     return jsonify(result="added idea to database")
@@ -85,7 +85,7 @@ def deleteOneIdea(id):
 def getAllIdeas(email):
     print("getAllIdeas")
     currentUser = _getParticipantByEmail(email)
-    rels = list(getGraph().match(start_node=currentUser, rel_type="CREATES"))
+    rels = list(getGraph().match(start_node=currentUser, rel_type="CREATED"))
     ideas = []
     for rel in rels:
         currentIdea = rel.end_node.get_properties()
@@ -100,8 +100,8 @@ def vote_on_idea_aux(inputdict):
    vote_type=inputdict['vote_type']
    currentParticipant = _getParticipantByEmail(user_email)
    idea = _getIdeaByIdeaIndex(idea_proposal)
-   if currentParticipant==None or idea==None :
-       return jsonify(result="Failure : idea or participant non existing")
+   if (currentParticipant is None) or (idea is None) :
+       return jsonify(result="Failure : Idea or participant non existing")
    #TODO: CASE where voting relationship exists but it is another type!
    if _getIfVotingRelationshipExists(currentParticipant, idea, vote_type)==True:
        return jsonify(result="Failure : User vote exists already")
