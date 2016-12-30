@@ -9,7 +9,7 @@ import json
 from communityManager import saveCommunity,deleteCommunity,addCommunityToContact,getCommunities
 from participantManager import _getParticipantByEmail,deleteParticipant,getAllParticipants, \
     addFollowingContactToParticipant_aux,getFollowerContacts,getFollowingContacts,getFullNameByEmail_aux,\
-    registration_aux,_verifyEmail
+    registration_basicdata_aux,_verifyEmail
 from ideaManager import Idea, addIdeaToUser_aux,deleteOneIdea,getAllIdeas, spreadIdeaToFollowers_aux, \
     _getIdeaByIdeaIndex, vote_on_idea_aux
 from webManager import ideas_for_newsfeed_aux
@@ -347,39 +347,21 @@ def getParticipantByEmail(email):
     return jsonify(result="Participant not found")
 
 
-#input: email to be verified as an argument
-#output: e-mail to the email account with a URL token link for email verification
-#         and json {"result": "email sent"}
-@app.route('/registration_send_emailverification/<email>')
-def registration_send_emailverification(email):
-    token = generate_confirmation_token(email)
-    confirm_url = url_for('.registration_receive_emailverification', token=token, _external=True)
-    html = render_template('login/verification_email.html', confirm_url=confirm_url)
-    subject = "Please confirm your email"
-    send_email(email, subject, html)
-    return jsonify({'result': 'email sent'})
-
-
 #input: json {"fullname":"Juan Lopez","email": "jj@gmail.com", "username": "jlopezvi",
 #              "position": "employee", "group": "IT", "password": "MD5password",
-#              "image_url": "http://.... ", "ifpublicprofile": true / false,
-#              "host_email": "asdf@das" / null, "ifemailverified": true / false}
-#       file  file.tar.gz
-# multipart/form-data : curl -F "metadata=<metadata.json" -F "file=@my-file.tar.gz" http://example.com/add-file
+#              "host_email": "asdf@das" / null, "ifregistrationfromemail": true / false}
 #output:
-#     -> NOT USED BY FRONTEND json {"result": "participant already exists""}
-#     -> login and json {"result": "email not verified"} (on registration pending of email verification)
-#     -> login and json {"result": "OK"} (on registration completed)
-@app.route('/registration', methods=['POST'])
-def registration():
+#     -> json {"result": "Wrong : Participant already exists"}
+#     -> json {"result": "OK : e-mail already exists but not verified. e-mail verification sent"}
+#     -> user login and json {"result": "OK : Host"}
+#     -> user login and json {"result": "OK"}
+#     -> json {"result": "OK : e-mail to be verified. Host"}
+#     -> json {"result": "OK : e-mail to be verified"}
+@app.route('/registration_basicdata', methods=['POST'])
+def registration_basicdata():
     #call with json_data converted to python_dictionary_data
     inputdict=request.get_json()
-    profilepic_file_body=None
-    profilepic_file_body=request.files['fileUpload']
-    print('b')
-    #if request.args['files']:
-    #    profilepic_file_body = request.args['files'][0]
-    return registration_aux(inputdict,profilepic_file_body)
+    return registration_basicdata_aux(inputdict)
 
 #return: Full Name (normal string) corresponding to e-mail
 @app.route('/getFullNameByEmail/<email>', methods=['GET'])

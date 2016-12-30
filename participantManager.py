@@ -1,74 +1,85 @@
 from py2neo import neo4j
-from flask import jsonify,abort, redirect,url_for
+from flask import jsonify,abort, redirect,url_for, render_template
 import ast
 import json
 import logging
-from utils import getGraph
+from utils import getGraph, send_email
+from uuid_token import generate_confirmation_token
 import datetime
 from user_authentification import User
 import flask_login
 
 
-#input: python dict {'fullname':'Juan Lopez','email': 'jj@gmail.com', 'username': 'jlopezvi',
+# input: python dict {'fullname':'Juan Lopez','email': 'jj@gmail.com', 'username': 'jlopezvi',
 #              'position': 'employee', 'group': 'IT', 'password': 'MD5password',
-#              'image_url': 'http://.... ', 'ifpublicprofile': True / False,
-#              'host_email': 'asdf@das' / None, 'ifemailverified': True / False}
-#output:
-#     -> NOT USED BY FRONTEND  json {"result": "participant already exists""}
-#     -> login and json {"result": "email not verified"} (on registration pending of email verification)
-#     -> login and json {"result": "OK"} (on registration completed)
-def registration_aux(inputdict,profilepic_file_body=None):
+#              'host_email': 'asdf@das' / None, 'ifregistrationfromemail': True / False}
+# output:
+#     -> json {"result": "Wrong : Participant already exists"}
+#     -> json {"result": "OK : e-mail already exists but not verified. e-mail verification sent"}
+#     -> user login and json {"result": "OK : Host"}
+#     -> user login and json {"result": "OK"}
+#     -> json {"result": "OK : e-mail to be verified. Host"}
+#     -> json {"result": "OK : e-mail to be verified"}
+def registration_basicdata_aux(inputdict,profilepic_file_body=None):
     email = inputdict['email']
-    if _getParticipantByEmail(email,'all') :
-        return jsonify(result="participant already exists")
-    else : #registration
-        _newParticipant(inputdict)
-        if inputdict['host_email']:
-            #TODO: verify valid host_email (exists and it is not equal to email)
-            addFollowingContactToParticipant_aux(email, inputdict['host_email'])
-        #user login
+    if _getParticipantByEmail(email,'all'):   # email exists?
+        if _getParticipantByEmail(email):   # participant's email is verified?
+            return jsonify(result="Wrong : Participant already exists")
+        else :
+            result_send_emailverification = _registration_send_emailverification(email)
+            if result_send_emailverification is "OK" :
+                return jsonify(result="OK : e-mail already exists but not verified. e-mail verification sent")
+    # save data for new (verified / unverified) participant in database
+    _newParticipant(inputdict)
+    result_host = None
+    if inputdict['host_email']:
+        # check host_email and current_participant (verified/unverified) follows host
+        result_host = addFollowingContactToParticipant_aux(email, inputdict['host_email'])
+    if inputdict['ifregistrationfromemail'] is True :
         user = User(email)
         flask_login.login_user(user)
-        #routes depending on whether the email has been verified or not
-        if inputdict['ifemailverified'] is True:
-            return jsonify(result="OK")
-            #return redirect(url_for('newsfeed'))
+        if result_host is "OK" :
+            return jsonify(result="OK : Host")
         else :
-            return jsonify(result="email not verified")
-            #return redirect(url_for('registration_send_emailverification', email=email))
-
-            #return jsonify(result="registration pending of email verification")
-        # else :
-        #     _newUnverifiedParticipant(inputdict)
-        #     if host_email:
-        #         addFollowingContactToUnverifiedParticipant_aux(email, host_email)
-        #     user = User(email)
-        #     flask_login.login_user(user)
-        #     return redirect(url_for('newsfeed2'))
-        #     #return jsonify(result="registration pending of email verification")
-
+            return jsonify(result="OK")
+    else :
+        _registration_send_emailverification(email)
+        if result_host is "OK" :
+            return jsonify(result="OK : e-mail to be verified. Host")
+        else :
+            return jsonify(result="OK : e-mail to be verified")
 
 
 #input: python dict {'fullname':'Juan Lopez','email': 'jj@gmail.com', 'username': 'jlopezvi',
 #              'position': 'employee', 'group': 'Human Resources', 'password': 'MD5password',
-#              'image_url': 'http://.... ', 'ifpublicprofile': True / False,
-#              'ifemailverified': True / False}
+#              'ifregistrationfromemail': True / False}
 #output: python dict {'result':'OK'}
 def _newParticipant(participantdict):
     email = participantdict['email']
-    newparticipant, = getGraph().create({"fullname" : participantdict['fullname'], "email" : email,
-                                  "username" : participantdict['username'], "position" : participantdict['position'],
-                                  "group" : participantdict['group'], "password" : participantdict['password'],
-                                  "ifpublicprofile" : participantdict['ifpublicprofile'],
-                                  "image_url" : participantdict['image_url']
-                                  })
-    if participantdict['ifemailverified']==True:
+    newparticipant, = getGraph().create({"fullname": participantdict['fullname'], "email": email,
+                                         "username": participantdict['username'], "position": participantdict['position'],
+                                         "group": participantdict['group'], "password": participantdict['password']
+                                         })
+    if participantdict['ifregistrationfromemail'] is True:
         newparticipant.add_labels("participant")
         _addToParticipantsIndex(email, newparticipant)
-    elif participantdict['ifemailverified']== False:
+    elif participantdict['ifregistrationfromemail'] is False:
         newparticipant.add_labels("unverified_participant")
         _addToUnverifiedParticipantsIndex(email, newparticipant)
-    return {'result' : 'OK'}
+    return "OK"
+
+
+# input: email to be verified as an argument
+# output: e-mail to the email account with a URL token link for email verification
+#         and json {"result": "email sent"}
+def _registration_send_emailverification(email):
+    token = generate_confirmation_token(email)
+    confirm_url = url_for('.registration_receive_emailverification', token=token, _external=True)
+    html = render_template('login/verification_email.html', confirm_url=confirm_url)
+    subject = "Please confirm your email"
+    send_email(email, subject, html)
+    return "OK"
+
 
 # def _newUnverifiedParticipant(participantdict):
 #     email = participantdict.get('email')
@@ -161,15 +172,19 @@ def _getIfContactRelationshipExists(currentParticipant, newFollowingContact) :
 
 #input: current participant email, new following contact email
 #output: json
-#   ->  {"result" : "Following contact was added"}
-#   ->  {"result" : "Following contact exists already")
+#   ->  {"result" : "OK"}
+#   ->  {"result" : "Wrong"}
+#   ->  {"result" : "Wrong : Following contact exists already")
 def addFollowingContactToParticipant_aux(currentparticipantemail, newfollowingcontactemail) :
     currentparticipant = _getParticipantByEmail(currentparticipantemail,'all')  #current's email could be unverified
     newfollowingcontact = _getParticipantByEmail(newfollowingcontactemail)
-    if _getIfContactRelationshipExists(currentparticipant, newfollowingcontact) == False:
-         getGraph().create((currentparticipant, "FOLLOWS", newfollowingcontact))
-         return jsonify(result="Following contact was added")
-    return jsonify(result="Following contact exists already")
+    if (currentparticipant is None) or (newfollowingcontact is None) or (currentparticipantemail is newfollowingcontactemail) :
+        return jsonify(result="Wrong")
+    if _getIfContactRelationshipExists(currentparticipant, newfollowingcontact) == True:
+        return jsonify(result="Wrong : Following contact exists already")
+    getGraph().create((currentparticipant, "FOLLOWS", newfollowingcontact))
+    return "OK"
+
 # def addFollowingContactToUnverifiedParticipant_aux(currentparticipantemail, newfollowingcontactemail) :
 #     currentparticipant = _getUnverifiedParticipantByEmail(currentparticipantemail)
 #     newfollowingcontact = _getParticipantByEmail(newfollowingcontactemail)
