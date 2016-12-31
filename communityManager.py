@@ -2,6 +2,7 @@ from utils import getGraph
 from py2neo import neo4j
 from participantManager import _getParticipantByEmail
 
+
 def saveCommunity(community):
     if _getCommunity(community) :
        return "Community %s already exists" % community

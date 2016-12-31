@@ -56,9 +56,13 @@ def registration_basicdata_aux(inputdict,profilepic_file_body=None):
 #output: python dict {'result':'OK'}
 def _newParticipant(participantdict):
     email = participantdict['email']
+    #add some default values for profile (changed with completeregistration)
+    default_profilepic_url = 'static/assets/profile/perfil-mediano.png'
+    default_ifpublicprofile = False
     newparticipant, = getGraph().create({"fullname": participantdict['fullname'], "email": email,
                                          "username": participantdict['username'], "position": participantdict['position'],
-                                         "group": participantdict['group'], "password": participantdict['password']
+                                         "group": participantdict['group'], "password": participantdict['password'],
+                                         "profilepic_url":default_profilepic_url, "ifpublicprofile":default_ifpublicprofile
                                          })
     if participantdict['ifregistrationfromemail'] is True:
         newparticipant.add_labels("participant")
@@ -68,6 +72,28 @@ def _newParticipant(participantdict):
         _addToUnverifiedParticipantsIndex(email, newparticipant)
     return "OK"
 
+# input: python dict {'email': 'jj@gmail.com', 'ifpublicprofile': True/False,
+#               'ifprofilepic':True/False}
+# output: json {"result": "Wrong"}
+#              {"result": "OK"}
+#              {"result": "OK: profilepic", "profilepic_url": "static/assets/profile/email@adress.png"}
+def registration_completeregistration_aux(inputdict):
+    email=inputdict['email']
+    participant=_getParticipantByEmail(email,'all')
+    if participant is None:
+        return jsonify({"result": "Wrong"})
+    else:
+        participant.set_properties({"ifpublicprofile": inputdict['ifpublicprofile']})
+        if inputdict['ifprofilepic'] is True:
+            response = _registration_uploadprofilepic_1of2(email)
+            return response
+        elif inputdict['ifprofilepic'] is False:
+            return jsonify({"result": "OK"})
+
+def _registration_uploadprofilepic_1of2(email):
+    # TODO: change name for profilepic. Currently the email.
+    profilepic_url='static/assets/profile/'+str(email)+'.png'
+    return jsonify({"result": "OK: profilepic", "profilepic_url": profilepic_url})
 
 # input: email to be verified as an argument
 # output: e-mail to the email account with a URL token link for email verification

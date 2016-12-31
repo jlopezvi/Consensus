@@ -9,7 +9,7 @@ import json
 from communityManager import saveCommunity,deleteCommunity,addCommunityToContact,getCommunities
 from participantManager import _getParticipantByEmail,deleteParticipant,getAllParticipants, \
     addFollowingContactToParticipant_aux,getFollowerContacts,getFollowingContacts,getFullNameByEmail_aux,\
-    registration_basicdata_aux,_verifyEmail
+    registration_basicdata_aux, registration_completeregistration_aux, _verifyEmail
 from ideaManager import Idea, addIdeaToUser_aux,deleteOneIdea,getAllIdeas, spreadIdeaToFollowers_aux, \
     _getIdeaByIdeaIndex, vote_on_idea_aux
 from webManager import ideas_for_newsfeed_aux
@@ -362,6 +362,19 @@ def registration_basicdata():
     #call with json_data converted to python_dictionary_data
     inputdict=request.get_json()
     return registration_basicdata_aux(inputdict)
+
+
+# input: json {"email": "jj@gmail.com", "ifpublicprofile": true/false,
+#               "ifprofilepic":true/false}
+# output: json {"result": "Wrong"}
+#              {"result": "OK"}
+#              {"result": "OK: profilepic", "profilepic_url": "static/assets/profile/email@adress.png"}
+@app.route('/registration_completeregistration', methods=['POST'])
+def registration_completeregistration():
+    #call with json_data converted to python_dictionary_data
+    inputdict=request.get_json()
+    return registration_completeregistration_aux(inputdict)
+
 
 #return: Full Name (normal string) corresponding to e-mail
 @app.route('/getFullNameByEmail/<email>', methods=['GET'])
