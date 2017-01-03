@@ -8,46 +8,52 @@ from uuid_token import generate_confirmation_token
 import datetime
 from user_authentification import User
 import flask_login
+from werkzeug.utils import secure_filename
+import os
+basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 # input: python dict {'fullname':'Juan Lopez','email': 'jj@gmail.com', 'username': 'jlopezvi',
 #              'position': 'employee', 'group': 'IT', 'password': 'MD5password',
 #              'host_email': 'asdf@das' / None, 'ifregistrationfromemail': True / False}
-# output:
-#     -> json {"result": "Wrong : Participant already exists"}
-#     -> json {"result": "OK : e-mail already exists but not verified. e-mail verification sent"}
-#     -> user login and json {"result": "OK : Host"}
-#     -> user login and json {"result": "OK"}
-#     -> json {"result": "OK : e-mail to be verified. Host"}
-#     -> json {"result": "OK : e-mail to be verified"}
-def registration_basicdata_aux(inputdict,profilepic_file_body=None):
+# output: json
+#          1. Wrong  -->   {"result":"Wrong","ifemailexists":true,"ifemailexists_msg":ifemailexists_msg[true]}
+#          2. OK (registered participant but e-mail not verified yet. Sends new e-mail for verification)  -->
+#                       {"result":"OK","ifemailexists":true,"ifemailexists_msg":ifemailexists_msg[true],
+#                        "ifemailverified":false,"ifemailverified_msg":ifemailverified_msg[false]}
+#          3. OK (4 different normal cases of registration)
+#                       {"result":"OK", "ifhost":true/false,"ifhost_msg":ifhost_msg[ifhost],
+#                       "ifemailverified":true/false,"ifemailverified_msg":ifemailverified_msg[ifemailverified]})
+def registration_basicdata_aux(inputdict):
     email = inputdict['email']
+    ifemailexists_msg=[None,"Participant already exists"]
+    ifemailverified_msg= ["E-mail not verified. E-mail verification sent. " \
+                          "Close this window and check your e-mail within the next few minutes ", None]
+    ifhost_msg=[None, "You will be following your host in Consensus"]
     if _getParticipantByEmail(email,'all'):   # email exists?
+        ifemailexists = True
         if _getParticipantByEmail(email):   # participant's email is verified?
-            return jsonify(result="Wrong : Participant already exists")
-        else :
+            return jsonify({"result":"Wrong","ifemailexists":ifemailexists,"ifemailexists_msg":ifemailexists_msg[ifemailexists]})
+        else:
+            ifemailverified=False
             result_send_emailverification = _registration_send_emailverification(email)
             if result_send_emailverification is "OK" :
-                return jsonify(result="OK : e-mail already exists but not verified. e-mail verification sent")
+                return jsonify({"result":"OK","ifemailexists":ifemailexists,"ifemailexists_msg":ifemailexists_msg[ifemailexists],
+                                "ifemailverified":ifemailverified,"ifemailverified_msg":ifemailverified_msg[ifemailverified]})
     # save data for new (verified / unverified) participant in database
     _newParticipant(inputdict)
-    result_host = None
+    ifhost = False
     if inputdict['host_email']:
-        # check host_email and current_participant (verified/unverified) follows host
-        result_host = addFollowingContactToParticipant_aux(email, inputdict['host_email'])
-    if inputdict['ifregistrationfromemail'] is True :
+        # current_participant (verified/unverified) follows host
+        ifhost = addFollowingContactToParticipant_aux(email, inputdict['host_email'])
+    ifemailverified=inputdict['ifregistrationfromemail']
+    if ifemailverified is True :
         user = User(email)
         flask_login.login_user(user)
-        if result_host is "OK" :
-            return jsonify(result="OK : Host")
-        else :
-            return jsonify(result="OK")
-    else :
+    else:
         _registration_send_emailverification(email)
-        if result_host is "OK" :
-            return jsonify(result="OK : e-mail to be verified. Host")
-        else :
-            return jsonify(result="OK : e-mail to be verified")
+    return jsonify({"result":"OK", "ifhost":ifhost,"ifhost_msg":ifhost_msg[ifhost],
+                   "ifemailverified":ifemailverified,"ifemailverified_msg":ifemailverified_msg[ifemailverified]})
 
 
 #input: python dict {'fullname':'Juan Lopez','email': 'jj@gmail.com', 'username': 'jlopezvi',
@@ -85,15 +91,24 @@ def registration_completeregistration_aux(inputdict):
     else:
         participant.set_properties({"ifpublicprofile": inputdict['ifpublicprofile']})
         if inputdict['ifprofilepic'] is True:
-            response = _registration_uploadprofilepic_1of2(email)
-            return response
+            response = _registration_uploadprofilepic(email)
+            if response is "OK":
+                return jsonify({"result": "OK: profilepic"})
         elif inputdict['ifprofilepic'] is False:
             return jsonify({"result": "OK"})
 
-def _registration_uploadprofilepic_1of2(email):
-    # TODO: change name for profilepic. Currently the email.
-    profilepic_url='static/assets/profile/'+str(email)+'.png'
-    return jsonify({"result": "OK: profilepic", "profilepic_url": profilepic_url})
+def _registration_uploadprofilepic(email, profilepic_file_body):
+    currentparticipant = _getParticipantByEmail(email,'all')
+    if (profilepic_file_body is None) or (currentparticipant is None):
+        return "Wrong"
+    else:
+        path = basedir + '/static/assets/profile/'
+        # TODO: change name for profilepic. Currently the email.
+        filename=str(email)+'.png'
+        profilepic_file_body.save(os.path.join(path, secure_filename(filename)))
+        currentparticipant["profilepic_url"] = path + secure_filename(filename)
+        return "OK"
+
 
 # input: email to be verified as an argument
 # output: e-mail to the email account with a URL token link for email verification
@@ -197,19 +212,19 @@ def _getIfContactRelationshipExists(currentParticipant, newFollowingContact) :
     return False
 
 #input: current participant email, new following contact email
-#output: json
-#   ->  {"result" : "OK"}
-#   ->  {"result" : "Wrong"}
-#   ->  {"result" : "Wrong : Following contact exists already")
+#output:
+#   ->  True
+#   ->  False
+#   ->  [False,'Following contact exists already']
 def addFollowingContactToParticipant_aux(currentparticipantemail, newfollowingcontactemail) :
     currentparticipant = _getParticipantByEmail(currentparticipantemail,'all')  #current's email could be unverified
     newfollowingcontact = _getParticipantByEmail(newfollowingcontactemail)
     if (currentparticipant is None) or (newfollowingcontact is None) or (currentparticipantemail is newfollowingcontactemail) :
-        return jsonify(result="Wrong")
+        return False
     if _getIfContactRelationshipExists(currentparticipant, newfollowingcontact) == True:
-        return jsonify(result="Wrong : Following contact exists already")
+        return [False,'Following contact exists already']
     getGraph().create((currentparticipant, "FOLLOWS", newfollowingcontact))
-    return "OK"
+    return True
 
 # def addFollowingContactToUnverifiedParticipant_aux(currentparticipantemail, newfollowingcontactemail) :
 #     currentparticipant = _getUnverifiedParticipantByEmail(currentparticipantemail)

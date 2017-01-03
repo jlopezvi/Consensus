@@ -347,16 +347,17 @@ def getParticipantByEmail(email):
     return jsonify(result="Participant not found")
 
 
-#input: json {"fullname":"Juan Lopez","email": "jj@gmail.com", "username": "jlopezvi",
+# input: json {"fullname":"Juan Lopez","email": "jj@gmail.com", "username": "jlopezvi",
 #              "position": "employee", "group": "IT", "password": "MD5password",
 #              "host_email": "asdf@das" / null, "ifregistrationfromemail": true / false}
-#output:
-#     -> json {"result": "Wrong : Participant already exists"}
-#     -> json {"result": "OK : e-mail already exists but not verified. e-mail verification sent"}
-#     -> user login and json {"result": "OK : Host"}
-#     -> user login and json {"result": "OK"}
-#     -> json {"result": "OK : e-mail to be verified. Host"}
-#     -> json {"result": "OK : e-mail to be verified"}
+# output: json
+#          1. Wrong  -->   {"result":"Wrong","ifemailexists":true,"ifemailexists_msg":ifemailexists_msg[true]}
+#          2. OK (registered participant but e-mail not verified yet. Sends new e-mail for verification)  -->
+#                       {"result":"OK","ifemailexists":true,"ifemailexists_msg":ifemailexists_msg[true],
+#                        "ifemailverified":false,"ifemailverified_msg":ifemailverified_msg[false]}
+#          3. OK (4 different normal cases of registration)
+#                       {"result":"OK", "ifhost":true/false,"ifhost_msg":ifhost_msg[ifhost],
+#                       "ifemailverified":true/false,"ifemailverified_msg":ifemailverified_msg[ifemailverified]})
 @app.route('/registration_basicdata', methods=['POST'])
 def registration_basicdata():
     #call with json_data converted to python_dictionary_data
@@ -376,12 +377,18 @@ def registration_completeregistration():
     return registration_completeregistration_aux(inputdict)
 
 
+@app.route('/registration_uploadprofilepic_2of2', methods=['POST'])
+def registration_uploadprofilepic_2of2():
+   profilepic_file_body = request.files['fileUpload']
+   user_email = request.args['email']
+   return registration_uploadprofilepic_2of2_aux(user_email, profilepic_file_body)
+
 #return: Full Name (normal string) corresponding to e-mail
 @app.route('/getFullNameByEmail/<email>', methods=['GET'])
 def getFullNameByEmail(email):
     return getFullNameByEmail_aux(email)
 
-
+#TODO: connect with the _aux function.
 #input: json with fields "current" (current user email), "newFollowingContact" (email)
 @app.route('/addFollowingContactToParticipant', methods=['POST'])
 def addFollowingContactToParticipant():
