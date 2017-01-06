@@ -15,7 +15,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 # input: python dict {'fullname':'Juan Lopez','email': 'jj@gmail.com', 'username': 'jlopezvi',
 #              'position': 'employee', 'group': 'IT', 'password': 'MD5password',
-#              'host_email': 'asdf@das' / None, 'ifregistrationfromemail': True / False}
+#              'host_email': 'asdf@das' / None, 'ifpublicprofile': True/ False, 'ifregistrationfromemail': True / False}
 # output: json
 #          1. Wrong  -->   {"result":"Wrong","ifemailexists":true,"ifemailexists_msg":ifemailexists_msg[true]}
 #          2. OK (registered participant but e-mail not verified yet. Sends new e-mail for verification)  -->
@@ -24,34 +24,36 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 #          3. OK (4 different normal cases of registration)
 #                       {"result":"OK", "ifhost":true/false,"ifhost_msg":ifhost_msg[ifhost],
 #                       "ifemailverified":true/false,"ifemailverified_msg":ifemailverified_msg[ifemailverified]})
-def registration_basicdata_aux(inputdict):
+def registration_aux(inputdict):
     email = inputdict['email']
-    ifemailexists_msg=[None,"Participant already exists"]
     ifemailverified_msg= ["E-mail not verified. E-mail verification sent. " \
                           "Close this window and check your e-mail within the next few minutes ", None]
     ifhost_msg=[None, "You will be following your host in Consensus"]
-    if _getParticipantByEmail(email,'all'):   # email exists?
+    if _getParticipantByEmail(email,'all'):   # email exists? (Exceptional cases of registration)
         ifemailexists = True
+        ifemailexists_msg = "Participant already exists"
         if _getParticipantByEmail(email):   # participant's email is verified?
-            return jsonify({"result":"Wrong","ifemailexists":ifemailexists,"ifemailexists_msg":ifemailexists_msg[ifemailexists]})
+            ifemailverified=True
+            return jsonify({"result":"Wrong","ifemailexists":ifemailexists,"ifemailexists_msg":ifemailexists_msg})
         else:
             ifemailverified=False
             result_send_emailverification = _registration_send_emailverification(email)
             if result_send_emailverification is "OK" :
-                return jsonify({"result":"OK","ifemailexists":ifemailexists,"ifemailexists_msg":ifemailexists_msg[ifemailexists],
-                                "ifemailverified":ifemailverified,"ifemailverified_msg":ifemailverified_msg[ifemailverified]})
+                return jsonify({"result": "OK", "ifemailexists": ifemailexists, "ifemailexists_msg":ifemailexists_msg,
+                                "ifemailverified": ifemailverified, "ifemailverified_msg": ifemailverified_msg[ifemailverified]})
+    # (Normal cases of registration)
     # save data for new (verified / unverified) participant in database
+    ifemailverified = inputdict['ifregistrationfromemail']
     _newParticipant(inputdict)
-    ifhost = False
-    if inputdict['host_email']:
-        # current_participant (verified/unverified) follows host
-        ifhost = addFollowingContactToParticipant_aux(email, inputdict['host_email'])
-    ifemailverified=inputdict['ifregistrationfromemail']
     if ifemailverified is True :
         user = User(email)
         flask_login.login_user(user)
     else:
         _registration_send_emailverification(email)
+    ifhost = False
+    if inputdict['host_email']:
+        # current_participant (verified/unverified) follows host
+        ifhost = addFollowingContactToParticipant_aux(email, inputdict['host_email'])
     return jsonify({"result":"OK", "ifhost":ifhost,"ifhost_msg":ifhost_msg[ifhost],
                    "ifemailverified":ifemailverified,"ifemailverified_msg":ifemailverified_msg[ifemailverified]})
 
@@ -62,13 +64,11 @@ def registration_basicdata_aux(inputdict):
 #output: python dict {'result':'OK'}
 def _newParticipant(participantdict):
     email = participantdict['email']
-    #add some default values for profile (changed with completeregistration)
     default_profilepic_url = 'static/assets/profile/perfil-mediano.png'
-    default_ifpublicprofile = False
     newparticipant, = getGraph().create({"fullname": participantdict['fullname'], "email": email,
                                          "username": participantdict['username'], "position": participantdict['position'],
                                          "group": participantdict['group'], "password": participantdict['password'],
-                                         "profilepic_url":default_profilepic_url, "ifpublicprofile":default_ifpublicprofile
+                                         "profilepic_url":default_profilepic_url, "ifpublicprofile":participantdict['ifpublicprofile']
                                          })
     if participantdict['ifregistrationfromemail'] is True:
         newparticipant.add_labels("participant")
@@ -78,36 +78,23 @@ def _newParticipant(participantdict):
         _addToUnverifiedParticipantsIndex(email, newparticipant)
     return "OK"
 
-# input: python dict {'email': 'jj@gmail.com', 'ifpublicprofile': True/False,
-#               'ifprofilepic':True/False}
-# output: json {"result": "Wrong"}
-#              {"result": "OK"}
-#              {"result": "OK: profilepic", "profilepic_url": "static/assets/profile/email@adress.png"}
-def registration_completeregistration_aux(inputdict):
-    email=inputdict['email']
-    participant=_getParticipantByEmail(email,'all')
-    if participant is None:
-        return jsonify({"result": "Wrong"})
-    else:
-        participant.set_properties({"ifpublicprofile": inputdict['ifpublicprofile']})
-        if inputdict['ifprofilepic'] is True:
-            response = _registration_uploadprofilepic(email)
-            if response is "OK":
-                return jsonify({"result": "OK: profilepic"})
-        elif inputdict['ifprofilepic'] is False:
-            return jsonify({"result": "OK"})
 
-def _registration_uploadprofilepic(email, profilepic_file_body):
+# input: (data) 'email': 'jj@gmail.com'
+#        (file) profilepic_file_body
+# output: json  {"result": "Wrong"}
+#               {"result": "OK", "ifprofilepic": true, "ifprofilepic_msg":ifprofilepic_msg}
+# NOTES: prepared only for one picture file extension. At the moment,'.png' is hardcoded.
+def registration_uploadprofilepic_aux(email, profilepic_file_body):
     currentparticipant = _getParticipantByEmail(email,'all')
     if (profilepic_file_body is None) or (currentparticipant is None):
-        return "Wrong"
+        return jsonify({"result": "Wrong"})
     else:
         path = basedir + '/static/assets/profile/'
         # TODO: change name for profilepic. Currently the email.
         filename=str(email)+'.png'
         profilepic_file_body.save(os.path.join(path, secure_filename(filename)))
         currentparticipant["profilepic_url"] = path + secure_filename(filename)
-        return "OK"
+        return jsonify({"result": "OK", "ifprofilepic": True, "ifprofilepic_msg": "Profile picture uploaded."})
 
 
 # input: email to be verified as an argument

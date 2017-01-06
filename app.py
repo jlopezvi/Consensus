@@ -9,7 +9,7 @@ import json
 from communityManager import saveCommunity,deleteCommunity,addCommunityToContact,getCommunities
 from participantManager import _getParticipantByEmail,deleteParticipant,getAllParticipants, \
     addFollowingContactToParticipant_aux,getFollowerContacts,getFollowingContacts,getFullNameByEmail_aux,\
-    registration_basicdata_aux, registration_completeregistration_aux, _verifyEmail
+    registration_aux, registration_uploadprofilepic_aux, _verifyEmail
 from ideaManager import Idea, addIdeaToUser_aux,deleteOneIdea,getAllIdeas, spreadIdeaToFollowers_aux, \
     _getIdeaByIdeaIndex, vote_on_idea_aux
 from webManager import ideas_for_newsfeed_aux
@@ -349,7 +349,7 @@ def getParticipantByEmail(email):
 
 # input: json {"fullname":"Juan Lopez","email": "jj@gmail.com", "username": "jlopezvi",
 #              "position": "employee", "group": "IT", "password": "MD5password",
-#              "host_email": "asdf@das" / null, "ifregistrationfromemail": true / false}
+#              "host_email": "asdf@das" / null, "ifpublicprofile": true/ false, "ifregistrationfromemail": true / false}
 # output: json
 #          1. Wrong  -->   {"result":"Wrong","ifemailexists":true,"ifemailexists_msg":ifemailexists_msg[true]}
 #          2. OK (registered participant but e-mail not verified yet. Sends new e-mail for verification)  -->
@@ -358,30 +358,25 @@ def getParticipantByEmail(email):
 #          3. OK (4 different normal cases of registration)
 #                       {"result":"OK", "ifhost":true/false,"ifhost_msg":ifhost_msg[ifhost],
 #                       "ifemailverified":true/false,"ifemailverified_msg":ifemailverified_msg[ifemailverified]})
-@app.route('/registration_basicdata', methods=['POST'])
-def registration_basicdata():
+@app.route('/registration', methods=['POST'])
+def registration():
     #call with json_data converted to python_dictionary_data
     inputdict=request.get_json()
-    return registration_basicdata_aux(inputdict)
+    return registration_aux(inputdict)
 
 
-# input: json {"email": "jj@gmail.com", "ifpublicprofile": true/false,
-#               "ifprofilepic":true/false}
-# output: json {"result": "Wrong"}
-#              {"result": "OK"}
-#              {"result": "OK: profilepic", "profilepic_url": "static/assets/profile/email@adress.png"}
-@app.route('/registration_completeregistration', methods=['POST'])
-def registration_completeregistration():
-    #call with json_data converted to python_dictionary_data
-    inputdict=request.get_json()
-    return registration_completeregistration_aux(inputdict)
+# input:  multipart/form-data
+#        (args)  email: 'jj@gmail.com'
+#        (file) profilepic_file_body
+# output: json  {"result": "Wrong"}
+#               {"result": "OK", "ifprofilepic": true, "ifprofilepic_msg":ifprofilepic_msg}
+# NOTES: prepared only for one picture file extension. At the moment,'.png' is hardcoded.
+@app.route('/registration_uploadprofilepic', methods=['POST'])
+def registration_uploadprofilepic():
+    email = request.args['email']
+    profilepic_file_body = request.files['fileUpload']
+    return registration_uploadprofilepic_aux(email, profilepic_file_body)
 
-
-@app.route('/registration_uploadprofilepic_2of2', methods=['POST'])
-def registration_uploadprofilepic_2of2():
-   profilepic_file_body = request.files['fileUpload']
-   user_email = request.args['email']
-   return registration_uploadprofilepic_2of2_aux(user_email, profilepic_file_body)
 
 #return: Full Name (normal string) corresponding to e-mail
 @app.route('/getFullNameByEmail/<email>', methods=['GET'])
