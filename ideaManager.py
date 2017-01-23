@@ -23,7 +23,7 @@ class Idea:
 
 # input: user_email, idea_obj (object from class Idea)
 # output: json {"result"="added idea to database"}/{"result"="proposal already exists"}
-def addIdeaToUser_aux(user_email, newidea_obj):
+def add_idea_to_user_aux(user_email, newidea_obj):
     user = _getParticipantByEmail(user_email)
     newidea_index = newidea_obj.proposal
     if _getIdeaByIdeaIndex(newidea_index) :
@@ -39,17 +39,91 @@ def addIdeaToUser_aux(user_email, newidea_obj):
     newidea_node.add_labels("idea")
     _addIdeaToIndex(newidea_index, newidea_node)
     getGraph().create((user, "CREATED", newidea_node))
-    #calls dynamic function to spread idea
-    spreadIdeaToFollowers_aux(user_email, newidea_index)
     return jsonify(result="added idea to database")
 
-def spreadIdeaToFollowers_aux(participant_email, idea_index) :
-    followers = getFollowerContacts(participant_email)
-    idea=_getIdeaByIdeaIndex(idea_index)
-    for follower in followers :
-        if _getIfVotingRelationshipExists(follower,idea) is False:
-            _ideaIsNewForParticipant(idea,follower)
-    return "spreadIdeaToFollowers invoked"
+
+def get_ideas_created_by_participant_aux(email):
+    currentUser = _getParticipantByEmail(email)
+    rels = list(getGraph().match(start_node=currentUser, rel_type="CREATED"))
+    ideas = []
+    for rel in rels:
+        current_idea = get_idea_structure(rel.end_node)
+        ideas.append(current_idea)
+    return jsonify(result= ideas)
+
+
+# Used by ideas_for_newsfeed_aux / ideas_for_home_aux / get_ideas_created_by_participant_aux
+# Output: << return  idea_structure>>
+# idea_structure = {
+    # 'idea_id' : 12343,
+    # 'author_photo_url' : 'assets/profile/perfil-mediano.png', 'author_username' : 'Daniela', 'author_email' : 'a@',
+    # 'duration' : '2 days',
+    # 'supporters_goal_num' : 200, 'supporters_num' : 5, 'volunteers_goal_num' : 5, 'volunteers_num' : 2,
+    # 'image_url' : 'url-to-picture',
+    # 'concern': 'Some text for the concern',
+    # 'proposal': 'Some text for the proposal',
+    # 'support_rate' : 95,
+    # 'support_rate_MIN' : 90,
+    # 'supporters': [
+    # { 'email': 'b@', 'username': 'Maria' }, { 'email': 'c@', 'username': 'Pedro' }
+    #             ],
+    # 'rejectors':[
+    # { 'email': 'd@', 'username': 'Elisa' }
+    #               ]
+    # }
+def get_idea_structure(new_idea_node):
+    author_email = getGraph().match_one(end_node=new_idea_node, rel_type="CREATED").start_node.get_properties()['email']
+    author_photo_url = _getParticipantByEmail(author_email).get_properties()['image_url']
+    author_username = _getParticipantByEmail(author_email).get_properties()['username']
+    #TODO: add numerical index to ideas
+    idea_id=0
+    datestamp = datetime.strptime(new_idea_node.get_properties()['datestamp'], '%d.%m.%Y')
+    duration = str((datetime.now() - datestamp).days) + ' days'
+    voters_num = len(list(getGraph().match(end_node=new_idea_node, rel_type="VOTED_ON")))
+    #TODO: puede ser optimizado
+    supporters_num= _get_vote_statistics_for_idea(new_idea_node)[0]
+    #rejecters_num= getall_vote_properties(new_idea_node)[1]
+    volunteers_num=_get_vote_statistics_for_idea(new_idea_node)[2]
+    if voters_num == 0 :
+        support_rate = 100
+    else:
+        support_rate = (supporters_num / voters_num)*100
+    supporters = []
+    rejectors = []
+    for vote in (list(getGraph().match(end_node=new_idea_node, rel_type="VOTED_ON"))):
+        if vote["type"]== "supporter":
+            email = vote.start_node.get_properties()['email']
+            username = vote.start_node.get_properties()['username']
+            supporters.append({'email' : email, 'username':username })
+        else:
+            email = vote.start_node.get_properties()['email']
+            username = vote.start_node.get_properties()['username']
+            rejectors.append({'email' : email, 'username':username })
+    idea_structure=new_idea_node.get_properties()
+    idea_structure.update({'idea_id' : idea_id,
+                 'author_photo_url': author_photo_url, 'author_username' : author_username,
+                 'duration': duration,
+                 'author_email' : author_email, 'supporters_num' : supporters_num,
+                 'volunteers_num': volunteers_num,
+                 'support_rate': support_rate, 'support_rate_MIN': support_rate_MIN,
+                 'supporters' : supporters, 'rejectors' : rejectors})
+    return idea_structure
+
+
+#used by get_idea_structure
+def _get_vote_statistics_for_idea(node_idea):
+   rejectors_num=0
+   supporters_num=0
+   volunteers_num=0
+   for vote_rel in (list(getGraph().match(end_node=node_idea, rel_type="VOTED_ON"))):
+       if vote_rel["type"] == "supporter":
+           supporters_num+=1
+       else:
+           rejectors_num+=1
+       if vote_rel["volunteered"] == "yes":
+           volunteers_num+=1
+   return (supporters_num,rejectors_num,volunteers_num)
+
 
 
 #participant, idea are graph nodes

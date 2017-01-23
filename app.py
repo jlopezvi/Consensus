@@ -10,9 +10,9 @@ from communityManager import saveCommunity,deleteCommunity,addCommunityToContact
 from participantManager import _getParticipantByEmail,deleteParticipant,getAllParticipants, \
     addFollowingContactToParticipant_aux,getFollowerContacts,getFollowingContacts,getFullNameByEmail_aux,\
     registration_aux, registration_uploadprofilepic_aux, _verifyEmail
-from ideaManager import Idea, addIdeaToUser_aux,deleteOneIdea,getAllIdeas, spreadIdeaToFollowers_aux, \
+from ideaManager import Idea, get_ideas_created_by_participant_aux, add_idea_to_user_aux,deleteOneIdea,getAllIdeas, \
     _getIdeaByIdeaIndex, vote_on_idea_aux
-from webManager import ideas_for_newsfeed_aux
+from webManager import ideas_for_newsfeed_aux, ideas_for_home_aux
 import logging
 import flask_login
 from user_authentification import User
@@ -170,57 +170,6 @@ def home():
     print(feed_home)
     return render_template('home.html', persons_home = feed_home) 
 
-
-#input: user_email(URL); idea (json)
-#    {"concern" :"we are not social enough in the office",
-#     "proposal": "social coffee pause at 4 p.m.",
-#     "image_url" : "static/images/concerns/social_coffee_break.jpg",
-#     "datestamp":"01.10.2016",
-#     "moreinfo":"I have to say as well this and this and this...",
-#     "supporters_goal_num": 500, "volunteers_goal_num": 5}
-@app.route('/addIdeaToUser/<string:user_email>', methods=['POST'])
-def addIdeaToUser(user_email) :
-    idea_dict = request.get_json()
-    idea_object = Idea(idea_dict)
-    return addIdeaToUser_aux(user_email, idea_object)
-
-#input: nothing
-#output: render_template to newsfeed
-@app.route('/newsfeed')
-@flask_login.login_required
-#user_email=flask_login.current_user.id
-def newsfeed():
-    return render_template('login/newsfeed.html')
-
-#input : NOTHING
-#output : json named "feed"
-# feed = {
-# 'idea_id' : 120,
-# 'author_photo_url' : 'assets/profile/perfil-mediano.png', 'author_username' : 'Daniela', 'author_email' : 'a@',
-# 'duration' : '2 days',
-# 'supporters_goal_num' : 200, 'supporters_num' : 5, 'volunteers_goal_num' : 5, 'volunteers_num' : 2,
-# 'image_url' : 'url-to-picture',
-# 'concern': 'Some text for the concern',
-# 'proposal': 'Some text for the proposal',
-# 'support_rate' : 95,
-# 'support_rate_MIN' : 90,
-# 'supporters': [
-# { 'email': 'b@', 'username': 'Maria' }, { 'email': 'c@', 'username': 'Pedro' }
-#             ],
-# 'rejectors':[
-# { 'email': 'd@', 'username': 'Elisa' }
-#               ]
-# }
-@app.route('/ideas_for_newsfeed')
-@flask_login.login_required
-def ideas_for_newsfeed():
-    return ideas_for_newsfeed_aux(flask_login.current_user.id)
-    #return ideas_for_newsfeed_aux(email)
-
-@app.route('/TEST_ideas_for_newsfeed/<email>')
-def TEST_ideas_for_newsfeed(email) :
-    return ideas_for_newsfeed_aux(email)
-
 #TODO: try with redirect instead of render_template
 #input: URL token link from an invitation e-mail
 #output: redirects to login with a json called "message"
@@ -286,6 +235,103 @@ def registration_send_invitation(host_email, guest_email):
     subject = ''.join([getFullNameByEmail(host_email), " invites you to join Consensus"])
     send_email(guest_email, subject, html)
     return jsonify({'result': 'email sent'})
+
+
+#input: nothing
+#output: render_template to newsfeed
+@app.route('/newsfeed')
+@flask_login.login_required
+#user_email=flask_login.current_user.id
+def newsfeed():
+    return render_template('login/newsfeed.html')
+
+
+###
+# web manager
+###
+
+
+#input : NOTHING
+#output : json named "feed"
+# feed = {
+# 'idea_id' : 120,
+# 'author_photo_url' : 'assets/profile/perfil-mediano.png', 'author_username' : 'Daniela', 'author_email' : 'a@',
+# 'duration' : '2 days',
+# 'supporters_goal_num' : 200, 'supporters_num' : 5, 'volunteers_goal_num' : 5, 'volunteers_num' : 2,
+# 'image_url' : 'url-to-picture',
+# 'concern': 'Some text for the concern',
+# 'proposal': 'Some text for the proposal',
+# 'support_rate' : 95,
+# 'support_rate_MIN' : 90,
+# 'supporters': [
+# { 'email': 'b@', 'username': 'Maria' }, { 'email': 'c@', 'username': 'Pedro' }
+#             ],
+# 'rejectors':[
+# { 'email': 'd@', 'username': 'Elisa' }
+#               ]
+# }
+#@app.route('/ideas_for_newsfeed')
+#@flask_login.login_required
+#def ideas_for_newsfeed():
+#    return ideas_for_newsfeed_aux(flask_login.current_user.id)
+#    #return ideas_for_newsfeed_aux(email)
+
+#@app.route('/TEST_ideas_for_newsfeed/<email>')
+#def TEST_ideas_for_newsfeed(email) :
+#    return ideas_for_newsfeed_aux(email)
+
+# Get Ideas For Newsfeed
+# Input: << flask_login.current_user.id >>
+# Output: Json with all the new ideas that the user has not << VOTED_ON >>
+@app.route('/ideas_for_newsfeed')
+@flask_login.login_required
+def ideas_for_newsfeed():
+    return ideas_for_newsfeed_aux(flask_login.current_user.id)
+
+
+# TEMPORARY: función para testear con ARC el << newsfeed >>
+@app.route('/ideas_for_newsfeed_test',methods=['POST'])
+def ideas_for_newsfeed_test():
+    email=request.get_json()['email']
+    return ideas_for_newsfeed_aux(email)
+
+
+# Ideas For Home: See the Supported + Volunteered ideas/ See the ignored ideas / See the rejected ideas
+# Input: JSON {"mail":"new@gmail.com", "vote_type": "rejected/supported/ignored"
+# Output: JSON with ideas that the user has voted according to << vote_type >>
+@app.route('/ideas_for_home',methods=['POST'])
+def ideas_for_home():
+    email=request.get_json()['email']
+    vote_type=request.get_json()['vote_type']
+    return ideas_for_home_aux(email,vote_type)
+
+
+###
+# idea manager
+###
+
+
+# Get all User Created Ideas by Email
+# Input: mail:new@gmail.com
+# Output: A JSON with all the ideas created by the user
+@app.route('/get_ideas_created_by_participant/<email>',methods=['GET'])
+def get_ideas_created_by_participant(email):
+    return get_ideas_created_by_participant_aux(email)
+
+
+#input: user_email(URL); idea (json)
+#    {"concern" :"we are not social enough in the office",
+#     "proposal": "social coffee pause at 4 p.m.",
+#     "image_url" : "static/images/concerns/social_coffee_break.jpg",
+#     "datestamp":"01.10.2016",
+#     "moreinfo":"I have to say as well this and this and this...",
+#     "supporters_goal_num": 500, "volunteers_goal_num": 5}
+@app.route('/add_idea_to_user/<string:user_email>', methods=['POST'])
+def add_idea_to_user(user_email) :
+    idea_dict = request.get_json()
+    idea_object = Idea(idea_dict)
+    return add_idea_to_user_aux(user_email, idea_object)
+
 
 #TODO: format for timestamp!
 #input json {"user_email":"asd@asd.com", "idea_proposal":"let's do this", "vote_timestamp":"time", "vote_type":"supporter/rejector"}
