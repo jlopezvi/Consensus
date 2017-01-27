@@ -112,7 +112,7 @@ def participants():
                     'name': 'Jesus'
                 }
             ],
-            'disliked': 
+            'disliked':
             [
                 {
                     'id': 'id',
@@ -125,7 +125,7 @@ def participants():
 
 
 @app.route('/home')
-def home():  
+def home():
     feed_home = [
         {
             'id': 'id',
@@ -158,7 +158,7 @@ def home():
                     'name': 'Jesus'
                 }
             ],
-            'disliked': 
+            'disliked':
             [
                 {
                     'id': 'id',
@@ -168,7 +168,7 @@ def home():
         }
     ]
     print(feed_home)
-    return render_template('home.html', persons_home = feed_home) 
+    return render_template('home.html', persons_home = feed_home)
 
 #TODO: try with redirect instead of render_template
 #input: URL token link from an invitation e-mail
@@ -282,7 +282,55 @@ def newsfeed():
 
 # Get Ideas For Newsfeed
 # Input: << flask_login.current_user.id >>
-# Output: Json with all the new ideas that the user has not << VOTED_ON >>
+# Output: Array with all ideas that the user has not << VOTED_ON >>
+#{
+#  "result": [
+#    {
+#      "author_email": "new1@hotmail.com",
+#      "author_photo_url": "",
+#      "author_username": "new1",
+#      "concern": "this is mi new concern for test",
+#      "datestamp": "01.10.2016",
+#      "duration": "118 days",
+#      "idea_id": "(13)",
+#      "image_url": "/home/alexis/Documentos/Consensus-master/static/images/concerns/new1hotmail.com2017-01-24_092326.767044.png",
+#      "moreinfo": "this and this",
+#      "proposal": "this proposal is for test",
+#      "rejectors": [],
+#      "support_rate": 100,
+#      "support_rate_MIN": 90,
+#      "supporters": [
+#             { "email": "new2@hotmail.com", "username": "new2_mail" }
+#                   ],
+#      "supporters_goal_num": "500",
+#      "supporters_num": 0,
+#      "volunteers_goal_num": "5",
+#      "volunteers_num": 0
+#    },
+#    {
+#      "author_email": "new2@hotmail.com",
+#      "author_photo_url": "",
+#      "author_username": "new2",
+#      "concern": "Concern",
+#      "datestamp": "01.10.2016",
+#      "duration": "118 days",
+#      "idea_id": "(9)",
+#      "image_url": "http:myproposal.jpg",
+#      "moreinfo": "this and this...",
+#      "proposal": "IdeaM",
+#      "rejectors": [
+#           { "email": "new1@hotmail.com", "username": "new1_mail" }
+#                   ],
+#      "support_rate": 100,
+#      "support_rate_MIN": 90,
+#      "supporters": [],
+#      "supporters_goal_num": "400",
+#      "supporters_num": 0,
+#      "volunteers_goal_num": "11",
+#      "volunteers_num": 0
+#    }
+ # ]
+ #}
 @app.route('/ideas_for_newsfeed')
 @flask_login.login_required
 def ideas_for_newsfeed():
@@ -296,9 +344,59 @@ def ideas_for_newsfeed_test():
     return ideas_for_newsfeed_aux(email)
 
 
+
 # Ideas For Home: See the Supported + Volunteered ideas/ See the ignored ideas / See the rejected ideas
-# Input: JSON {"mail":"new@gmail.com", "vote_type": "rejected/supported/ignored"
-# Output: JSON with ideas that the user has voted according to << vote_type >>
+# Input: JSON {"email":"new@gmail.com", "vote_type": "rejected/supported/ignored"
+# Output:  Array with all ideas that the user has voted according to << vote_type >>
+#        {
+#  "result": [
+#    {
+#      "author_email": "adavidsole@gmail.com",
+#      "author_username": "alexdsole",
+#      "concern": "Concern",
+#      "datestamp": "01.10.2016",
+#      "duration": "118 days",
+#      "idea_id": "(6)",
+#      "image_url": "http:myproposal.jpg",
+#      "moreinfo": "this and this...",
+#      "proposal": "New Proposal ",
+#      "rejectors": [
+#            { "email": "new1@hotmail.com", "username": "new1_mail" }
+#                   ],
+#      "support_rate": 0,
+#      "support_rate_MIN": 90,
+#      "supporters": [],
+#      "supporters_goal_num": "400",
+#      "supporters_num": 0,
+#      "volunteers_goal_num": "11",
+#      "volunteers_num": 0
+#    },
+#    {
+#      "author_email": "newemail@hotmail.com",
+#      "author_photo_url": "",
+#      "author_username": "newemail",
+#      "concern": "Concern",
+#      "datestamp": "01.10.2016",
+#      "duration": "118 days",
+#      "idea_id": "(5)",
+#      "image_url": "http:myproposal.jpg",
+#      "moreinfo": "this and this...",
+#      "proposal": "This is my Proposal",
+#      "rejectors": [
+#           { "email": "new1@hotmail.com", "username": "new1_mail" }
+#                   ],
+#      "support_rate": 50,
+#      "support_rate_MIN": 90,
+#      "supporters": [
+#           { "email": "new2@gmail.com", "username": "new2_mail"  }
+#                    ],
+#      "supporters_goal_num": "400",
+#      "supporters_num": 1,
+#      "volunteers_goal_num": "11",
+#      "volunteers_num": 1
+#    }
+#  ]
+#}
 @app.route('/ideas_for_home',methods=['POST'])
 def ideas_for_home():
     email=request.get_json()['email']
@@ -306,14 +404,58 @@ def ideas_for_home():
     return ideas_for_home_aux(email,vote_type)
 
 
-###
+###############
 # idea manager
-###
+###############
 
 
 # Get all User Created Ideas by Email
-# Input: mail:new@gmail.com
-# Output: A JSON with all the ideas created by the user
+# Input: email:new@gmail.com
+# Output: Array with all ideas created by the user
+#{
+ # "result": [
+#    {
+#      "author_email": "new@hotmail.com",
+#      "author_photo_url": "",
+#      "author_username": "newmail",
+#      "concern": "this is mi new concern for test",
+#      "datestamp": "01.10.2016",
+#      "duration": "118 days",
+#      "idea_id": "(13)",
+#      "image_url": "/home/alexis/Documentos/Consensus-master/static/images/concerns/new@hotmail.com2017-01-24_092326.767044.png",
+#      "moreinfo": "this and this",
+#      "proposal": "this proposal is for test",
+#      "rejectors": [],
+#      "support_rate": 100,
+#      "support_rate_MIN": 90,
+#      "supporters": [],
+#      "supporters_goal_num": "500",
+#      "supporters_num": 0,
+#      "volunteers_goal_num": "5",
+#      "volunteers_num": 0
+#    },
+#    {
+#      "author_email": "new@hotmail.com",
+#      "author_photo_url": "",
+#      "author_username": "newmail",
+#      "concern": "Concern",
+#      "datestamp": "01.10.2016",
+#      "duration": "118 days",
+#      "idea_id": "(9)",
+#      "image_url": "http:myproposal.jpg",
+#      "moreinfo": "this and this...",
+#      "proposal": "IdeaM",
+#      "rejectors": [],
+#      "support_rate": 100,
+#      "support_rate_MIN": 90,
+#      "supporters": [],
+#      "supporters_goal_num": "400",
+#      "supporters_num": 0,
+#      "volunteers_goal_num": "11",
+#      "volunteers_num": 0
+#    }
+ # ]
+#}
 @app.route('/get_ideas_created_by_participant/<email>',methods=['GET'])
 def get_ideas_created_by_participant(email):
     return get_ideas_created_by_participant_aux(email)
@@ -493,7 +635,7 @@ def deleteConcern(idConcern) :
 def getConcerns(current):
     print (current)
     return json.dumps(getAllConcerns(current))
-       
+
 
 
 ##ERROR HANDLERS

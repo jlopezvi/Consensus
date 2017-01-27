@@ -3,7 +3,7 @@ from participantManager import _getParticipantByEmail, getFollowerContacts
 from utils import getGraph
 from flask import jsonify
 import json
-
+from datetime import datetime,date
 
 class Idea:
     #                           {'concern':'this is my concern <140',
