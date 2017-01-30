@@ -60,12 +60,15 @@ def user_loader(email):
 ####    API, WORKING NOW    ####
 ################################
 
-
+#REPLACE /search-participant with this function /participants
+# @app.route('/participants')
+# def participants():
+#     return render_template('/participants.html')
 @app.route('/search-participant')
 def search_p():
     return render_template('/search_participant.html')
 
-
+#TO BE ERASED and REPLACED by two single JSON calls
 @app.route('/participants')
 def participants():
     participants_p = [
