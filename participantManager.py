@@ -3,19 +3,19 @@ from flask import jsonify,abort, redirect,url_for, render_template
 import ast
 import json
 import logging
-from utils import getGraph, send_email
+from utils import getGraph, send_email, save_file
 from uuid_token import generate_confirmation_token
 import datetime
 from user_authentification import User
 import flask_login
-from werkzeug.utils import secure_filename
-import os
-basedir = os.path.abspath(os.path.dirname(__file__))
 
 
+# TODO: change 'True', 'False', 'None' to True, False, None when calling this function to have a real Python dictionary
 # input: python dict {'fullname':'Juan Lopez','email': 'jj@gmail.com', 'username': 'jlopezvi',
 #              'position': 'employee', 'group': 'IT', 'password': 'MD5password',
-#              'host_email': 'asdf@das' / None, 'ifpublicprofile': True/ False, 'ifregistrationfromemail': True / False}
+#              'host_email': 'asdf@das' / 'None', 'ifpublicprofile': 'True'/ 'False',
+#              'ifregistrationfromemail': 'True' / 'False'}
+#        (file) profilepic_file_body
 # output: json
 #          1. Wrong  -->   {"result":"Wrong","ifemailexists":true,"ifemailexists_msg":ifemailexists_msg[true]}
 #          2. OK (registered participant but e-mail not verified yet. Sends new e-mail for verification)  -->
@@ -23,9 +23,9 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 #                        "ifemailverified":false,"ifemailverified_msg":ifemailverified_msg[false]}
 #          3. OK (4 different normal cases of registration)
 #                       {"result":"OK", "ifhost":true/false,"ifhost_msg":ifhost_msg[ifhost],
-#                       "ifemailverified":true/false,"ifemailverified_msg":ifemailverified_msg[ifemailverified]})
-def registration_aux(inputdict):
-    email = inputdict['email']
+#                       "ifemailverified":true/false,"ifemailverified_msg":ifemailverified_msg[email_verified]})
+def registration_aux(inputdict, profilepic_file_body):
+    email = inputdict.get('email')
     ifemailverified_msg= ["E-mail not verified. E-mail verification sent. " \
                           "Close this window and check your e-mail within the next few minutes ", None]
     ifhost_msg=[None, "You will be following your host in Consensus"]
@@ -43,82 +43,63 @@ def registration_aux(inputdict):
                                 "ifemailverified": ifemailverified, "ifemailverified_msg": ifemailverified_msg[ifemailverified]})
     # (Normal cases of registration)
     # save data for new (verified / unverified) participant in database
-    ifemailverified = inputdict['ifregistrationfromemail']
-    _newParticipant(inputdict)
-    if ifemailverified is True :
+    ifemailverified = inputdict.get('ifregistrationfromemail')
+    _newParticipant(inputdict, profilepic_file_body)
+    if ifemailverified =='True':
+        email_verified = True
         user = User(email)
         flask_login.login_user(user)
     else:
+        email_verified = False
         _registration_send_emailverification(email)
     ifhost = False
-    if inputdict['host_email']:
+    if inputdict.get('host_email') != 'None':
         # current_participant (verified/unverified) follows host
-        ifhost = addFollowingContactToParticipant_aux(email, inputdict['host_email'])
-    return jsonify({"result":"OK", "ifhost":ifhost,"ifhost_msg":ifhost_msg[ifhost],
-                   "ifemailverified":ifemailverified,"ifemailverified_msg":ifemailverified_msg[ifemailverified]})
+        ifhost = addFollowingContactToParticipant_aux(email, inputdict.get('host_email'))
+    return jsonify({"result":"OK", "ifhost":ifhost, "ifhost_msg":ifhost_msg[ifhost],
+                    "ifemailverified":email_verified, "ifemailverified_msg":ifemailverified_msg[email_verified]})
 
 
+#Used By <registration_aux>
 #input: python dict {'fullname':'Juan Lopez','email': 'jj@gmail.com', 'username': 'jlopezvi',
 #              'position': 'employee', 'group': 'Human Resources', 'password': 'MD5password',
-#              'ifregistrationfromemail': True / False}
+#              'ifregistrationfromemail': 'True' / 'False', 'ifpublicprofile': 'True' / 'False',}
+#       profilepic_file_body: None/ (file)
 #output: python dict {'result':'OK'}
-def _newParticipant(participantdict):
-    email = participantdict['email']
-    default_profilepic_url = 'static/assets/profile/perfil-mediano.png'
-    newparticipant, = getGraph().create({"fullname": participantdict['fullname'], "email": email,
-                                         "username": participantdict['username'], "position": participantdict['position'],
-                                         "group": participantdict['group'], "password": participantdict['password'],
-                                         "profilepic_url":default_profilepic_url, "ifpublicprofile":participantdict['ifpublicprofile']
-                                         })
-    if participantdict['ifregistrationfromemail'] is True:
+def _newParticipant(participantdict,profilepic_file_body):
+    image_url = 'static/assets/profile/perfil-mediano.png'
+    email = participantdict.get('email')
+    if profilepic_file_body is not None:
+        ruta_dest = '/static/assets/profile/'
+        filename=str(email)+'.png'
+        image_url = save_file(ruta_dest, profilepic_file_body, filename)
+    newparticipant, = getGraph().create({"fullname" : participantdict.get('fullname'), "email" : email,
+                                  "username" : participantdict.get('username'), "position" : participantdict.get('position'),
+                                  "group" : participantdict.get('group'), "password" : participantdict.get('password'),
+                                  "ifpublicprofile" : participantdict.get('ifpublicprofile'),
+                                  "profilepic_url" : image_url, "ifsupportingproposalsvisible" : True,
+                                  "ifrejectingproposalsvisible": True
+                                  })
+    if participantdict.get('ifregistrationfromemail')=='True':
         newparticipant.add_labels("participant")
         _addToParticipantsIndex(email, newparticipant)
-    elif participantdict['ifregistrationfromemail'] is False:
+    elif participantdict.get('ifregistrationfromemail')== 'False':
         newparticipant.add_labels("unverified_participant")
         _addToUnverifiedParticipantsIndex(email, newparticipant)
-    return "OK"
+    return {'result' : 'OK'}
 
-
-# input: (data) 'email': 'jj@gmail.com'
-#        (file) profilepic_file_body
-# output: json  {"result": "Wrong"}
-#               {"result": "OK", "ifprofilepic": true, "ifprofilepic_msg":ifprofilepic_msg}
-# NOTES: prepared only for one picture file extension. At the moment,'.png' is hardcoded.
-def registration_uploadprofilepic_aux(email, profilepic_file_body):
-    currentparticipant = _getParticipantByEmail(email,'all')
-    if (profilepic_file_body is None) or (currentparticipant is None):
-        return jsonify({"result": "Wrong"})
-    else:
-        path = basedir + '/static/assets/profile/'
-        # TODO: change name for profilepic. Currently the email.
-        filename=str(email)+'.png'
-        profilepic_file_body.save(os.path.join(path, secure_filename(filename)))
-        currentparticipant["profilepic_url"] = path + secure_filename(filename)
-        return jsonify({"result": "OK", "ifprofilepic": True, "ifprofilepic_msg": "Profile picture uploaded."})
-
-
+#Used By <registration_aux>
 # input: email to be verified as an argument
 # output: e-mail to the email account with a URL token link for email verification
-#         and json {"result": "email sent"}
+#         and json {"result": "OK", "result_msg":"email sent"}
 def _registration_send_emailverification(email):
     token = generate_confirmation_token(email)
     confirm_url = url_for('.registration_receive_emailverification', token=token, _external=True)
     html = render_template('login/verification_email.html', confirm_url=confirm_url)
     subject = "Please confirm your email"
     send_email(email, subject, html)
-    return "OK"
+    return jsonify({"result": "OK", "result_msg":"email sent"})
 
-
-# def _newUnverifiedParticipant(participantdict):
-#     email = participantdict.get('email')
-#     newparticipant, = getGraph().create({"fullname" : participantdict.get('fullname'), "email" : email,
-#                                   "username" : participantdict.get('username'), "position" : participantdict.get('position'),
-#                                   "group" : participantdict.get('group'), "password" : participantdict.get('password'),
-#                                   "ifpublicprofile" : participantdict.get('ifpublicprofile'),
-#                                   "image_url" : participantdict.get('image_url')
-#                                   })
-#     newparticipant.add_labels("unverified_participant")
-#     _addToUnverifiedParticipantsIndex(email, newparticipant)
 
 #input: email
 #output: python dictionary

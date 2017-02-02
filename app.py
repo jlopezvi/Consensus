@@ -9,8 +9,8 @@ import json
 from communityManager import saveCommunity,deleteCommunity,addCommunityToContact,getCommunities
 from participantManager import _getParticipantByEmail,deleteParticipant,getAllParticipants, \
     addFollowingContactToParticipant_aux,getFollowerContacts,getFollowingContacts,getFullNameByEmail_aux,\
-    registration_aux, registration_uploadprofilepic_aux, _verifyEmail
-from ideaManager import Idea, get_ideas_created_by_participant_aux, add_idea_to_user_aux,deleteOneIdea,getAllIdeas, \
+    registration_aux, _verifyEmail
+from ideaManager import get_ideas_created_by_participant_aux, add_idea_to_user_aux,deleteOneIdea,getAllIdeas, \
     _getIdeaByIdeaIndex, vote_on_idea_aux
 from webManager import ideas_for_newsfeed_aux, ideas_for_home_aux
 import logging
@@ -463,24 +463,27 @@ def ideas_for_home():
 def get_ideas_created_by_participant(email):
     return get_ideas_created_by_participant_aux(email)
 
-
-#input: user_email(URL); idea (json)
-#    {"concern" :"we are not social enough in the office",
-#     "proposal": "social coffee pause at 4 p.m.",
-#     "image_url" : "static/images/concerns/social_coffee_break.jpg",
-#     "datestamp":"01.10.2016",
-#     "moreinfo":"I have to say as well this and this and this...",
-#     "supporters_goal_num": 500, "volunteers_goal_num": 5}
+#   input:  user_email(URL); multipart/form-data
+#           (file) ideapic_file_body
+#       (data dictionary):  {"concern" :"we are not social enough in the office",
+#                           "proposal": "social coffee pause at 4 p.m.",
+#                           "datestamp":"01.10.2016",
+#                           "moreinfo":"I have to say as well this and this and this...",
+#                           "supporters_goal_num": 500, "volunteers_goal_num": 5}
+#    output: json {"result":"OK", "result_msg":"added idea to database"}
+#                 {"result":"Wrong", "result_msg":"proposal already exists"}
 @app.route('/add_idea_to_user/<string:user_email>', methods=['POST'])
 def add_idea_to_user(user_email) :
-    idea_dict = request.get_json()
-    idea_object = Idea(idea_dict)
-    return add_idea_to_user_aux(user_email, idea_object)
+    ideapic_file_body = None
+    idea_dict = request.form
+    if 'fileUpload' in request.files:
+        ideapic_file_body = request.files['fileUpload']
+    return add_idea_to_user_aux(user_email,idea_dict,ideapic_file_body)
 
 
-#TODO: format for timestamp!
-#input json {"user_email":"asd@asd.com", "idea_proposal":"let's do this", "vote_timestamp":"time", "vote_type":"supporter/rejector"}
-#output json  {"result" : "Success : User vote was added"}
+# TODO: format for timestamp!
+# input json {"user_email":"asd@asd.com", "idea_proposal":"let's do this", "vote_timestamp":"time", "vote_type":"supporter/rejector"}
+# output json  {"result" : "Success : User vote was added"}
 #             {"result" : "Failure : Idea or participant non existings"}
 #             {"result" : "Failure : User vote exists already"}
 @app.route('/vote_on_idea',methods=['POST'])
@@ -538,35 +541,28 @@ def getParticipantByEmail(email):
     return jsonify(result="Participant not found")
 
 
-# input: json {"fullname":"Juan Lopez","email": "jj@gmail.com", "username": "jlopezvi",
-#              "position": "employee", "group": "IT", "password": "MD5password",
-#              "host_email": "asdf@das" / null, "ifpublicprofile": true/ false, "ifregistrationfromemail": true / false}
+# input:  multipart/form-data
+#        (file) profilepic_file_body
+#   (data dictionary): {"fullname":"Juan Lopez","email": "jj@gmail.com", "username": "jlopezvi",
+#                       "position": "employee", "group": "IT", "password": "MD5password",
+#                       "host_email": "asdf@das" / "None", "ifpublicprofile": "True"/ "False",
+#                       "ifregistrationfromemail": "True" / "False"}
 # output: json
-#          1. Wrong  -->   {"result":"Wrong","ifemailexists":true,"ifemailexists_msg":ifemailexists_msg[true]}
+#          1. Wrong  -->   {"result":"Wrong","ifemailexists":true,"ifemailexists_msg":"message"}
 #          2. OK (registered participant but e-mail not verified yet. Sends new e-mail for verification)  -->
-#                       {"result":"OK","ifemailexists":true,"ifemailexists_msg":ifemailexists_msg[true],
-#                        "ifemailverified":false,"ifemailverified_msg":ifemailverified_msg[false]}
+#                       {"result":"OK","ifemailexists":true,"ifemailexists_msg":"message",
+#                        "ifemailverified":false,"ifemailverified_msg":"message"}
 #          3. OK (4 different normal cases of registration)
-#                       {"result":"OK", "ifhost":true/false,"ifhost_msg":ifhost_msg[ifhost],
-#                       "ifemailverified":true/false,"ifemailverified_msg":ifemailverified_msg[ifemailverified]})
+#                       {"result":"OK", "ifhost":true/false,"ifhost_msg":"message",
+#                       "ifemailverified":true/false,"ifemailverified_msg":"message"})
 @app.route('/registration', methods=['POST'])
 def registration():
-    #call with json_data converted to python_dictionary_data
-    inputdict=request.get_json()
-    return registration_aux(inputdict)
-
-
-# input:  multipart/form-data
-#        (args)  email: 'jj@gmail.com'
-#        (file) profilepic_file_body
-# output: json  {"result": "Wrong"}
-#               {"result": "OK", "ifprofilepic": true, "ifprofilepic_msg":ifprofilepic_msg}
-# NOTES: prepared only for one picture file extension. At the moment,'.png' is hardcoded.
-@app.route('/registration_uploadprofilepic', methods=['POST'])
-def registration_uploadprofilepic():
-    email = request.args['email']
-    profilepic_file_body = request.files['fileUpload']
-    return registration_uploadprofilepic_aux(email, profilepic_file_body)
+    profilepic_file_body = None
+    # TODO: inputdict should be a real python dictionary with True, False and None. Can we use request.form.to_dict ?
+    inputdict=request.form
+    if 'fileUpload' in request.files:
+        profilepic_file_body = request.files['fileUpload']
+    return registration_aux(inputdict,profilepic_file_body)
 
 
 #return: Full Name (normal string) corresponding to e-mail

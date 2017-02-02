@@ -1,45 +1,52 @@
 from py2neo import neo4j
 from participantManager import _getParticipantByEmail, getFollowerContacts
-from utils import getGraph
+from utils import getGraph, save_file
 from flask import jsonify
 import json
-from datetime import datetime,date
+from datetime import datetime
 
-class Idea:
-    #                           {'concern':'this is my concern <140',
-    #                           'proposal':'this is my proposal <140',
-    #                            'image_url':'.../image.jpg', 'datestamp':'01.12.2012',
-    #                            'moreinfo':'I have to say this and this and this...',
-    #                            'supporters_goal_num': 500, 'volunteers_goal_num': 5}
-    def __init__(self, idea_dict):
-        self.concern = idea_dict['concern']
-        self.proposal = idea_dict['proposal']
-        self.image_url = idea_dict['image_url']
-        self.datestamp = idea_dict['datestamp']
-        self.moreinfo = idea_dict['moreinfo']
-        self.supporters_goal_num = idea_dict['supporters_goal_num']
-        self.volunteers_goal_num = idea_dict['volunteers_goal_num']
+# class Idea:
+#     #                           {'concern':'this is my concern <140',
+#     #                           'proposal':'this is my proposal <140',
+#     #                            'image_url':'.../image.jpg', 'datestamp':'01.12.2012',
+#     #                            'moreinfo':'I have to say this and this and this...',
+#     #                            'supporters_goal_num': 500, 'volunteers_goal_num': 5}
+#     def __init__(self, idea_dict):
+#         self.concern = idea_dict['concern']
+#         self.proposal = idea_dict['proposal']
+#         self.image_url = idea_dict['image_url']
+#         self.datestamp = idea_dict['datestamp']
+#         self.moreinfo = idea_dict['moreinfo']
+#         self.supporters_goal_num = idea_dict['supporters_goal_num']
+#         self.volunteers_goal_num = idea_dict['volunteers_goal_num']
 
 
-# input: user_email, idea_obj (object from class Idea)
-# output: json {"result"="added idea to database"}/{"result"="proposal already exists"}
-def add_idea_to_user_aux(user_email, newidea_obj):
+# input: user_email, idea_dict      {"concern" :"we are not social enough in the office",
+#                                   "proposal": "social coffee pause at 4 p.m.", "datestamp":"01.10.2016",
+#                                    "moreinfo":"I have to say as well this and this and this...",
+#                                    "supporters_goal_num": 500, "volunteers_goal_num": 5}
+#         ideapic_file_body: None/ (file)
+# output: json {"result":"OK", "result_msg":"added idea to database"}
+#              {"result":"Wrong", "result_msg":"proposal already exists"}
+def add_idea_to_user_aux(user_email, idea_dict, ideapic_file_body):
     user = _getParticipantByEmail(user_email)
-    newidea_index = newidea_obj.proposal
-    if _getIdeaByIdeaIndex(newidea_index) :
-        return jsonify(result="proposal already exists")
-    #TODO: create numerical index. For the moment the index is the proposal, which must be unique.
-    # The numerical index could be an integer field in the idea. In the launching of the app,
-    # the last assigned index would be retrieved, then each idea would be assigned with an ascending integer.
-    newidea_node, = getGraph().create({"concern": newidea_obj.concern, "proposal": newidea_obj.proposal,
-                                       "image_url": newidea_obj.image_url,
-                                       "datestamp": newidea_obj.datestamp, "moreinfo": newidea_obj.moreinfo,
-                                       "supporters_goal_num": newidea_obj.supporters_goal_num,
-                                       "volunteers_goal_num": newidea_obj.volunteers_goal_num})
+    newidea_index = idea_dict.get('proposal')
+    image_url = 'static/images/concerns/social_coffee_break.jpg'
+    if _getIdeaByIdeaIndex(newidea_index):
+        return jsonify({"result":"Wrong", "result_msg":"proposal already exists"})
+    if ideapic_file_body is not None:
+        ruta_dest = '/static/images/concerns/'
+        filename = str(user_email) + str(datetime.now()) + '.png'
+        image_url = save_file(ruta_dest, ideapic_file_body, filename)
+    newidea_node, = getGraph().create({"concern": idea_dict.get('concern'), "proposal": idea_dict.get('proposal'),
+                                       "image_url": image_url, "datestamp": idea_dict.get('datestamp'),
+                                       "moreinfo": idea_dict.get('moreinfo'),
+                                       "supporters_goal_num": idea_dict.get('supporters_goal_num'),
+                                       "volunteers_goal_num": idea_dict.get('volunteers_goal_num')})
     newidea_node.add_labels("idea")
     _addIdeaToIndex(newidea_index, newidea_node)
     getGraph().create((user, "CREATED", newidea_node))
-    return jsonify(result="added idea to database")
+    return jsonify({"result":"OK", "result_msg":"added idea to database"})
 
 
 def get_ideas_created_by_participant_aux(email):
@@ -47,14 +54,14 @@ def get_ideas_created_by_participant_aux(email):
     rels = list(getGraph().match(start_node=currentUser, rel_type="CREATED"))
     ideas = []
     for rel in rels:
-        current_idea = get_idea_structure(rel.end_node)
+        current_idea = get_idea_data(rel.end_node)
         ideas.append(current_idea)
     return jsonify(result= ideas)
 
 
 # Used by ideas_for_newsfeed_aux / ideas_for_home_aux / get_ideas_created_by_participant_aux
-# Output: << return  idea_structure>>
-# idea_structure = {
+# Output: << return  idea_data>>
+# idea_data = {
     # 'idea_id' : 12343,
     # 'author_photo_url' : 'assets/profile/perfil-mediano.png', 'author_username' : 'Daniela', 'author_email' : 'a@',
     # 'duration' : '2 days',
@@ -71,7 +78,7 @@ def get_ideas_created_by_participant_aux(email):
     # { 'email': 'd@', 'username': 'Elisa' }
     #               ]
     # }
-def get_idea_structure(new_idea_node):
+def get_idea_data(new_idea_node):
     author_email = getGraph().match_one(end_node=new_idea_node, rel_type="CREATED").start_node.get_properties()['email']
     author_photo_url = _getParticipantByEmail(author_email).get_properties()['image_url']
     author_username = _getParticipantByEmail(author_email).get_properties()['username']
@@ -99,18 +106,18 @@ def get_idea_structure(new_idea_node):
             email = vote.start_node.get_properties()['email']
             username = vote.start_node.get_properties()['username']
             rejectors.append({'email' : email, 'username':username })
-    idea_structure=new_idea_node.get_properties()
-    idea_structure.update({'idea_id' : idea_id,
+    idea_data=new_idea_node.get_properties()
+    idea_data.update({'idea_id' : idea_id,
                  'author_photo_url': author_photo_url, 'author_username' : author_username,
                  'duration': duration,
                  'author_email' : author_email, 'supporters_num' : supporters_num,
                  'volunteers_num': volunteers_num,
                  'support_rate': support_rate, 'support_rate_MIN': support_rate_MIN,
                  'supporters' : supporters, 'rejectors' : rejectors})
-    return idea_structure
+    return idea_data
 
 
-#used by get_idea_structure
+#used by get_idea_data
 def _get_vote_statistics_for_idea(node_idea):
    rejectors_num=0
    supporters_num=0

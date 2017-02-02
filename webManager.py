@@ -1,6 +1,6 @@
 from py2neo import neo4j
 from participantManager import _getParticipantByEmail, getFollowerContacts
-from ideaManager import get_idea_structure
+from ideaManager import get_idea_data
 from utils import getGraph
 from flask import jsonify, render_template
 
@@ -25,7 +25,7 @@ def ideas_for_newsfeed_aux(participant_email):
             if ifIsNewIdeaForParticipant(idea, participant):
                 dic.append(idea)
     for dic_idea in dic:
-        newfeed = get_idea_structure(dic_idea)
+        newfeed = get_idea_data(dic_idea)
         feed.append(newfeed)
     return jsonify(result=feed)
 
@@ -44,7 +44,7 @@ def ideas_for_home_aux(participant_email, vote_type):
         if vote["type"] == vote_type:
             dic.append(vote.end_node)
     for dic_idea in dic:
-        current_idea = get_idea_structure(dic_idea)
+        current_idea = get_idea_data(dic_idea)
         feed.append(current_idea)
     return jsonify(result=feed)
 

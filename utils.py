@@ -1,5 +1,4 @@
 from py2neo import neo4j
-import os
 
 
 def getGraph():
@@ -12,6 +11,21 @@ def getGraph():
      else:
          graph_db = neo4j.GraphDatabaseService('http://localhost:7474/db/data')
      return graph_db
+
+
+import os
+basedir = os.path.abspath(os.path.dirname(__file__))
+from werkzeug.utils import secure_filename
+
+
+#Used By <_newParticipant> and 	<addIdeaToUser_aux> For Upload Files.
+# for upload files
+# NOTES: prepared only for one picture file extension. At the moment,'.png' is hardcoded.
+def save_file(ruta_dest,file_upload,filename):
+    path = basedir + ruta_dest
+    file_upload.save(os.path.join(path, secure_filename(filename)))
+    url = str(path + secure_filename(filename))
+    return url
 
 
 from flask.ext.mail import Message
