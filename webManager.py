@@ -1,17 +1,14 @@
 from py2neo import neo4j
-from participantManager import _getParticipantByEmail, getFollowerContacts
+from participantManager import _getParticipantByEmail, getFollowerContacts, _verifyEmail
 from ideaManager import get_idea_data
 from utils import getGraph
 from flask import jsonify, render_template
-
-#Global variable support_rate_MIN = 90%
-support_rate_MIN = 90
-
+from uuid_token import generate_confirmation_token, confirm_token
 
 def ideas_for_newsfeed_aux(participant_email):
     participant = _getParticipantByEmail(participant_email)
     dic = []
-    feed = []
+    list_ideas = []
     followings_rels = list(getGraph().match(start_node=participant, rel_type="FOLLOWS"))
     if len(followings_rels) is 0:
         return None
@@ -22,15 +19,16 @@ def ideas_for_newsfeed_aux(participant_email):
             continue
         for idea_rel in ideas_rels:
             idea = idea_rel.end_node
-            if ifIsNewIdeaForParticipant(idea, participant):
+            if if_isnewideaforparticipant(idea, participant):
                 dic.append(idea)
     for dic_idea in dic:
         newfeed = get_idea_data(dic_idea)
-        feed.append(newfeed)
-    return jsonify(result=feed)
+        list_ideas.append(newfeed)
+    return jsonify({'result':'OK','data': list_ideas})
+
 
 # Used by ideas_for_newsfeed_aux
-def ifIsNewIdeaForParticipant(idea, participant):
+def if_isnewideaforparticipant(idea, participant):
     votingRelationshipFound = getGraph().match_one(start_node=participant, rel_type="VOTED_ON", end_node=idea)
     if votingRelationshipFound is None:
         return True
@@ -39,19 +37,71 @@ def ifIsNewIdeaForParticipant(idea, participant):
 def ideas_for_home_aux(participant_email, vote_type):
     participant = _getParticipantByEmail(participant_email)
     dic = []
-    feed = []
+    list_ideas = []
     for vote in (list(getGraph().match(start_node=participant, rel_type="VOTED_ON"))):
         if vote["type"] == vote_type:
             dic.append(vote.end_node)
     for dic_idea in dic:
         current_idea = get_idea_data(dic_idea)
-        feed.append(current_idea)
-    return jsonify(result=feed)
+        list_ideas.append(current_idea)
+    return jsonify({'result': 'OK','data': list_ideas})
+
+
+def registration_from_invitation_aux(token, guest_email):
+    if not confirm_token(token, 10000):
+        jsondata = {"result": "The confirmation link is invalid or has expired"}
+        return render_template('login/login.html', message=jsondata)
+    if confirm_token(token, 10000):
+        host_email = confirm_token(token)
+        jsondata = {
+            "result": "invitation:OK",
+            "current_email": guest_email,
+            "host_email": host_email
+        }
+        return render_template('login/login.html', message=jsondata)
+
+
+def registration_send_invitation_aux(host_email, guest_email):
+    token = generate_confirmation_token(host_email)
+    confirm_url = url_for('.registration_from_invitation', token=token, guest_email=guest_email, _external=True)
+    html = render_template('login/invitation_email.html', confirm_url=confirm_url)
+    subject = ''.join([getFullNameByEmail(host_email), " invites you to join Consensus"])
+    send_email(guest_email, subject, html)
+    return jsonify({'result': 'email sent'})
+
+
+def registration_receive_emailverification_aux(token):
+    if not confirm_token(token, 3600):
+        jsondata = {"result": "The confirmation link is invalid or has expired"}
+        return render_template('login/login.html', message=jsondata)
+    if confirm_token(token, 3600):
+        email = confirm_token(token)
+        result_dict = _verifyEmail(email)
+        if result_dict['result'] == 'OK':
+            # TODO: possibly redundant user_login: see function registration_aux
+            ##user login
+            # user = User(email)
+            # flask_login.login_user(user)
+            # flash ('email registered')
+            jsondata = {
+                "result": "emailverification:OK",
+                "email": email
+            }
+            return render_template('login/login.html', message=jsondata)
+        else:
+            jsondata = {
+                "result": result_dict['result']
+            }
+            # return redirect(url_for('.hello',message=jsondata))
+            return render_template('login/login.html', message=jsondata)
 
 
 
 
-#
+
+
+
+                #
 # def ideas_for_newsfeed_aux(user_email):
 #     # load 1 concern
 #     # feed = concern
@@ -150,8 +200,8 @@ def ideas_for_home_aux(participant_email, vote_type):
 #          for idea_rel in ideas_rels :
 #              idea=idea_rel.end_node
 #              idea_id=idea['proposal']
-#              if ifIsNewIdeaForParticipant(idea_id,participant_email):
+#              if if_isnewideaforparticipant(idea_id,participant_email):
 #                  return idea
 #
-# def ifIsNewIdeaForParticipant(idea_id,participant_email):
+# def if_isnewideaforparticipant(idea_id,participant_email):
 #     return True

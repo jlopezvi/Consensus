@@ -12,7 +12,8 @@ from participantManager import _getParticipantByEmail,deleteParticipant,getAllPa
     registration_aux, _verifyEmail
 from ideaManager import get_ideas_created_by_participant_aux, add_idea_to_user_aux,deleteOneIdea,getAllIdeas, \
     _getIdeaByIdeaIndex, vote_on_idea_aux
-from webManager import ideas_for_newsfeed_aux, ideas_for_home_aux
+from webManager import ideas_for_newsfeed_aux, ideas_for_home_aux, registration_receive_emailverification_aux, \
+    registration_from_invitation_aux, registration_send_invitation_aux
 import logging
 import flask_login
 from user_authentification import User
@@ -34,6 +35,9 @@ try:
     app.config.from_object(os.environ['APP_SETTINGS'])
 except KeyError:
     pass
+
+MAIL_DEFAULT_SENDER=app.config['MAIL_DEFAULT_SENDER']
+SUPPORT_RATE_MIN=app.config['SUPPORT_RATE_MIN']
 
 
 ####################
@@ -127,378 +131,8 @@ def participants():
     return render_template('login/participants.html', participants = participants_p, feed = feed)
 
 
-@app.route('/home')
-def home():
-    feed_home = [
-        {
-            'id': 'id',
-            'picture': 'assets/profile/perfil-mediano.png',
-            'name': 'Daniela',
-            'duration': '2 Days',
-            'supporters_goal': 200,
-            'supporters_current': 5,
-            'volunters_goal': 5,
-            'volunters_current': 2,
-            'image': 'url-to-picture',
-            'problem':  'Some text for the problem',
-            'proposal': 'Some text for the proposal',
-            'liked':
-            [
-                {
-                    'id': 'id',
-                    'name': 'Maria'
-                },
-                {
-                    'id': 'id',
-                    'name': 'Pedro'
-                },
-                {
-                    'id': 'id',
-                    'name': 'Juan'
-                },
-                {
-                    'id': 'id',
-                    'name': 'Jesus'
-                }
-            ],
-            'disliked':
-            [
-                {
-                    'id': 'id',
-                    'name': 'Jose'
-                }
-            ]
-        }
-    ]
-    print(feed_home)
-    return render_template('home.html', persons_home = feed_home)
-
-#TODO: try with redirect instead of render_template
-#input: URL token link from an invitation e-mail
-#output: redirects to login with a json called "message"
-#  -> json {"result": "The confirmation link is invalid or has expired"}
-#  -> json {"result": "email already confirmed"}
-#  -> json {"result": "email not registered"}
-#TODO: redirects to a place with a message of "email verified" and then, login user and redirection to newsfeed.
-#TODO: should I login user when email verified? review registration_aux where I log in user? what's the interplay
-#among the two of them?
-#  -> json {"result": "emailverification:OK", "email": "asdf@dasdf.com"}
-@app.route('/registration_receive_emailverification/<token>')
-def registration_receive_emailverification(token):
-    if not confirm_token(token, 3600):
-        jsondata = {"result": "The confirmation link is invalid or has expired"}
-        return render_template('login/login.html', message=jsondata)
-    if confirm_token(token, 3600):
-        email = confirm_token(token)
-        result_dict=_verifyEmail(email)
-        if result_dict['result'] == 'OK' :
-            #TODO: possibly redundant user_login: see function registration_aux
-            ##user login
-            #user = User(email)
-            #flask_login.login_user(user)
-            #flash ('email registered')
-            jsondata = {
-                "result": "emailverification:OK",
-                "email": email
-            }
-            return render_template('login/login.html', message=jsondata)
-        else:
-            jsondata = {
-                "result": result_dict['result']
-            }
-            #return redirect(url_for('.hello',message=jsondata))
-            return render_template('login/login.html', message=jsondata)
-
-
-#TODO: try with redirect instead of render_template
-#input: URL token link from an invitation e-mail
-#output: redirects to login with a json called "message"
-#  -> json {"result": "The confirmation link is invalid or has expired"}
-#  -> json {"result": "invitation:OK", "current_email": "guestemail@com", "host_email": host_email@com"}
-@app.route('/registration_from_invitation/<token>/<guest_email>')
-def registration_from_invitation(token, guest_email):
-    if not confirm_token(token, 10000):
-        jsondata = {"result": "The confirmation link is invalid or has expired"}
-        return render_template('login/login.html', message=jsondata)
-    if confirm_token(token, 10000):
-        host_email = confirm_token(token)
-        jsondata = {
-            "result": "invitation:OK",
-            "current_email": guest_email,
-            "host_email": host_email
-        }
-        return render_template('login/login.html', message=jsondata)
-
-
-@app.route('/registration_send_invitation/<host_email>/<guest_email>', methods=['GET'])
-def registration_send_invitation(host_email, guest_email):
-    token = generate_confirmation_token(host_email)
-    confirm_url = url_for('.registration_from_invitation', token=token, guest_email=guest_email, _external=True)
-    html = render_template('login/invitation_email.html', confirm_url=confirm_url)
-    subject = ''.join([getFullNameByEmail(host_email), " invites you to join Consensus"])
-    send_email(guest_email, subject, html)
-    return jsonify({'result': 'email sent'})
-
-
-#input: nothing
-#output: render_template to newsfeed
-@app.route('/newsfeed')
-@flask_login.login_required
-#user_email=flask_login.current_user.id
-def newsfeed():
-    return render_template('login/newsfeed.html')
-
-
-###
-# web manager
-###
-
-
-#input : NOTHING
-#output : json named "feed"
-# feed = {
-# 'idea_id' : 120,
-# 'author_photo_url' : 'assets/profile/perfil-mediano.png', 'author_username' : 'Daniela', 'author_email' : 'a@',
-# 'duration' : '2 days',
-# 'supporters_goal_num' : 200, 'supporters_num' : 5, 'volunteers_goal_num' : 5, 'volunteers_num' : 2,
-# 'image_url' : 'url-to-picture',
-# 'concern': 'Some text for the concern',
-# 'proposal': 'Some text for the proposal',
-# 'support_rate' : 95,
-# 'support_rate_MIN' : 90,
-# 'supporters': [
-# { 'email': 'b@', 'username': 'Maria' }, { 'email': 'c@', 'username': 'Pedro' }
-#             ],
-# 'rejectors':[
-# { 'email': 'd@', 'username': 'Elisa' }
-#               ]
-# }
-#@app.route('/ideas_for_newsfeed')
-#@flask_login.login_required
-#def ideas_for_newsfeed():
-#    return ideas_for_newsfeed_aux(flask_login.current_user.id)
-#    #return ideas_for_newsfeed_aux(email)
-
-#@app.route('/TEST_ideas_for_newsfeed/<email>')
-#def TEST_ideas_for_newsfeed(email) :
-#    return ideas_for_newsfeed_aux(email)
-
-# Get Ideas For Newsfeed
-# Input: << flask_login.current_user.id >>
-# Output: Array with all ideas that the user has not << VOTED_ON >>
-#{
-#  "result": [
-#    {
-#      "author_email": "new1@hotmail.com",
-#      "author_photo_url": "",
-#      "author_username": "new1",
-#      "concern": "this is mi new concern for test",
-#      "datestamp": "01.10.2016",
-#      "duration": "118 days",
-#      "idea_id": "(13)",
-#      "image_url": "/home/alexis/Documentos/Consensus-master/static/images/concerns/new1hotmail.com2017-01-24_092326.767044.png",
-#      "moreinfo": "this and this",
-#      "proposal": "this proposal is for test",
-#      "rejectors": [],
-#      "support_rate": 100,
-#      "support_rate_MIN": 90,
-#      "supporters": [
-#             { "email": "new2@hotmail.com", "username": "new2_mail" }
-#                   ],
-#      "supporters_goal_num": "500",
-#      "supporters_num": 0,
-#      "volunteers_goal_num": "5",
-#      "volunteers_num": 0
-#    },
-#    {
-#      "author_email": "new2@hotmail.com",
-#      "author_photo_url": "",
-#      "author_username": "new2",
-#      "concern": "Concern",
-#      "datestamp": "01.10.2016",
-#      "duration": "118 days",
-#      "idea_id": "(9)",
-#      "image_url": "http:myproposal.jpg",
-#      "moreinfo": "this and this...",
-#      "proposal": "IdeaM",
-#      "rejectors": [
-#           { "email": "new1@hotmail.com", "username": "new1_mail" }
-#                   ],
-#      "support_rate": 100,
-#      "support_rate_MIN": 90,
-#      "supporters": [],
-#      "supporters_goal_num": "400",
-#      "supporters_num": 0,
-#      "volunteers_goal_num": "11",
-#      "volunteers_num": 0
-#    }
- # ]
- #}
-@app.route('/ideas_for_newsfeed')
-@flask_login.login_required
-def ideas_for_newsfeed():
-    return ideas_for_newsfeed_aux(flask_login.current_user.id)
-
-
-# TEMPORARY: función para testear con ARC el << newsfeed >>
-@app.route('/ideas_for_newsfeed_test',methods=['POST'])
-def ideas_for_newsfeed_test():
-    email=request.get_json()['email']
-    return ideas_for_newsfeed_aux(email)
-
-
-
-# Ideas For Home: See the Supported + Volunteered ideas/ See the ignored ideas / See the rejected ideas
-# Input: JSON {"email":"new@gmail.com", "vote_type": "rejected/supported/ignored"
-# Output:  Array with all ideas that the user has voted according to << vote_type >>
-#        {
-#  "result": [
-#    {
-#      "author_email": "adavidsole@gmail.com",
-#      "author_username": "alexdsole",
-#      "concern": "Concern",
-#      "datestamp": "01.10.2016",
-#      "duration": "118 days",
-#      "idea_id": "(6)",
-#      "image_url": "http:myproposal.jpg",
-#      "moreinfo": "this and this...",
-#      "proposal": "New Proposal ",
-#      "rejectors": [
-#            { "email": "new1@hotmail.com", "username": "new1_mail" }
-#                   ],
-#      "support_rate": 0,
-#      "support_rate_MIN": 90,
-#      "supporters": [],
-#      "supporters_goal_num": "400",
-#      "supporters_num": 0,
-#      "volunteers_goal_num": "11",
-#      "volunteers_num": 0
-#    },
-#    {
-#      "author_email": "newemail@hotmail.com",
-#      "author_photo_url": "",
-#      "author_username": "newemail",
-#      "concern": "Concern",
-#      "datestamp": "01.10.2016",
-#      "duration": "118 days",
-#      "idea_id": "(5)",
-#      "image_url": "http:myproposal.jpg",
-#      "moreinfo": "this and this...",
-#      "proposal": "This is my Proposal",
-#      "rejectors": [
-#           { "email": "new1@hotmail.com", "username": "new1_mail" }
-#                   ],
-#      "support_rate": 50,
-#      "support_rate_MIN": 90,
-#      "supporters": [
-#           { "email": "new2@gmail.com", "username": "new2_mail"  }
-#                    ],
-#      "supporters_goal_num": "400",
-#      "supporters_num": 1,
-#      "volunteers_goal_num": "11",
-#      "volunteers_num": 1
-#    }
-#  ]
-#}
-@app.route('/ideas_for_home',methods=['POST'])
-def ideas_for_home():
-    email=request.get_json()['email']
-    vote_type=request.get_json()['vote_type']
-    return ideas_for_home_aux(email,vote_type)
-
-
-###############
-# idea manager
-###############
-
-
-# Get all User Created Ideas by Email
-# Input: email:new@gmail.com
-# Output: Array with all ideas created by the user
-#{
- # "result": [
-#    {
-#      "author_email": "new@hotmail.com",
-#      "author_photo_url": "",
-#      "author_username": "newmail",
-#      "concern": "this is mi new concern for test",
-#      "datestamp": "01.10.2016",
-#      "duration": "118 days",
-#      "idea_id": "(13)",
-#      "image_url": "/home/alexis/Documentos/Consensus-master/static/images/concerns/new@hotmail.com2017-01-24_092326.767044.png",
-#      "moreinfo": "this and this",
-#      "proposal": "this proposal is for test",
-#      "rejectors": [],
-#      "support_rate": 100,
-#      "support_rate_MIN": 90,
-#      "supporters": [],
-#      "supporters_goal_num": "500",
-#      "supporters_num": 0,
-#      "volunteers_goal_num": "5",
-#      "volunteers_num": 0
-#    },
-#    {
-#      "author_email": "new@hotmail.com",
-#      "author_photo_url": "",
-#      "author_username": "newmail",
-#      "concern": "Concern",
-#      "datestamp": "01.10.2016",
-#      "duration": "118 days",
-#      "idea_id": "(9)",
-#      "image_url": "http:myproposal.jpg",
-#      "moreinfo": "this and this...",
-#      "proposal": "IdeaM",
-#      "rejectors": [],
-#      "support_rate": 100,
-#      "support_rate_MIN": 90,
-#      "supporters": [],
-#      "supporters_goal_num": "400",
-#      "supporters_num": 0,
-#      "volunteers_goal_num": "11",
-#      "volunteers_num": 0
-#    }
- # ]
-#}
-@app.route('/get_ideas_created_by_participant/<email>',methods=['GET'])
-def get_ideas_created_by_participant(email):
-    return get_ideas_created_by_participant_aux(email)
-
-#   input:  user_email(URL); multipart/form-data
-#           (file) ideapic_file_body
-#       (data dictionary):  {"concern" :"we are not social enough in the office",
-#                           "proposal": "social coffee pause at 4 p.m.",
-#                           "datestamp":"01.10.2016",
-#                           "moreinfo":"I have to say as well this and this and this...",
-#                           "supporters_goal_num": 500, "volunteers_goal_num": 5}
-#    output: json {"result":"OK", "result_msg":"added idea to database"}
-#                 {"result":"Wrong", "result_msg":"proposal already exists"}
-@app.route('/add_idea_to_user/<string:user_email>', methods=['POST'])
-def add_idea_to_user(user_email) :
-    ideapic_file_body = None
-    idea_dict = request.form
-    if 'fileUpload' in request.files:
-        ideapic_file_body = request.files['fileUpload']
-    return add_idea_to_user_aux(user_email,idea_dict,ideapic_file_body)
-
-
-# TODO: format for timestamp!
-# input json {"user_email":"asd@asd.com", "idea_proposal":"let's do this", "vote_timestamp":"time", "vote_type":"supporter/rejector"}
-# output json  {"result" : "Success : User vote was added"}
-#             {"result" : "Failure : Idea or participant non existings"}
-#             {"result" : "Failure : User vote exists already"}
-@app.route('/vote_on_idea',methods=['POST'])
-def vote_on_idea():
-   return vote_on_idea_aux(request.get_json())
-
-
-
-
-
-
-
-
 ############################################
-#####   API
+#  API
 ############################################
 
 
@@ -507,10 +141,20 @@ def hello(message=None):
     return render_template('login/login.html',message=message)
 
 
-#PARTICIPANTS
+@app.route('/newsfeed')
+@flask_login.login_required
+#user_email=flask_login.current_user.id
+def newsfeed():
+    return render_template('login/newsfeed.html')
 
-#input: json {"email":"asdf@asdf", "password":"MD5password"}
-#output:
+
+##############
+# PARTICIPANT MANAGER
+##############
+
+
+# input: json {"email":"asdf@asdf", "password":"MD5password"}
+# output:
 #   json {"result":"Bad e-mail"} / json {"result": "Bad password"}
 #   / login cookie and redirection to '/newsfeed'
 @app.route('/login', methods=['POST'])
@@ -601,7 +245,269 @@ def getAllContacts(email) :
 
 
 
-#COMMUNITIES (NOT USED)
+###############
+# IDEA MANAGER
+###############
+
+
+# Input: participant's email
+# Output: json with fields "result", "data". "data" contains array with all ideas created by the user
+# {"result": "OK",
+#  "data": [
+#    {
+#      "author_email": "new@hotmail.com",
+#      "author_photo_url": "",
+#      "author_username": "newmail",
+#      "concern": "this is mi new concern for test",
+#      "datestamp": "01.10.2016",
+#      "duration": "118 days",
+#      "idea_id": "(13)",
+#      "image_url": "/home/alexis/Documentos/Consensus-master/static/images/concerns/new@hotmail.com2017-01-24_092326.767044.png",
+#      "moreinfo": "this and this",
+#      "proposal": "this proposal is for test",
+#      "rejectors": [],
+#      "support_rate": 100,
+#      "support_rate_MIN": 90,
+#      "supporters": [],
+#      "supporters_goal_num": "500",
+#      "supporters_num": 0,
+#      "volunteers_goal_num": "5",
+#      "volunteers_num": 0
+#    },
+#    {
+#      "author_email": "new@hotmail.com",
+#      "author_photo_url": "",
+#      "author_username": "newmail",
+#      "concern": "Concern",
+#      "datestamp": "01.10.2016",
+#      "duration": "118 days",
+#      "idea_id": "(9)",
+#      "image_url": "http:myproposal.jpg",
+#      "moreinfo": "this and this...",
+#      "proposal": "IdeaM",
+#      "rejectors": [],
+#      "support_rate": 100,
+#      "support_rate_MIN": 90,
+#      "supporters": [],
+#      "supporters_goal_num": "400",
+#      "supporters_num": 0,
+#      "volunteers_goal_num": "11",
+#      "volunteers_num": 0
+#    }
+ # ]
+#}
+@app.route('/get_ideas_created_by_participant/<email>',methods=['GET'])
+def get_ideas_created_by_participant(email):
+    return get_ideas_created_by_participant_aux(email)
+
+
+#   input:  user_email(URL); multipart/form-data
+#           (file) ideapic_file_body
+#       (data dictionary):  {"concern" :"we are not social enough in the office",
+#                           "proposal": "social coffee pause at 4 p.m.",
+#                           "datestamp":"01.10.2016",
+#                           "moreinfo":"I have to say as well this and this and this...",
+#                           "supporters_goal_num": 500, "volunteers_goal_num": 5}
+#    output: json {"result":"OK", "result_msg":"added idea to database"}
+#                 {"result":"Wrong", "result_msg":"proposal already exists"}
+@app.route('/add_idea_to_user/<string:user_email>', methods=['POST'])
+def add_idea_to_user(user_email) :
+    ideapic_file_body = None
+    idea_dict = request.form
+    if 'fileUpload' in request.files:
+        ideapic_file_body = request.files['fileUpload']
+    return add_idea_to_user_aux(user_email,idea_dict,ideapic_file_body)
+
+
+# input json {"user_email":"asd@asd.com", "idea_proposal":"let's do this", "vote_timestamp":"time", "vote_type":"supporter/rejector"}
+# output json  {"result" : "Success : User vote was added"}
+#             {"result" : "Failure : Idea or participant non existings"}
+#             {"result" : "Failure : User vote exists already"}
+@app.route('/vote_on_idea',methods=['POST'])
+def vote_on_idea():
+   return vote_on_idea_aux(request.get_json())
+
+
+#IDEAS (NOT USED)
+@app.route('/deleteConcern/<string:idConcern>', methods=['DELETE', 'OPTIONS'])
+def deleteConcern(idConcern) :
+    print (idConcern)
+    deleteOneConcern(idConcern)
+    return "deleteConcern was invoked"
+
+@app.route('/getConcerns/<string:current>', methods=['GET', 'OPTIONS'])
+def getConcerns(current):
+    print (current)
+    return json.dumps(getAllConcerns(current))
+
+
+##############
+# WEB MANAGER
+##############
+
+
+# TODO: try with redirect instead of render_template
+# input: URL token link from an invitation e-mail
+# output: redirects to login with a json called "message"
+#  -> json {"result": "The confirmation link is invalid or has expired"}
+#  -> json {"result": "invitation:OK", "current_email": "guestemail@com", "host_email": host_email@com"}
+@app.route('/registration_from_invitation/<token>/<guest_email>')
+def registration_from_invitation(token, guest_email):
+    return registration_from_invitation_aux(token, guest_email)
+
+
+# input: host_email and guest_email
+# output: sends registration e-mail
+@app.route('/registration_send_invitation/<host_email>/<guest_email>', methods=['GET'])
+def registration_send_invitation(host_email, guest_email):
+    return registration_send_invitation_aux(host_email, guest_email)
+
+
+# TODO: try with redirect instead of render_template
+# input: URL token link from an invitation e-mail
+# output: redirects to login with a json called "message"
+#  -> json {"result": "The confirmation link is invalid or has expired"}
+#  -> json {"result": "email already confirmed"}
+#  -> json {"result": "email not registered"}
+# TODO: redirects to a place with a message of "email verified" and then, login user and redirection to newsfeed.
+# TODO: should I login user when email verified? review registration_aux where I log in user? what's the interplay
+# among the two of them?
+#  -> json {"result": "emailverification:OK", "email": "asdf@dasdf.com"}
+@app.route('/registration_receive_emailverification/<token>')
+def registration_receive_emailverification(token):
+    return registration_receive_emailverification_aux(token)
+
+
+# TODO: add weights for ideas
+# Get Ideas For Newsfeed
+# Input: << flask_login.current_user.id >>
+# Output: json with fields 'result' and 'data'. 'data' contains array with all ideas that the user has not << VOTED_ON >>
+# {'result':'OK',
+#  'data': [
+#    {
+#      "author_email": "new1@hotmail.com",
+#      "author_photo_url": "",
+#      "author_username": "new1",
+#      "concern": "this is mi new concern for test",
+#      "datestamp": "01.10.2016",
+#      "duration": "118 days",
+#      "idea_id": "(13)",
+#      "image_url": "/home/alexis/Documentos/Consensus-master/static/images/concerns/new1hotmail.com2017-01-24_092326.767044.png",
+#      "moreinfo": "this and this",
+#      "proposal": "this proposal is for test",
+#      "rejectors": [],
+#      "support_rate": 100,
+#      "support_rate_MIN": 90,
+#      "supporters": [
+#             { "email": "new2@hotmail.com", "username": "new2_mail" }
+#                   ],
+#      "supporters_goal_num": "500",
+#      "supporters_num": 0,
+#      "volunteers_goal_num": "5",
+#      "volunteers_num": 0
+#    },
+#    {
+#      "author_email": "new2@hotmail.com",
+#      "author_photo_url": "",
+#      "author_username": "new2",
+#      "concern": "Concern",
+#      "datestamp": "01.10.2016",
+#      "duration": "118 days",
+#      "idea_id": "(9)",
+#      "image_url": "http:myproposal.jpg",
+#      "moreinfo": "this and this...",
+#      "proposal": "IdeaM",
+#      "rejectors": [
+#           { "email": "new1@hotmail.com", "username": "new1_mail" }
+#                   ],
+#      "support_rate": 100,
+#      "support_rate_MIN": 90,
+#      "supporters": [],
+#      "supporters_goal_num": "400",
+#      "supporters_num": 0,
+#      "volunteers_goal_num": "11",
+#      "volunteers_num": 0
+#    }
+ # ]
+ #}
+@app.route('/ideas_for_newsfeed')
+@flask_login.login_required
+def ideas_for_newsfeed():
+    return ideas_for_newsfeed_aux(flask_login.current_user.id)
+
+
+# TEMPORARY: función para testear con ARC el << newsfeed >>
+@app.route('/ideas_for_newsfeed_test',methods=['POST'])
+def ideas_for_newsfeed_test():
+    email=request.get_json()['email']
+    return ideas_for_newsfeed_aux(email)
+
+
+
+# Ideas For Home: See the Supported + Volunteered ideas/ See the ignored ideas / See the rejected ideas
+# Input: JSON {"email":"new@gmail.com", "vote_type": "rejected/supported/ignored"
+# Output: json with fields 'result' and 'data'. 'data' Array with all ideas that the user has voted according to << vote_type >>
+# {'result':'OK',
+#  'data': [
+#    {
+#      "author_email": "adavidsole@gmail.com",
+#      "author_username": "alexdsole",
+#      "concern": "Concern",
+#      "datestamp": "01.10.2016",
+#      "duration": "118 days",
+#      "idea_id": "(6)",
+#      "image_url": "http:myproposal.jpg",
+#      "moreinfo": "this and this...",
+#      "proposal": "New Proposal ",
+#      "rejectors": [
+#            { "email": "new1@hotmail.com", "username": "new1_mail" }
+#                   ],
+#      "support_rate": 0,
+#      "support_rate_MIN": 90,
+#      "supporters": [],
+#      "supporters_goal_num": "400",
+#      "supporters_num": 0,
+#      "volunteers_goal_num": "11",
+#      "volunteers_num": 0
+#    },
+#    {
+#      "author_email": "newemail@hotmail.com",
+#      "author_photo_url": "",
+#      "author_username": "newemail",
+#      "concern": "Concern",
+#      "datestamp": "01.10.2016",
+#      "duration": "118 days",
+#      "idea_id": "(5)",
+#      "image_url": "http:myproposal.jpg",
+#      "moreinfo": "this and this...",
+#      "proposal": "This is my Proposal",
+#      "rejectors": [
+#           { "email": "new1@hotmail.com", "username": "new1_mail" }
+#                   ],
+#      "support_rate": 50,
+#      "support_rate_MIN": 90,
+#      "supporters": [
+#           { "email": "new2@gmail.com", "username": "new2_mail"  }
+#                    ],
+#      "supporters_goal_num": "400",
+#      "supporters_num": 1,
+#      "volunteers_goal_num": "11",
+#      "volunteers_num": 1
+#    }
+#  ]
+#}
+@app.route('/ideas_for_home',methods=['POST'])
+def ideas_for_home():
+    email=request.get_json()['email']
+    vote_type=request.get_json()['vote_type']
+    return ideas_for_home_aux(email,vote_type)
+
+
+
+########################
+# COMMUNITIES (NOT USED)
+#######################
+
 @app.route('/addCommunity', methods=['POST'])
 def addComunity():
     return saveCommunity(request.get_json())
@@ -622,22 +528,9 @@ def getAllCommunitiesForUser(email):
 
 
 
-
-#IDEAS (NOT USED)
-@app.route('/deleteConcern/<string:idConcern>', methods=['DELETE', 'OPTIONS'])
-def deleteConcern(idConcern) :
-    print (idConcern)
-    deleteOneConcern(idConcern)
-    return "deleteConcern was invoked"
-
-@app.route('/getConcerns/<string:current>', methods=['GET', 'OPTIONS'])
-def getConcerns(current):
-    print (current)
-    return json.dumps(getAllConcerns(current))
-
-
-
-##ERROR HANDLERS
+################
+# ERROR HANDLERS
+################
 #@app.errorhandler(NotFoundError)
 #def handle_NotFoundError(error):
 #    response = jsonify(error.to_dict())
@@ -646,7 +539,9 @@ def getConcerns(current):
 
 
 
-
+################
+# MAIN PROGRAM
+################
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))

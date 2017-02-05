@@ -5,6 +5,7 @@ from flask import jsonify
 import json
 from datetime import datetime
 
+
 # class Idea:
 #     #                           {'concern':'this is my concern <140',
 #     #                           'proposal':'this is my proposal <140',
@@ -52,11 +53,11 @@ def add_idea_to_user_aux(user_email, idea_dict, ideapic_file_body):
 def get_ideas_created_by_participant_aux(email):
     currentUser = _getParticipantByEmail(email)
     rels = list(getGraph().match(start_node=currentUser, rel_type="CREATED"))
-    ideas = []
+    list_ideas = []
     for rel in rels:
         current_idea = get_idea_data(rel.end_node)
-        ideas.append(current_idea)
-    return jsonify(result= ideas)
+        list_ideas.append(current_idea)
+    return jsonify({'result': 'OK','data': list_ideas})
 
 
 # Used by ideas_for_newsfeed_aux / ideas_for_home_aux / get_ideas_created_by_participant_aux
@@ -79,6 +80,7 @@ def get_ideas_created_by_participant_aux(email):
     #               ]
     # }
 def get_idea_data(new_idea_node):
+    from app import SUPPORT_RATE_MIN
     author_email = getGraph().match_one(end_node=new_idea_node, rel_type="CREATED").start_node.get_properties()['email']
     author_photo_url = _getParticipantByEmail(author_email).get_properties()['image_url']
     author_username = _getParticipantByEmail(author_email).get_properties()['username']
@@ -108,12 +110,12 @@ def get_idea_data(new_idea_node):
             rejectors.append({'email' : email, 'username':username })
     idea_data=new_idea_node.get_properties()
     idea_data.update({'idea_id' : idea_id,
-                 'author_photo_url': author_photo_url, 'author_username' : author_username,
-                 'duration': duration,
-                 'author_email' : author_email, 'supporters_num' : supporters_num,
-                 'volunteers_num': volunteers_num,
-                 'support_rate': support_rate, 'support_rate_MIN': support_rate_MIN,
-                 'supporters' : supporters, 'rejectors' : rejectors})
+                      'author_photo_url': author_photo_url, 'author_username' : author_username,
+                      'duration': duration,
+                      'author_email' : author_email, 'supporters_num' : supporters_num,
+                      'volunteers_num': volunteers_num,
+                      'support_rate': support_rate, 'support_rate_MIN': SUPPORT_RATE_MIN,
+                      'supporters' : supporters, 'rejectors' : rejectors})
     return idea_data
 
 

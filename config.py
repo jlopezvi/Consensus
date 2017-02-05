@@ -24,6 +24,9 @@ class BaseConfig(object):
     # mail accounts
     MAIL_DEFAULT_SENDER = 'consensus.info@gmail.com'
 
+    # Consensus variables
+    # Global variable support_rate_MIN = 90%
+    SUPPORT_RATE_MIN = 90
 
 class DevelopmentConfig(BaseConfig):
     """Development configuration."""
