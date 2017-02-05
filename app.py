@@ -148,6 +148,12 @@ def newsfeed():
     return render_template('login/newsfeed.html')
 
 
+@app.route('/home')
+@flask_login.login_required
+#user_email=flask_login.current_user.id
+def home():
+    return render_template('login/home.html')
+
 ##############
 # PARTICIPANT MANAGER
 ##############
