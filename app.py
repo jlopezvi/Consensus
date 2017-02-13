@@ -8,7 +8,7 @@ import ast
 import json
 from communityManager import saveCommunity,deleteCommunity,addCommunityToContact,getCommunities
 from participantManager import _getParticipantByEmail,deleteParticipant,getAllParticipants, \
-    addFollowingContactToParticipant_aux,getFollowerContacts,getFollowingContacts,getFullNameByEmail_aux,\
+    add_following_contact_to_participant_aux,getFollowerContacts,getFollowingContacts,getFullNameByEmail_aux,\
     registration_aux, _verifyEmail
 from ideaManager import get_ideas_created_by_participant_aux, add_idea_to_user_aux,deleteOneIdea,getAllIdeas, \
     _getIdeaByIdeaIndex, vote_on_idea_aux
@@ -220,17 +220,18 @@ def registration():
 def getFullNameByEmail(email):
     return getFullNameByEmail_aux(email)
 
-#TODO: connect with the _aux function.
-#input: json with fields "current" (current user email), "newFollowingContact" (email)
-@app.route('/addFollowingContactToParticipant', methods=['POST'])
-def addFollowingContactToParticipant():
-    current=request.get_json()['current']
-    newFollowingContact=request.get_json()['newFollowingContact']
-    return addFollowingContactToParticipant_aux(current, newFollowingContact)
-#@app.route('/addFollowingContactToParticipant/<string:current>/<string:newFollowingContact>', methods=['POST', 'OPTIONS'])
-#def addFollowingContactToParticipant(current, newFollowingContact) :
-#    addFollowingContactToParticipant_aux(current, newFollowingContact)
-#    return "addFollowingContact was invoked"
+
+# input: json with fields "currentparticipantemail" (current user email), "newfollowingcontactemail"
+# output: json  {"result": "OK"/"Wrong"}
+@app.route('/add_following_contact_to_participant', methods=['POST'])
+def add_following_contact_to_participant():
+    currentparticipantemail=request.get_json()['currentparticipantemail']
+    newfollowingcontactemail=request.get_json()['newfollowingcontactemail']
+    result=add_following_contact_to_participant_aux(currentparticipantemail,newfollowingcontactemail)
+    if result is True:
+        return jsonify({"result": "OK"})
+    else:
+        return jsonify({"result": "Wrong"})
 
 
 #Not used
@@ -331,7 +332,7 @@ def add_idea_to_user(user_email) :
 #             {"result" : "Failure : User vote exists already"}
 @app.route('/vote_on_idea',methods=['POST'])
 def vote_on_idea():
-   return vote_on_idea_aux(request.get_json())
+    return vote_on_idea_aux(request.get_json())
 
 
 #IDEAS (NOT USED)

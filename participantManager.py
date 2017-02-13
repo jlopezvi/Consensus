@@ -55,7 +55,7 @@ def registration_aux(inputdict, profilepic_file_body):
     ifhost = False
     if inputdict.get('host_email') != 'None':
         # current_participant (verified/unverified) follows host
-        ifhost = addFollowingContactToParticipant_aux(email, inputdict.get('host_email'))
+        ifhost = add_following_contact_to_participant_aux(email, inputdict.get('host_email'))
     return jsonify({"result":"OK", "ifhost":ifhost, "ifhost_msg":ifhost_msg[ifhost],
                     "ifemailverified":email_verified, "ifemailverified_msg":ifemailverified_msg[email_verified]})
 
@@ -179,28 +179,22 @@ def _getIfContactRelationshipExists(currentParticipant, newFollowingContact) :
          return True
     return False
 
+
 #input: current participant email, new following contact email
 #output:
 #   ->  True
 #   ->  False
 #   ->  [False,'Following contact exists already']
-def addFollowingContactToParticipant_aux(currentparticipantemail, newfollowingcontactemail) :
+def add_following_contact_to_participant_aux(currentparticipantemail,newfollowingcontactemail) :
     currentparticipant = _getParticipantByEmail(currentparticipantemail,'all')  #current's email could be unverified
     newfollowingcontact = _getParticipantByEmail(newfollowingcontactemail)
     if (currentparticipant is None) or (newfollowingcontact is None) or (currentparticipantemail is newfollowingcontactemail) :
         return False
-    if _getIfContactRelationshipExists(currentparticipant, newfollowingcontact) == True:
+    if _getIfContactRelationshipExists(currentparticipant, newfollowingcontact) is True:
         return [False,'Following contact exists already']
     getGraph().create((currentparticipant, "FOLLOWS", newfollowingcontact))
     return True
 
-# def addFollowingContactToUnverifiedParticipant_aux(currentparticipantemail, newfollowingcontactemail) :
-#     currentparticipant = _getUnverifiedParticipantByEmail(currentparticipantemail)
-#     newfollowingcontact = _getParticipantByEmail(newfollowingcontactemail)
-#     if _getIfContactRelationshipExists(currentparticipant, newfollowingcontact) == False:
-#          getGraph().create((currentparticipant, "FOLLOWS", newfollowingcontact))
-#          return jsonify(result="Following contact was added")
-#     return jsonify(result="Following contact exists already")
 
 #input: participant_email
 #output: list of nodes of following contacts
