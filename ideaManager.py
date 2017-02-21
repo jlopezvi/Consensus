@@ -1,5 +1,5 @@
 from py2neo import neo4j
-from participantManager import _getParticipantByEmail, getFollowerContacts
+from participantManager import _getParticipantByEmail, get_participant_followers
 from utils import getGraph, save_file
 from flask import jsonify
 import json

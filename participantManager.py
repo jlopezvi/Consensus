@@ -198,23 +198,50 @@ def add_following_contact_to_participant_aux(currentparticipantemail,newfollowin
 
 #input: participant_email
 #output: list of nodes of following contacts
-def getFollowingContacts(participant_email) :
+def get_participant_followings(participant_email) :
     participant = _getParticipantByEmail(participant_email)
     rels = list(getGraph().match(start_node=participant, rel_type="FOLLOWS"))
-    following_contacts = []
+    followings = []
     for rel in rels:
-        following_contacts.append(rel.end_node)
-    return following_contacts
+        followings.append(rel.end_node)
+    return followings
 
 #input: participant_email
 #output: list of nodes of follower contacts
-def getFollowerContacts(participant_email) :
+def get_participant_followers(participant_email) :
     participant = _getParticipantByEmail(participant_email)
     rels = list(getGraph().match(end_node=participant, rel_type="FOLLOWS"))
-    follower_contacts = []
+    followers = []
     for rel in rels:
-        follower_contacts.append(rel.start_node)
-    return follower_contacts
+        followers.append(rel.start_node)
+    return followers
+
+
+def get_participant_followings_info_aux(email):
+    participant=_getParticipantByEmail(email)
+    followings= []
+    participants_followings = get_participant_followings(email)
+    for p in participants_followings:
+        email = p.get_properties()['email']
+        username = p.get_properties()['username']
+        fullname = p.get_properties()['fullname']
+        followings.append({'email' : email, 'username':username, 'fullname' : fullname })
+    return jsonify({"followings_num": len(participants_followings), "followings": followings})
+
+
+def get_participant_followers_info_aux(email):
+    participant=_getParticipantByEmail(email)
+    followers= []
+    participants_followers = get_participant_followers(email)
+    for p in participants_followers:
+        email = p.get_properties()['email']
+        username = p.get_properties()['username']
+        fullname = p.get_properties()['fullname']
+        followers.append({'email' : email, 'username':username, 'fullname' : fullname })
+    return jsonify({"followers_num" : len(participants_followers), "followers": followers})
+
+
+
 
 def _addToParticipantsIndex(email, newparticipant) :
      getGraph().get_or_create_index(neo4j.Node, "Participants").add("email", email, newparticipant)

@@ -8,8 +8,8 @@ import ast
 import json
 from communityManager import saveCommunity,deleteCommunity,addCommunityToContact,getCommunities
 from participantManager import _getParticipantByEmail,deleteParticipant,getAllParticipants, \
-    add_following_contact_to_participant_aux,getFollowerContacts,getFollowingContacts,getFullNameByEmail_aux,\
-    registration_aux, _verifyEmail
+    add_following_contact_to_participant_aux,get_participant_followers_info_aux,get_participant_followings_info_aux,\
+    getFullNameByEmail_aux, registration_aux, _verifyEmail
 from ideaManager import get_ideas_created_by_participant_aux, add_idea_to_user_aux,deleteOneIdea,getAllIdeas, \
     _getIdeaByIdeaIndex, vote_on_idea_aux
 from webManager import ideas_for_newsfeed_aux, ideas_for_home_aux, registration_receive_emailverification_aux, \
@@ -234,7 +234,45 @@ def add_following_contact_to_participant():
         return jsonify({"result": "Wrong"})
 
 
-#Not used
+# Input: participant's email
+# Output: json
+# 		{
+# 		  "followers_num": 1,
+#  		  "followers": [
+# 		    {
+# 		      "email": "ale@gmail.com",
+# 		      "fullname": "alejandro perez",
+# 		      "username": "ale"
+# 		    }
+# 		  ]
+# 		}
+@app.route('/get_participant_followers_info/<email>', methods=['GET'])
+def get_participant_followers_info(email):
+    return get_participant_followers_info_aux(email)
+
+
+# Input: email
+# Output: 	{
+# 		 "followings_num": 2,
+# 		 "followings": [
+# 		   {
+# 		      "email": "ale@gmail.com",
+# 		      "fullname": "alejandro perez",
+# 		      "username": "ale"
+# 		   },
+#   		   {
+#      		      "email": "adavidsole@gmail.com",
+#  	             "fullname": "Alexis Sole",
+#   	             "username": "alexdsole"
+# 		   }
+#  				     ]
+# 		}
+@app.route('/get_participant_followings_info/<email>',methods=['GET'])
+def get_participant_followings_info(email):
+    return get_participant_followings_info_aux(email)
+
+
+# Not used
 @app.route('/deleteParticipant/<string:email>', methods=['DELETE', 'OPTIONS'])
 def removeParticipant(email) :
     deleteParticipant(email)

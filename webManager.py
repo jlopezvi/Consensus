@@ -1,5 +1,5 @@
 from py2neo import neo4j
-from participantManager import _getParticipantByEmail, getFollowerContacts, _verifyEmail
+from participantManager import _getParticipantByEmail, get_participant_followers, _verifyEmail
 from ideaManager import get_idea_data
 from utils import getGraph
 from flask import jsonify, render_template
