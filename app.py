@@ -470,13 +470,22 @@ def add_idea_to_user(user_email) :
     return add_idea_to_user_aux(user_email,idea_dict,ideapic_file_body)
 
 
-# input json {"user_email":"asd@asd.com", "idea_proposal":"let's do this", "vote_timestamp":"time", "vote_type":"supporter/rejector"}
-# output json  {"result" : "Success : User vote was added"}
-#             {"result" : "Failure : Idea or participant non existings"}
-#             {"result" : "Failure : User vote exists already"}
+#TODO: format for vote_timestamp
+# input   user's email (flask_login.current_user.id)
+#         json {"idea_proposal":"let's do this", "vote_timestamp":    ,
+#               "vote_type":"supported/rejected/ignored", "vote_ifvolunteered": true/false}
+# output json  {'result':'Wrong: User vote exists'}
+#              {"result": "OK: User vote was modified"}
+#              {"result": "OK: User vote was created"}
 @app.route('/vote_on_idea',methods=['POST'])
+@flask_login.login_required
 def vote_on_idea():
-    return vote_on_idea_aux(request.get_json())
+    return vote_on_idea_aux(flask_login.current_user.id, request.get_json())
+
+
+@app.route('/test_vote_on_idea/<participant_email>',methods=['POST'])
+def test_vote_on_idea(participant_email):
+    return vote_on_idea_aux(participant_email, request.get_json())
 
 
 #IDEAS (NOT USED)

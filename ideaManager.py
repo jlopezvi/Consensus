@@ -195,22 +195,68 @@ def getAllIdeas(email):
         ideas.append(currentIdea)
     return ideas
 
-def vote_on_idea_aux(inputdict):
-   user_email=inputdict['user_email']
-   idea_proposal=inputdict['idea_proposal']
-   vote_timestamp=inputdict['vote_timestamp']
-   vote_type=inputdict['vote_type']
-   currentParticipant = _get_participant_node(user_email)
-   idea = _getIdeaByIdeaIndex(idea_proposal)
-   if (currentParticipant is None) or (idea is None) :
-       return jsonify(result="Failure : Idea or participant non existing")
-   #TODO: CASE where voting relationship exists but it is another type!
-   if _getIfVotingRelationshipExists(currentParticipant, idea, vote_type)==True:
-       return jsonify(result="Failure : User vote exists already")
-   getGraph().create((currentParticipant, "VOTED_ON", idea, {"type":vote_type, "timestamp":vote_timestamp}))
-   return jsonify(result="Success : User vote was added")
+
+def vote_on_idea_aux(user_email, inputdict):
+    user = _get_participant_node(user_email)
+    idea_proposal=inputdict['idea_proposal']
+    idea = _getIdeaByIdeaIndex(idea_proposal)
+    vote_type=inputdict['vote_type']
+    vote_ifvolunteered=inputdict['vote_ifvolunteered']
+    vote_timestamp=inputdict['vote_timestamp']
+    if if_voting_relationship_exists(user,idea):
+        if if_voting_relationship_exists_of_given_type(user, idea, vote_type, vote_ifvolunteered):
+            return jsonify({'result':'Wrong: User vote exists'})
+        else:
+            response = create_or_modify_voting_relationship_to_given_type(user, idea, vote_type, vote_ifvolunteered, vote_timestamp)
+            return response
+    else:
+        response = create_or_modify_voting_relationship_to_given_type(user, idea, vote_type, vote_ifvolunteered, vote_timestamp)
+        return response
 
 
-#TODO
-def _getIfVotingRelationshipExists(currentParticipant, idea, vote_type):
+def if_voting_relationship_exists(participant, idea):
+    voting_rel = getGraph().match_one(start_node=participant, rel_type="VOTED_ON", end_node=idea)
+    if voting_rel is not None: return True
+    else: return False
+
+
+def if_voting_relationship_exists_of_given_type(participant, idea, vote_type, vote_ifvolunteered):
+    voting_rel = getGraph().match_one(start_node=participant, rel_type="VOTED_ON", end_node=idea)
+    if voting_rel is not None:
+        if voting_rel["type"] == vote_type and voting_rel["ifvolunteered"] == vote_ifvolunteered:
+            return True
     return False
+
+
+def create_or_modify_voting_relationship_to_given_type(participant, idea, vote_type, vote_ifvolunteered, vote_timestamp):
+    voting_rel = getGraph().match_one(start_node=participant, rel_type="VOTED_ON", end_node=idea)
+    if voting_rel is not None:
+        voting_rel["type"] = vote_type
+        voting_rel["ifvolunteered"] = vote_ifvolunteered
+        voting_rel["timestamp"] = vote_timestamp
+        return jsonify({"result": "OK: User vote was modified"})
+    else:
+        getGraph().create((participant, "VOTED_ON", idea, {"type":vote_type, "timestamp": vote_timestamp, "ifvolunteered": vote_ifvolunteered}))
+        return jsonify({"result": "OK: User vote was created"})
+
+
+#
+# def vote_on_idea_aux(inputdict):
+#    user_email=inputdict['user_email']
+#    idea_proposal=inputdict['idea_proposal']
+#    vote_timestamp=inputdict['vote_timestamp']
+#    vote_type=inputdict['vote_type']
+#    currentParticipant = _get_participant_node(user_email)
+#    idea = _getIdeaByIdeaIndex(idea_proposal)
+#    if (currentParticipant is None) or (idea is None) :
+#        return jsonify(result="Failure : Idea or participant non existing")
+#    #TODO: CASE where voting relationship exists but it is another type!
+#    if _getIfVotingRelationshipExists(currentParticipant, idea, vote_type)==True:
+#        return jsonify(result="Failure : User vote exists already")
+#    getGraph().create((currentParticipant, "VOTED_ON", idea, {"type":vote_type, "timestamp":vote_timestamp}))
+#    return jsonify(result="Success : User vote was added")
+#
+#
+# #TODO
+# def _getIfVotingRelationshipExists(currentParticipant, idea, vote_type):
+#     return False
