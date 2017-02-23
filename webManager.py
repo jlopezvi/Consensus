@@ -1,9 +1,10 @@
 from py2neo import neo4j
-from participantManager import _get_participant_node, get_participant_followers, _verifyEmail
+from participantManager import _get_participant_node, _verifyEmail, getFullNameByEmail_aux
 from ideaManager import get_idea_data
-from utils import getGraph
-from flask import jsonify, render_template
+from utils import getGraph, send_email
+from flask import jsonify, render_template, url_for
 from uuid_token import generate_confirmation_token, confirm_token
+
 
 def ideas_for_newsfeed_aux(participant_email):
     participant = _get_participant_node(participant_email)
@@ -65,7 +66,7 @@ def registration_send_invitation_aux(host_email, guest_email):
     token = generate_confirmation_token(host_email)
     confirm_url = url_for('.registration_from_invitation', token=token, guest_email=guest_email, _external=True)
     html = render_template('login/invitation_email.html', confirm_url=confirm_url)
-    subject = ''.join([getFullNameByEmail(host_email), " invites you to join Consensus"])
+    subject = ''.join([getFullNameByEmail_aux(host_email), " invites you to join Consensus"])
     send_email(guest_email, subject, html)
     return jsonify({'result': 'email sent'})
 

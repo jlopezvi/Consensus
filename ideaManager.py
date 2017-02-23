@@ -50,7 +50,19 @@ def add_idea_to_user_aux(user_email, idea_dict, ideapic_file_body):
     return jsonify({"result":"OK", "result_msg":"added idea to database"})
 
 
-def get_ideas_created_by_participant_aux(currentuser_email, participant_email):
+# input: participant email
+# output: json {'ideas': [idea_node1, idea_node2,...] }
+def get_ideas_created_by_participant(participant_email):
+    participant = _get_participant_node(participant_email)
+    ideas=[]
+    rels = list(getGraph().match(start_node=participant, rel_type="CREATED"))
+    for rel in rels:
+        idea = get_idea_data(rel.end_node)
+        ideas.append(idea)
+    return jsonify({'ideas': ideas})
+
+
+def get_ideas_data_created_by_participant_aux(currentuser_email, participant_email):
     currentuser = _get_participant_node(currentuser_email)
     participant = _get_participant_node(participant_email)
     ifpublicprofile = participant.get_properties()['ifpublicprofile']
@@ -64,9 +76,10 @@ def get_ideas_created_by_participant_aux(currentuser_email, participant_email):
             ideas_data.append(idea_data)
     else:
         ifallowed = False
-    return jsonify({'result': 'OK',"ifallowed": ifallowed,'data': ideas_data})
+    return jsonify({'result': 'OK',"ifallowed": ifallowed,'ideas_data': ideas_data})
 
-# Used by ideas_for_newsfeed_aux / ideas_for_home_aux / get_ideas_created_by_participant_aux
+
+# Used by ideas_for_newsfeed_aux / ideas_for_home_aux / get_ideas_data_created_by_participant_aux
 # Output: << return  idea_data>>
 # idea_data = {
     # 'idea_id' : 12343,

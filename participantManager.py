@@ -238,8 +238,9 @@ def remove_following_contact_to_participant_aux(currentparticipantemail,followin
 
 
 def get_participant_data_aux(currentuser_email, participant_email):
+    from ideaManager import get_ideas_data_created_by_participant_aux
     currentuser = _get_participant_node(currentuser_email)
-    participant=_get_participant_node(participant_email)
+    participant = _get_participant_node(participant_email)
     ifpublicprofile = participant.get_properties()['ifpublicprofile']
     participant_data= {}
     if participant_email == currentuser_email or _getIfContactRelationshipExists(participant, currentuser) is True \
@@ -248,18 +249,18 @@ def get_participant_data_aux(currentuser_email, participant_email):
         profilepic_url = participant.get_properties()['profilepic_url']
         username = participant.get_properties()['username']
         fullname = participant.get_properties()['fullname']
-        participant_followers = get_participant_followers(participant_email)
-        participant_followings = get_participant_followings(participant_email)
-        active_publications = getIdeas_Activepublications(participant_email)
+        followers_num = len(get_participant_followers(participant_email))
+        followings_num = len(get_participant_followings(participant_email))
+        ideas_num = len(get_ideas_data_created_by_participant_aux(participant_email))
         participant_data.update({'id': participant_email,'profilepic_url': profilepic_url,
                                  'username' : username, 'fullname': fullname,
-                                 'active_publications_num' : len(active_publications),
-                                 'followers_num' : len(participant_followers),
-                                 'followings_num': len(participant_followings)})
-        return jsonify({"result":"OK", "ifallowed": ifallowed, "participant_data":participant_data})
+                                 'ideas_num' : ideas_num,
+                                 'followers_num': followers_num,
+                                 'followings_num': followings_num})
+        return jsonify({"result":"OK", "ifallowed": ifallowed, "participant_data": participant_data})
     else:
         ifallowed = False
-        return jsonify({"result":"OK", 'ifallowed': ifallowed, "participant_data":participant_data})
+        return jsonify({"result":"OK", 'ifallowed': ifallowed, "participant_data": participant_data})
 
 
 #input: participant_email
