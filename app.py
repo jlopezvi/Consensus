@@ -8,7 +8,8 @@ import ast
 import json
 from communityManager import saveCommunity,deleteCommunity,addCommunityToContact,getCommunities
 from participantManager import _get_participant_node,deleteParticipant,getAllParticipants, \
-    add_following_contact_to_participant_aux,get_participant_followers_info_aux,get_participant_followings_info_aux,\
+    add_following_contact_to_participant_aux, remove_following_contact_to_participant_aux, \
+    get_participant_followers_info_aux,get_participant_followings_info_aux,\
     getFullNameByEmail_aux, registration_aux, _verifyEmail, get_participant_data_aux, modify_participant_data_aux
 from ideaManager import get_ideas_created_by_participant_aux, add_idea_to_user_aux,deleteOneIdea,getAllIdeas, \
     _getIdeaByIdeaIndex, vote_on_idea_aux
@@ -294,10 +295,22 @@ def add_following_contact_to_participant():
     newfollowingcontactemail=request.get_json()['newfollowingcontactemail']
     result=add_following_contact_to_participant_aux(currentparticipantemail,newfollowingcontactemail)
     if result is True:
-        return jsonify({"result": "OK"})
+        return jsonify({"result": "OK", "result_msg": "Following contact was added"})
     else:
-        return jsonify({"result": "Wrong"})
+        return jsonify({"result": "Wrong", "result_msg": "Following contact not possible or exists already"})
 
+
+# input: json with fields "currentparticipantemail" (current user email), "followingcontactemail"
+# output: json  {"result": "OK"/"Wrong"}
+@app.route('/remove_following_contact_to_participant', methods=['POST'])
+def remove_following_contact_to_participant():
+    currentparticipantemail = request.get_json()['currentparticipantemail']
+    followingcontactemail = request.get_json()['followingcontactemail']
+    result = remove_following_contact_to_participant_aux(currentparticipantemail, followingcontactemail)
+    if result is True:
+        return jsonify({"result": "OK", "result_msg": "Following contact was removed"})
+    else:
+        return jsonify({"result": "Wrong", "result_msg": "Following contact does not exist"})
 
 # Input: participant's email, user's email (flask_login.current_user.id)
 # Output: json

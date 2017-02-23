@@ -207,13 +207,13 @@ def _getIfContactRelationshipExists(currentParticipant, newFollowingContact) :
     return False
 
 
-#input: current participant email, new following contact email
-#output:
+# input: current participant email, new following contact email
+# output:
 #   ->  True
 #   ->  False
 #   ->  [False,'Following contact exists already']
 def add_following_contact_to_participant_aux(currentparticipantemail,newfollowingcontactemail) :
-    currentparticipant = _get_participant_node(currentparticipantemail, 'all')  #current's email could be unverified
+    currentparticipant = _get_participant_node(currentparticipantemail, 'all')  # current's email could be unverified
     newfollowingcontact = _get_participant_node(newfollowingcontactemail)
     if (currentparticipant is None) or (newfollowingcontact is None) or (currentparticipantemail is newfollowingcontactemail) :
         return False
@@ -221,6 +221,20 @@ def add_following_contact_to_participant_aux(currentparticipantemail,newfollowin
         return [False,'Following contact exists already']
     getGraph().create((currentparticipant, "FOLLOWS", newfollowingcontact))
     return True
+
+
+# input: current participant email, following contact email
+# output:
+#   ->  True
+#   ->  False
+def remove_following_contact_to_participant_aux(currentparticipantemail,followingcontactemail) :
+    currentparticipant = _get_participant_node(currentparticipantemail, 'all')  # current's email could be unverified
+    followingcontact = _get_participant_node(followingcontactemail)
+    if _getIfContactRelationshipExists(currentparticipant, followingcontact) is True:
+        contact_rel = getGraph().match_one(start_node=currentparticipant, rel_type="FOLLOWS", end_node=followingcontact)
+        getGraph().delete(contact_rel)
+        return True
+    return False
 
 
 def get_participant_data_aux(currentuser_email, participant_email):
