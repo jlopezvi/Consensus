@@ -1,6 +1,6 @@
 from utils import getGraph
 from py2neo import neo4j
-from participantManager import _getParticipantByEmail
+from participantManager import _get_participant_node
 
 
 def saveCommunity(community):
@@ -11,7 +11,7 @@ def saveCommunity(community):
        return "Community %s was successfully added" % community
 
 def addCommunityToContact(name, email):
-    userFound = _getParticipantByEmail(email)
+    userFound = _get_participant_node(email)
     communityFound = _getCommunity(name)
     getGraph().create((userFound, "BELONGS_TO", communityFound))
 

@@ -10,11 +10,10 @@ from user_authentification import User
 import flask_login
 
 
-# TODO: change 'True', 'False', 'None' to True, False, None when calling this function to have a real Python dictionary
 # input: python dict {'fullname':'Juan Lopez','email': 'jj@gmail.com', 'username': 'jlopezvi',
 #              'position': 'employee', 'group': 'IT', 'password': 'MD5password',
-#              'host_email': 'asdf@das' / 'None', 'ifpublicprofile': 'True'/ 'False',
-#              'ifregistrationfromemail': 'True' / 'False'}
+#              'host_email': 'asdf@das' / None, 'ifpublicprofile': True/ False,
+#              'ifregistrationfromemail': True / False}
 #        (file) profilepic_file_body
 # output: json
 #          1. Wrong  -->   {"result":"Wrong","ifemailexists":true,"ifemailexists_msg":ifemailexists_msg[true]}
@@ -29,10 +28,10 @@ def registration_aux(inputdict, profilepic_file_body):
     ifemailverified_msg= ["E-mail not verified. E-mail verification sent. " \
                           "Close this window and check your e-mail within the next few minutes ", None]
     ifhost_msg=[None, "You will be following your host in Consensus"]
-    if _getParticipantByEmail(email,'all'):   # email exists? (Exceptional cases of registration)
+    if _get_participant_node(email, 'all'):   # email exists? (Exceptional cases of registration)
         ifemailexists = True
         ifemailexists_msg = "Participant already exists"
-        if _getParticipantByEmail(email):   # participant's email is verified?
+        if _get_participant_node(email):   # participant's email is verified?
             ifemailverified=True
             return jsonify({"result":"Wrong","ifemailexists":ifemailexists,"ifemailexists_msg":ifemailexists_msg})
         else:
@@ -45,25 +44,23 @@ def registration_aux(inputdict, profilepic_file_body):
     # save data for new (verified / unverified) participant in database
     ifemailverified = inputdict.get('ifregistrationfromemail')
     _newParticipant(inputdict, profilepic_file_body)
-    if ifemailverified =='True':
-        email_verified = True
+    if ifemailverified is True:
         user = User(email)
         flask_login.login_user(user)
     else:
-        email_verified = False
         _registration_send_emailverification(email)
     ifhost = False
-    if inputdict.get('host_email') != 'None':
+    if inputdict.get('host_email') is not None:
         # current_participant (verified/unverified) follows host
         ifhost = add_following_contact_to_participant_aux(email, inputdict.get('host_email'))
     return jsonify({"result":"OK", "ifhost":ifhost, "ifhost_msg":ifhost_msg[ifhost],
-                    "ifemailverified":email_verified, "ifemailverified_msg":ifemailverified_msg[email_verified]})
+                    "ifemailverified":ifemailverified, "ifemailverified_msg":ifemailverified_msg[ifemailverified]})
 
 
 #Used By <registration_aux>
 #input: python dict {'fullname':'Juan Lopez','email': 'jj@gmail.com', 'username': 'jlopezvi',
 #              'position': 'employee', 'group': 'Human Resources', 'password': 'MD5password',
-#              'ifregistrationfromemail': 'True' / 'False', 'ifpublicprofile': 'True' / 'False',}
+#              'ifregistrationfromemail': True / False, 'ifpublicprofile': True / False,}
 #       profilepic_file_body: None/ (file)
 #output: python dict {'result':'OK'}
 def _newParticipant(participantdict,profilepic_file_body):
@@ -80,13 +77,13 @@ def _newParticipant(participantdict,profilepic_file_body):
                                   "profilepic_url" : image_url, "ifsupportingproposalsvisible" : True,
                                   "ifrejectingproposalsvisible": True
                                   })
-    if participantdict.get('ifregistrationfromemail')=='True':
+    if participantdict.get('ifregistrationfromemail') is True:
         newparticipant.add_labels("participant")
         _addToParticipantsIndex(email, newparticipant)
-    elif participantdict.get('ifregistrationfromemail')== 'False':
+    elif participantdict.get('ifregistrationfromemail') is False:
         newparticipant.add_labels("unverified_participant")
         _addToUnverifiedParticipantsIndex(email, newparticipant)
-    return {'result' : 'OK'}
+    return {'result': 'OK'}
 
 #Used By <registration_aux>
 # input: email to be verified as an argument
@@ -107,9 +104,9 @@ def _registration_send_emailverification(email):
 #  -> {'result': 'email not registered'}
 #  -> {'result': 'OK'}
 def _verifyEmail(email):
-    unverifiedparticipant = _getParticipantByEmail(email,False)
+    unverifiedparticipant = _get_participant_node(email, False)
     if unverifiedparticipant is None:
-       if _getParticipantByEmail(email,True):
+       if _get_participant_node(email, True):
            return {'result': 'email already confirmed'}
        else:
            return {'result': 'email not registered'}
@@ -125,7 +122,7 @@ def _verifyEmail(email):
 
 #NOT USED
 def deleteParticipant(email) :
-    participantFound = _getParticipantByEmail(email,'all')
+    participantFound = _get_participant_node(email, 'all')
     participantFound.delete()
 
 #NOT USED
@@ -141,12 +138,13 @@ def _getParticipantsIndex():
 def _getUnverifiedParticipantsIndex():
     return getGraph().get_or_create_index(neo4j.Node, "UnverifiedParticipants")
 
+
 #input: email, ifemailverified_category ('all'/True/False)
 #output:
 #  -> participant_node
 #  -> None
 #TODO: participantFound[0] is a node or a dictionary?
-def _getParticipantByEmail(email, ifemailverified_category=True) :
+def _get_participant_node(email, ifemailverified_category=True) :
     if ifemailverified_category in ('all', True):
         participantFound = _getParticipantsIndex().get("email", email)
         if participantFound:
@@ -165,8 +163,8 @@ def _getParticipantByEmail(email, ifemailverified_category=True) :
 #     return None
 
 def getFullNameByEmail_aux(email):
-    if _getParticipantByEmail(email):
-        fullname=_getParticipantByEmail(email)["fullname"]
+    if _get_participant_node(email):
+        fullname=_get_participant_node(email)["fullname"]
         return fullname
     return None
 
@@ -186,8 +184,8 @@ def _getIfContactRelationshipExists(currentParticipant, newFollowingContact) :
 #   ->  False
 #   ->  [False,'Following contact exists already']
 def add_following_contact_to_participant_aux(currentparticipantemail,newfollowingcontactemail) :
-    currentparticipant = _getParticipantByEmail(currentparticipantemail,'all')  #current's email could be unverified
-    newfollowingcontact = _getParticipantByEmail(newfollowingcontactemail)
+    currentparticipant = _get_participant_node(currentparticipantemail, 'all')  #current's email could be unverified
+    newfollowingcontact = _get_participant_node(newfollowingcontactemail)
     if (currentparticipant is None) or (newfollowingcontact is None) or (currentparticipantemail is newfollowingcontactemail) :
         return False
     if _getIfContactRelationshipExists(currentparticipant, newfollowingcontact) is True:
@@ -196,10 +194,35 @@ def add_following_contact_to_participant_aux(currentparticipantemail,newfollowin
     return True
 
 
+def get_participant_data_aux(currentuser_email, participant_email):
+    currentuser = _get_participant_node(currentuser_email)
+    participant=_get_participant_node(participant_email)
+    ifpublicprofile = participant.get_properties()['ifpublicprofile']
+    participant_data= {}
+    if participant_email == currentuser_email or _getIfContactRelationshipExists(participant, currentuser) is True \
+            or ifpublicprofile is True:
+        ifallowed = True
+        profilepic_url = participant.get_properties()['profilepic_url']
+        username = participant.get_properties()['username']
+        fullname = participant.get_properties()['fullname']
+        participant_followers = get_participant_followers(participant_email)
+        participant_followings = get_participant_followings(participant_email)
+        active_publications = getIdeas_Activepublications(participant_email)
+        participant_data.update({'id': participant_email,'profilepic_url': profilepic_url,
+                                 'username' : username, 'fullname': fullname,
+                                 'active_publications_num' : len(active_publications),
+                                 'followers_num' : len(participant_followers),
+                                 'followings_num': len(participant_followings)})
+        return jsonify({"result":"OK", "ifallowed": ifallowed, "participant_data":participant_data})
+    else:
+        ifallowed = False
+        return jsonify({"result":"OK", 'ifallowed': ifallowed, "participant_data":participant_data})
+
+
 #input: participant_email
 #output: list of nodes of following contacts
 def get_participant_followings(participant_email) :
-    participant = _getParticipantByEmail(participant_email)
+    participant = _get_participant_node(participant_email)
     rels = list(getGraph().match(start_node=participant, rel_type="FOLLOWS"))
     followings = []
     for rel in rels:
@@ -209,7 +232,7 @@ def get_participant_followings(participant_email) :
 #input: participant_email
 #output: list of nodes of follower contacts
 def get_participant_followers(participant_email) :
-    participant = _getParticipantByEmail(participant_email)
+    participant = _get_participant_node(participant_email)
     rels = list(getGraph().match(end_node=participant, rel_type="FOLLOWS"))
     followers = []
     for rel in rels:
@@ -217,30 +240,44 @@ def get_participant_followers(participant_email) :
     return followers
 
 
-def get_participant_followings_info_aux(email):
-    participant=_getParticipantByEmail(email)
-    followings= []
-    participants_followings = get_participant_followings(email)
-    for p in participants_followings:
-        email = p.get_properties()['email']
-        username = p.get_properties()['username']
-        fullname = p.get_properties()['fullname']
-        followings.append({'email' : email, 'username':username, 'fullname' : fullname })
-    return jsonify({"followings_num": len(participants_followings), "followings": followings})
+def get_participant_followings_info_aux(currentuser_email,participant_email):
+    currentuser = _get_participant_node(currentuser_email)
+    participant = _get_participant_node(participant_email)
+    ifpublicprofile = participant.get_properties()['ifpublicprofile']
+    followings_info= []
+    if participant_email == currentuser_email or _getIfContactRelationshipExists(participant, currentuser) is True \
+            or ifpublicprofile is True:
+        ifallowed = True
+        followings = get_participant_followings(participant_email)
+        followings_num = len(followings)
+        for following in followings:
+            email = following.get_properties()['email']
+            username = following.get_properties()['username']
+            fullname = following.get_properties()['fullname']
+            followings_info.append({'email' : email, 'username': username, 'fullname': fullname })
+    else:
+        ifallowed = False
+    return jsonify({"result": "OK", "ifallowed": ifallowed, "followings_num": followings_num, "followings_info": followings_info})
 
 
-def get_participant_followers_info_aux(email):
-    participant=_getParticipantByEmail(email)
-    followers= []
-    participants_followers = get_participant_followers(email)
-    for p in participants_followers:
-        email = p.get_properties()['email']
-        username = p.get_properties()['username']
-        fullname = p.get_properties()['fullname']
-        followers.append({'email' : email, 'username':username, 'fullname' : fullname })
-    return jsonify({"followers_num" : len(participants_followers), "followers": followers})
-
-
+def get_participant_followers_info_aux(currentuser_email,participant_email):
+    currentuser = _get_participant_node(currentuser_email)
+    participant = _get_participant_node(participant_email)
+    ifpublicprofile = participant.get_properties()['ifpublicprofile']
+    followers_info= []
+    if participant_email == currentuser_email or _getIfContactRelationshipExists(participant, currentuser) is True \
+            or ifpublicprofile is True:
+        ifallowed = True
+        followers = get_participant_followers(participant_email)
+        followers_num = len(followers)
+        for follower in followers:
+            email = follower.get_properties()['email']
+            username = follower.get_properties()['username']
+            fullname = follower.get_properties()['fullname']
+            followers_info.append({'email' : email, 'username': username, 'fullname': fullname })
+    else:
+        ifallowed = False
+    return jsonify({"result":"OK", "ifallowed": ifallowed, "followers_num": followers_num, "followers_info": followers_info})
 
 
 def _addToParticipantsIndex(email, newparticipant) :

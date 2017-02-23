@@ -6,8 +6,8 @@ class User(flask_login.UserMixin):
     #def __init__(self, email, password, ifemailverified=None) :
     def __init__(self, email) :
         #TODO: distinguish unverified and verified participants
-        from participantManager import _getParticipantByEmail
-        if _getParticipantByEmail(email,'all') is None:
+        from participantManager import _get_participant_node
+        if _get_participant_node(email, 'all') is None:
             self = None
         else:
             self.id = email

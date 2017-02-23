@@ -1,4 +1,4 @@
-#TODO: change system of looking for new ideas. Erase tagging "IS_NEW_FOR". DIRECT SEARCH
+# TODO: change system of looking for new ideas. Erase tagging "IS_NEW_FOR". DIRECT SEARCH
 import os
 
 from flask import Flask,jsonify,json, flash
@@ -7,9 +7,9 @@ from flask import request,render_template,redirect,url_for
 import ast
 import json
 from communityManager import saveCommunity,deleteCommunity,addCommunityToContact,getCommunities
-from participantManager import _getParticipantByEmail,deleteParticipant,getAllParticipants, \
+from participantManager import _get_participant_node,deleteParticipant,getAllParticipants, \
     add_following_contact_to_participant_aux,get_participant_followers_info_aux,get_participant_followings_info_aux,\
-    getFullNameByEmail_aux, registration_aux, _verifyEmail
+    getFullNameByEmail_aux, registration_aux, _verifyEmail, get_participant_data_aux
 from ideaManager import get_ideas_created_by_participant_aux, add_idea_to_user_aux,deleteOneIdea,getAllIdeas, \
     _getIdeaByIdeaIndex, vote_on_idea_aux
 from webManager import ideas_for_newsfeed_aux, ideas_for_home_aux, registration_receive_emailverification_aux, \
@@ -166,7 +166,7 @@ def home():
 @app.route('/login', methods=['POST'])
 def login():
     login = request.get_json(force=True)
-    user_to_check=_getParticipantByEmail(login['email'])
+    user_to_check=_get_participant_node(login['email'])
     if user_to_check is None :
         return jsonify(result ="Bad e-mail")
 
@@ -177,18 +177,46 @@ def login():
     else:
         return jsonify(result="Bad password")
 
+
 @app.route('/logout')
 def logout():
     flask_login.logout_user()
     return 'Logged out'
 
+
 #input: email
-#output: json {"result" : "Participant found" / "Participant not found" }
-@app.route('/get_participant_by_email/<email>')
-def getParticipantByEmail(email):
-    if _getParticipantByEmail(email,'all'):
-        return jsonify(result="Participant found")
-    return jsonify(result="Participant not found")
+#output: json {"result" : true / false }
+@app.route('/if_participant_exists/<email>')
+def if_participant_exists(email):
+    if _get_participant_node(email, 'all'):
+        return jsonify({"result": True})
+    return jsonify({"result": False})
+
+
+# input: email: new@gmail.com
+# output: JSON
+#       1.  return jsonify({"result":"OK", "ifallowed":true, "participant_data":participant_data })
+    #        participant_data:
+    #        {
+    #            'id': 'email',
+    #            'picture': 'assets/profile/perfil-mediano.png',
+    #            'username': 'John',
+    #            'fullname': 'Juan J. Lopez Villarejo',
+    #            'active_publications': 5,
+    #            'followers': 5,
+    #            'followings': 2
+    #        }
+#       2.  return jsonify({"result":"OK", "ifallowed":false, "participant_data": {} })
+@app.route('/get_participant_data/<email>')
+@flask_login.login_required
+def get_participant_data(email):
+    return get_participant_data_aux(flask_login.current_user.id, email)
+
+
+# Temporary For TEST in ARC
+@app.route('/test_get_participant_data/<user_email>/<participant_email>')
+def test_get_participant_data(user_email,participant_email):
+    return get_participant_data_aux(user_email,participant_email)
 
 
 # input:  multipart/form-data
@@ -208,8 +236,14 @@ def getParticipantByEmail(email):
 @app.route('/registration', methods=['POST'])
 def registration():
     profilepic_file_body = None
-    # TODO: inputdict should be a real python dictionary with True, False and None. Can we use request.form.to_dict ?
-    inputdict=request.form
+    inputdict = request.form.to_dict()
+    # translation of data to a python dictionnary, with True, False, and None
+    if inputdict['ifpublicprofile'] == 'True': inputdict['ifpublicprofile'] = True
+    if inputdict['ifpublicprofile'] == 'False': inputdict['ifpublicprofile'] = False
+    if inputdict['ifregistrationfromemail'] == 'True': inputdict['ifregistrationfromemail'] = True
+    if inputdict['ifregistrationfromemail'] == 'False': inputdict['ifregistrationfromemail'] = False
+    if inputdict['host_email'] == 'None': inputdict['host_email'] = None
+    # if profilepic :
     if 'fileUpload' in request.files:
         profilepic_file_body = request.files['fileUpload']
     return registration_aux(inputdict,profilepic_file_body)
@@ -234,11 +268,11 @@ def add_following_contact_to_participant():
         return jsonify({"result": "Wrong"})
 
 
-# Input: participant's email
+# Input: participant's email, user's email (flask_login.current_user.id)
 # Output: json
 # 		{
 # 		  "followers_num": 1,
-#  		  "followers": [
+#  		  "followers_info": [
 # 		    {
 # 		      "email": "ale@gmail.com",
 # 		      "fullname": "alejandro perez",
@@ -248,13 +282,20 @@ def add_following_contact_to_participant():
 # 		}
 @app.route('/get_participant_followers_info/<email>', methods=['GET'])
 def get_participant_followers_info(email):
-    return get_participant_followers_info_aux(email)
+    return get_participant_followers_info_aux(flask_login.current_user.id, email)
 
 
-# Input: email
-# Output: 	{
+# Temporary For TEST in ARC
+@app.route('/test_get_participant_followers_info/<user_email>/<participant_email>',methods=['GET'])
+def test_get_participant_followers_info(user_email,participant_email):
+    return get_participant_followers_info_aux(user_email,participant_email)
+
+
+# Input: participant's email, user's email (flask_login.current_user.id)
+# Output: 	json
+#         {
 # 		 "followings_num": 2,
-# 		 "followings": [
+# 		 "followings_info": [
 # 		   {
 # 		      "email": "ale@gmail.com",
 # 		      "fullname": "alejandro perez",
@@ -264,12 +305,18 @@ def get_participant_followers_info(email):
 #      		      "email": "adavidsole@gmail.com",
 #  	             "fullname": "Alexis Sole",
 #   	             "username": "alexdsole"
-# 		   }
-#  				     ]
+#              }
+#  		   ]
 # 		}
-@app.route('/get_participant_followings_info/<email>',methods=['GET'])
+@app.route('/get_participant_followings_info/<email>', methods=['GET'])
 def get_participant_followings_info(email):
-    return get_participant_followings_info_aux(email)
+    return get_participant_followings_info_aux(flask_login.current_user.id, email)
+
+
+# Temporary For TEST in ARC
+@app.route('/test_get_participant_followings_info/<user_email>/<participant_email>',methods=['GET'])
+def test_get_participant_followings_info(user_email,participant_email):
+    return get_participant_followings_info_aux(user_email,participant_email)
 
 
 # Not used
@@ -296,9 +343,10 @@ def getAllContacts(email) :
 
 
 # Input: participant's email
-# Output: json with fields "result", "data". "data" contains array with all ideas created by the user
-# {"result": "OK",
-#  "data": [
+# Output: json with fields "result","ifallowed":true/ false, "data". "data" contains array with all ideas created by the user
+# 1. {"result": "OK",
+#     "ifallowed": true,
+#     "data": [
 #    {
 #      "author_email": "new@hotmail.com",
 #      "author_photo_url": "",
@@ -338,12 +386,24 @@ def getAllContacts(email) :
 #      "supporters_num": 0,
 #      "volunteers_goal_num": "11",
 #      "volunteers_num": 0
+#      }
+#     ]
 #    }
- # ]
-#}
-@app.route('/get_ideas_created_by_participant/<email>',methods=['GET'])
-def get_ideas_created_by_participant(email):
-    return get_ideas_created_by_participant_aux(email)
+# 2. {
+#    "data": [],
+#    "ifallowed": false,
+#    "result": "OK"
+#    }
+@app.route('/get_ideas_created_by_participant/<email>')
+@flask_login.login_required
+def ideas_created_by_participant(email):
+    return get_ideas_created_by_participant_aux(flask_login.current_user.id, email)
+
+
+# Temporary For TEST in ARC
+@app.route('/get_ideas_created_by_participant/<user_email>/<participant_email>',methods=['GET'])
+def get_ideas_created_by_participant(user_email,participant_email):
+    return get_ideas_created_by_participant_aux(user_email,participant_email)
 
 
 #   input:  user_email(URL); multipart/form-data

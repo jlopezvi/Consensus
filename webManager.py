@@ -1,12 +1,12 @@
 from py2neo import neo4j
-from participantManager import _getParticipantByEmail, get_participant_followers, _verifyEmail
+from participantManager import _get_participant_node, get_participant_followers, _verifyEmail
 from ideaManager import get_idea_data
 from utils import getGraph
 from flask import jsonify, render_template
 from uuid_token import generate_confirmation_token, confirm_token
 
 def ideas_for_newsfeed_aux(participant_email):
-    participant = _getParticipantByEmail(participant_email)
+    participant = _get_participant_node(participant_email)
     dic = []
     list_ideas = []
     followings_rels = list(getGraph().match(start_node=participant, rel_type="FOLLOWS"))
@@ -35,7 +35,7 @@ def if_isnewideaforparticipant(idea, participant):
 
 
 def ideas_for_home_aux(participant_email, vote_type):
-    participant = _getParticipantByEmail(participant_email)
+    participant = _get_participant_node(participant_email)
     dic = []
     list_ideas = []
     for vote in (list(getGraph().match(start_node=participant, rel_type="VOTED_ON"))):
@@ -130,12 +130,12 @@ def registration_receive_emailverification_aux(token):
 #
 #
 #     author_email = getGraph().match_one(end_node=new_idea_node, rel_type="CREATED").start_node.get_properties()['email']
-#     author_photo_url = _getParticipantByEmail(author_email).get_properties()['image_url']
-#     author_username = _getParticipantByEmail(author_email).get_properties()['username']
+#     author_photo_url = _get_participant_node(author_email).get_properties()['image_url']
+#     author_username = _get_participant_node(author_email).get_properties()['username']
 #     #TODO: add numerical index to ideas
 #     idea_id=0
 #     duration = "2 days"
-#     #duration = time today - _getParticipantByEmail(user_email).get_properties()['timestamp']
+#     #duration = time today - _get_participant_node(user_email).get_properties()['timestamp']
 #     voters_num = len(list(getGraph().match(end_node=new_idea_node, rel_type="VOTED_ON")))
 #     supporters_num = _get_vote_statistics_for_idea(new_idea_node)[0]
 #     #rejectors_num = _get_vote_statistics_for_idea(new_idea_node)[1]
@@ -180,14 +180,14 @@ def registration_receive_emailverification_aux(token):
 #    return (supporters_num,rejectors_num,volunteers_num)
 #
 # # def getNewIdeaForParticipant(participant_email):
-# #     participant=_getParticipantByEmail(participant_email)
+# #     participant=_get_participant_node(participant_email)
 # #     rels = list(getGraph().match(end_node=participant, rel_type="IS NEW FOR"))
 # #     if len(rels) is 0:
 # #         return None
 # #     return rels[0].start_node
 #
 # def getNewIdeaForParticipant(participant_email):
-#      participant=_getParticipantByEmail(participant_email)
+#      participant=_get_participant_node(participant_email)
 #      followings_rels = list(getGraph().match(start_node=participant, rel_type="FOLLOWS"))
 #      if len(followings_rels) is 0:
 #          return None

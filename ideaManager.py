@@ -1,5 +1,5 @@
 from py2neo import neo4j
-from participantManager import _getParticipantByEmail, get_participant_followers
+from participantManager import _get_participant_node, _getIfContactRelationshipExists
 from utils import getGraph, save_file
 from flask import jsonify
 import json
@@ -30,7 +30,7 @@ from datetime import datetime
 # output: json {"result":"OK", "result_msg":"added idea to database"}
 #              {"result":"Wrong", "result_msg":"proposal already exists"}
 def add_idea_to_user_aux(user_email, idea_dict, ideapic_file_body):
-    user = _getParticipantByEmail(user_email)
+    user = _get_participant_node(user_email)
     newidea_index = idea_dict.get('proposal')
     image_url = 'static/images/concerns/social_coffee_break.jpg'
     if _getIdeaByIdeaIndex(newidea_index):
@@ -50,15 +50,21 @@ def add_idea_to_user_aux(user_email, idea_dict, ideapic_file_body):
     return jsonify({"result":"OK", "result_msg":"added idea to database"})
 
 
-def get_ideas_created_by_participant_aux(email):
-    currentUser = _getParticipantByEmail(email)
-    rels = list(getGraph().match(start_node=currentUser, rel_type="CREATED"))
-    list_ideas = []
-    for rel in rels:
-        current_idea = get_idea_data(rel.end_node)
-        list_ideas.append(current_idea)
-    return jsonify({'result': 'OK','data': list_ideas})
-
+def get_ideas_created_by_participant_aux(currentuser_email, participant_email):
+    currentuser = _get_participant_node(currentuser_email)
+    participant = _get_participant_node(participant_email)
+    ifpublicprofile = participant.get_properties()['ifpublicprofile']
+    ideas_data = []
+    if currentuser_email == participant_email or _getIfContactRelationshipExists(participant, currentuser) is True \
+            or ifpublicprofile is True:
+        ifallowed = True
+        rels = list(getGraph().match(start_node=participant, rel_type="CREATED"))
+        for rel in rels:
+            idea_data = get_idea_data(rel.end_node)
+            ideas_data.append(idea_data)
+    else:
+        ifallowed = False
+    return jsonify({'result': 'OK',"ifallowed": ifallowed,'data': ideas_data})
 
 # Used by ideas_for_newsfeed_aux / ideas_for_home_aux / get_ideas_created_by_participant_aux
 # Output: << return  idea_data>>
@@ -82,8 +88,8 @@ def get_ideas_created_by_participant_aux(email):
 def get_idea_data(new_idea_node):
     from app import SUPPORT_RATE_MIN
     author_email = getGraph().match_one(end_node=new_idea_node, rel_type="CREATED").start_node.get_properties()['email']
-    author_photo_url = _getParticipantByEmail(author_email).get_properties()['image_url']
-    author_username = _getParticipantByEmail(author_email).get_properties()['username']
+    author_photo_url = _get_participant_node(author_email).get_properties()['image_url']
+    author_username = _get_participant_node(author_email).get_properties()['username']
     #TODO: add numerical index to ideas
     idea_id=0
     datestamp = datetime.strptime(new_idea_node.get_properties()['datestamp'], '%d.%m.%Y')
@@ -167,7 +173,7 @@ def deleteOneIdea(id):
 
 def getAllIdeas(email):
     print("getAllIdeas")
-    currentUser = _getParticipantByEmail(email)
+    currentUser = _get_participant_node(email)
     rels = list(getGraph().match(start_node=currentUser, rel_type="CREATED"))
     ideas = []
     for rel in rels:
@@ -181,7 +187,7 @@ def vote_on_idea_aux(inputdict):
    idea_proposal=inputdict['idea_proposal']
    vote_timestamp=inputdict['vote_timestamp']
    vote_type=inputdict['vote_type']
-   currentParticipant = _getParticipantByEmail(user_email)
+   currentParticipant = _get_participant_node(user_email)
    idea = _getIdeaByIdeaIndex(idea_proposal)
    if (currentParticipant is None) or (idea is None) :
        return jsonify(result="Failure : Idea or participant non existing")
