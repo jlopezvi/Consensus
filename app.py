@@ -9,7 +9,7 @@ import json
 from communityManager import saveCommunity,deleteCommunity,addCommunityToContact,getCommunities
 from participantManager import _get_participant_node,deleteParticipant,getAllParticipants, \
     add_following_contact_to_participant_aux,get_participant_followers_info_aux,get_participant_followings_info_aux,\
-    getFullNameByEmail_aux, registration_aux, _verifyEmail, get_participant_data_aux
+    getFullNameByEmail_aux, registration_aux, _verifyEmail, get_participant_data_aux, modify_participant_data_aux
 from ideaManager import get_ideas_created_by_participant_aux, add_idea_to_user_aux,deleteOneIdea,getAllIdeas, \
     _getIdeaByIdeaIndex, vote_on_idea_aux
 from webManager import ideas_for_newsfeed_aux, ideas_for_home_aux, registration_receive_emailverification_aux, \
@@ -219,7 +219,7 @@ def test_get_participant_data(user_email,participant_email):
     return get_participant_data_aux(user_email,participant_email)
 
 
-# input:  multipart/form-data
+# input:  application/x-www-form-urlencoded
 #        (file) profilepic_file_body
 #   (data dictionary): {"fullname":"Juan Lopez","email": "jj@gmail.com", "username": "jlopezvi",
 #                       "position": "employee", "group": "IT", "password": "MD5password",
@@ -247,6 +247,37 @@ def registration():
     if 'fileUpload' in request.files:
         profilepic_file_body = request.files['fileUpload']
     return registration_aux(inputdict,profilepic_file_body)
+
+
+#TODO  multipart/form-data   or   application/x-www-form-urlencoded ?
+# input:  multipart/form-data   or   application/x-www-form-urlencoded ?
+#        (file) profilepic_file_body
+#     (data dictionary): {"fullname":"Juan Lopez","current_email": "jj@gmail.com", "new_email": "new_email@gmail.com",
+#                       "username": "jlopezvi",
+#                       "position": "employee", "group": "IT", "password": "MD5password",
+#                       "ifpublicprofile": "True"/ "False", "ifsupportingproposalsvisible" : "True"/"False",
+# 			            "ifrejectingproposalsvisible" : "True"/"False"
+#           		    }
+# Output: json
+#           1. {'result': 'Wrong: Email does not exist'}
+#           3. {'result': 'Wrong: New email already exists'}
+# 	        2. {'result': 'OK: Participant data was modified'}
+@app.route('/modify_participant_data', methods=['PUT'])
+def modify_participant_data():
+    profilepic_file_body = None
+    inputdict = request.form.to_dict()
+    # translation of data to a python dictionnary, with True, False, and None
+    if inputdict['ifpublicprofile'] == 'True': inputdict['ifpublicprofile'] = True
+    if inputdict['ifpublicprofile'] == 'False': inputdict['ifpublicprofile'] = False
+    if inputdict['ifsupportingproposalsvisible'] == 'True': inputdict['ifsupportingproposalsvisible'] = True
+    if inputdict['ifsupportingproposalsvisible'] == 'False': inputdict['ifsupportingproposalsvisible'] = False
+    if inputdict['ifrejectingproposalsvisible'] == 'True': inputdict['ifrejectingproposalsvisible'] = True
+    if inputdict['ifrejectingproposalsvisible'] == 'False': inputdict['ifrejectingproposalsvisible'] = False
+
+    if inputdict['host_email'] == 'None': inputdict['host_email'] = None
+    if 'fileUpload' in request.files:
+        profilepic_file_body = request.files['fileUpload']
+    return modify_participant_data_aux(inputdict, profilepic_file_body)
 
 
 #return: Full Name (normal string) corresponding to e-mail
