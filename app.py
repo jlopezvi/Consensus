@@ -1,4 +1,3 @@
-# TODO: change system of looking for new ideas. Erase tagging "IS_NEW_FOR". DIRECT SEARCH
 import os
 
 from flask import Flask,jsonify,json, flash
@@ -65,71 +64,8 @@ def user_loader(email):
 ####    API, WORKING NOW    ####
 ################################
 
-#REPLACE /search-participant with this function /participants
-# @app.route('/participants')
-# def participants():
-#     return render_template('/participants.html')
-@app.route('/search-participant')
-def search_p():
-    return render_template('/search_participant.html')
 
-#TO BE ERASED and REPLACED by two single JSON calls
-@app.route('/participants')
-def participants():
-    participants_p = [
-        {
-            'id': 'id',
-            'picture': 'assets/profile/perfil-mediano.png',
-            'username': 'John',
-            'name': 'Juan J.',
-            'lastname': 'Lopez Villarejo',
-            'active_publications': 5,
-            'followers': 5,
-            'following': 2
-        }
-    ]
-    feed = [
-        {
-            'id': 'id',
-            'picture': 'assets/profile/perfil-mediano.png',
-            'name': 'Daniela',
-            'duration': '2 Days',
-            'supporters_goal': 200,
-            'supporters_current': 5,
-            'volunters_goal': 5,
-            'volunters_current': 2,
-            'image': 'url-to-picture',
-            'problem':  'Some text for the problem',
-            'proposal': 'Some text for the proposal',
-            'liked':
-            [
-                {
-                    'id': 'id',
-                    'name': 'Maria'
-                },
-                {
-                    'id': 'id',
-                    'name': 'Pedro'
-                },
-                {
-                    'id': 'id',
-                    'name': 'Juan'
-                },
-                {
-                    'id': 'id',
-                    'name': 'Jesus'
-                }
-            ],
-            'disliked':
-            [
-                {
-                    'id': 'id',
-                    'name': 'Jose'
-                }
-            ]
-        }
-    ]
-    return render_template('login/participants.html', participants = participants_p, feed = feed)
+
 
 
 ############################################
@@ -154,6 +90,12 @@ def newsfeed():
 #user_email=flask_login.current_user.id
 def home():
     return render_template('login/home.html')
+
+
+@app.route('/participants')
+def participants():
+    return render_template('/participants.html')
+
 
 ##############
 # PARTICIPANT MANAGER
