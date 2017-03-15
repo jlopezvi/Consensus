@@ -9,21 +9,21 @@ from datetime import datetime
 # class Idea:
 #     #                           {'concern':'this is my concern <140',
 #     #                           'proposal':'this is my proposal <140',
-#     #                            'image_url':'.../image.jpg', 'datestamp':'01.12.2012',
+#     #                            'image_url':'.../image.jpg', 'timestamp':'01.12.2012',
 #     #                            'moreinfo':'I have to say this and this and this...',
 #     #                            'supporters_goal_num': 500, 'volunteers_goal_num': 5}
 #     def __init__(self, idea_dict):
 #         self.concern = idea_dict['concern']
 #         self.proposal = idea_dict['proposal']
 #         self.image_url = idea_dict['image_url']
-#         self.datestamp = idea_dict['datestamp']
+#         self.timestamp = idea_dict['timestamp']
 #         self.moreinfo = idea_dict['moreinfo']
 #         self.supporters_goal_num = idea_dict['supporters_goal_num']
 #         self.volunteers_goal_num = idea_dict['volunteers_goal_num']
 
 
 # input: user_email, idea_dict      {"concern" :"we are not social enough in the office",
-#                                   "proposal": "social coffee pause at 4 p.m.", "datestamp":"01.10.2016",
+#                                   "proposal": "social coffee pause at 4 p.m.", "timestamp":"01.10.2016",
 #                                    "moreinfo":"I have to say as well this and this and this...",
 #                                    "supporters_goal_num": 500, "volunteers_goal_num": 5}
 #         ideapic_file_body: None/ (file)
@@ -40,7 +40,7 @@ def add_idea_to_user_aux(user_email, idea_dict, ideapic_file_body):
         filename = str(user_email) + str(datetime.now()) + '.png'
         image_url = save_file(ruta_dest, ideapic_file_body, filename)
     newidea_node, = getGraph().create({"concern": idea_dict.get('concern'), "proposal": idea_dict.get('proposal'),
-                                       "image_url": image_url, "datestamp": idea_dict.get('datestamp'),
+                                       "image_url": image_url, "timestamp": idea_dict.get('timestamp'),
                                        "moreinfo": idea_dict.get('moreinfo'),
                                        "supporters_goal_num": idea_dict.get('supporters_goal_num'),
                                        "volunteers_goal_num": idea_dict.get('volunteers_goal_num')})
@@ -105,8 +105,8 @@ def get_idea_data(new_idea_node):
     author_username = _get_participant_node(author_email).get_properties()['username']
     #TODO: add numerical index to ideas
     idea_id=0
-    datestamp = datetime.strptime(new_idea_node.get_properties()['datestamp'], '%d.%m.%Y')
-    duration = str((datetime.now() - datestamp).days) + ' days'
+    timestamp = datetime.strptime(new_idea_node.get_properties()['timestamp'], '%d.%m.%Y')
+    duration = str((datetime.now() - timestamp).days) + ' days'
     voters_num = len(list(getGraph().match(end_node=new_idea_node, rel_type="VOTED_ON")))
     #TODO: puede ser optimizado
     supporters_num= _get_vote_statistics_for_idea(new_idea_node)[0]
