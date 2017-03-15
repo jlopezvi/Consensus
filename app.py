@@ -10,7 +10,7 @@ from participantManager import _get_participant_node,deleteParticipant,getAllPar
     add_following_contact_to_participant_aux, remove_following_contact_to_participant_aux, \
     get_participant_followers_info_aux,get_participant_followings_info_aux,\
     getFullNameByEmail_aux, registration_aux, _verifyEmail, get_participant_data_aux, modify_participant_data_aux
-from ideaManager import get_ideas_data_created_by_participant_aux, add_idea_to_user_aux,deleteOneIdea,getAllIdeas, \
+from ideaManager import get_ideas_data_created_by_participant_aux, add_idea_to_user_aux, deleteOneIdea,getAllIdeas, \
     _getIdeaByIdeaIndex, vote_on_idea_aux
 from webManager import ideas_for_newsfeed_aux, ideas_for_home_aux, registration_receive_emailverification_aux, \
     registration_from_invitation_aux, registration_send_invitation_aux
@@ -64,8 +64,23 @@ def user_loader(email):
 ####    API, WORKING NOW    ####
 ################################
 
-
-
+#   input:  user_email(URL); multipart/form-data
+#           (file) ideapic_file_body
+#       (data dictionary):  {"concern" :"we are not social enough in the office",
+#                           "proposal": "social coffee pause at 4 p.m.",
+#                           "datestamp":"01.10.2016",
+#			                "moreinfo_concern":"I have to say as well this and this and this about the concern...",
+#                           "moreinfo_proposal":"I have to say as well this and this and this about the proposal...",
+#                           "supporters_goal_num": 500, "volunteers_goal_num": 5}
+#    output: json {"result":"OK", "result_msg":"added idea to database"}
+#                 {"result":"Wrong", "result_msg":"proposal already exists"}
+@app.route('/add_idea_to_user/<string:user_email>', methods=['POST'])
+def add_idea_to_user(user_email) :
+    ideapic_file_body = None
+    idea_dict = request.form
+    if 'fileUpload' in request.files:
+        ideapic_file_body = request.files['fileUpload']
+    return add_idea_to_user_aux(user_email,idea_dict,ideapic_file_body)
 
 
 ############################################
@@ -392,24 +407,6 @@ def get_ideas_data_created_by_participant(email):
 @app.route('/test_get_ideas_data_created_by_participant/<user_email>/<participant_email>',methods=['GET'])
 def test_get_ideas_data_created_by_participant(user_email,participant_email):
     return get_ideas_data_created_by_participant_aux(user_email, participant_email)
-
-
-#   input:  user_email(URL); multipart/form-data
-#           (file) ideapic_file_body
-#       (data dictionary):  {"concern" :"we are not social enough in the office",
-#                           "proposal": "social coffee pause at 4 p.m.",
-#                           "datestamp":"01.10.2016",
-#                           "moreinfo":"I have to say as well this and this and this...",
-#                           "supporters_goal_num": 500, "volunteers_goal_num": 5}
-#    output: json {"result":"OK", "result_msg":"added idea to database"}
-#                 {"result":"Wrong", "result_msg":"proposal already exists"}
-@app.route('/add_idea_to_user/<string:user_email>', methods=['POST'])
-def add_idea_to_user(user_email) :
-    ideapic_file_body = None
-    idea_dict = request.form
-    if 'fileUpload' in request.files:
-        ideapic_file_body = request.files['fileUpload']
-    return add_idea_to_user_aux(user_email,idea_dict,ideapic_file_body)
 
 
 #TODO: format for vote_timestamp

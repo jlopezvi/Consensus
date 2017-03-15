@@ -22,13 +22,7 @@ from datetime import datetime
 #         self.volunteers_goal_num = idea_dict['volunteers_goal_num']
 
 
-# input: user_email, idea_dict      {"concern" :"we are not social enough in the office",
-#                                   "proposal": "social coffee pause at 4 p.m.", "timestamp":"01.10.2016",
-#                                    "moreinfo":"I have to say as well this and this and this...",
-#                                    "supporters_goal_num": 500, "volunteers_goal_num": 5}
-#         ideapic_file_body: None/ (file)
-# output: json {"result":"OK", "result_msg":"added idea to database"}
-#              {"result":"Wrong", "result_msg":"proposal already exists"}
+#Used By < add_idea_to_user >
 def add_idea_to_user_aux(user_email, idea_dict, ideapic_file_body):
     user = _get_participant_node(user_email)
     newidea_index = idea_dict.get('proposal')
@@ -41,7 +35,8 @@ def add_idea_to_user_aux(user_email, idea_dict, ideapic_file_body):
         image_url = save_file(ruta_dest, ideapic_file_body, filename)
     newidea_node, = getGraph().create({"concern": idea_dict.get('concern'), "proposal": idea_dict.get('proposal'),
                                        "image_url": image_url, "timestamp": idea_dict.get('timestamp'),
-                                       "moreinfo": idea_dict.get('moreinfo'),
+                                       "moreinfo_concern": idea_dict.get('moreinfo_concern'),
+                                       "moreinfo_proposal": idea_dict.get('moreinfo_proposal'),
                                        "supporters_goal_num": idea_dict.get('supporters_goal_num'),
                                        "volunteers_goal_num": idea_dict.get('volunteers_goal_num')})
     newidea_node.add_labels("idea")
@@ -165,8 +160,14 @@ def _getIfVotingRelationshipExists(participant, idea) :
 def _ideaIsNewForParticipant(idea,participant) :
     getGraph().create((idea, "IS NEW FOR", participant))
 
+
 def _addIdeaToIndex(proposal, new_idea_node):
     _getIdeasIndex().add("proposal", proposal, new_idea_node)
+
+
+def _removeFromIdeaIndex(proposal, idea_data):
+    _getIdeasIndex().remove("proposal", proposal, idea_data)
+
 
 def _getIdeaByIdeaIndex(idea_index) :
     ideaFound = _getIdeasIndex().get("proposal", idea_index)
