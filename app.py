@@ -11,7 +11,7 @@ from participantManager import _get_participant_node,deleteParticipant,getAllPar
     get_participant_followers_info_aux,get_participant_followings_info_aux,\
     getFullNameByEmail_aux, registration_aux, _verifyEmail, get_participant_data_aux, modify_participant_data_aux
 from ideaManager import get_ideas_data_created_by_participant_aux, add_idea_to_user_aux, deleteOneIdea,getAllIdeas, \
-    _getIdeaByIdeaIndex, vote_on_idea_aux
+    _getIdeaByIdeaIndex, vote_on_idea_aux, modify_idea_aux
 from webManager import ideas_for_newsfeed_aux, ideas_for_home_aux, registration_receive_emailverification_aux, \
     registration_from_invitation_aux, registration_send_invitation_aux
 import logging
@@ -68,7 +68,6 @@ def user_loader(email):
 #           (file) ideapic_file_body
 #       (data dictionary):  {"concern" :"we are not social enough in the office",
 #                           "proposal": "social coffee pause at 4 p.m.",
-#                           "datestamp":"01.10.2016",
 #			                "moreinfo_concern":"I have to say as well this and this and this about the concern...",
 #                           "moreinfo_proposal":"I have to say as well this and this and this about the proposal...",
 #                           "supporters_goal_num": 500, "volunteers_goal_num": 5}
@@ -82,6 +81,24 @@ def add_idea_to_user(user_email) :
         ideapic_file_body = request.files['fileUpload']
     return add_idea_to_user_aux(user_email,idea_dict,ideapic_file_body)
 
+#   input:  user_email(URL); multipart/form-data
+#           (file) ideapic_file_body
+#       (data dictionary):  {"concern" :"we are not social enough in the office",
+#			                "current_proposal": "this is the proposal to be modified",
+#                           "proposal": "this is the new proposal (if is required)",
+#                           "moreinfo_concern":"I have to say as well this and this and this...",
+#                           "moreinfo_proposal":"I have to say as well this and this and this...",
+#                           "supporters_goal_num": 500, "volunteers_goal_num": 5}
+#   Output json :  1./ {"result":"OK", "result_msg":"idea was modified"}
+#		           2./ {"result":"Wrong", "result_msg":"Idea Does not exist"}
+#		           3./ {"result":"Wrong", "result_msg":"proposal already exists"}
+@app.route('/modify_idea/<string:user_email>', methods=['PUT'])
+def modify_idea(user_email):
+    ideapic_file_body = None
+    idea_dict=request.form
+    if 'fileUpload' in request.files:
+        ideapic_file_body = request.files['fileUpload']
+    return modify_idea_aux(user_email, idea_dict, ideapic_file_body)
 
 ############################################
 #  API

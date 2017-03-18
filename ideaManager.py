@@ -3,7 +3,7 @@ from participantManager import _get_participant_node, _getIfContactRelationshipE
 from utils import getGraph, save_file
 from flask import jsonify
 import json
-from datetime import datetime
+from datetime import datetime,date
 
 
 # class Idea:
@@ -33,17 +33,52 @@ def add_idea_to_user_aux(user_email, idea_dict, ideapic_file_body):
         ruta_dest = '/static/images/concerns/'
         filename = str(user_email) + str(datetime.now()) + '.png'
         image_url = save_file(ruta_dest, ideapic_file_body, filename)
+    dateFormat = (datetime.now()).strftime("%d.%m.%Y")
     newidea_node, = getGraph().create({"concern": idea_dict.get('concern'), "proposal": idea_dict.get('proposal'),
-                                       "image_url": image_url, "timestamp": idea_dict.get('timestamp'),
+                                       "image_url": image_url,
                                        "moreinfo_concern": idea_dict.get('moreinfo_concern'),
                                        "moreinfo_proposal": idea_dict.get('moreinfo_proposal'),
-                                       "supporters_goal_num": idea_dict.get('supporters_goal_num'),
-                                       "volunteers_goal_num": idea_dict.get('volunteers_goal_num')})
+                                       "supporters_goal_num": int(idea_dict.get('supporters_goal_num')),
+                                       "volunteers_goal_num": int(idea_dict.get('volunteers_goal_num'))})
     newidea_node.add_labels("idea")
     _addIdeaToIndex(newidea_index, newidea_node)
-    getGraph().create((user, "CREATED", newidea_node))
+    getGraph().create((user, "CREATED", newidea_node, {"timestamp":dateFormat}))
     return jsonify({"result":"OK", "result_msg":"added idea to database"})
 
+#Used By < modify_idea >
+def modify_idea_aux(user_email, idea_dict ,ideapic_file_body):
+    idea_index = idea_dict['current_proposal']
+    idea_data = _getIdeaByIdeaIndex(idea_index)
+    currentParticipant = _get_participant_node(user_email)
+    if idea_data is not None:
+        fields = ['concern','proposal','moreinfo_concern','moreinfo_proposal',
+                   'supporters_goal_num','volunteers_goal_num']
+        data= {}
+        if 'proposal' in idea_dict:
+            idea_index = idea_dict['proposal']
+            if _getIdeaByIdeaIndex(idea_index):
+                return jsonify(result= 'Wrong New Idea: Proposal already exists')
+            dateFormat = (datetime.now()).strftime("%d.%m.%Y")
+            IdeaRelationshipFound = getGraph().match_one(start_node=currentParticipant, rel_type="CREATED", end_node=idea_data)
+            IdeaRelationshipFound["timestamp"] = dateFormat
+            IdeaRelationshipFound["if_proposal_edited"] = True
+            _removeFromIdeaIndex(idea_dict['current_proposal'], idea_data)
+            _addIdeaToIndex(idea_dict['proposal'], idea_data)
+        for k,v in idea_dict.items():
+            if k in fields:
+                if k == 'supporters_goal_num' or k == 'volunteers_goal_num':
+                    data[k]=int(v)
+                else:
+                    data[k]=v
+        for k,v in data.items():
+            idea_data[k]=v
+        if ideapic_file_body is not None:
+            ruta_dest = '/static/images/concerns/'
+            filename = str(user_email) +  str(datetime.now()) +'.png'
+            image_url = save_file(ruta_dest, ideapic_file_body, filename)
+            idea_data["image_url"] = image_url
+        return jsonify(result= 'OK, Idea was modified')
+    return jsonify(result= 'Idea Does not exist')
 
 # input: participant email
 # output: json {'ideas': [idea_node1, idea_node2,...] }
@@ -212,6 +247,12 @@ def vote_on_idea_aux(user_email, inputdict):
             return response
     else:
         response = create_or_modify_voting_relationship_to_given_type(user, idea, vote_type, vote_ifvolunteered, vote_timestamp)
+        supporters_num= _get_vote_statistics_for_idea(idea)[0]
+        volunteers_num=_get_vote_statistics_for_idea(idea)[2]
+        dateFormat = (datetime.now()).strftime("%d.%m.%Y")
+        if supporters_num >= int(idea['supporters_goal_num']):
+            idea["if_successful"] = True
+            idea["if_successful_timestamp"] = dateFormat
         return response
 
 
