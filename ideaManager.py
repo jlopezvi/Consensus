@@ -38,8 +38,8 @@ def add_idea_to_user_aux(user_email, idea_dict, ideapic_file_body):
                                        "image_url": image_url,
                                        "moreinfo_concern": idea_dict.get('moreinfo_concern'),
                                        "moreinfo_proposal": idea_dict.get('moreinfo_proposal'),
-                                       "supporters_goal_num": int(idea_dict.get('supporters_goal_num')),
-                                       "volunteers_goal_num": int(idea_dict.get('volunteers_goal_num'))})
+                                       "supporters_goal_num": idea_dict.get('supporters_goal_num'),
+                                       "volunteers_goal_num": idea_dict.get('volunteers_goal_num')})
     newidea_node.add_labels("idea")
     _addIdeaToIndex(newidea_index, newidea_node)
     getGraph().create((user, "CREATED", newidea_node, {"timestamp":dateFormat}))
@@ -66,10 +66,7 @@ def modify_idea_aux(user_email, idea_dict ,ideapic_file_body):
             _addIdeaToIndex(idea_dict['proposal'], idea_data)
         for k,v in idea_dict.items():
             if k in fields:
-                if k == 'supporters_goal_num' or k == 'volunteers_goal_num':
-                    data[k]=int(v)
-                else:
-                    data[k]=v
+                data[k]=v
         for k,v in data.items():
             idea_data[k]=v
         if ideapic_file_body is not None:
