@@ -94,15 +94,15 @@ def add_idea_to_user(user_email) :
 #   Output json :  1./ {"result":"OK", "result_msg":"idea was modified"}
 #		           2./ {"result":"Wrong", "result_msg":"Idea Does not exist"}
 #		           3./ {"result":"Wrong", "result_msg":"proposal already exists"}
-@app.route('/modify_idea/<string:user_email>', methods=['PUT'])
-def modify_idea(user_email):
+@app.route('/modify_idea', methods=['PUT'])
+def modify_idea():
     ideapic_file_body = None
     idea_dict = request.form.to_dict()
     if idea_dict['supporters_goal_num']: idea_dict['supporters_goal_num'] = int(idea_dict.get('supporters_goal_num'))
     if idea_dict['volunteers_goal_num']: idea_dict['volunteers_goal_num'] = int(idea_dict.get('volunteers_goal_num'))
     if 'fileUpload' in request.files:
         ideapic_file_body = request.files['fileUpload']
-    return modify_idea_aux(user_email, idea_dict, ideapic_file_body)
+    return modify_idea_aux(idea_dict, ideapic_file_body)
 
 ############################################
 #  API
