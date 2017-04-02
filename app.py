@@ -77,6 +77,7 @@ def user_loader(email):
 def add_idea_to_user(user_email) :
     ideapic_file_body = None
     idea_dict = request.form.to_dict()
+    # translation of data to a python dictionary, with integers
     if idea_dict['supporters_goal_num']: idea_dict['supporters_goal_num'] = int(idea_dict.get('supporters_goal_num'))
     if idea_dict['volunteers_goal_num']: idea_dict['volunteers_goal_num'] = int(idea_dict.get('volunteers_goal_num'))
     if 'fileUpload' in request.files:
@@ -98,6 +99,7 @@ def add_idea_to_user(user_email) :
 def modify_idea():
     ideapic_file_body = None
     idea_dict = request.form.to_dict()
+    # translation of data to a python dictionary, with integers
     if idea_dict['supporters_goal_num']: idea_dict['supporters_goal_num'] = int(idea_dict.get('supporters_goal_num'))
     if idea_dict['volunteers_goal_num']: idea_dict['volunteers_goal_num'] = int(idea_dict.get('volunteers_goal_num'))
     if 'fileUpload' in request.files:
@@ -216,7 +218,7 @@ def test_get_participant_data(user_email,participant_email):
 def registration():
     profilepic_file_body = None
     inputdict = request.form.to_dict()
-    # translation of data to a python dictionnary, with True, False, and None
+    # translation of data to a python dictionary, with True, False, and None
     if inputdict['ifpublicprofile'] == 'True': inputdict['ifpublicprofile'] = True
     if inputdict['ifpublicprofile'] == 'False': inputdict['ifpublicprofile'] = False
     if inputdict['ifregistrationfromemail'] == 'True': inputdict['ifregistrationfromemail'] = True
