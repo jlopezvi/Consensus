@@ -11,7 +11,7 @@ from participantManager import _get_participant_node,deleteParticipant,getAllPar
     get_participant_followers_info_aux,get_participant_followings_info_aux,\
     getFullNameByEmail_aux, registration_aux, _verifyEmail, get_participant_data_aux, modify_participant_data_aux
 from ideaManager import get_ideas_data_created_by_participant_aux, add_idea_to_user_aux, deleteOneIdea,getAllIdeas, \
-    _getIdeaByIdeaIndex, vote_on_idea_aux, modify_idea_aux
+    _getIdeaByIdeaIndex, vote_on_idea_aux, modify_idea_aux, remove_notification_to_participant_aux
 from webManager import ideas_for_newsfeed_aux, ideas_for_home_aux, registration_receive_emailverification_aux, \
     registration_from_invitation_aux, registration_send_invitation_aux
 import logging
@@ -105,6 +105,14 @@ def modify_idea():
     if 'fileUpload' in request.files:
         ideapic_file_body = request.files['fileUpload']
     return modify_idea_aux(idea_dict, ideapic_file_body)
+
+
+# TODO: DOC!!
+@app.route('/remove_notification_to_participant',methods=['POST'])
+def remove_notification_to_participant():
+    email = request.get_json()['email']
+    proposal_index = request.get_json()['proposal']
+    return remove_notification_to_participant_aux(email, proposal_index)
 
 ############################################
 #  API

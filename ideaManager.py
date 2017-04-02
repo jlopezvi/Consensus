@@ -45,10 +45,12 @@ def add_idea_to_user_aux(user_email, idea_dict, ideapic_file_body):
     getGraph().create((user, "CREATED", newidea_node, {"timestamp":dateFormat}))
     return jsonify({"result":"OK", "result_msg":"added idea to database"})
 
-#Used By < modify_idea >
-def modify_idea_aux(idea_dict ,ideapic_file_body):
+
+# Used By < modify_idea >
+def modify_idea_aux(user_email, idea_dict,ideapic_file_body):
     idea_index = idea_dict['current_proposal']
     idea_data = _getIdeaByIdeaIndex(idea_index)
+    user = _get_participant_node(user_email)
     if idea_data is not None:
         fields = ['concern','proposal','moreinfo_concern','moreinfo_proposal',
                    'supporters_goal_num','volunteers_goal_num']
@@ -58,11 +60,12 @@ def modify_idea_aux(idea_dict ,ideapic_file_body):
             if _getIdeaByIdeaIndex(idea_index):
                 return jsonify(result= 'Wrong New Idea: Proposal already exists')
             dateFormat = (datetime.now()).strftime("%d.%m.%Y")
-            IdeaRelationshipFound = getGraph().match_one(rel_type="CREATED", end_node=idea_data)
+            IdeaRelationshipFound = getGraph().match_one(start_node=user, rel_type="CREATED", end_node=idea_data)
             IdeaRelationshipFound["timestamp"] = dateFormat
             IdeaRelationshipFound["if_proposal_edited"] = True
             _removeFromIdeaIndex(idea_dict['current_proposal'], idea_data)
             _addIdeaToIndex(idea_dict['proposal'], idea_data)
+            add_notification_to_participants(idea_data, 'edited')
         for k,v in idea_dict.items():
             if k in fields:
                 data[k]=v
@@ -70,11 +73,12 @@ def modify_idea_aux(idea_dict ,ideapic_file_body):
             idea_data[k]=v
         if ideapic_file_body is not None:
             ruta_dest = '/static/images/concerns/'
-            filename = str(datetime.now()) +'.png'
+            filename = str(user_email) +  str(datetime.now()) +'.png'
             image_url = save_file(ruta_dest, ideapic_file_body, filename)
             idea_data["image_url"] = image_url
         return jsonify(result= 'OK, Idea was modified')
     return jsonify(result= 'Idea Does not exist')
+
 
 # input: participant email
 # output: json {'ideas': [idea_node1, idea_node2,...] }
@@ -246,9 +250,8 @@ def vote_on_idea_aux(user_email, inputdict):
         supporters_num= _get_vote_statistics_for_idea(idea)[0]
         volunteers_num=_get_vote_statistics_for_idea(idea)[2]
         dateFormat = (datetime.now()).strftime("%d.%m.%Y")
-        if supporters_num >= int(idea['supporters_goal_num']):
-            idea["if_successful"] = True
-            idea["if_successful_timestamp"] = dateFormat
+        if supporters_num >= idea['supporters_goal_num']:
+            add_notification_to_participants(idea, 'successful')
         return response
 
 
@@ -278,23 +281,33 @@ def create_or_modify_voting_relationship_to_given_type(participant, idea, vote_t
         return jsonify({"result": "OK: User vote was created"})
 
 
-#
-# def vote_on_idea_aux(inputdict):
-#    user_email=inputdict['user_email']
-#    idea_proposal=inputdict['idea_proposal']
-#    vote_timestamp=inputdict['vote_timestamp']
-#    vote_type=inputdict['vote_type']
-#    currentParticipant = _get_participant_node(user_email)
-#    idea = _getIdeaByIdeaIndex(idea_proposal)
-#    if (currentParticipant is None) or (idea is None) :
-#        return jsonify(result="Failure : Idea or participant non existing")
-#    #TODO: CASE where voting relationship exists but it is another type!
-#    if _getIfVotingRelationshipExists(currentParticipant, idea, vote_type)==True:
-#        return jsonify(result="Failure : User vote exists already")
-#    getGraph().create((currentParticipant, "VOTED_ON", idea, {"type":vote_type, "timestamp":vote_timestamp}))
-#    return jsonify(result="Success : User vote was added")
-#
-#
-# #TODO
-# def _getIfVotingRelationshipExists(currentParticipant, idea, vote_type):
-#     return False
+# Used By <modify_idea_aux> and <vote_on_idea_aux>
+def add_notification_to_participants(idea, notification_type):
+    timestamp = (datetime.now()).strftime("%d.%m.%Y")
+    for participant in (list(getGraph().match(end_node=idea, rel_type="VOTED_ON"))):
+        notification_rel_found = getGraph().match_one(start_node=idea, rel_type="HAS_NOTIFICATION_FOR", end_node=participant.start_node)
+        if notification_rel_found is None:
+            getGraph().create((idea, "HAS_NOTIFICATION_FOR",participant.start_node, {"type":notification_type,"timestamp":timestamp}))
+        else:
+            notification_rel_found["type"] = notification_type
+            notification_rel_found["timestamp"] = timestamp
+    if notification_type == 'successful':
+        author_participant = getGraph().match_one(rel_type="CREATED", end_node=idea)
+        notification_rel_found = getGraph().match_one(start_node=idea, rel_type="HAS_NOTIFICATION_FOR", end_node=author_participant.start_node)
+        if notification_rel_found is None:
+            getGraph().create((idea, "HAS_NOTIFICATION_FOR", author_participant.start_node, {"type":notification_type,"timestamp":timestamp}))
+        else:
+            notification_rel_found["type"] = notification_type
+            notification_rel_found["timestamp"] = timestamp
+    return
+
+
+# Used By <remove_notification_to_participant>
+def remove_notification_to_participant_aux(email, proposal_index):
+    idea = _getIdeaByIdeaIndex(proposal_index)
+    participant = _get_participant_node(email)
+    notification_rel_found = getGraph().match_one(start_node=idea, rel_type="HAS_NOTIFICATION_FOR", end_node=participant)
+    if notification_rel_found is not None:
+        getGraph().delete(notification_rel_found)
+        return jsonify({"result":"OK", "result_msg":"Notification Relationship was deleted"})
+    return jsonify({"result":"Wrong", "result_msg":"Notification Relationship does not exist"})
