@@ -249,8 +249,7 @@ def vote_on_idea_aux(user_email, inputdict):
         response = create_or_modify_voting_relationship_to_given_type(user, idea, vote_type, vote_ifvolunteered, vote_timestamp)
         supporters_num= _get_vote_statistics_for_idea(idea)[0]
         volunteers_num=_get_vote_statistics_for_idea(idea)[2]
-        dateFormat = (datetime.now()).strftime("%d.%m.%Y")
-        if supporters_num >= idea['supporters_goal_num']:
+        if supporters_num >= (idea['supporters_goal_num']) and volunteers_num >= (idea['volunteers_goal_num']):
             add_notification_to_participants(idea, 'successful')
         return response
 
