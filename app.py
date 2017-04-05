@@ -107,7 +107,10 @@ def modify_idea():
     return modify_idea_aux(idea_dict, ideapic_file_body)
 
 
-# TODO: DOC!!
+# input: json {"email":"asdf@asdf", "proposal":"this is a proposal"}
+# output:
+#   json {"result":"OK", "result_msg":"Notification Relationship was deleted"} /
+#   json {"result":"Wrong", "result_msg":"Notification Relationship does not exist"}
 @app.route('/remove_notification_to_participant',methods=['POST'])
 def remove_notification_to_participant():
     email = request.get_json()['email']

@@ -233,23 +233,44 @@ def getAllIdeas(email):
 
 
 def vote_on_idea_aux(user_email, inputdict):
+    from app import SUPPORT_RATE_MIN
     user = _get_participant_node(user_email)
     idea_proposal=inputdict['idea_proposal']
     idea = _getIdeaByIdeaIndex(idea_proposal)
     vote_type=inputdict['vote_type']
     vote_ifvolunteered=inputdict['vote_ifvolunteered']
     vote_timestamp=inputdict['vote_timestamp']
+    supporters_num= _get_vote_statistics_for_idea(idea)[0]
+    voters_num = len(list(getGraph().match(end_node=idea, rel_type="VOTED_ON")))
+    if voters_num == 0:
+        support_rate = 100
+    else:
+        support_rate = (supporters_num / voters_num)*100
+    if support_rate < support_rate_MIN:
+        support = False
+    else:
+        support = True
     if if_voting_relationship_exists(user,idea):
         if if_voting_relationship_exists_of_given_type(user, idea, vote_type, vote_ifvolunteered):
             return jsonify({'result':'Wrong: User vote exists'})
         else:
             response = create_or_modify_voting_relationship_to_given_type(user, idea, vote_type, vote_ifvolunteered, vote_timestamp)
-            return response
+            supporters_num= _get_vote_statistics_for_idea(idea)[0]
+            volunteers_num=_get_vote_statistics_for_idea(idea)[2]
+            support_rate = (supporters_num / voters_num)*100
+            if support_rate < support_rate_MIN and support == True:
+                add_notification_to_participants(idea, 'failure_warning')
+            if supporters_num >= (idea['supporters_goal_num']) and volunteers_num >= (idea['supporters_goal_num']):
+                add_notification_to_participants(idea, 'successful')
+	    return response
     else:
         response = create_or_modify_voting_relationship_to_given_type(user, idea, vote_type, vote_ifvolunteered, vote_timestamp)
         supporters_num= _get_vote_statistics_for_idea(idea)[0]
         volunteers_num=_get_vote_statistics_for_idea(idea)[2]
-        if supporters_num >= (idea['supporters_goal_num']) and volunteers_num >= (idea['volunteers_goal_num']):
+        support_rate = (supporters_num / voters_num)*100
+        if support_rate < support_rate_MIN and support == True:
+            add_notification_to_participants(idea, 'failure_warning')
+        if supporters_num >= (idea['supporters_goal_num']) and volunteers_num >= (idea['supporters_goal_num']):
             add_notification_to_participants(idea, 'successful')
         return response
 
@@ -283,14 +304,15 @@ def create_or_modify_voting_relationship_to_given_type(participant, idea, vote_t
 # Used By <modify_idea_aux> and <vote_on_idea_aux>
 def add_notification_to_participants(idea, notification_type):
     timestamp = (datetime.now()).strftime("%d.%m.%Y")
-    for participant in (list(getGraph().match(end_node=idea, rel_type="VOTED_ON"))):
-        notification_rel_found = getGraph().match_one(start_node=idea, rel_type="HAS_NOTIFICATION_FOR", end_node=participant.start_node)
-        if notification_rel_found is None:
-            getGraph().create((idea, "HAS_NOTIFICATION_FOR",participant.start_node, {"type":notification_type,"timestamp":timestamp}))
-        else:
-            notification_rel_found["type"] = notification_type
-            notification_rel_found["timestamp"] = timestamp
-    if notification_type == 'successful':
+    if notification_type is not 'failure_warning':
+	    for participant in (list(getGraph().match(end_node=idea, rel_type="VOTED_ON"))):
+		notification_rel_found = getGraph().match_one(start_node=idea, rel_type="HAS_NOTIFICATION_FOR", end_node=participant.start_node)
+		if notification_rel_found is None:
+		    getGraph().create((idea, "HAS_NOTIFICATION_FOR",participant.start_node, {"type":notification_type,"timestamp":timestamp}))
+		else:
+		    notification_rel_found["type"] = notification_type
+		    notification_rel_found["timestamp"] = timestamp
+    if notification_type == 'successful' or notification_type == 'failure_warning':
         author_participant = getGraph().match_one(rel_type="CREATED", end_node=idea)
         notification_rel_found = getGraph().match_one(start_node=idea, rel_type="HAS_NOTIFICATION_FOR", end_node=author_participant.start_node)
         if notification_rel_found is None:
