@@ -33,7 +33,7 @@ def add_idea_to_user_aux(user_email, idea_dict, ideapic_file_body):
         ruta_dest = '/static/images/concerns/'
         filename = str(user_email) + str(datetime.now()) + '.png'
         image_url = save_file(ruta_dest, ideapic_file_body, filename)
-    dateFormat = (datetime.now()).strftime("%d.%m.%Y")
+    timestamp = (datetime.now()).strftime("%d.%m.%Y")
     newidea_node, = getGraph().create({"concern": idea_dict.get('concern'), "proposal": idea_dict.get('proposal'),
                                        "image_url": image_url,
                                        "moreinfo_concern": idea_dict.get('moreinfo_concern'),
@@ -42,7 +42,7 @@ def add_idea_to_user_aux(user_email, idea_dict, ideapic_file_body):
                                        "volunteers_goal_num": idea_dict.get('volunteers_goal_num')})
     newidea_node.add_labels("idea")
     _addIdeaToIndex(newidea_index, newidea_node)
-    getGraph().create((user, "CREATED", newidea_node, {"timestamp":dateFormat}))
+    getGraph().create((user, "CREATED", newidea_node, {"timestamp":timestamp}))
     return jsonify({"result":"OK", "result_msg":"added idea to database"})
 
 

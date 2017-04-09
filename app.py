@@ -188,16 +188,16 @@ def if_participant_exists(email):
 # input: email: new@gmail.com
 # output: JSON
 #       1.  return jsonify({"result":"OK", "ifallowed":true, "participant_data":participant_data })
-    #        participant_data:
-    #        {
-    #            'id': 'email',
-    #            'profilepic_url': 'assets/profile/perfil-mediano.png',
-    #            'username': 'John',
-    #            'fullname': 'Juan J. Lopez Villarejo',
-    #            'ideas_num': 5,
-    #            'followers_num': 5,
-    #            'followings_num': 2
-    #        }
+#        participant_data:
+#        {
+#            'id': 'email',
+#            'profilepic_url': 'assets/profile/perfil-mediano.png',
+#            'username': 'John',
+#            'fullname': 'Juan J. Lopez Villarejo',
+#            'ideas_num': 5,
+#            'followers_num': 5,
+#            'followings_num': 2
+#        }
 #       2.  return jsonify({"result":"OK", "ifallowed":false, "participant_data": {} })
 @app.route('/get_participant_data/<email>')
 @flask_login.login_required
@@ -445,7 +445,7 @@ def test_get_ideas_data_created_by_participant(user_email,participant_email):
 
 #TODO: format for vote_timestamp
 # input   user's email (flask_login.current_user.id)
-#         json {"idea_proposal":"let's do this", "vote_timestamp":    ,
+#         json {"idea_proposal":"let's do this",
 #               "vote_type":"supported/rejected/ignored", "vote_ifvolunteered": true/false}
 # output json  {'result':'Wrong: User vote exists'}
 #              {"result": "OK: User vote was modified"}
