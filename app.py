@@ -30,9 +30,11 @@ from utils import send_email
 app = Flask(__name__)
 # app.debug = True
 app.config.from_object('config.BaseConfig')
+DEBUG=False
 try:
     os.environ['APP_SETTINGS']
     app.config.from_object(os.environ['APP_SETTINGS'])
+    DEBUG = app.config['DEBUG']
 except KeyError:
     pass
 
@@ -153,27 +155,28 @@ def participants():
 
 # input: json {"email":"asdf@asdf", "password":"MD5password"}
 # output:
-#   json {"result":"Bad e-mail"} / json {"result": "Bad password"}
-#   / login cookie and redirection to '/newsfeed'
+#   json {"result":"Wrong: Bad e-mail"} / json {"result": "Wrong: Bad password"}
+#           / login and json {"result": "OK"}
 @app.route('/login', methods=['POST'])
 def login():
     login = request.get_json(force=True)
     user_to_check=_get_participant_node(login['email'])
     if user_to_check is None :
-        return jsonify(result ="Bad e-mail")
-
+        return jsonify({"result":"Wrong: Bad e-mail"})
     if login['password'] == user_to_check['password']:
         user = User(login['email'])
         flask_login.login_user(user)
-        return jsonify(result="Login validated")
+        return jsonify({"result": "OK"})
     else:
-        return jsonify(result="Bad password")
+        return jsonify({"result": "Wrong: Bad password"})
 
 
+# input: user_index logged in
+# output:  json  {"result": "OK"}
 @app.route('/logout')
 def logout():
     flask_login.logout_user()
-    return 'Logged out'
+    return jsonify({"result": "OK"})
 
 
 #input: email
@@ -244,19 +247,27 @@ def registration():
 #TODO  multipart/form-data   or   application/x-www-form-urlencoded ?
 # input:  multipart/form-data   or   application/x-www-form-urlencoded ?
 #        (file) profilepic_file_body
-#     (data dictionary): {"fullname":"Juan Lopez","current_email": "jj@gmail.com", "new_email": "new_email@gmail.com",
+#     (data dictionary): {"fullname":"Juan Lopez", "new_email": "new_email@gmail.com",
 #                       "username": "jlopezvi",
 #                       "position": "employee", "group": "IT", "password": "MD5password",
 #                       "ifpublicprofile": "True"/ "False", "ifsupportingproposalsvisible" : "True"/"False",
 # 			            "ifrejectingproposalsvisible" : "True"/"False"
 #           		    }
 # Output: json
-#           1. {'result': 'Wrong: Email does not exist'}
-#           3. {'result': 'Wrong: New email already exists'}
-# 	        2. {'result': 'OK: Participant data was modified'}
+#           1. {'result': 'Wrong: New e-mail already exists'}
+# 	        2. {'result': 'OK'}
 @app.route('/modify_participant_data', methods=['PUT'])
-def modify_participant_data():
+@app.route('/modify_participant_data/<participant_current_email>', methods=['PUT'])
+def modify_participant_data(participant_current_email=None):
+    if DEBUG and participant_current_email is not None:
+        user_email = participant_current_email
+    else:
+        user_email = flask_login.current_user.id
+
     profilepic_file_body = None
+    if 'fileUpload' in request.files:
+        profilepic_file_body = request.files['fileUpload']
+
     inputdict = request.form.to_dict()
     # translation of data to a python dictionnary, with True, False, and None
     if inputdict['ifpublicprofile'] == 'True': inputdict['ifpublicprofile'] = True
@@ -265,11 +276,9 @@ def modify_participant_data():
     if inputdict['ifsupportingproposalsvisible'] == 'False': inputdict['ifsupportingproposalsvisible'] = False
     if inputdict['ifrejectingproposalsvisible'] == 'True': inputdict['ifrejectingproposalsvisible'] = True
     if inputdict['ifrejectingproposalsvisible'] == 'False': inputdict['ifrejectingproposalsvisible'] = False
-
     if inputdict['host_email'] == 'None': inputdict['host_email'] = None
-    if 'fileUpload' in request.files:
-        profilepic_file_body = request.files['fileUpload']
-    return modify_participant_data_aux(inputdict, profilepic_file_body)
+
+    return modify_participant_data_aux(inputdict, profilepic_file_body, user_email)
 
 
 #return: Full Name (normal string) corresponding to e-mail

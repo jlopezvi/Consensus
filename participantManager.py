@@ -121,32 +121,30 @@ def _verifyEmail(email):
         return {'result': 'OK'}
 
 
-def modify_participant_data_aux(participant_data, profilepic_file_body):
-    email = participant_data['current_email']
-    participant = _get_participant_node(email)
-    if participant is not None:
-        fields = ['email', 'position', 'group', 'password', 'ifsupportingproposalsvisible',
-                  'ifrejectingproposalsvisible',
-                  'username', 'ifpublicprofile', 'fullname']
-        data = {}
-        if 'new_email' in participant_data:
-            email = participant_data['new_email']
-            if _get_participant_node(email, 'all'):  # email exists?
-                return jsonify({'result': 'Wrong: New email already exists'})
-            _removeFromParticipantsIndex(participant_data['current_email'], participant)
-            _addToParticipantsIndex(participant_data['email'], participant)
-        for k, v in participant_data.items():
-            if k in fields:
-                data[k] = v
-        for k, v in data.items():
-            participant[k] = v
-        if profilepic_file_body is not None:
-            ruta_dest = '/static/assets/profile/'
-            filename = str(email) + '.png'
-            image_url = save_file(ruta_dest, profilepic_file_body, filename)
-            participant["profilepic_url"] = image_url
-        return jsonify({'result': 'OK: Participant data was modified'})
-    return jsonify({'result': 'Wrong: Email does not exist'})
+def modify_participant_data_aux(user_data, profilepic_file_body, user_email):
+    participant = _get_participant_node(user_email)
+    fields = ['email', 'position', 'group', 'password', 'ifsupportingproposalsvisible',
+              'ifrejectingproposalsvisible',
+              'username', 'ifpublicprofile', 'fullname']
+    data = {}
+    if 'new_email' in user_data:
+        new_email=user_data['new_email']
+        if _get_participant_node(new_email, 'all'):  # email exists?
+            return jsonify({'result': 'Wrong: New e-mail already exists'})
+        _removeFromParticipantsIndex(user_email, participant)
+        _addToParticipantsIndex(new_email, participant)
+        user_email = new_email
+    for k, v in user_data.items():
+        if k in fields:
+            data[k] = v
+    for k, v in data.items():
+        participant[k] = v
+    if profilepic_file_body is not None:
+        ruta_dest = '/static/assets/profile/'
+        filename = str(user_email) + '.png'
+        image_url = save_file(ruta_dest, profilepic_file_body, filename)
+        participant["profilepic_url"] = image_url
+    return jsonify({'result': 'OK'})
 
 
 #NOT USED
