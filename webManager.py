@@ -1,9 +1,21 @@
 from py2neo import neo4j
-from participantManager import _get_participant_node, _verifyEmail, getFullNameByEmail_aux
+from participantManager import _get_participant_node, _verifyEmail, get_fullname_for_participant_aux
 from ideaManager import get_idea_data
 from utils import getGraph, send_email
 from flask import jsonify, render_template, url_for
 from uuid_token import generate_confirmation_token, confirm_token
+
+
+def get_notifications_for_user_aux(email):
+    participant = _get_participant_node(email)
+    notifications = []
+    current_notification = {}
+    for NotificationRelationshipFound in (list(getGraph().match(end_node= participant ,rel_type="HAS_NOTIFICATION_FOR"))):
+        current_notification.update({'notification_type' : NotificationRelationshipFound["type"],
+                                     'proposal' : NotificationRelationshipFound.start_node['proposal']})
+        notifications.append(current_notification)
+    return jsonify({"result": "OK", "data": notifications})
+
 
 
 def ideas_for_newsfeed_aux(participant_email):
@@ -66,7 +78,7 @@ def registration_send_invitation_aux(host_email, guest_email):
     token = generate_confirmation_token(host_email)
     confirm_url = url_for('.registration_from_invitation', token=token, guest_email=guest_email, _external=True)
     html = render_template('login/invitation_email.html', confirm_url=confirm_url)
-    subject = ''.join([getFullNameByEmail_aux(host_email), " invites you to join Consensus"])
+    subject = ''.join([get_fullname_for_participant_aux(host_email), " invites you to join Consensus"])
     send_email(guest_email, subject, html)
     return jsonify({'result': 'email sent'})
 

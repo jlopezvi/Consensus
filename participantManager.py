@@ -1,5 +1,5 @@
 from py2neo import neo4j
-from flask import jsonify,abort, redirect,url_for, render_template
+from flask import jsonify, abort, redirect,url_for, render_template
 import ast
 import json
 import logging
@@ -52,7 +52,7 @@ def registration_aux(inputdict, profilepic_file_body):
     ifhost = False
     if inputdict.get('host_email') is not None:
         # current_participant (verified/unverified) follows host
-        ifhost = add_following_contact_to_participant_aux(email, inputdict.get('host_email'))
+        ifhost = if_add_following_contact_to_user(email, inputdict.get('host_email'))
     return jsonify({"result":"OK", "ifhost":ifhost, "ifhost_msg":ifhost_msg[ifhost],
                     "ifemailverified":ifemailverified, "ifemailverified_msg":ifemailverified_msg[ifemailverified]})
 
@@ -121,7 +121,7 @@ def _verifyEmail(email):
         return {'result': 'OK'}
 
 
-def modify_participant_data_aux(user_data, profilepic_file_body, user_email):
+def modify_user_data_aux(user_data, profilepic_file_body, user_email):
     participant = _get_participant_node(user_email)
     fields = ['email', 'position', 'group', 'password', 'ifsupportingproposalsvisible',
               'ifrejectingproposalsvisible',
@@ -147,23 +147,10 @@ def modify_participant_data_aux(user_data, profilepic_file_body, user_email):
     return jsonify({'result': 'OK'})
 
 
-#NOT USED
-def deleteParticipant(email) :
-    participantFound = _get_participant_node(email, 'all')
-    participantFound.delete()
-
-#NOT USED
-def getAllParticipants():
-    allnodes = _getParticipantsIndex().query("email:*")
-    participants = []
-    for node in allnodes:
-         participants.append(node.get_properties())
-    return participants
-
-def _getParticipantsIndex():
-    return getGraph().get_or_create_index(neo4j.Node, "Participants")
-def _getUnverifiedParticipantsIndex():
-    return getGraph().get_or_create_index(neo4j.Node, "UnverifiedParticipants")
+def remove_user_aux(user_email) :
+    user = _get_participant_node(user_email, 'all')
+    user.delete()
+    return jsonify({'result': 'OK'})
 
 
 #input: email, ifemailverified_category ('all'/True/False)
@@ -189,11 +176,20 @@ def _get_participant_node(email, ifemailverified_category=True) :
 #          return participantFound[0]
 #     return None
 
-def getFullNameByEmail_aux(email):
-    if _get_participant_node(email):
-        fullname=_get_participant_node(email)["fullname"]
-        return fullname
-    return None
+
+def get_fullname_for_participant_aux(participant_email, user_email):
+    user=_get_participant_node(user_email)
+    participant = _get_participant_node(participant_email)
+    ifpublicprofile = participant.get_properties()['ifpublicprofile']
+    fullname=None
+    if participant_email == user_email or _getIfContactRelationshipExists(participant, user) is True \
+            or ifpublicprofile is True:
+        ifallowed = True
+        fullname=participant["fullname"]
+    else:
+        ifallowed = False
+    return jsonify({"result": "OK", "ifallowed": ifallowed, "fullname": fullname})
+
 
 #currentParticipant, newFollowingContact are graph nodes
 def _getIfContactRelationshipExists(currentParticipant, newFollowingContact) :
@@ -202,36 +198,6 @@ def _getIfContactRelationshipExists(currentParticipant, newFollowingContact) :
     print ("contactRelationshipFound",contactRelationshipFound)
     if contactRelationshipFound is not None:
          return True
-    return False
-
-
-# input: current participant email, new following contact email
-# output:
-#   ->  True
-#   ->  False
-#   ->  [False,'Following contact exists already']
-def add_following_contact_to_participant_aux(currentparticipantemail,newfollowingcontactemail) :
-    currentparticipant = _get_participant_node(currentparticipantemail, 'all')  # current's email could be unverified
-    newfollowingcontact = _get_participant_node(newfollowingcontactemail)
-    if (currentparticipant is None) or (newfollowingcontact is None) or (currentparticipantemail is newfollowingcontactemail) :
-        return False
-    if _getIfContactRelationshipExists(currentparticipant, newfollowingcontact) is True:
-        return [False,'Following contact exists already']
-    getGraph().create((currentparticipant, "FOLLOWS", newfollowingcontact))
-    return True
-
-
-# input: current participant email, following contact email
-# output:
-#   ->  True
-#   ->  False
-def remove_following_contact_to_participant_aux(currentparticipantemail,followingcontactemail) :
-    currentparticipant = _get_participant_node(currentparticipantemail, 'all')  # current's email could be unverified
-    followingcontact = _get_participant_node(followingcontactemail)
-    if _getIfContactRelationshipExists(currentparticipant, followingcontact) is True:
-        contact_rel = getGraph().match_one(start_node=currentparticipant, rel_type="FOLLOWS", end_node=followingcontact)
-        getGraph().delete(contact_rel)
-        return True
     return False
 
 
@@ -247,23 +213,22 @@ def get_participant_data_aux(currentuser_email, participant_email):
         profilepic_url = participant.get_properties()['profilepic_url']
         username = participant.get_properties()['username']
         fullname = participant.get_properties()['fullname']
-        followers_num = len(get_participant_followers(participant_email))
-        followings_num = len(get_participant_followings(participant_email))
+        followers_num = len(_get_participant_followers(participant_email))
+        followings_num = len(_get_participant_followings(participant_email))
         ideas_num = len(get_ideas_data_created_by_participant_aux(participant_email))
         participant_data.update({'id': participant_email,'profilepic_url': profilepic_url,
                                  'username' : username, 'fullname': fullname,
                                  'ideas_num' : ideas_num,
                                  'followers_num': followers_num,
                                  'followings_num': followings_num})
-        return jsonify({"result":"OK", "ifallowed": ifallowed, "participant_data": participant_data})
     else:
         ifallowed = False
-        return jsonify({"result":"OK", 'ifallowed': ifallowed, "participant_data": participant_data})
+    return jsonify({"result":"OK", 'ifallowed': ifallowed, "participant_data": participant_data})
 
 
-#input: participant_email
-#output: list of nodes of following contacts
-def get_participant_followings(participant_email) :
+# input: participant_email
+# output: list of nodes of following contacts
+def _get_participant_followings(participant_email) :
     participant = _get_participant_node(participant_email)
     rels = list(getGraph().match(start_node=participant, rel_type="FOLLOWS"))
     followings = []
@@ -271,9 +236,10 @@ def get_participant_followings(participant_email) :
         followings.append(rel.end_node)
     return followings
 
-#input: participant_email
-#output: list of nodes of follower contacts
-def get_participant_followers(participant_email) :
+
+# input: participant_email
+# output: list of nodes of follower contacts
+def _get_participant_followers(participant_email) :
     participant = _get_participant_node(participant_email)
     rels = list(getGraph().match(end_node=participant, rel_type="FOLLOWS"))
     followers = []
@@ -282,44 +248,80 @@ def get_participant_followers(participant_email) :
     return followers
 
 
-def get_participant_followings_info_aux(currentuser_email,participant_email):
-    currentuser = _get_participant_node(currentuser_email)
+def get_participant_followings_info_aux(participant_email, user_email):
+    user = _get_participant_node(user_email)
     participant = _get_participant_node(participant_email)
-    ifpublicprofile = participant.get_properties()['ifpublicprofile']
-    followings_info= []
-    if participant_email == currentuser_email or _getIfContactRelationshipExists(participant, currentuser) is True \
+    ifpublicprofile = participant['ifpublicprofile']
+    followings_info = []
+    if participant_email is user_email or _getIfContactRelationshipExists(participant, user) is True \
             or ifpublicprofile is True:
         ifallowed = True
-        followings = get_participant_followings(participant_email)
+        followings = _get_participant_followings(participant_email)
         followings_num = len(followings)
         for following in followings:
-            email = following.get_properties()['email']
-            username = following.get_properties()['username']
-            fullname = following.get_properties()['fullname']
+            email = following['email']
+            username = following['username']
+            fullname = following['fullname']
             followings_info.append({'email' : email, 'username': username, 'fullname': fullname })
     else:
         ifallowed = False
-    return jsonify({"result": "OK", "ifallowed": ifallowed, "followings_num": followings_num, "followings_info": followings_info})
+        followings = _get_participant_followings(participant_email)
+        followings_num = len(followings)
+    return jsonify({"result":"OK", "ifallowed": ifallowed, "followings_num": followings_num, "followings_info": followings_info})
 
 
-def get_participant_followers_info_aux(currentuser_email,participant_email):
-    currentuser = _get_participant_node(currentuser_email)
+def get_participant_followers_info_aux(participant_email, user_email):
+    user = _get_participant_node(user_email)
     participant = _get_participant_node(participant_email)
-    ifpublicprofile = participant.get_properties()['ifpublicprofile']
-    followers_info= []
-    if participant_email == currentuser_email or _getIfContactRelationshipExists(participant, currentuser) is True \
+    ifpublicprofile = participant['ifpublicprofile']
+    followers_info = []
+    if participant_email is user_email or _getIfContactRelationshipExists(participant, user) is True \
             or ifpublicprofile is True:
         ifallowed = True
-        followers = get_participant_followers(participant_email)
+        followers = _get_participant_followers(participant_email)
         followers_num = len(followers)
         for follower in followers:
-            email = follower.get_properties()['email']
-            username = follower.get_properties()['username']
-            fullname = follower.get_properties()['fullname']
+            email = follower['email']
+            username = follower['username']
+            fullname = follower['fullname']
             followers_info.append({'email' : email, 'username': username, 'fullname': fullname })
     else:
         ifallowed = False
+        followers = _get_participant_followers(participant_email)
+        followers_num = len(followers)
     return jsonify({"result":"OK", "ifallowed": ifallowed, "followers_num": followers_num, "followers_info": followers_info})
+
+
+# USED BY: add_following_contact_to_user() [app.py], registration_aux()
+# input: user email, new following contact email
+# output:
+#   ->  True
+#   ->  False
+#   ->  [False,'Following contact exists already']
+def if_add_following_contact_to_user(user_email, followingcontact_email) :
+    user = _get_participant_node(user_email, 'all')  # current's email could be unverified
+    followingcontact = _get_participant_node(followingcontact_email)
+    if (followingcontact is None) or (followingcontact is user) :
+        return False
+    if _getIfContactRelationshipExists(user, followingcontact) is True:
+        return [False,'Following contact exists already']
+    getGraph().create((user, "FOLLOWS", followingcontact))
+    return True
+
+
+# USED BY: remove_following_contact_to_user() [app.py]
+# input: user email, following contact email
+# output:
+#   ->  True
+#   ->  False
+def if_remove_following_contact_to_user(user_email, followingcontact_email) :
+    user = _get_participant_node(user_email, 'all')  # current's email could be unverified
+    followingcontact = _get_participant_node(followingcontact_email)
+    if _getIfContactRelationshipExists(user, followingcontact) is True:
+        contact_rel = getGraph().match_one(start_node=user, rel_type="FOLLOWS", end_node=followingcontact)
+        getGraph().delete(contact_rel)
+        return True
+    return False
 
 
 def _addToParticipantsIndex(email, newparticipant) :
@@ -330,3 +332,16 @@ def _removeFromParticipantsIndex(email, participant):
     getGraph().get_or_create_index(neo4j.Node, "Participants").remove("email", email, participant)
 def _removeFromUnverifiedParticipantsIndex(email, participant):
     getGraph().get_or_create_index(neo4j.Node, "UnverifiedParticipants").remove("email", email, participant)
+def _getParticipantsIndex():
+    return getGraph().get_or_create_index(neo4j.Node, "Participants")
+def _getUnverifiedParticipantsIndex():
+    return getGraph().get_or_create_index(neo4j.Node, "UnverifiedParticipants")
+
+
+#NOT TESTED
+def get_all_participants_aux():
+    allnodes = _getParticipantsIndex().query("email:*")
+    participants = []
+    for node in allnodes:
+         participants.append(node.get_properties())
+    return participants

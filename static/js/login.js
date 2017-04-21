@@ -256,7 +256,7 @@ $( window ).load(function(){
   if(hostEmail != null){
     $('#email_r').val(guestEmail).prop('disabled', true);
     $.ajax({
-      url: url[0] + "//" + url[2] + '/getFullNameByEmail/'+hostEmail,
+      url: url[0] + "//" + url[2] + '/get_full_name_for_participant/'+hostEmail,
       type: 'GET',
       headers: {
         'Content-Type': 'application/json'

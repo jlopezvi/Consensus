@@ -6,14 +6,15 @@ from flask import request,render_template,redirect,url_for
 import ast
 import json
 from communityManager import saveCommunity,deleteCommunity,addCommunityToContact,getCommunities
-from participantManager import _get_participant_node,deleteParticipant,getAllParticipants, \
-    add_following_contact_to_participant_aux, remove_following_contact_to_participant_aux, \
+from participantManager import _get_participant_node, remove_user_aux, get_all_participants_aux, \
+    if_add_following_contact_to_user, if_remove_following_contact_to_user, \
     get_participant_followers_info_aux,get_participant_followings_info_aux,\
-    getFullNameByEmail_aux, registration_aux, _verifyEmail, get_participant_data_aux, modify_participant_data_aux
+    get_fullname_for_participant_aux, registration_aux, _verifyEmail, get_participant_data_aux, modify_user_data_aux
 from ideaManager import get_ideas_data_created_by_participant_aux, add_idea_to_user_aux, deleteOneIdea,getAllIdeas, \
-    _getIdeaByIdeaIndex, vote_on_idea_aux, modify_idea_aux, remove_notification_to_participant_aux
+    _getIdeaByIdeaIndex, vote_on_idea_aux, modify_idea_aux, remove_notification_to_participant_aux, \
+    do_tasks_for_idea_edited
 from webManager import ideas_for_newsfeed_aux, ideas_for_home_aux, registration_receive_emailverification_aux, \
-    registration_from_invitation_aux, registration_send_invitation_aux
+    registration_from_invitation_aux, registration_send_invitation_aux, get_notifications_for_user_aux
 import logging
 import flask_login
 from user_authentification import User
@@ -66,47 +67,9 @@ def user_loader(email):
 ####    API, WORKING NOW    ####
 ################################
 
-#   input:  user_email(URL); multipart/form-data
-#           (file) ideapic_file_body
-#       (data dictionary):  {"concern" :"we are not social enough in the office",
-#                           "proposal": "social coffee pause at 4 p.m.",
-#			                "moreinfo_concern":"I have to say as well this and this and this about the concern...",
-#                           "moreinfo_proposal":"I have to say as well this and this and this about the proposal...",
-#                           "supporters_goal_num": 500, "volunteers_goal_num": 5}
-#    output: json {"result":"OK", "result_msg":"added idea to database"}
-#                 {"result":"Wrong", "result_msg":"proposal already exists"}
-@app.route('/add_idea_to_user/<string:user_email>', methods=['POST'])
-def add_idea_to_user(user_email) :
-    ideapic_file_body = None
-    idea_dict = request.form.to_dict()
-    # translation of data to a python dictionary, with integers
-    if idea_dict['supporters_goal_num']: idea_dict['supporters_goal_num'] = int(idea_dict.get('supporters_goal_num'))
-    if idea_dict['volunteers_goal_num']: idea_dict['volunteers_goal_num'] = int(idea_dict.get('volunteers_goal_num'))
-    if 'fileUpload' in request.files:
-        ideapic_file_body = request.files['fileUpload']
-    return add_idea_to_user_aux(user_email,idea_dict,ideapic_file_body)
-
-#   input:  user_email(URL); multipart/form-data
-#           (file) ideapic_file_body
-#       (data dictionary):  {"concern" :"we are not social enough in the office",
-#			                "current_proposal": "this is the proposal to be modified",
-#                           "proposal": "this is the new proposal (if is required)",
-#                           "moreinfo_concern":"I have to say as well this and this and this...",
-#                           "moreinfo_proposal":"I have to say as well this and this and this...",
-#                           "supporters_goal_num": 500, "volunteers_goal_num": 5}
-#   Output json :  1./ {"result":"OK", "result_msg":"idea was modified"}
-#		           2./ {"result":"Wrong", "result_msg":"Idea Does not exist"}
-#		           3./ {"result":"Wrong", "result_msg":"proposal already exists"}
-@app.route('/modify_idea', methods=['PUT'])
-def modify_idea():
-    ideapic_file_body = None
-    idea_dict = request.form.to_dict()
-    # translation of data to a python dictionary, with integers
-    if idea_dict['supporters_goal_num']: idea_dict['supporters_goal_num'] = int(idea_dict.get('supporters_goal_num'))
-    if idea_dict['volunteers_goal_num']: idea_dict['volunteers_goal_num'] = int(idea_dict.get('volunteers_goal_num'))
-    if 'fileUpload' in request.files:
-        ideapic_file_body = request.files['fileUpload']
-    return modify_idea_aux(idea_dict, ideapic_file_body)
+@app.route('/do_tasks_for_idea_edited_TEST/<idea_index>', methods=['POST'])
+def do_tasks_for_idea_edited_TEST(idea_index):
+    return do_tasks_for_idea_edited(idea_index)
 
 
 # input: json {"email":"asdf@asdf", "proposal":"this is a proposal"}
@@ -179,41 +142,6 @@ def logout():
     return jsonify({"result": "OK"})
 
 
-#input: email
-#output: json {"result" : true / false }
-@app.route('/if_participant_exists/<email>')
-def if_participant_exists(email):
-    if _get_participant_node(email, 'all'):
-        return jsonify({"result": True})
-    return jsonify({"result": False})
-
-
-# input: email: new@gmail.com
-# output: JSON
-#       1.  return jsonify({"result":"OK", "ifallowed":true, "participant_data":participant_data })
-#        participant_data:
-#        {
-#            'id': 'email',
-#            'profilepic_url': 'assets/profile/perfil-mediano.png',
-#            'username': 'John',
-#            'fullname': 'Juan J. Lopez Villarejo',
-#            'ideas_num': 5,
-#            'followers_num': 5,
-#            'followings_num': 2
-#        }
-#       2.  return jsonify({"result":"OK", "ifallowed":false, "participant_data": {} })
-@app.route('/get_participant_data/<email>')
-@flask_login.login_required
-def get_participant_data(email):
-    return get_participant_data_aux(flask_login.current_user.id, email)
-
-
-# Temporary For TEST in ARC
-@app.route('/test_get_participant_data/<user_email>/<participant_email>')
-def test_get_participant_data(user_email,participant_email):
-    return get_participant_data_aux(user_email,participant_email)
-
-
 # input:  application/x-www-form-urlencoded
 #        (file) profilepic_file_body
 #   (data dictionary): {"fullname":"Juan Lopez","email": "jj@gmail.com", "username": "jlopezvi",
@@ -245,7 +173,8 @@ def registration():
 
 
 #TODO  multipart/form-data   or   application/x-www-form-urlencoded ?
-# input:  multipart/form-data   or   application/x-www-form-urlencoded ?
+# input:   user_email  (user logged in)
+#          multipart/form-data   or   application/x-www-form-urlencoded ?
 #        (file) profilepic_file_body
 #     (data dictionary): {"fullname":"Juan Lopez", "new_email": "new_email@gmail.com",
 #                       "username": "jlopezvi",
@@ -256,11 +185,11 @@ def registration():
 # Output: json
 #           1. {'result': 'Wrong: New e-mail already exists'}
 # 	        2. {'result': 'OK'}
-@app.route('/modify_participant_data', methods=['PUT'])
-@app.route('/modify_participant_data/<participant_current_email>', methods=['PUT'])
-def modify_participant_data(participant_current_email=None):
-    if DEBUG and participant_current_email is not None:
-        user_email = participant_current_email
+@app.route('/modify_user_data', methods=['PUT'])
+@app.route('/modify_user_data/<user_email_DEBUG>', methods=['PUT'])
+def modify_user_data(user_email_DEBUG=None):
+    if DEBUG and user_email_DEBUG is not None:
+        user_email = user_email_DEBUG
     else:
         user_email = flask_login.current_user.id
 
@@ -278,106 +207,149 @@ def modify_participant_data(participant_current_email=None):
     if inputdict['ifrejectingproposalsvisible'] == 'False': inputdict['ifrejectingproposalsvisible'] = False
     if inputdict['host_email'] == 'None': inputdict['host_email'] = None
 
-    return modify_participant_data_aux(inputdict, profilepic_file_body, user_email)
+    return modify_user_data_aux(inputdict, profilepic_file_body, user_email)
 
 
-#return: Full Name (normal string) corresponding to e-mail
-@app.route('/getFullNameByEmail/<email>', methods=['GET'])
-def getFullNameByEmail(email):
-    return getFullNameByEmail_aux(email)
+# input:   user_email  (user logged in)
+# output: json {"result": "OK"/"Wrong"}
+@app.route('/remove_user', methods=['DELETE'])
+@app.route('/remove_user/<user_email_DEBUG>', methods=['DELETE'])
+def remove_user(user_email_DEBUG=None) :
+    if DEBUG and user_email_DEBUG is not None:
+        user_email = user_email_DEBUG
+    else:
+        user_email = flask_login.current_user.id
+    return remove_user_aux(user_email)
 
 
-# input: json with fields "currentparticipantemail" (current user email), "newfollowingcontactemail"
+# input: participant_email: new@gmail.com,  user_email (user logged in)
+# output: JSON      [2 possibilities, according to privacy restrictions]
+#       1.  return jsonify({"result":"OK", "ifallowed":true, "participant_data": participant_data })
+#        participant_data:
+#        {
+#            'id': 'email',
+#            'profilepic_url': 'assets/profile/perfil-mediano.png',
+#            'username': 'John',
+#            'fullname': 'Juan J. Lopez Villarejo',
+#            'ideas_num': 5,
+#            'followers_num': 5,
+#            'followings_num': 2
+#        }
+#       2.  return jsonify({"result":"OK", "ifallowed":false, "participant_data": {} })
+@app.route('/get_participant_data/<participant_email>')
+@app.route('/get_participant_data/<participant_email>/<user_email_DEBUG>')
+def get_participant_data(participant_email, user_email_DEBUG=None):
+    if DEBUG and user_email_DEBUG is not None:
+        user_email = user_email_DEBUG
+    else:
+        user_email = flask_login.current_user.id
+    return get_participant_data_aux(user_email, participant_email)
+
+
+# input: email
+# output: json {"result" : true / false }
+@app.route('/if_participant_exists_by_email/<participant_email>')
+def if_participant_exists_by_email(participant_email):
+    if _get_participant_node(participant_email, 'all'):
+        return jsonify({"result": True})
+    return jsonify({"result": False})
+
+
+# input: participant_email, user_email  (user logged in)
+# output: json {"result": "OK", "ifallowed": ifallowed, "fullname": fullname}
+@app.route('/get_fullname_for_participant/<participant_email>', methods=['GET'])
+@app.route('/get_fullname_for_participant/<participant_email>/<user_email_DEBUG>', methods=['GET'])
+def get_fullname_for_participant(participant_email, user_email_DEBUG=None):
+    if DEBUG and user_email_DEBUG is not None:
+        user_email = user_email_DEBUG
+    else:
+        user_email = flask_login.current_user.id
+    return get_fullname_for_participant_aux(participant_email, user_email)
+
+
+# Input: participant's email, user's email (user logged in)
+# Output: json  [2 possibilities, according to privacy restrictions]
+#       1.{"result":"OK", "ifallowed": True,
+# 		   "followers_num": 1,
+#  		   "followers_info": [
+# 		    {
+# 		      "email": "ale@gmail.com",
+# 		      "fullname": "alejandro perez",
+# 		      "username": "ale"
+# 		    }
+# 		   ]
+# 		  }
+#       2.{"result":"OK", "ifallowed": False, "followers_num": 1, "followers_info": []}
+@app.route('/get_participant_followers_info/<participant_email>', methods=['GET'])
+@app.route('/get_participant_followers_info/<participant_email>/<user_email_DEBUG>', methods=['GET'])
+def get_participant_followers_info(participant_email, user_email_DEBUG=None):
+    if DEBUG and user_email_DEBUG is not None:
+        user_email = user_email_DEBUG
+    else:
+        user_email = flask_login.current_user.id
+    return get_participant_followers_info_aux(participant_email, user_email)
+
+
+# Input: participant's email, user's email (user logged in)
+# Output: json  [2 possibilities, according to privacy restrictions]
+#       1.{"result":"OK", "ifallowed": True,
+# 		   "followings_num": 1,
+#  		   "followings_info": [
+# 		    {
+# 		      "email": "ale@gmail.com",
+# 		      "fullname": "alejandro perez",
+# 		      "username": "ale"
+# 		    }
+# 		   ]
+# 		  }
+#       2.{"result":"OK", "ifallowed": False, "followings_num": 1, "followings_info": []}
+@app.route('/get_participant_followings_info/<participant_email>', methods=['GET'])
+@app.route('/get_participant_followings_info/<participant_email>/<user_email_DEBUG>', methods=['GET'])
+def get_participant_followings_info(participant_email, user_email_DEBUG=None):
+    if DEBUG and user_email_DEBUG is not None:
+        user_email = user_email_DEBUG
+    else:
+        user_email = flask_login.current_user.id
+    return get_participant_followings_info_aux(participant_email, user_email)
+
+
+# input: followingcontact email, user email (user logged in)
 # output: json  {"result": "OK"/"Wrong"}
-@app.route('/add_following_contact_to_participant', methods=['POST'])
-def add_following_contact_to_participant():
-    currentparticipantemail=request.get_json()['currentparticipantemail']
-    newfollowingcontactemail=request.get_json()['newfollowingcontactemail']
-    result=add_following_contact_to_participant_aux(currentparticipantemail,newfollowingcontactemail)
+@app.route('/add_following_contact_to_user/<followingcontact_email>', methods=['GET'])
+@app.route('/add_following_contact_to_user/<followingcontact_email>/<user_email_DEBUG>', methods=['GET'])
+def add_following_contact_to_user(followingcontact_email, user_email_DEBUG=None):
+    if DEBUG and user_email_DEBUG is not None:
+        user_email = user_email_DEBUG
+    else:
+        user_email = flask_login.current_user.id
+    result = if_add_following_contact_to_user(followingcontact_email, user_email)
     if result is True:
         return jsonify({"result": "OK", "result_msg": "Following contact was added"})
     else:
         return jsonify({"result": "Wrong", "result_msg": "Following contact not possible or exists already"})
 
 
-# input: json with fields "currentparticipantemail" (current user email), "followingcontactemail"
+# input: followingcontact email, user email (user logged in)
 # output: json  {"result": "OK"/"Wrong"}
-@app.route('/remove_following_contact_to_participant', methods=['POST'])
-def remove_following_contact_to_participant():
-    currentparticipantemail = request.get_json()['currentparticipantemail']
-    followingcontactemail = request.get_json()['followingcontactemail']
-    result = remove_following_contact_to_participant_aux(currentparticipantemail, followingcontactemail)
+@app.route('/remove_following_contact_to_user/<followingcontact_email>', methods=['GET'])
+@app.route('/remove_following_contact_to_user/<followingcontact_email>/<user_email_DEBUG>', methods=['GET'])
+def remove_following_contact_to_user(followingcontact_email, user_email_DEBUG=None):
+    if DEBUG and user_email_DEBUG is not None:
+        user_email = user_email_DEBUG
+    else:
+        user_email = flask_login.current_user.id
+    result = if_remove_following_contact_to_user(followingcontact_email, user_email)
     if result is True:
         return jsonify({"result": "OK", "result_msg": "Following contact was removed"})
     else:
         return jsonify({"result": "Wrong", "result_msg": "Following contact does not exist"})
 
-# Input: participant's email, user's email (flask_login.current_user.id)
-# Output: json
-# 		{
-# 		  "followers_num": 1,
-#  		  "followers_info": [
-# 		    {
-# 		      "email": "ale@gmail.com",
-# 		      "fullname": "alejandro perez",
-# 		      "username": "ale"
-# 		    }
-# 		  ]
-# 		}
-@app.route('/get_participant_followers_info/<email>', methods=['GET'])
-def get_participant_followers_info(email):
-    return get_participant_followers_info_aux(flask_login.current_user.id, email)
 
+#DEBUG
+@app.route('/get_all_participants_DEBUG', methods=['GET','OPTIONS'])
+def get_all_participants_DEBUG():
+    return json.dumps(get_all_participants_aux())
 
-# Temporary For TEST in ARC
-@app.route('/test_get_participant_followers_info/<user_email>/<participant_email>',methods=['GET'])
-def test_get_participant_followers_info(user_email,participant_email):
-    return get_participant_followers_info_aux(user_email,participant_email)
-
-
-# Input: participant's email, user's email (flask_login.current_user.id)
-# Output: 	json
-#         {
-# 		 "followings_num": 2,
-# 		 "followings_info": [
-# 		   {
-# 		      "email": "ale@gmail.com",
-# 		      "fullname": "alejandro perez",
-# 		      "username": "ale"
-# 		   },
-#   		   {
-#      		      "email": "adavidsole@gmail.com",
-#  	             "fullname": "Alexis Sole",
-#   	             "username": "alexdsole"
-#              }
-#  		   ]
-# 		}
-@app.route('/get_participant_followings_info/<email>', methods=['GET'])
-def get_participant_followings_info(email):
-    return get_participant_followings_info_aux(flask_login.current_user.id, email)
-
-
-# Temporary For TEST in ARC
-@app.route('/test_get_participant_followings_info/<user_email>/<participant_email>',methods=['GET'])
-def test_get_participant_followings_info(user_email,participant_email):
-    return get_participant_followings_info_aux(user_email,participant_email)
-
-
-# Not used
-@app.route('/deleteParticipant/<string:email>', methods=['DELETE', 'OPTIONS'])
-def removeParticipant(email) :
-    deleteParticipant(email)
-    return "Participant with email %s was successfully removed" % email
-
-#Not used
-@app.route('/getParticipants', methods=['GET','OPTIONS'])
-def getParticipants():
-    return json.dumps(getAllParticipants())
-
-#Not used
-@app.route('/getAllContactsForParticipant/<string:email>', methods=['GET', 'OPTIONS'])
-def getAllContacts(email) :
-    return json.dumps(getContacts(email))
 
 
 
@@ -385,6 +357,49 @@ def getAllContacts(email) :
 ###############
 # IDEA MANAGER
 ###############
+
+
+#   input:  user_email(URL); multipart/form-data
+#           (file) ideapic_file_body
+#       (data dictionary):  {"concern" :"we are not social enough in the office",
+#                           "proposal": "social coffee pause at 4 p.m.",
+#			                "moreinfo_concern":"I have to say as well this and this and this about the concern...",
+#                           "moreinfo_proposal":"I have to say as well this and this and this about the proposal...",
+#                           "supporters_goal_num": 500, "volunteers_goal_num": 5}
+#    output: json {"result":"OK", "result_msg":"added idea to database"}
+#                 {"result":"Wrong", "result_msg":"proposal already exists"}
+@app.route('/add_idea_to_user/<string:user_email>', methods=['POST'])
+def add_idea_to_user(user_email) :
+    ideapic_file_body = None
+    idea_dict = request.form.to_dict()
+    # translation of data to a python dictionary, with integers
+    if idea_dict['supporters_goal_num']: idea_dict['supporters_goal_num'] = int(idea_dict.get('supporters_goal_num'))
+    if idea_dict['volunteers_goal_num']: idea_dict['volunteers_goal_num'] = int(idea_dict.get('volunteers_goal_num'))
+    if 'fileUpload' in request.files:
+        ideapic_file_body = request.files['fileUpload']
+    return add_idea_to_user_aux(user_email,idea_dict,ideapic_file_body)
+
+#   input:  user_email(URL); multipart/form-data
+#           (file) ideapic_file_body
+#       (data dictionary):  {"concern" :"we are not social enough in the office",
+#			                "current_proposal": "this is the proposal to be modified",
+#                           "proposal": "this is the new proposal (if is required)",
+#                           "moreinfo_concern":"I have to say as well this and this and this...",
+#                           "moreinfo_proposal":"I have to say as well this and this and this...",
+#                           "supporters_goal_num": 500, "volunteers_goal_num": 5}
+#   Output json :  1./ {"result":"OK", "result_msg":"idea was modified"}
+#		           2./ {"result":"Wrong", "result_msg":"Idea Does not exist"}
+#		           3./ {"result":"Wrong", "result_msg":"proposal already exists"}
+@app.route('/modify_idea', methods=['PUT'])
+def modify_idea():
+    ideapic_file_body = None
+    idea_dict = request.form.to_dict()
+    # translation of data to a python dictionary, with integers
+    if idea_dict['supporters_goal_num']: idea_dict['supporters_goal_num'] = int(idea_dict.get('supporters_goal_num'))
+    if idea_dict['volunteers_goal_num']: idea_dict['volunteers_goal_num'] = int(idea_dict.get('volunteers_goal_num'))
+    if 'fileUpload' in request.files:
+        ideapic_file_body = request.files['fileUpload']
+    return modify_idea_aux(idea_dict, ideapic_file_body)
 
 
 # Input: participant's email, user's email (@flask_login.login_required)
@@ -452,7 +467,7 @@ def test_get_ideas_data_created_by_participant(user_email,participant_email):
     return get_ideas_data_created_by_participant_aux(user_email, participant_email)
 
 
-#TODO: format for vote_timestamp
+# TODO: format for vote_timestamp
 # input   user's email (flask_login.current_user.id)
 #         json {"idea_proposal":"let's do this",
 #               "vote_type":"supported/rejected/ignored", "vote_ifvolunteered": true/false}
@@ -460,14 +475,13 @@ def test_get_ideas_data_created_by_participant(user_email,participant_email):
 #              {"result": "OK: User vote was modified"}
 #              {"result": "OK: User vote was created"}
 @app.route('/vote_on_idea',methods=['POST'])
-@flask_login.login_required
-def vote_on_idea():
-    return vote_on_idea_aux(flask_login.current_user.id, request.get_json())
-
-
-@app.route('/test_vote_on_idea/<participant_email>',methods=['POST'])
-def test_vote_on_idea(participant_email):
-    return vote_on_idea_aux(participant_email, request.get_json())
+@app.route('/vote_on_idea/<user_email_DEBUG>',methods=['POST'])
+def vote_on_idea(user_email_DEBUG = None):
+    if DEBUG and user_email_DEBUG is not None:
+        user_email = user_email_DEBUG
+    else:
+        user_email = flask_login.current_user.id
+    return vote_on_idea_aux(user_email, request.get_json())
 
 
 #IDEAS (NOT USED)
@@ -486,6 +500,20 @@ def getConcerns(current):
 ##############
 # WEB MANAGER
 ##############
+
+# input: email: new@gmail.com
+# Output: json
+# {"result":"OK",
+#  "data" : [
+#    {
+#      "notification_type": "successful",
+#      "proposal": "this and this"
+#    }
+#  ]
+# }
+@app.route('/get_notifications_for_user/<email>')
+def get_notifications_for_user(email):
+    return get_notifications_for_user_aux(email)
 
 
 # TODO: try with redirect instead of render_template
