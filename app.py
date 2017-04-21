@@ -199,14 +199,18 @@ def modify_user_data(user_email_DEBUG=None):
 
     inputdict = request.form.to_dict()
     # translation of data to a python dictionnary, with True, False, and None
-    if inputdict['ifpublicprofile'] == 'True': inputdict['ifpublicprofile'] = True
-    if inputdict['ifpublicprofile'] == 'False': inputdict['ifpublicprofile'] = False
-    if inputdict['ifsupportingproposalsvisible'] == 'True': inputdict['ifsupportingproposalsvisible'] = True
-    if inputdict['ifsupportingproposalsvisible'] == 'False': inputdict['ifsupportingproposalsvisible'] = False
-    if inputdict['ifrejectingproposalsvisible'] == 'True': inputdict['ifrejectingproposalsvisible'] = True
-    if inputdict['ifrejectingproposalsvisible'] == 'False': inputdict['ifrejectingproposalsvisible'] = False
-    if inputdict['host_email'] == 'None': inputdict['host_email'] = None
-
+    if 'ifpublicprofile' in inputdict:
+        if inputdict['ifpublicprofile'] == 'True': inputdict['ifpublicprofile'] = True
+        if inputdict['ifpublicprofile'] == 'False': inputdict['ifpublicprofile'] = False
+    if 'ifsupportingproposalsvisible' in inputdict:
+        if inputdict['ifsupportingproposalsvisible'] == 'True': inputdict['ifsupportingproposalsvisible'] = True
+        if inputdict['ifsupportingproposalsvisible'] == 'False': inputdict['ifsupportingproposalsvisible'] = False
+    if 'ifrejectingproposalsvisible' in inputdict:
+        if inputdict['ifrejectingproposalsvisible'] == 'True': inputdict['ifrejectingproposalsvisible'] = True
+        if inputdict['ifrejectingproposalsvisible'] == 'False': inputdict['ifrejectingproposalsvisible'] = False
+    if 'host_email' in inputdict:
+        if inputdict['host_email'] == 'None': inputdict['host_email'] = None
+    #
     return modify_user_data_aux(inputdict, profilepic_file_body, user_email)
 
 
@@ -395,8 +399,9 @@ def modify_idea():
     ideapic_file_body = None
     idea_dict = request.form.to_dict()
     # translation of data to a python dictionary, with integers
-    if idea_dict['supporters_goal_num']: idea_dict['supporters_goal_num'] = int(idea_dict.get('supporters_goal_num'))
-    if idea_dict['volunteers_goal_num']: idea_dict['volunteers_goal_num'] = int(idea_dict.get('volunteers_goal_num'))
+    if 'supporters_goal_num' in idea_dict: idea_dict['supporters_goal_num'] = int(idea_dict.get('supporters_goal_num'))
+    if 'volunteers_goal_num' in idea_dict: idea_dict['volunteers_goal_num'] = int(idea_dict.get('volunteers_goal_num'))
+    #
     if 'fileUpload' in request.files:
         ideapic_file_body = request.files['fileUpload']
     return modify_idea_aux(idea_dict, ideapic_file_body)

@@ -2,7 +2,7 @@ from py2neo import neo4j
 from participantManager import _get_participant_node, _getIfContactRelationshipExists
 from utils import getGraph, save_file, send_email
 from flask import jsonify, render_template
-import json
+import json, uuid
 from datetime import datetime,date
 
 
@@ -26,16 +26,17 @@ from datetime import datetime,date
 def add_idea_to_user_aux(user_email, idea_dict, ideapic_file_body):
     user = _get_participant_node(user_email)
     newidea_index = idea_dict.get('proposal')
+    code_uuid = str(uuid.uuid4())
     image_url = 'static/images/concerns/social_coffee_break.jpg'
     if _getIdeaByIdeaIndex(newidea_index):
         return jsonify({"result":"Wrong", "result_msg":"proposal already exists"})
     if ideapic_file_body is not None:
         ruta_dest = '/static/images/concerns/'
-        filename = str(user_email) + str(datetime.now()) + '.png'
+        filename = code_uuid + '.png'
         image_url = save_file(ruta_dest, ideapic_file_body, filename)
     timestamp = (datetime.now()).strftime("%d.%m.%Y")
     newidea_node, = getGraph().create({"concern": idea_dict.get('concern'), "proposal": idea_dict.get('proposal'),
-                                       "image_url": image_url,
+                                       "image_url": image_url, "uuid" : code_uuid,
                                        "moreinfo_concern": idea_dict.get('moreinfo_concern'),
                                        "moreinfo_proposal": idea_dict.get('moreinfo_proposal'),
                                        "supporters_goal_num": idea_dict.get('supporters_goal_num'),
@@ -60,7 +61,7 @@ def modify_idea_aux(idea_dict,ideapic_file_body):
                 return jsonify(result= 'Wrong New Idea: Proposal already exists')
             _removeFromIdeaIndex(idea_dict['current_proposal'], idea_data)
             _addIdeaToIndex(idea_dict['proposal'], idea_data)
-            do_tasks_for_idea_edited(idea_index)
+            do_tasks_for_idea_edited(idea_data)
         for k,v in idea_dict.items():
             if k in fields:
                 data[k]=v
@@ -68,7 +69,7 @@ def modify_idea_aux(idea_dict,ideapic_file_body):
             idea_data[k]=v
         if ideapic_file_body is not None:
             ruta_dest = '/static/images/concerns/'
-            filename =  str(datetime.now()) +'.png'
+            filename =  idea_data['uuid'] + '.png'
             image_url = save_file(ruta_dest, ideapic_file_body, filename)
             idea_data["image_url"] = image_url
         return jsonify(result= 'OK, Idea was modified')
