@@ -149,6 +149,8 @@ def modify_user_data_aux(user_data, profilepic_file_body, user_email):
 
 def remove_user_aux(user_email) :
     user = _get_participant_node(user_email, 'all')
+    for rel in getGraph().match(start_node=user, bidirectional=True):
+        rel.delete()
     user.delete()
     return jsonify({'result': 'OK'})
 

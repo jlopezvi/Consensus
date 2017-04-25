@@ -7,11 +7,6 @@ from datetime import datetime,date
 
 
 # class Idea:
-#     #                           {'concern':'this is my concern <140',
-#     #                           'proposal':'this is my proposal <140',
-#     #                            'image_url':'.../image.jpg', 'timestamp':'01.12.2012',
-#     #                            'moreinfo':'I have to say this and this and this...',
-#     #                            'supporters_goal_num': 500, 'volunteers_goal_num': 5}
 #     def __init__(self, idea_dict):
 #         self.concern = idea_dict['concern']
 #         self.proposal = idea_dict['proposal']
@@ -22,93 +17,106 @@ from datetime import datetime,date
 #         self.volunteers_goal_num = idea_dict['volunteers_goal_num']
 
 
-#Used By < add_idea_to_user >
+# Used By < add_idea_to_user >
 def add_idea_to_user_aux(user_email, idea_dict, ideapic_file_body):
     user = _get_participant_node(user_email)
     newidea_index = idea_dict.get('proposal')
     code_uuid = str(uuid.uuid4())
     image_url = 'static/images/concerns/social_coffee_break.jpg'
     if _getIdeaByIdeaIndex(newidea_index):
-        return jsonify({"result":"Wrong", "result_msg":"proposal already exists"})
+        return jsonify({"result": "Wrong", "result_msg": "proposal already exists"})
     if ideapic_file_body is not None:
         ruta_dest = '/static/images/concerns/'
         filename = code_uuid + '.png'
         image_url = save_file(ruta_dest, ideapic_file_body, filename)
     timestamp = (datetime.now()).strftime("%d.%m.%Y")
-    newidea_node, = getGraph().create({"concern": idea_dict.get('concern'), "proposal": idea_dict.get('proposal'),
-                                       "image_url": image_url, "uuid" : code_uuid,
-                                       "moreinfo_concern": idea_dict.get('moreinfo_concern'),
-                                       "moreinfo_proposal": idea_dict.get('moreinfo_proposal'),
-                                       "supporters_goal_num": idea_dict.get('supporters_goal_num'),
-                                       "volunteers_goal_num": idea_dict.get('volunteers_goal_num')})
-    newidea_node.add_labels("idea")
-    _addIdeaToIndex(newidea_index, newidea_node)
-    getGraph().create((user, "CREATED", newidea_node, {"timestamp":timestamp}))
+    newidea, = getGraph().create({"concern": idea_dict.get('concern'), "proposal": idea_dict.get('proposal'),
+                                  "image_url": image_url, "uuid" : code_uuid,
+                                  "moreinfo_concern": idea_dict.get('moreinfo_concern'),
+                                  "moreinfo_proposal": idea_dict.get('moreinfo_proposal'),
+                                  "supporters_goal_num": idea_dict.get('supporters_goal_num'),
+                                  "volunteers_goal_num": idea_dict.get('volunteers_goal_num')})
+    newidea.add_labels("idea")
+    _addIdeaToIndex(newidea_index, newidea)
+    getGraph().create((user, "CREATED", newidea, {"timestamp":timestamp}))
     return jsonify({"result":"OK", "result_msg":"added idea to database"})
 
 
 # Used By < modify_idea >
 def modify_idea_aux(idea_dict,ideapic_file_body):
     idea_index = idea_dict['current_proposal']
-    idea_data = _getIdeaByIdeaIndex(idea_index)
-    if idea_data is not None:
-        fields = ['concern','proposal','moreinfo_concern','moreinfo_proposal',
-                   'supporters_goal_num','volunteers_goal_num']
-        data= {}
-        if 'proposal' in idea_dict:
-            idea_index = idea_dict['proposal']
-            if _getIdeaByIdeaIndex(idea_index):
-                return jsonify(result= 'Wrong New Idea: Proposal already exists')
-            _removeFromIdeaIndex(idea_dict['current_proposal'], idea_data)
-            _addIdeaToIndex(idea_dict['proposal'], idea_data)
-            do_tasks_for_idea_edited(idea_data)
-        for k,v in idea_dict.items():
-            if k in fields:
-                data[k]=v
-        for k,v in data.items():
-            idea_data[k]=v
-        if ideapic_file_body is not None:
-            ruta_dest = '/static/images/concerns/'
-            filename =  idea_data['uuid'] + '.png'
-            image_url = save_file(ruta_dest, ideapic_file_body, filename)
-            idea_data["image_url"] = image_url
-        return jsonify(result= 'OK, Idea was modified')
-    return jsonify(result= 'Idea Does not exist')
+    idea = _getIdeaByIdeaIndex(idea_index)
+    fields = ['concern','proposal','moreinfo_concern','moreinfo_proposal',
+              'supporters_goal_num','volunteers_goal_num']
+    data= {}
+    if 'proposal' in idea_dict:
+        idea_index = idea_dict['proposal']
+        if _getIdeaByIdeaIndex(idea_index):
+            return jsonify({"result":"Wrong", "result_msg": "Proposal already exists"})
+        _removeFromIdeaIndex(idea_dict['current_proposal'], idea)
+        _addIdeaToIndex(idea_dict['proposal'], idea)
+        do_tasks_for_idea_edited(idea_index)
+    for k,v in idea_dict.items():
+        if k in fields:
+            data[k]=v
+    for k,v in data.items():
+        idea[k]=v
+    if ideapic_file_body is not None:
+        ruta_dest = '/static/images/concerns/'
+        filename =  idea['uuid'] + '.png'
+        image_url = save_file(ruta_dest, ideapic_file_body, filename)
+        idea["image_url"] = image_url
+    return jsonify({"result":"OK", "result_msg":"Idea was modified"})
 
 
-# input: participant email
-# output: json {'ideas': [idea_node1, idea_node2,...] }
-def get_ideas_created_by_participant(participant_email):
+def remove_idea_aux(idea_index) :
+    idea = _getIdeaByIdeaIndex(idea_index)
+    for rel in getGraph().match(start_node=idea, bidirectional=True):
+        rel.delete()
+    idea.delete()
+    return jsonify({"result":"OK", "result_msg":"Idea was removed"})
+
+
+def get_ideas_created_by_participant_aux(participant_email, user_email):
+    user = _get_participant_node(user_email)
     participant = _get_participant_node(participant_email)
-    ideas=[]
-    rels = list(getGraph().match(start_node=participant, rel_type="CREATED"))
-    for rel in rels:
-        idea = get_idea_data(rel.end_node)
-        ideas.append(idea)
-    return jsonify({'ideas': ideas})
+    ifpublicprofile = participant.get_properties()['ifpublicprofile']
+    ideas_indices=[]
+    if user_email == participant_email or _getIfContactRelationshipExists(participant, user) is True \
+            or ifpublicprofile is True:
+        ifallowed = True
+        ideas=[x.end_node for x in list(getGraph().match(start_node=participant, rel_type="CREATED"))]
+        for idea in ideas:
+            idea_index=idea['proposal']
+            ideas_indices.append(idea_index)
+    else:
+        ifallowed = False
+    return jsonify({"result": "OK", "ifallowed": ifallowed, "ideas_indices": ideas_indices})
 
 
-def get_ideas_data_created_by_participant_aux(currentuser_email, participant_email):
-    currentuser = _get_participant_node(currentuser_email)
+def get_ideas_data_created_by_participant_aux(participant_email, user_email):
+    user = _get_participant_node(user_email)
     participant = _get_participant_node(participant_email)
     ifpublicprofile = participant.get_properties()['ifpublicprofile']
     ideas_data = []
-    if currentuser_email == participant_email or _getIfContactRelationshipExists(participant, currentuser) is True \
+    if user_email == participant_email or _getIfContactRelationshipExists(participant, user) is True \
             or ifpublicprofile is True:
         ifallowed = True
         rels = list(getGraph().match(start_node=participant, rel_type="CREATED"))
         for rel in rels:
-            idea_data = get_idea_data(rel.end_node)
+            idea_data = get_idea_data_aux(rel.end_node)
             ideas_data.append(idea_data)
     else:
         ifallowed = False
     return jsonify({'result': 'OK',"ifallowed": ifallowed,'ideas_data': ideas_data})
 
 
-# Used by ideas_for_newsfeed_aux / ideas_for_home_aux / get_ideas_data_created_by_participant_aux
+# <Used by ideas_for_newsfeed_aux / ideas_for_home_aux / get_ideas_data_created_by_participant_aux
+#    /get_idea_data_DEBUG >
+# input   idea_node
 # Output: << return  idea_data>>
 # idea_data = {
-    # 'idea_id' : 12343,
+    # 'uuid' : unique_identifier_string,
     # 'author_photo_url' : 'assets/profile/perfil-mediano.png', 'author_username' : 'Daniela', 'author_email' : 'a@',
     # 'duration' : '2 days',
     # 'supporters_goal_num' : 200, 'supporters_num' : 5, 'volunteers_goal_num' : 5, 'volunteers_num' : 2,
@@ -124,47 +132,44 @@ def get_ideas_data_created_by_participant_aux(currentuser_email, participant_ema
     # { 'email': 'd@', 'username': 'Elisa' }
     #               ]
     # }
-def get_idea_data(new_idea_node):
+def get_idea_data_aux(idea):
     from app import SUPPORT_RATE_MIN
-    author_email = getGraph().match_one(end_node=new_idea_node, rel_type="CREATED").start_node.get_properties()['email']
-    author_photo_url = _get_participant_node(author_email).get_properties()['image_url']
-    author_username = _get_participant_node(author_email).get_properties()['username']
-    #TODO: add numerical index to ideas
-    idea_id=0
-    timestamp = datetime.strptime(new_idea_node.get_properties()['timestamp'], '%d.%m.%Y')
+    author_email = getGraph().match_one(end_node=idea, rel_type="CREATED").start_node.get_properties()['email']
+    author_photo_url = _get_participant_node(author_email)['image_url']
+    author_username = _get_participant_node(author_email)['username']
+    uuid=idea['uuid']
+    timestamp = datetime.strptime(idea['timestamp'], '%d.%m.%Y')
     duration = str((datetime.now() - timestamp).days) + ' days'
-    voters_num = len(list(getGraph().match(end_node=new_idea_node, rel_type="VOTED_ON")))
-    #TODO: puede ser optimizado
-    supporters_num= _get_vote_statistics_for_idea(new_idea_node)[0]
-    #rejecters_num= getall_vote_properties(new_idea_node)[1]
-    volunteers_num=_get_vote_statistics_for_idea(new_idea_node)[2]
-    if voters_num == 0 :
-        support_rate = 100
-    else:
-        support_rate = (supporters_num / voters_num)*100
-    supporters = []
-    rejectors = []
-    for vote in (list(getGraph().match(end_node=new_idea_node, rel_type="VOTED_ON"))):
-        if vote["type"]== "supported":
-            email = vote.start_node.get_properties()['email']
-            username = vote.start_node.get_properties()['username']
-            supporters.append({'email': email, 'username':username })
-        else:
-            email = vote.start_node.get_properties()['email']
-            username = vote.start_node.get_properties()['username']
-            rejectors.append({'email': email, 'username':username })
-    idea_data=new_idea_node.get_properties()
-    idea_data.update({'idea_id' : idea_id,
-                      'author_photo_url': author_photo_url, 'author_username' : author_username,
-                      'duration': duration,
+    #voters_num = len(list(getGraph().match(end_node=idea, rel_type="VOTED_ON")))
+    supporters_num = _get_vote_statistics_for_idea(idea)[0]
+    rejectors_num = _get_vote_statistics_for_idea(idea)[1]
+    active_voters_num = supporters_num + rejectors_num
+    volunteers_num=_get_vote_statistics_for_idea(idea)[2]
+    support_rate = (supporters_num / active_voters_num) * 100 if active_voters_num is not 0 else 100
+    #
+    vote_rels = list(getGraph().match(end_node=idea, rel_type="VOTED_ON"))
+    supporters_data = []
+    support_rels = [x for x in vote_rels if x["type"] == "supported"]
+    supporters = [x.start_node for x in support_rels]
+    for supporter in supporters:
+        supporters_data.append({'email': supporter['email'], 'username': supporter['username']})
+    rejectors_data = []
+    rejection_rels = [x for x in vote_rels if x["type"] == "rejected"]
+    rejectors = [x.start_node for x in rejection_rels]
+    for rejector in rejectors:
+        rejectors_data.append({'email': rejector['email'], 'username': rejector['username']})
+    #
+    idea_data=idea.get_properties()
+    idea_data.update({'author_photo_url': author_photo_url, 'author_username' : author_username,
+                      'duration': duration, 'uuid': uuid,
                       'author_email' : author_email, 'supporters_num' : supporters_num,
                       'volunteers_num': volunteers_num,
                       'support_rate': support_rate, 'support_rate_MIN': SUPPORT_RATE_MIN,
-                      'supporters' : supporters, 'rejectors' : rejectors})
+                      'supporters' : supporters_data, 'rejectors' : rejectors_data})
     return idea_data
 
 
-#used by get_idea_data
+#used by get_idea_data_aux
 def _get_vote_statistics_for_idea(node_idea):
    rejectors_num=0
    supporters_num=0

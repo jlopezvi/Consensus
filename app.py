@@ -10,8 +10,9 @@ from participantManager import _get_participant_node, remove_user_aux, get_all_p
     if_add_following_contact_to_user, if_remove_following_contact_to_user, \
     get_participant_followers_info_aux,get_participant_followings_info_aux,\
     get_fullname_for_participant_aux, registration_aux, _verifyEmail, get_participant_data_aux, modify_user_data_aux
-from ideaManager import get_ideas_data_created_by_participant_aux, add_idea_to_user_aux, deleteOneIdea,getAllIdeas, \
-    _getIdeaByIdeaIndex, vote_on_idea_aux, modify_idea_aux, remove_notification_to_participant_aux, \
+from ideaManager import get_ideas_data_created_by_participant_aux, get_ideas_created_by_participant_aux,\
+     get_idea_data_aux, add_idea_to_user_aux, deleteOneIdea,getAllIdeas, \
+    _getIdeaByIdeaIndex, vote_on_idea_aux, modify_idea_aux, remove_idea_aux, remove_notification_to_participant_aux, \
     do_tasks_for_idea_edited
 from webManager import ideas_for_newsfeed_aux, ideas_for_home_aux, registration_receive_emailverification_aux, \
     registration_from_invitation_aux, registration_send_invitation_aux, get_notifications_for_user_aux
@@ -363,37 +364,44 @@ def get_all_participants_DEBUG():
 ###############
 
 
-#   input:  user_email(URL); multipart/form-data
+#   input:  user_email (user logged in)
+#           application/x-www-form-urlencoded :
 #           (file) ideapic_file_body
 #       (data dictionary):  {"concern" :"we are not social enough in the office",
 #                           "proposal": "social coffee pause at 4 p.m.",
-#			                "moreinfo_concern":"I have to say as well this and this and this about the concern...",
+#       	                "moreinfo_concern":"I have to say as well this and this and this about the concern...",
 #                           "moreinfo_proposal":"I have to say as well this and this and this about the proposal...",
 #                           "supporters_goal_num": 500, "volunteers_goal_num": 5}
 #    output: json {"result":"OK", "result_msg":"added idea to database"}
 #                 {"result":"Wrong", "result_msg":"proposal already exists"}
+@app.route('/add_idea_to_user', methods=['POST'])
 @app.route('/add_idea_to_user/<string:user_email>', methods=['POST'])
-def add_idea_to_user(user_email) :
+def add_idea_to_user(user_email_DEBUG=None) :
+    if DEBUG and user_email_DEBUG is not None:
+        user_email = user_email_DEBUG
+    else:
+        user_email = flask_login.current_user.id
     ideapic_file_body = None
     idea_dict = request.form.to_dict()
     # translation of data to a python dictionary, with integers
-    if idea_dict['supporters_goal_num']: idea_dict['supporters_goal_num'] = int(idea_dict.get('supporters_goal_num'))
-    if idea_dict['volunteers_goal_num']: idea_dict['volunteers_goal_num'] = int(idea_dict.get('volunteers_goal_num'))
+    if 'supporters_goal_num' in idea_dict: idea_dict['supporters_goal_num'] = int(idea_dict.get('supporters_goal_num'))
+    if 'volunteers_goal_num' in idea_dict: idea_dict['volunteers_goal_num'] = int(idea_dict.get('volunteers_goal_num'))
+    #
     if 'fileUpload' in request.files:
         ideapic_file_body = request.files['fileUpload']
     return add_idea_to_user_aux(user_email,idea_dict,ideapic_file_body)
 
-#   input:  user_email(URL); multipart/form-data
+
+#   input:  application/x-www-form-urlencoded :
 #           (file) ideapic_file_body
 #       (data dictionary):  {"concern" :"we are not social enough in the office",
-#			                "current_proposal": "this is the proposal to be modified",
-#                           "proposal": "this is the new proposal (if is required)",
-#                           "moreinfo_concern":"I have to say as well this and this and this...",
-#                           "moreinfo_proposal":"I have to say as well this and this and this...",
-#                           "supporters_goal_num": 500, "volunteers_goal_num": 5}
-#   Output json :  1./ {"result":"OK", "result_msg":"idea was modified"}
-#		           2./ {"result":"Wrong", "result_msg":"Idea Does not exist"}
-#		           3./ {"result":"Wrong", "result_msg":"proposal already exists"}
+#                            "current_proposal": "this is the proposal to be modified",
+#                            "proposal": "this is the new proposal (if is required)",
+#                            "moreinfo_concern":"I have to say as well this and this and this...",
+#                            "moreinfo_proposal":"I have to say as well this and this and this...",
+#                            "supporters_goal_num": 500, "volunteers_goal_num": 5}
+#   Output json :  1./ {"result":"OK", "result_msg":"Idea was modified"}
+#    	           2./ {"result":"Wrong", "result_msg": "Proposal already exists"}
 @app.route('/modify_idea', methods=['PUT'])
 def modify_idea():
     ideapic_file_body = None
@@ -407,13 +415,45 @@ def modify_idea():
     return modify_idea_aux(idea_dict, ideapic_file_body)
 
 
-# Input: participant's email, user's email (@flask_login.login_required)
+#   input:  json   {"proposal": "text of the proposal"}
+#   Output json :  {"result":"OK", "result_msg":"Idea was removed"}
+@app.route('/remove_idea', methods=['DELETE'])
+def remove_idea():
+    idea_index=request.get_json()['proposal']
+    return remove_idea_aux(idea_index)
+
+
+# Input: participant's email, user's email (user logged in)
+# Output: json with fields "result","ifallowed":true/ false, "ideas_indices".
+# "ideas_indices" contains a list [] with the indices for all the ideas created by the user
+#  There are two possibilities according to privacy restrictions
+# 1. {"result": "OK",
+#     "ifallowed": true,
+#     "ideas_indices": [proposal_of_idea_1, proposal_of_idea_2,...]
+#     }
+# 2. {
+#    "result": "OK"
+#    "ifallowed": false,
+#    "ideas_indices": []
+#    }
+@app.route('/get_ideas_created_by_participant/<participant_email>', methods=['GET'])
+@app.route('/get_ideas_created_by_participant/<participant_email>/<user_email>', methods=['GET'])
+def get_ideas_created_by_participant(participant_email,user_email_DEBUG=None):
+    if DEBUG and user_email_DEBUG is not None:
+        user_email = user_email_DEBUG
+    else:
+        user_email = flask_login.current_user.id
+    return get_ideas_created_by_participant_aux(participant_email,user_email)
+
+
+# Input: participant's email, user's email (user logged in)
 # Output: json with fields "result","ifallowed":true/ false, "ideas_data".
-# "ideas_data" contains array with all ideas created by the user
+# "ideas_data" contains list [] with json data {} for all the ideas created by the user
+#  There are two possibilities according to privacy restrictions
 # 1. {"result": "OK",
 #     "ifallowed": true,
 #     "ideas_data": [
-#    {
+#      {
 #      "author_email": "new@hotmail.com",
 #      "author_photo_url": "",
 #      "author_username": "newmail",
@@ -432,44 +472,31 @@ def modify_idea():
 #      "supporters_num": 0,
 #      "volunteers_goal_num": "5",
 #      "volunteers_num": 0
-#    },
-#    {
-#      "author_email": "new@hotmail.com",
-#      "author_photo_url": "",
-#      "author_username": "newmail",
-#      "concern": "Concern",
-#      "datestamp": "01.10.2016",
-#      "duration": "118 days",
-#      "idea_id": "(9)",
-#      "image_url": "http:myproposal.jpg",
-#      "moreinfo": "this and this...",
-#      "proposal": "IdeaM",
-#      "rejectors": [],
-#      "support_rate": 100,
-#      "support_rate_MIN": 90,
-#      "supporters": [],
-#      "supporters_goal_num": "400",
-#      "supporters_num": 0,
-#      "volunteers_goal_num": "11",
-#      "volunteers_num": 0
-#      }
-#     ]
+#      },
+#      { ... }
+#      ]
 #    }
 # 2. {
-#    "ideas_data": [],
+#    "result": "OK",
 #    "ifallowed": false,
-#    "result": "OK"
+#    "ideas_data": []
 #    }
-@app.route('/get_ideas_data_created_by_participant/<email>')
-@flask_login.login_required
-def get_ideas_data_created_by_participant(email):
-    return get_ideas_data_created_by_participant_aux(flask_login.current_user.id, email)
+@app.route('/get_ideas_data_created_by_participant/<participant_email>', methods=['GET'])
+@app.route('/get_ideas_data_created_by_participant/<participant_email>/<user_email>', methods=['GET'])
+def get_ideas_data_created_by_participant(participant_email,user_email_DEBUG=None):
+    if DEBUG and user_email_DEBUG is not None:
+        user_email = user_email_DEBUG
+    else:
+        user_email = flask_login.current_user.id
+    return get_ideas_data_created_by_participant_aux(participant_email,user_email)
 
 
-# Temporary For TEST in ARC
-@app.route('/test_get_ideas_data_created_by_participant/<user_email>/<participant_email>',methods=['GET'])
-def test_get_ideas_data_created_by_participant(user_email,participant_email):
-    return get_ideas_data_created_by_participant_aux(user_email, participant_email)
+#input   idea_proposal
+#output   idea data as a json
+@app.route('/get_idea_data_DEBUG/<idea_proposal>', methods=['GET'])
+def get_idea_data_DEBUG(idea_proposal):
+    idea = _getIdeaByIdeaIndex(idea_proposal)
+    return get_idea_data_aux(idea)
 
 
 # TODO: format for vote_timestamp
@@ -488,13 +515,6 @@ def vote_on_idea(user_email_DEBUG = None):
         user_email = flask_login.current_user.id
     return vote_on_idea_aux(user_email, request.get_json())
 
-
-#IDEAS (NOT USED)
-@app.route('/deleteConcern/<string:idConcern>', methods=['DELETE', 'OPTIONS'])
-def deleteConcern(idConcern) :
-    print (idConcern)
-    deleteOneConcern(idConcern)
-    return "deleteConcern was invoked"
 
 @app.route('/getConcerns/<string:current>', methods=['GET', 'OPTIONS'])
 def getConcerns(current):

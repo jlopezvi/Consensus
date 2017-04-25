@@ -1,6 +1,6 @@
 from py2neo import neo4j
 from participantManager import _get_participant_node, _verifyEmail, get_fullname_for_participant_aux
-from ideaManager import get_idea_data
+from ideaManager import get_idea_data_aux
 from utils import getGraph, send_email
 from flask import jsonify, render_template, url_for
 from uuid_token import generate_confirmation_token, confirm_token
@@ -35,7 +35,7 @@ def ideas_for_newsfeed_aux(participant_email):
             if if_isnewideaforparticipant(idea, participant):
                 dic.append(idea)
     for dic_idea in dic:
-        newfeed = get_idea_data(dic_idea)
+        newfeed = get_idea_data_aux(dic_idea)
         list_ideas.append(newfeed)
     return jsonify({'result':'OK','data': list_ideas})
 
@@ -55,7 +55,7 @@ def ideas_for_home_aux(participant_email, vote_type):
         if vote["type"] == vote_type:
             dic.append(vote.end_node)
     for dic_idea in dic:
-        current_idea = get_idea_data(dic_idea)
+        current_idea = get_idea_data_aux(dic_idea)
         list_ideas.append(current_idea)
     return jsonify({'result': 'OK','data': list_ideas})
 
