@@ -99,28 +99,6 @@ def _registration_send_emailverification(email):
     return jsonify({"result": "OK", "result_msg":"email sent"})
 
 
-#input: email
-#output: python dictionary
-#  -> {'result': 'email already confirmed'}
-#  -> {'result': 'email not registered'}
-#  -> {'result': 'OK'}
-def _verifyEmail(email):
-    unverifiedparticipant = _get_participant_node(email, False)
-    if unverifiedparticipant is None:
-       if _get_participant_node(email, True):
-           return {'result': 'email already confirmed'}
-       else:
-           return {'result': 'email not registered'}
-    else:
-        _removeFromUnverifiedParticipantsIndex(email, unverifiedparticipant)
-        _addToParticipantsIndex(email, unverifiedparticipant)
-        unverifiedparticipant.remove_labels("unverified_participant")
-        unverifiedparticipant.add_labels("participant")
-        #TODO datestamp for registration
-        #registered_on=datetime.datetime.now()
-        return {'result': 'OK'}
-
-
 def modify_user_data_aux(user_data, profilepic_file_body, user_email):
     participant = _get_participant_node(user_email)
     fields = ['email', 'position', 'group', 'password', 'ifsupportingproposalsvisible',
@@ -324,6 +302,15 @@ def if_remove_following_contact_to_user(user_email, followingcontact_email) :
         getGraph().delete(contact_rel)
         return True
     return False
+
+# TODO complete
+def get_notifications_for_user_aux(user_email):
+    user = _get_participant_node(user_email)
+    notification_rels = list(getGraph().match(rel_type="HAS_NOTIFICATION_FOR", end_node=user))
+    notification_rels_from_idea = [x for x in notification_rels if x.start_node.labels == {'idea'}]
+    notification_rels_from_participant = [x for x in notification_rels if (x.start_node.labels == {'participant'})
+                                          or (x.start_node.labels == {'unverified_participant'}) ]
+    return
 
 
 def _addToParticipantsIndex(email, newparticipant) :

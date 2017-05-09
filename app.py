@@ -12,10 +12,13 @@ from participantManager import _get_participant_node, remove_user_aux, get_all_p
     get_fullname_for_participant_aux, registration_aux, _verifyEmail, get_participant_data_aux, modify_user_data_aux
 from ideaManager import get_ideas_data_created_by_participant_aux, get_ideas_created_by_participant_aux,\
      get_idea_data_aux, add_idea_to_user_aux, deleteOneIdea,getAllIdeas, \
-    _getIdeaByIdeaIndex, vote_on_idea_aux, modify_idea_aux, remove_idea_aux, remove_notification_to_participant_aux, \
-    do_tasks_for_idea_edited
+    _getIdeaByIdeaIndex, vote_on_idea_aux, modify_idea_aux, remove_idea_aux, \
+    get_supporters_emails_for_idea_aux, get_volunteers_emails_for_idea_aux, \
+    _get_vote_statistics_for_idea
 from webManager import ideas_for_newsfeed_aux, ideas_for_home_aux, registration_receive_emailverification_aux, \
-    registration_from_invitation_aux, registration_send_invitation_aux, get_notifications_for_user_aux
+    registration_from_invitation_aux, registration_send_invitation_aux
+from notificationManager import get_notifications_for_user_aux, remove_notification_from_idea_to_participant_aux, \
+    _do_tasks_for_idea_editedproposal
 import logging
 import flask_login
 from user_authentification import User
@@ -68,20 +71,10 @@ def user_loader(email):
 ####    API, WORKING NOW    ####
 ################################
 
-@app.route('/do_tasks_for_idea_edited_TEST/<idea_index>', methods=['POST'])
-def do_tasks_for_idea_edited_TEST(idea_index):
-    return do_tasks_for_idea_edited(idea_index)
+@app.route('/do_tasks_for_idea_editedproposal_TEST/<idea_index>', methods=['POST'])
+def do_tasks_for_idea_editedproposal_TEST(idea_index):
+    return _do_tasks_for_idea_editedproposal(idea_index)
 
-
-# input: json {"email":"asdf@asdf", "proposal":"this is a proposal"}
-# output:
-#   json {"result":"OK", "result_msg":"Notification Relationship was deleted"} /
-#   json {"result":"Wrong", "result_msg":"Notification Relationship does not exist"}
-@app.route('/remove_notification_to_participant',methods=['POST'])
-def remove_notification_to_participant():
-    email = request.get_json()['email']
-    proposal_index = request.get_json()['proposal']
-    return remove_notification_to_participant_aux(email, proposal_index)
 
 ############################################
 #  API
@@ -350,6 +343,27 @@ def remove_following_contact_to_user(followingcontact_email, user_email_DEBUG=No
         return jsonify({"result": "Wrong", "result_msg": "Following contact does not exist"})
 
 
+#TODO  REDO for participants and ideas
+# input: email: new@gmail.com
+# Output: json
+# {"result":"OK",
+#  "data" : [
+#    {
+#      "notification_type": "successful",
+#      "proposal": "this and this"
+#    }
+#  ]
+# }
+@app.route('/get_notifications_for_user', methods=['GET'])
+@app.route('/get_notifications_for_user/<user_email_DEBUG>', methods=['GET'])
+def get_notifications_for_user(user_email_DEBUG=None):
+    if DEBUG and user_email_DEBUG is not None:
+        user_email = user_email_DEBUG
+    else:
+        user_email = flask_login.current_user.id
+    return get_notifications_for_user_aux(user_email)
+
+
 #DEBUG
 @app.route('/get_all_participants_DEBUG', methods=['GET','OPTIONS'])
 def get_all_participants_DEBUG():
@@ -499,11 +513,33 @@ def get_idea_data_DEBUG(idea_proposal):
     return get_idea_data_aux(idea)
 
 
+#input   idea_proposal
+#output  json {"result": "OK", "volunteers_emails": [email1, email2,...]}
+@app.route('/get_volunteers_emails_for_idea/<idea_proposal>', methods=['GET'])
+def get_volunteers_emails_for_idea(idea_proposal):
+    return get_volunteers_emails_for_idea_aux(idea_proposal)
+
+
+#input   idea_proposal
+#output  {"result": "OK", "vote_statistics" : [supporters_num, rejectors_num, passives_num, volunteers_num]}
+@app.route('/get_vote_statistics_for_idea/<idea_proposal>', methods=['GET'])
+def get_vote_statistics_for_idea(idea_proposal):
+    vote_statistics = _get_vote_statistics_for_idea(idea_proposal)
+    return jsonify({"result": "OK", "vote_statistics" : vote_statistics})
+
+
+#input   idea_proposal
+#output  json {"result": "OK", "supporters_emails": [email1, email2,...]}
+@app.route('/get_supporters_emails_for_idea/<idea_proposal>', methods=['GET'])
+def get_supporters_emails_for_idea(idea_proposal):
+    return get_supporters_emails_for_idea_aux(idea_proposal)
+
+
 # TODO: format for vote_timestamp
 # input   user's email (flask_login.current_user.id)
 #         json {"idea_proposal":"let's do this",
 #               "vote_type":"supported/rejected/ignored", "vote_ifvolunteered": true/false}
-# output json  {'result':'Wrong: User vote exists'}
+# output json  {"result": "Wrong: User vote exists of same type"}
 #              {"result": "OK: User vote was modified"}
 #              {"result": "OK: User vote was created"}
 @app.route('/vote_on_idea',methods=['POST'])
@@ -516,6 +552,17 @@ def vote_on_idea(user_email_DEBUG = None):
     return vote_on_idea_aux(user_email, request.get_json())
 
 
+# input: json {"email":"asdf@asdf", "proposal":"this is a proposal"}
+# output:
+#   json {"result": "OK", "result_msg": "Notification was deleted"} /
+#   json {"result": "Wrong", "result_msg": "Notification does not exist"}
+@app.route('/remove_notification_from_idea_to_participant',methods=['POST'])
+def remove_notification_from_idea_to_participant():
+    email = request.get_json()['email']
+    idea_index = request.get_json()['proposal']
+    return remove_notification_from_idea_to_participant_aux(email, idea_index)
+
+
 @app.route('/getConcerns/<string:current>', methods=['GET', 'OPTIONS'])
 def getConcerns(current):
     print (current)
@@ -526,33 +573,20 @@ def getConcerns(current):
 # WEB MANAGER
 ##############
 
-# input: email: new@gmail.com
-# Output: json
-# {"result":"OK",
-#  "data" : [
-#    {
-#      "notification_type": "successful",
-#      "proposal": "this and this"
-#    }
-#  ]
-# }
-@app.route('/get_notifications_for_user/<email>')
-def get_notifications_for_user(email):
-    return get_notifications_for_user_aux(email)
-
 
 # TODO: try with redirect instead of render_template
-# input: URL token link from an invitation e-mail
+# input: URL token link from an invitation e-mail and that (guest) e-mail
 # output: redirects to login with a json called "message"
-#  -> json {"result": "The confirmation link is invalid or has expired"}
-#  -> json {"result": "invitation:OK", "current_email": "guestemail@com", "host_email": host_email@com"}
+#  -> json {"result": "Wrong", "result_msg" : "The confirmation link is invalid or has expired"}
+#  -> json {"result": "OK", "result_msg": "Invitation OK", "user_email": "guestemail@com", "host_email": host_email@com"}
 @app.route('/registration_from_invitation/<token>/<guest_email>')
 def registration_from_invitation(token, guest_email):
     return registration_from_invitation_aux(token, guest_email)
 
 
 # input: host_email and guest_email
-# output: sends registration e-mail
+# output: sends registration e-mail and json
+#         {"result": "OK", "result_msg" : "email sent"}
 @app.route('/registration_send_invitation/<host_email>/<guest_email>', methods=['GET'])
 def registration_send_invitation(host_email, guest_email):
     return registration_send_invitation_aux(host_email, guest_email)
@@ -561,13 +595,10 @@ def registration_send_invitation(host_email, guest_email):
 # TODO: try with redirect instead of render_template
 # input: URL token link from an invitation e-mail
 # output: redirects to login with a json called "message"
-#  -> json {"result": "The confirmation link is invalid or has expired"}
-#  -> json {"result": "email already confirmed"}
-#  -> json {"result": "email not registered"}
-# TODO: redirects to a place with a message of "email verified" and then, login user and redirection to newsfeed.
-# TODO: should I login user when email verified? review registration_aux where I log in user? what's the interplay
-# among the two of them?
-#  -> json {"result": "emailverification:OK", "email": "asdf@dasdf.com"}
+#  -> json {"result": "Wrong: The confirmation link is invalid or has expired"}
+#  -> json {"result": "Wrong: Email already verified"}
+#  -> json {"result": "Wrong: Email not registered"}
+#  -> json {"result": "OK", "login_email": "asdf@dasdf.com"}
 @app.route('/registration_receive_emailverification/<token>')
 def registration_receive_emailverification(token):
     return registration_receive_emailverification_aux(token)
@@ -575,10 +606,10 @@ def registration_receive_emailverification(token):
 
 # TODO: add weights for ideas
 # Get Ideas For Newsfeed
-# Input: << flask_login.current_user.id >>
+# Input: user_email   (user logged in)
 # Output: json with fields 'result' and 'data'. 'data' contains array with all ideas that the user has not << VOTED_ON >>
-# {'result':'OK',
-#  'data': [
+# {"result": "OK",
+#  "data": [
 #    {
 #      "author_email": "new1@hotmail.com",
 #      "author_photo_url": "",
@@ -623,27 +654,23 @@ def registration_receive_emailverification(token):
 #      "volunteers_goal_num": "11",
 #      "volunteers_num": 0
 #    }
- # ]
- #}
-@app.route('/ideas_for_newsfeed')
-@flask_login.login_required
-def ideas_for_newsfeed():
-    return ideas_for_newsfeed_aux(flask_login.current_user.id)
-
-
-# TEMPORARY: función para testear con ARC el << newsfeed >>
-@app.route('/ideas_for_newsfeed_test',methods=['POST'])
-def ideas_for_newsfeed_test():
-    email=request.get_json()['email']
-    return ideas_for_newsfeed_aux(email)
-
+#  ]
+# }
+@app.route('/ideas_for_newsfeed',methods=['GET'])
+@app.route('/ideas_for_newsfeed/<user_email_DEBUG>',methods=['GET'])
+def ideas_for_newsfeed(user_email_DEBUG = None):
+    if DEBUG and user_email_DEBUG is not None:
+        user_email = user_email_DEBUG
+    else:
+        user_email = flask_login.current_user.id
+    return ideas_for_newsfeed_aux(user_email)
 
 
 # Ideas For Home: See the Supported + Volunteered ideas/ See the ignored ideas / See the rejected ideas
-# Input: JSON {"email":"new@gmail.com", "vote_type": "rejected/supported/ignored"
+# Input: user_email (user logged in) and JSON {"vote_type": "rejected/supported/ignored"}
 # Output: json with fields 'result' and 'data'. 'data' Array with all ideas that the user has voted according to << vote_type >>
-# {'result':'OK',
-#  'data': [
+# {"result": "OK",
+#  "data": [
 #    {
 #      "author_email": "adavidsole@gmail.com",
 #      "author_username": "alexdsole",
@@ -690,13 +717,17 @@ def ideas_for_newsfeed_test():
 #      "volunteers_num": 1
 #    }
 #  ]
-#}
-@app.route('/ideas_for_home',methods=['POST'])
-def ideas_for_home():
-    email=request.get_json()['email']
-    vote_type=request.get_json()['vote_type']
-    return ideas_for_home_aux(email,vote_type)
-
+# }
+@app.route('/ideas_for_home',methods=['GET'])
+@app.route('/ideas_for_home/<user_email_DEBUG>',methods=['GET'])
+def ideas_for_home(user_email_DEBUG = None):
+    if DEBUG and user_email_DEBUG is not None:
+        user_email = user_email_DEBUG
+    else:
+        user_email = flask_login.current_user.id
+    #
+    vote_type = request.get_json()['vote_type']
+    return ideas_for_home_aux(user_email, vote_type)
 
 
 ########################

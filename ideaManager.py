@@ -44,6 +44,7 @@ def add_idea_to_user_aux(user_email, idea_dict, ideapic_file_body):
 
 # Used By < modify_idea >
 def modify_idea_aux(idea_dict,ideapic_file_body):
+    from notificationManager import _do_tasks_for_idea_editedproposal
     idea_index = idea_dict['current_proposal']
     idea = _getIdeaByIdeaIndex(idea_index)
     fields = ['concern','proposal','moreinfo_concern','moreinfo_proposal',
@@ -55,7 +56,7 @@ def modify_idea_aux(idea_dict,ideapic_file_body):
             return jsonify({"result":"Wrong", "result_msg": "Proposal already exists"})
         _removeFromIdeaIndex(idea_dict['current_proposal'], idea)
         _addIdeaToIndex(idea_dict['proposal'], idea)
-        do_tasks_for_idea_edited(idea_index)
+        _do_tasks_for_idea_editedproposal(idea_index)
     for k,v in idea_dict.items():
         if k in fields:
             data[k]=v
@@ -134,17 +135,18 @@ def get_ideas_data_created_by_participant_aux(participant_email, user_email):
     # }
 def get_idea_data_aux(idea):
     from app import SUPPORT_RATE_MIN
-    author_email = getGraph().match_one(end_node=idea, rel_type="CREATED").start_node.get_properties()['email']
+    author_email = getGraph().match_one(end_node=idea, rel_type="CREATED").start_node['email']
     author_photo_url = _get_participant_node(author_email)['image_url']
     author_username = _get_participant_node(author_email)['username']
+    idea_proposal = idea['proposal']
     uuid=idea['uuid']
     timestamp = datetime.strptime(idea['timestamp'], '%d.%m.%Y')
     duration = str((datetime.now() - timestamp).days) + ' days'
     #voters_num = len(list(getGraph().match(end_node=idea, rel_type="VOTED_ON")))
-    supporters_num = _get_vote_statistics_for_idea(idea)[0]
-    rejectors_num = _get_vote_statistics_for_idea(idea)[1]
+    supporters_num = _get_vote_statistics_for_idea(idea_proposal)[0]
+    rejectors_num = _get_vote_statistics_for_idea(idea_proposal)[1]
     active_voters_num = supporters_num + rejectors_num
-    volunteers_num=_get_vote_statistics_for_idea(idea)[2]
+    volunteers_num=_get_vote_statistics_for_idea(idea_proposal)[3]
     support_rate = (supporters_num / active_voters_num) * 100 if active_voters_num is not 0 else 100
     #
     vote_rels = list(getGraph().match(end_node=idea, rel_type="VOTED_ON"))
@@ -170,27 +172,46 @@ def get_idea_data_aux(idea):
 
 
 #used by get_idea_data_aux
-def _get_vote_statistics_for_idea(node_idea):
-   rejectors_num=0
-   supporters_num=0
-   volunteers_num=0
-   for vote_rel in (list(getGraph().match(end_node=node_idea, rel_type="VOTED_ON"))):
-       if vote_rel["type"] == "supported":
-           supporters_num+=1
-       elif vote_rel["type"] == "rejected":
-           rejectors_num+=1
-       if vote_rel["volunteered"] == True:
+def _get_vote_statistics_for_idea(idea_index):
+    idea=_getIdeaByIdeaIndex(idea_index)
+    rejectors_num=0
+    supporters_num=0
+    passives_num=0
+    volunteers_num=0
+    for vote_rel in (list(getGraph().match(end_node=idea, rel_type="VOTED_ON"))):
+        if vote_rel["type"] == "supported":
+            supporters_num+=1
+        elif vote_rel["type"] == "rejected":
+            rejectors_num+=1
+        elif vote_rel["type"] == "ignored":
+            passives_num+=1
+        if vote_rel["volunteered"] == True:
            volunteers_num+=1
-   return (supporters_num,rejectors_num,volunteers_num)
+    return (supporters_num, rejectors_num, passives_num, volunteers_num)
 
 
+def get_supporters_emails_for_idea_aux(idea_index):
+    idea=_getIdeaByIdeaIndex(idea_index)
+    supporters_emails = []
+    vote_rels = list(getGraph().match(end_node=idea, rel_type="VOTED_ON"))
+    support_rels = [x for x in vote_rels if x["type"] == "supported"]
+    supporters = [x.start_node for x in support_rels]
+    for supporter in supporters:
+        supporters_emails.append(supporter['email'])
+    return jsonify({"result": "OK", "supporters_emails": supporters_emails})
 
-#participant, idea are graph nodes
-def _getIfVotingRelationshipExists(participant, idea) :
-    votingRelationshipFound = getGraph().match_one(start_node=participant, end_node=idea, rel_type="VOTED")
-    if votingRelationshipFound is not None:
-         return True
-    return False
+
+def get_volunteers_emails_for_idea_aux(idea_index):
+    idea=_getIdeaByIdeaIndex(idea_index)
+    volunteers_emails = []
+    vote_rels = list(getGraph().match(end_node=idea, rel_type="VOTED_ON"))
+    volunteer_rels = [x for x in vote_rels if x["volunteered"] == True]
+    volunteers = [x.start_node for x in volunteer_rels]
+    for volunteer in volunteers:
+        volunteers_emails.append(volunteer['email'])
+    return jsonify({"result": "OK", "volunteers_emails": volunteers_emails})
+
+
 
 
 def _ideaIsNewForParticipant(idea,participant) :
@@ -235,13 +256,14 @@ def getAllIdeas(email):
 
 def vote_on_idea_aux(user_email, inputdict):
     from app import SUPPORT_RATE_MIN
+    from notificationManager import _do_tasks_for_idea_failurewarning, _do_tasks_for_idea_successful
     user = _get_participant_node(user_email)
     idea_index=inputdict['idea_proposal']
     idea = _getIdeaByIdeaIndex(idea_index)
     vote_type=inputdict['vote_type']
     vote_ifvolunteered=inputdict['vote_ifvolunteered']
     vote_timestamp=(datetime.now()).strftime("%d.%m.%Y")
-    supporters_num= _get_vote_statistics_for_idea(idea)[0]
+    supporters_num= _get_vote_statistics_for_idea(idea_index)[0]
     voters_num = len(list(getGraph().match(end_node=idea, rel_type="VOTED_ON")))
     if voters_num == 0:
         support_rate = 100
@@ -251,39 +273,46 @@ def vote_on_idea_aux(user_email, inputdict):
         support = False
     else:
         support = True
-    if if_voting_relationship_exists(user,idea):
-        if if_voting_relationship_exists_of_given_type(user, idea, vote_type, vote_ifvolunteered):
-            return jsonify({'result':'Wrong: User vote exists'})
+    if _if_voting_relationship_exists(user, idea):
+        if _if_voting_relationship_exists_of_given_type(user, idea, vote_type, vote_ifvolunteered):
+            return jsonify({"result": "Wrong: User vote exists of same type"})
         else:
-            response = create_or_modify_voting_relationship_to_given_type(user, idea, vote_type, vote_ifvolunteered, vote_timestamp)
-            supporters_num= _get_vote_statistics_for_idea(idea)[0]
-            volunteers_num=_get_vote_statistics_for_idea(idea)[2]
+            response = _create_or_modify_voting_relationship_to_given_type(user, idea, vote_type, vote_ifvolunteered, vote_timestamp)
+            supporters_num= _get_vote_statistics_for_idea(idea_index)[0]
+            volunteers_num=_get_vote_statistics_for_idea(idea_index)[3]
             support_rate = (supporters_num / voters_num)*100
             print (support_rate)
             if support_rate < SUPPORT_RATE_MIN and support == True:
-                do_tasks_for_idea_failurewarning(idea_index)
+                _do_tasks_for_idea_failurewarning(idea_index)
             if supporters_num >= (idea['supporters_goal_num']) and volunteers_num >= (idea['supporters_goal_num']):
-                do_tasks_for_idea_successful(idea_index)
+                _do_tasks_for_idea_successful(idea_index)
             return response
     else:
-        response = create_or_modify_voting_relationship_to_given_type(user, idea, vote_type, vote_ifvolunteered, vote_timestamp)
-        supporters_num= _get_vote_statistics_for_idea(idea)[0]
-        volunteers_num=_get_vote_statistics_for_idea(idea)[2]
+        response = _create_or_modify_voting_relationship_to_given_type(user, idea, vote_type, vote_ifvolunteered, vote_timestamp)
+        supporters_num= _get_vote_statistics_for_idea(idea_index)[0]
+        volunteers_num=_get_vote_statistics_for_idea(idea_index)[3]
         support_rate = (supporters_num / voters_num)*100 if voters_num is not 0 else 100
         if support_rate < SUPPORT_RATE_MIN and support == True:
-            do_tasks_for_idea_failurewarning(idea_index)
+            _do_tasks_for_idea_failurewarning(idea_index)
         if supporters_num >= (idea['supporters_goal_num']) and volunteers_num >= (idea['supporters_goal_num']):
-            do_tasks_for_idea_successful(idea_index)
+            _do_tasks_for_idea_successful(idea_index)
         return response
 
 
-def if_voting_relationship_exists(participant, idea):
+
+
+####################
+#  PURE INTERNAL
+###################
+
+
+def _if_voting_relationship_exists(participant, idea):
     voting_rel = getGraph().match_one(start_node=participant, rel_type="VOTED_ON", end_node=idea)
     if voting_rel is not None: return True
     else: return False
 
 
-def if_voting_relationship_exists_of_given_type(participant, idea, vote_type, vote_ifvolunteered):
+def _if_voting_relationship_exists_of_given_type(participant, idea, vote_type, vote_ifvolunteered):
     voting_rel = getGraph().match_one(start_node=participant, rel_type="VOTED_ON", end_node=idea)
     if voting_rel is not None:
         if voting_rel["type"] == vote_type and voting_rel["ifvolunteered"] == vote_ifvolunteered:
@@ -291,7 +320,8 @@ def if_voting_relationship_exists_of_given_type(participant, idea, vote_type, vo
     return False
 
 
-def create_or_modify_voting_relationship_to_given_type(participant, idea, vote_type, vote_ifvolunteered, vote_timestamp):
+#<used by vote_on_idea_aux>
+def _create_or_modify_voting_relationship_to_given_type(participant, idea, vote_type, vote_ifvolunteered, vote_timestamp):
     voting_rel = getGraph().match_one(start_node=participant, rel_type="VOTED_ON", end_node=idea)
     if voting_rel is not None:
         voting_rel["type"] = vote_type
@@ -303,90 +333,5 @@ def create_or_modify_voting_relationship_to_given_type(participant, idea, vote_t
         return jsonify({"result": "OK: User vote was created"})
 
 
-def create_notification_relationships_to_supporters(idea, notification_type):
-    vote_rels = list(getGraph().match(end_node=idea, rel_type="VOTED_ON"))
-    support_rels = [x for x in vote_rels if x["type"] == "supported"]
-    supporters = [x.start_node for x in support_rels]
-    for supporter in supporters:
-        NotificationRelationshipFound = getGraph().match_one(start_node=idea, rel_type="HAS_NOTIFICATION_FOR",
-                                                             end_node=supporter)
-        if NotificationRelationshipFound is None:
-            getGraph().create((idea, "HAS_NOTIFICATION_FOR", supporter, {"type": notification_type}))
-        else:
-            NotificationRelationshipFound["type"] = notification_type
-    return
 
 
-def send_notification_emails_to_supporters(idea, notification_type):
-    subject = "Consensus, New Notifications"
-    if notification_type == 'edited':
-        html = render_template('idea_edited.html', msg_proposal=idea['proposal'])
-    else:
-        html = render_template('idea_successful.html', msg_proposal=idea['proposal'])
-    vote_rels = list(getGraph().match(end_node=idea, rel_type="VOTED_ON"))
-    support_rels = [x for x in vote_rels if x["type"] == "supported"]
-    supporters = [x.start_node for x in support_rels]
-    for supporter in supporters:
-        send_email(supporter['email'], subject, html)
-    return
-
-
-def create_notification_relationship_to_author(idea, notification_type):
-    author = getGraph().match_one(rel_type="CREATED", end_node=idea).start_node
-    NotificationRelationshipFound = getGraph().match_one(start_node=idea, rel_type="HAS_NOTIFICATION_FOR", end_node=author)
-    if NotificationRelationshipFound is None:
-        getGraph().create((idea, "HAS_NOTIFICATION_FOR", author, {"type":notification_type}))
-    else:
-        NotificationRelationshipFound["type"] = notification_type
-    return
-
-
-def send_notification_email_to_author(idea, notification_type):
-    author = getGraph().match_one(rel_type="CREATED", end_node=idea).start_node
-    subject = "Consensus, New Notifications"
-    if notification_type == 'failurewarning':
-        html = render_template('idea_failurewarning.html', msg_proposal=idea['proposal'])
-    else:
-        html = render_template('idea_successful.html', msg_proposal=idea['proposal'])
-    send_email(author['email'], subject, html)
-    return
-
-
-def do_tasks_for_idea_edited(idea_index):
-    idea=_getIdeaByIdeaIndex(idea_index)
-    idea['if_proposal_edited'] = True
-    idea['if_proposal_edited_timestamp'] = ((datetime.now()).strftime("%d.%m.%Y"))
-    create_notification_relationships_to_supporters(idea, 'edited')
-    send_notification_emails_to_supporters(idea, 'edited')
-    return
-
-
-def do_tasks_for_idea_failurewarning(idea_index):
-    idea=_getIdeaByIdeaIndex(idea_index)
-    idea['failurewarning'] = True
-    idea['if_failurewarning_timestamp'] = ((datetime.now()).strftime("%d.%m.%Y"))
-    create_notification_relationship_to_author(idea, 'failurewarning')
-    send_notification_email_to_author(idea,'failurewarning')
-    return
-
-
-def do_tasks_for_idea_successful(idea_index):
-    idea=_getIdeaByIdeaIndex(idea_index)
-    idea['if_successful'] = True
-    idea['if_successful_timestamp'] = ((datetime.now()).strftime("%d.%m.%Y"))
-    create_notification_relationships_to_supporters(idea, 'successful')
-    create_notification_relationship_to_author(idea, 'successful_to_author')
-    send_notification_emails_to_supporters(idea, 'successful')
-    send_notification_email_to_author(idea,'successful_to_author')
-    return
-
-
-# Used By <remove_notification_to_participant>
-def remove_notification_to_participant_aux(email, proposal_index):
-    idea = _getIdeaByIdeaIndex(proposal_index)
-    participant = _get_participant_node(email)
-    notification_rel_found = getGraph().match_one(start_node=idea, rel_type="HAS_NOTIFICATION_FOR", end_node=participant)
-    if notification_rel_found is not None:
-        getGraph().delete(notification_rel_found)
-        return jsonify({"result":"OK", "result_msg":"Notification Relationship was deleted"})
-    return jsonify({"result":"Wrong", "result_msg":"Notification Relationship does not exist"})
