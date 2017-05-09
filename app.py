@@ -7,13 +7,13 @@ import ast
 import json
 from communityManager import saveCommunity,deleteCommunity,addCommunityToContact,getCommunities
 from participantManager import _get_participant_node, remove_user_aux, get_all_participants_aux, \
-    if_add_following_contact_to_user, if_remove_following_contact_to_user, \
+    _if_add_following_contact_to_user_aux, _if_remove_following_contact_to_user_aux, \
     get_participant_followers_info_aux,get_participant_followings_info_aux,\
     get_fullname_for_participant_aux, registration_aux, _verifyEmail, get_participant_data_aux, modify_user_data_aux
 from ideaManager import get_ideas_data_created_by_participant_aux, get_ideas_created_by_participant_aux,\
      get_idea_data_aux, add_idea_to_user_aux, deleteOneIdea,getAllIdeas, \
     _getIdeaByIdeaIndex, vote_on_idea_aux, modify_idea_aux, remove_idea_aux, \
-    get_supporters_emails_for_idea_aux, get_volunteers_emails_for_idea_aux, \
+    _get_supporters_emails_for_idea_aux, _get_volunteers_emails_for_idea_aux, \
     _get_vote_statistics_for_idea
 from webManager import ideas_for_newsfeed_aux, ideas_for_home_aux, registration_receive_emailverification_aux, \
     registration_from_invitation_aux, registration_send_invitation_aux
@@ -320,7 +320,7 @@ def add_following_contact_to_user(followingcontact_email, user_email_DEBUG=None)
         user_email = user_email_DEBUG
     else:
         user_email = flask_login.current_user.id
-    result = if_add_following_contact_to_user(followingcontact_email, user_email)
+    result = _if_add_following_contact_to_user_aux(followingcontact_email, user_email)
     if result is True:
         return jsonify({"result": "OK", "result_msg": "Following contact was added"})
     else:
@@ -336,7 +336,7 @@ def remove_following_contact_to_user(followingcontact_email, user_email_DEBUG=No
         user_email = user_email_DEBUG
     else:
         user_email = flask_login.current_user.id
-    result = if_remove_following_contact_to_user(followingcontact_email, user_email)
+    result = _if_remove_following_contact_to_user_aux(followingcontact_email, user_email)
     if result is True:
         return jsonify({"result": "OK", "result_msg": "Following contact was removed"})
     else:
@@ -514,13 +514,6 @@ def get_idea_data_DEBUG(idea_proposal):
 
 
 #input   idea_proposal
-#output  json {"result": "OK", "volunteers_emails": [email1, email2,...]}
-@app.route('/get_volunteers_emails_for_idea/<idea_proposal>', methods=['GET'])
-def get_volunteers_emails_for_idea(idea_proposal):
-    return get_volunteers_emails_for_idea_aux(idea_proposal)
-
-
-#input   idea_proposal
 #output  {"result": "OK", "vote_statistics" : [supporters_num, rejectors_num, passives_num, volunteers_num]}
 @app.route('/get_vote_statistics_for_idea/<idea_proposal>', methods=['GET'])
 def get_vote_statistics_for_idea(idea_proposal):
@@ -528,11 +521,20 @@ def get_vote_statistics_for_idea(idea_proposal):
     return jsonify({"result": "OK", "vote_statistics" : vote_statistics})
 
 
-#input   idea_proposal
-#output  json {"result": "OK", "supporters_emails": [email1, email2,...]}
+# input   idea_proposal
+# output  json {"result": "OK", "volunteers_emails": [email1, email2,...]}
+@app.route('/get_volunteers_emails_for_idea/<idea_proposal>', methods=['GET'])
+def get_volunteers_emails_for_idea(idea_proposal):
+    volunteers_emails = _get_volunteers_emails_for_idea_aux(idea_proposal)
+    return jsonify({"result": "OK", "volunteers_emails": volunteers_emails})
+
+
+# input   idea_proposal
+# output  json {"result": "OK", "supporters_emails": [email1, email2,...]}
 @app.route('/get_supporters_emails_for_idea/<idea_proposal>', methods=['GET'])
 def get_supporters_emails_for_idea(idea_proposal):
-    return get_supporters_emails_for_idea_aux(idea_proposal)
+    supporters_emails = _get_supporters_emails_for_idea_aux(idea_proposal)
+    return jsonify({"result": "OK", "supporters_emails": supporters_emails})
 
 
 # TODO: format for vote_timestamp

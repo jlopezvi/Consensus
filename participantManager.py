@@ -52,7 +52,7 @@ def registration_aux(inputdict, profilepic_file_body):
     ifhost = False
     if inputdict.get('host_email') is not None:
         # current_participant (verified/unverified) follows host
-        ifhost = if_add_following_contact_to_user(email, inputdict.get('host_email'))
+        ifhost = _if_add_following_contact_to_user_aux(email, inputdict.get('host_email'))
     return jsonify({"result":"OK", "ifhost":ifhost, "ifhost_msg":ifhost_msg[ifhost],
                     "ifemailverified":ifemailverified, "ifemailverified_msg":ifemailverified_msg[ifemailverified]})
 
@@ -278,7 +278,7 @@ def get_participant_followers_info_aux(participant_email, user_email):
 #   ->  True
 #   ->  False
 #   ->  [False,'Following contact exists already']
-def if_add_following_contact_to_user(user_email, followingcontact_email) :
+def _if_add_following_contact_to_user_aux(user_email, followingcontact_email) :
     user = _get_participant_node(user_email, 'all')  # current's email could be unverified
     followingcontact = _get_participant_node(followingcontact_email)
     if (followingcontact is None) or (followingcontact is user) :
@@ -294,7 +294,7 @@ def if_add_following_contact_to_user(user_email, followingcontact_email) :
 # output:
 #   ->  True
 #   ->  False
-def if_remove_following_contact_to_user(user_email, followingcontact_email) :
+def _if_remove_following_contact_to_user_aux(user_email, followingcontact_email) :
     user = _get_participant_node(user_email, 'all')  # current's email could be unverified
     followingcontact = _get_participant_node(followingcontact_email)
     if _getIfContactRelationshipExists(user, followingcontact) is True:
@@ -302,6 +302,7 @@ def if_remove_following_contact_to_user(user_email, followingcontact_email) :
         getGraph().delete(contact_rel)
         return True
     return False
+
 
 # TODO complete
 def get_notifications_for_user_aux(user_email):

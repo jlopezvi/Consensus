@@ -1,0 +1,24 @@
+<p>Hello!. The Following Proposal has been Successfully:</p>
+<p><a href="{{ msg_proposal }}">{{ msg_proposal }}</a></p>
+<br>
+
+{% if volunteers %}
+<p>Please chek the list of e-mails of volunteers:</p>
+{% for volunteer in volunteers %}
+<tr>
+  <td>{{volunteer}}</td> <br>
+</tr>
+{% endfor %}
+{% endif %}
+
+{% if supporters %}
+<p>Please chek the list of e-mails of supporters:</p>
+{% for supporter in supporters %}
+<tr>
+  <td>{{supporters}}</td> <br>
+</tr>
+{% endfor %}
+{% endif %}
+
+<br>
+<p>Cheers!</p>

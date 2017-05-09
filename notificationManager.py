@@ -3,7 +3,7 @@ from flask import jsonify, render_template
 import json, uuid
 from datetime import datetime,date
 from participantManager import _get_participant_node
-from ideaManager import _getIdeaByIdeaIndex
+from ideaManager import _getIdeaByIdeaIndex, _get_supporters_emails_for_idea_aux, _get_volunteers_emails_for_idea_aux
 
 
 def get_notifications_for_user_aux(email):
@@ -86,9 +86,9 @@ def _send_notification_emails_from_idea_to_supporters(idea_index, notification_t
     idea=_getIdeaByIdeaIndex(idea_index)
     subject = "Consensus, New Notifications"
     if notification_type == 'edited':
-        html = render_template('idea_edited.html', msg_proposal=idea['proposal'])
-    else:
-        html = render_template('idea_successful.html', msg_proposal=idea['proposal'])
+        html = render_template('emails/idea_edited.html', msg_proposal=idea['proposal'])
+    elif notification_type == 'successful':
+        html = render_template('emails/idea_successful.html', msg_proposal=idea['proposal'])
     vote_rels = list(getGraph().match(end_node=idea, rel_type="VOTED_ON"))
     support_rels = [x for x in vote_rels if x["type"] == "supported"]
     supporters = [x.start_node for x in support_rels]
@@ -115,8 +115,13 @@ def _send_notification_email_from_idea_to_author(idea_index, notification_type):
     author = getGraph().match_one(rel_type="CREATED", end_node=idea).start_node
     subject = "Consensus, New Notifications"
     if notification_type == 'failurewarning':
-        html = render_template('idea_failurewarning.html', msg_proposal=idea['proposal'])
-    else:
-        html = render_template('idea_successful.html', msg_proposal=idea['proposal'])
+        html = render_template('emails/idea_failurewarning.html', msg_proposal=idea['proposal'])
+    elif notification_type == 'successful_to_author':
+        volunteers = _get_volunteers_emails_for_idea_aux(idea_index)
+        if len(volunteers) > 0 :
+            html = render_template('emails/idea_successful.html', msg_proposal=idea['proposal'], volunteers=volunteers)
+        else :
+            supporters = _get_supporters_emails_for_idea_aux(idea_index)
+            html = render_template('emails/idea_successful.html', msg_proposal=idea['proposal'], supporters=supporters)
     send_email(author['email'], subject, html)
     return

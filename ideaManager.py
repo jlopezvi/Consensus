@@ -190,7 +190,7 @@ def _get_vote_statistics_for_idea(idea_index):
     return (supporters_num, rejectors_num, passives_num, volunteers_num)
 
 
-def get_supporters_emails_for_idea_aux(idea_index):
+def _get_supporters_emails_for_idea_aux(idea_index):
     idea=_getIdeaByIdeaIndex(idea_index)
     supporters_emails = []
     vote_rels = list(getGraph().match(end_node=idea, rel_type="VOTED_ON"))
@@ -198,10 +198,10 @@ def get_supporters_emails_for_idea_aux(idea_index):
     supporters = [x.start_node for x in support_rels]
     for supporter in supporters:
         supporters_emails.append(supporter['email'])
-    return jsonify({"result": "OK", "supporters_emails": supporters_emails})
+    return supporters_emails
 
 
-def get_volunteers_emails_for_idea_aux(idea_index):
+def _get_volunteers_emails_for_idea_aux(idea_index):
     idea=_getIdeaByIdeaIndex(idea_index)
     volunteers_emails = []
     vote_rels = list(getGraph().match(end_node=idea, rel_type="VOTED_ON"))
@@ -209,7 +209,7 @@ def get_volunteers_emails_for_idea_aux(idea_index):
     volunteers = [x.start_node for x in volunteer_rels]
     for volunteer in volunteers:
         volunteers_emails.append(volunteer['email'])
-    return jsonify({"result": "OK", "volunteers_emails": volunteers_emails})
+    return volunteers_emails
 
 
 
@@ -312,11 +312,15 @@ def _if_voting_relationship_exists(participant, idea):
     else: return False
 
 
-def _if_voting_relationship_exists_of_given_type(participant, idea, vote_type, vote_ifvolunteered):
+#vote_ifvolunteered = True / False / 'all'   ('all' is default)
+def _if_voting_relationship_exists_of_given_type(participant, idea, vote_type, vote_ifvolunteered ='all'):
     voting_rel = getGraph().match_one(start_node=participant, rel_type="VOTED_ON", end_node=idea)
     if voting_rel is not None:
-        if voting_rel["type"] == vote_type and voting_rel["ifvolunteered"] == vote_ifvolunteered:
-            return True
+        if voting_rel["ifvolunteered"] is 'all':
+            if voting_rel["type"] == vote_type: return True
+        else:
+            if voting_rel["type"] == vote_type and voting_rel["ifvolunteered"] == vote_ifvolunteered:
+                return True
     return False
 
 
