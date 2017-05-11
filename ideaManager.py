@@ -70,6 +70,7 @@ def modify_idea_aux(idea_dict,ideapic_file_body):
     return jsonify({"result":"OK", "result_msg":"Idea was modified"})
 
 
+# <Used by do_cron_tasks_aux>
 def remove_idea_aux(idea_index) :
     idea = _getIdeaByIdeaIndex(idea_index)
     for rel in getGraph().match(start_node=idea, bidirectional=True):

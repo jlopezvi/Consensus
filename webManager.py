@@ -1,9 +1,9 @@
 from participantManager import _get_participant_node, get_fullname_for_participant_aux
-from ideaManager import get_idea_data_aux
+from ideaManager import get_idea_data_aux, remove_idea_aux
 from utils import getGraph, send_email
 from flask import jsonify, render_template, url_for
 from uuid_token import generate_confirmation_token, confirm_token
-
+from datetime import datetime
 
 def registration_from_invitation_aux(token, guest_email):
     if not confirm_token(token, 10000):
@@ -82,6 +82,24 @@ def ideas_for_home_aux(participant_email, vote_type):
         current_idea = get_idea_data_aux(dic_idea)
         list_ideas.append(current_idea)
     return jsonify({"result": "OK", "data": list_ideas})
+
+
+def do_cron_tasks_aux():
+    # see the warningfailure_ideas to check whether we have to erase ideas.
+    ideas_failurewarning = []
+    ideas_failurewarning_removed = []
+    rels = list(getGraph().match(rel_type="CREATED"))
+    for rel in rels:
+        if rel.end_node["failurewarning"] is True:
+            ideas_failurewarning.append(rel.end_node)
+    if len(ideas_failurewarning) > 0:
+        for idea in ideas_failurewarning:
+            if_failurewarning_timestamp = datetime.strptime(idea['if_failurewarning_timestamp'], '%d.%m.%Y')
+            days = (datetime.now() - if_failurewarning_timestamp).days
+            if (days > 7):
+                ideas_failurewarning_removed.append(idea['proposal'])
+                remove_idea_aux(idea['proposal'])
+    return jsonify({"result":"OK", "ideas_removed" : ideas_failurewarning_removed})
 
 
 ####################

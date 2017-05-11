@@ -16,7 +16,7 @@ from ideaManager import get_ideas_data_created_by_participant_aux, get_ideas_cre
     _get_supporters_emails_for_idea_aux, _get_volunteers_emails_for_idea_aux, \
     _get_vote_statistics_for_idea
 from webManager import ideas_for_newsfeed_aux, ideas_for_home_aux, registration_receive_emailverification_aux, \
-    registration_from_invitation_aux, registration_send_invitation_aux
+    registration_from_invitation_aux, registration_send_invitation_aux, do_cron_tasks_aux
 from notificationManager import get_notifications_for_user_aux, remove_notification_from_idea_to_participant_aux, \
     _do_tasks_for_idea_editedproposal
 import logging
@@ -730,6 +730,17 @@ def ideas_for_home(user_email_DEBUG = None):
     #
     vote_type = request.get_json()['vote_type']
     return ideas_for_home_aux(user_email, vote_type)
+
+
+# input : None
+# output: JSON    {"result":"OK", "ideas_removed" : [ "proposal1", "proposal2"]}
+@app.route('/do_cron_tasks')
+def do_cron_tasks():
+    return do_cron_tasks_aux()
+
+
+
+
 
 
 ########################
