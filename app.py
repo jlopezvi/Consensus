@@ -9,14 +9,14 @@ from communityManager import saveCommunity,deleteCommunity,addCommunityToContact
 from participantManager import _get_participant_node, remove_user_aux, get_all_participants_aux, \
     _if_add_following_contact_to_user_aux, _if_remove_following_contact_to_user_aux, \
     get_participant_followers_info_aux,get_participant_followings_info_aux,\
-    get_fullname_for_participant_aux, registration_aux, _verifyEmail, get_participant_data_aux, modify_user_data_aux
+    get_fullname_for_participant_aux, registration_aux, get_participant_data_aux, modify_user_data_aux
 from ideaManager import get_ideas_data_created_by_participant_aux, get_ideas_created_by_participant_aux,\
      get_idea_data_aux, add_idea_to_user_aux, deleteOneIdea,getAllIdeas, \
     _getIdeaByIdeaIndex, vote_on_idea_aux, modify_idea_aux, remove_idea_aux, \
     _get_supporters_emails_for_idea_aux, _get_volunteers_emails_for_idea_aux, \
     _get_vote_statistics_for_idea
 from webManager import ideas_for_newsfeed_aux, ideas_for_home_aux, registration_receive_emailverification_aux, \
-    registration_from_invitation_aux, registration_send_invitation_aux, do_cron_tasks_aux
+    registration_from_invitation_aux, registration_send_invitation_aux, do_cron_tasks_aux, _verifyEmail
 from notificationManager import get_notifications_for_user_aux, remove_notification_from_idea_to_participant_aux, \
     _do_tasks_for_idea_editedproposal
 import logging
