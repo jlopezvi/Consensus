@@ -38,7 +38,7 @@ def registration_aux(inputdict, profilepic_file_body):
             ifemailverified=False
             result_send_emailverification = _registration_send_emailverification(email)
             if result_send_emailverification is "OK" :
-                return jsonify({"result": "OK", "ifemailexists": ifemailexists, "ifemailexists_msg":ifemailexists_msg,
+                return jsonify({"result": "OK: Resend email verification", "ifemailexists": ifemailexists, "ifemailexists_msg":ifemailexists_msg,
                                 "ifemailverified": ifemailverified, "ifemailverified_msg": ifemailverified_msg[ifemailverified]})
     # (Normal cases of registration)
     # save data for new (verified / unverified) participant in database

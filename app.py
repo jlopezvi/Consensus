@@ -146,7 +146,7 @@ def logout():
 #          1. Wrong (participant registered already!)
 #                       {"result":"Wrong","ifemailexists":true,"ifemailexists_msg":"message"}
 #          2. OK (participant registered already but e-mail not verified yet. Sends new e-mail for verification)  -->
-#                       {"result":"OK","ifemailexists":true,"ifemailexists_msg":"message",
+#                       {"result":"OK: Resend email verification","ifemailexists":true,"ifemailexists_msg":"message",
 #                        "ifemailverified":false,"ifemailverified_msg":"message"}
 #          3. OK (4 different normal cases of registration)
 #                       {"result":"OK", "ifhost":true/false,"ifhost_msg":"message",
