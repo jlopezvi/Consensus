@@ -5,6 +5,7 @@ from flask import jsonify, render_template, url_for
 from uuid_token import generate_confirmation_token, confirm_token
 from datetime import datetime
 
+
 def registration_from_invitation_aux(token, guest_email):
     if not confirm_token(token, 10000):
         jsondata = {"result": "Wrong", "result_msg" : "The confirmation link is invalid or has expired"}
@@ -19,14 +20,16 @@ def registration_from_invitation_aux(token, guest_email):
         return render_template('login/login.html', message=jsondata)
 
 
+# TODO repair getfullname, make it internal-external function
 def registration_send_invitation_aux(host_email, guest_email):
     token = generate_confirmation_token(host_email)
     confirm_url = url_for('.registration_from_invitation', token=token, guest_email=guest_email, _external=True)
     html = render_template('login/invitation_email.html', confirm_url=confirm_url)
     user_email=host_email
-    subject = ''.join([get_fullname_for_participant_aux(host_email,user_email), " invites you to join Consensus"])
+    # get_fullname_for_participant_aux(host_email,user_email)
+    subject = ''.join(["fullnameTEST", " invites you to join Consensus"])
     send_email(guest_email, subject, html)
-    return jsonify({"result": "OK", "result_msg" : "email sent"})
+    return jsonify({"result": "OK", "result_msg": "email sent"})
 
 
 def registration_receive_emailverification_aux(token):
@@ -56,7 +59,7 @@ def ideas_for_newsfeed_aux(participant_email):
     list_ideas = []
     followings_rels = list(getGraph().match(start_node=participant, rel_type="FOLLOWS"))
     if len(followings_rels) is 0:
-        return None
+        return jsonify({"result": "OK", "data": []})
     for following_rel in followings_rels:
         following = following_rel.end_node
         ideas_rels = list(getGraph().match(start_node=following, rel_type="CREATED"))
@@ -69,7 +72,7 @@ def ideas_for_newsfeed_aux(participant_email):
     for dic_idea in dic:
         newfeed = get_idea_data_aux(dic_idea)
         list_ideas.append(newfeed)
-    return jsonify({"result":"OK","data": list_ideas})
+    return jsonify({"result": "OK", "data": list_ideas})
 
 
 def ideas_for_home_aux(participant_email, vote_type):
