@@ -152,6 +152,9 @@ def logout():
 #          3. OK (4 different normal cases of registration)
 #                       {"result":"OK", "ifhost":true/false,"ifhost_msg":"message",
 #                       "ifemailverified":true/false,"ifemailverified_msg":"message"})
+#             *Note: when "ifemailverified" is "true", the user is logged in
+#             *Note: when "ifemailverified" is "false", a verification e-mail is sent
+#             *Note: when "ifhost" is "true", the user starts following the host.
 @app.route('/registration', methods=['POST'])
 def registration():
     profilepic_file_body = None

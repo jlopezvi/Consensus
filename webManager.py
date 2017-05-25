@@ -23,7 +23,8 @@ def registration_send_invitation_aux(host_email, guest_email):
     token = generate_confirmation_token(host_email)
     confirm_url = url_for('.registration_from_invitation', token=token, guest_email=guest_email, _external=True)
     html = render_template('login/invitation_email.html', confirm_url=confirm_url)
-    subject = ''.join([get_fullname_for_participant_aux(host_email), " invites you to join Consensus"])
+    user_email=host_email
+    subject = ''.join([get_fullname_for_participant_aux(host_email,user_email), " invites you to join Consensus"])
     send_email(guest_email, subject, html)
     return jsonify({"result": "OK", "result_msg" : "email sent"})
 
