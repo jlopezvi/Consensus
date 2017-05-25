@@ -97,16 +97,16 @@ $(document).ready( function() {
           },
           dataType: 'json',
           success: function (json) {
-            if(json.result == 'Bad password'){
+            if(json.result == 'Wrong: Bad password'){
               $('.login--message').empty().append('Email or Password wrong!').show();
-            } else if(json.result == 'Bad e-mail'){
+            } else if(json.result == 'Wrong: Bad e-mail'){
               $('.login--message').empty().append('e-mail not found / not verified').show();
-            } else if(json.result == 'Login validated'){
+            } else if(json.result == 'OK'){
               window.location = '/newsfeed';
             }
           },
           error: function(response){
-            console.log('error');
+            console.log(response);
           }
         });
     }
@@ -132,18 +132,18 @@ $(document).ready( function() {
     } else {
         if($('#password_r').val() == $('#password2_r').val()){
             $.ajax({
-              url: url[0] + "//" + url[2] + '/get_participant_by_email/'+data.email,
+              url: url[0] + "//" + url[2] + '/if_participant_exists_by_email/'+data.email,
               type: 'GET',
               headers: {
                 'Content-Type': 'application/json'
               },
               dataType: 'json',
               success: function (json) {
-                if(json.result == 'Participant found'){
+                if(json.result){
                   $('.register--message').removeClass('alert-success').addClass('alert-danger');
                   $('.register--message').empty().append('Email already taken').show();
                 } else {
-                    $('#modal_sign').modal('show');
+                  $('#modal_sign').modal('show');
                 }
               },
               error: function(response){
@@ -161,63 +161,55 @@ $(document).ready( function() {
   $(document).on('click', '.register--modal', function(){
     $('.register--button').prop('disabled', 'true');
     if ($('#public_r').is(":checked"))
-        opt = true;
+        opt = 'True';
     else
-        opt = false;
-    var data = {
-      'fullname': $('#fullname_r').val(),
-      'email': $('#email_r').val(),
-      'username': $('#username_r').val(),
-      'position': $('#position_r').val(),
-      'group': $('#group_r').val(),
-      'password': $('#password_r').val(),
-      'image_url': '', //$('#password').val(),
-      'ifpublicprofile': opt,
-      'host_email': null,
-      'ifemailverified': false
-    };
+        opt = 'False';
+
+    fData = new FormData();
+    fData.append('fullname', $('#fullname_r').val());
+    fData.append('email', $('#email_r').val());
+    fData.append('username', $('#username_r').val());
+    fData.append('position', $('#position_r').val());
+    fData.append('group', $('#group_r').val());
+    fData.append('password', $('#password_r').val());
+    fData.append('ifpublicprofile', opt);
+    fData.append('host_email', 'none');
+    fData.append('ifregistrationfromemail', 'False');
 
     hostEmail = $('#hostEmail').val();
     if(hostEmail != null){
-      data.host_email = hostEmail;
-      data.ifemailverified = true;
+      fData.host_email = hostEmail;
+      fData.ifemailverified = 'True';
     }
-
+/*
+    for (var pair of fData.entries()) {
+      console.log(pair[0]+ ', ' + pair[1]);
+    }
+*/
     $.ajax({
       url: url[0] + "//" + url[2] + '/registration',
       type: 'POST',
-      data: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      dataType: 'json',
+      data: fData,
+      processData: false,
+      contentType: false,
       success: function (json) {
-        if(json.result == 'email not verified'){
-            $.ajax({
-              url: url[0] + "//" + url[2] + '/registration_send_emailverification/'+data.email,
-              type: 'GET',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              dataType: 'json',
-              success: function (json) {
-                $('.register--button').prop('disabled', false);
-                if (json.result == 'email sent'){
-                    $('.register--message').removeClass('alert-danger').addClass('alert-success');
-                    $('.register--message').empty().append('Registration completed. <br> Check your email and validate your account!').show();
-                }
-              },
-              error: function(response){
-                $('.register--button').prop('disabled', false);
-                console.log('error');
-              }
-            });
-        } else if (json.result == 'OK'){
-            window.location = '/newsfeed';
+        //console.log(json);
+        if(json.result != 'OK'){
+          $('.register--message').removeClass('alert-danger').addClass('alert-success');
+          $('.register--message').empty().append('Participant registered previously, resend email verification.').show();
+          $('.register--button').prop('disabled', 'false');
+        } else {
+          if((json.ifhost) && (json.ifemailverified))
+            window.location('/newsfeed');
+          else{
+            $('.register--message').removeClass('alert-danger').addClass('alert-success');
+            $('.register--message').empty().append('E-mail verification sent.<br>Close this window and check your e-mail within the next few minutes.').show();
+            $('.register--button').prop('disabled', 'false');
+          }
         }
       },
       error: function(response){
-        console.log('error');
+        console.log(response);
       }
     });
   });

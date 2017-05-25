@@ -27,8 +27,8 @@
 				</div>
 
 				{% if message %}
-					{% if message.result == 'emailverification:OK' %}
-						<input type="text" value="{{ message.email }}" id="emailVerificated" hidden>
+					{% if message.result == 'OK' %}
+						<input type="text" value="{{ message.login_email }}" id="emailVerificated" hidden>
 					{% elif message.result == 'invitation:OK' %}
 						<input type="text" value="{{ message.host_email }}" id="hostEmail" hidden>
 						<input type="text" value="{{ message.current_email }}" id="guestEmail" hidden>
