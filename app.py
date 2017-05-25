@@ -138,13 +138,14 @@ def logout():
 
 # input:  application/x-www-form-urlencoded
 #        (file) profilepic_file_body
-#   (data dictionary): {"fullname":"Juan Lopez","email": "jj@gmail.com", "username": "jlopezvi",
-#                       "position": "employee", "group": "IT", "password": "MD5password",
-#                       "host_email": "asdf@das" / "None", "ifpublicprofile": "True"/ "False",
-#                       "ifregistrationfromemail": "True" / "False"}
+#   (data dictionary): fullname=Juan Lopez&email=jj@gmail.com&username=jlopezvi
+#                       &position=employee&group=IT&password=MD5password
+#                       &host_email=asdf@das/None&ifpublicprofile=True/False
+#                       &ifregistrationfromemail=True/False
 # output: json
-#          1. Wrong  -->   {"result":"Wrong","ifemailexists":true,"ifemailexists_msg":"message"}
-#          2. OK (registered participant but e-mail not verified yet. Sends new e-mail for verification)  -->
+#          1. Wrong (participant registered already!)
+#                       {"result":"Wrong","ifemailexists":true,"ifemailexists_msg":"message"}
+#          2. OK (participant registered already but e-mail not verified yet. Sends new e-mail for verification)  -->
 #                       {"result":"OK","ifemailexists":true,"ifemailexists_msg":"message",
 #                        "ifemailverified":false,"ifemailverified_msg":"message"}
 #          3. OK (4 different normal cases of registration)
