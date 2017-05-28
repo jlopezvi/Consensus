@@ -248,19 +248,20 @@ $( window ).load(function(){
   if(hostEmail != null){
     $('#email_r').val(guestEmail).prop('disabled', true);
     $.ajax({
-      url: url[0] + "//" + url[2] + '/get_full_name_for_participant/'+hostEmail,
+      url: url[0] + "//" + url[2] + '/get_fullname_for_participant/'+hostEmail,
       type: 'GET',
       headers: {
         'Content-Type': 'application/json'
       },
       dataType: 'json',
       success: function (json) {
-        console.log(json);
+        //console.log(json);
+        if(json.ifallowed)
+          $('.home--content--left h1').empty().append(json.fullname + ' Welcomes You!')
       },
       error: function(response){
         //console.log(response.responseText);
         //$('.login--message2').append('You have been invited by <strong>'+ response.responseText +'</strong>');
-        $('.home--content--left h1').empty().append(response.responseText + ' Welcomes You!')
       }
     });
   }

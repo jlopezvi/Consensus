@@ -1,3 +1,7 @@
+
+var url = window.location.href;
+url = url.split("/");
+
 $(document).ready(function(){
 	$('.menu--mobile--icon').addClass('close');
 	$('.menu--mobile--icon').on('click',function(){
@@ -29,6 +33,37 @@ $(document).ready(function(){
       });
   });
   /** end of check all  ***/
+
+  $(document).on('click', '.add--proposal--provisional', function(){
+
+    fData = new FormData();
+    fData.append('volunteers_goal_num', $('#volunteers_goal_num').val());
+    fData.append('concern', $('#concern').val());
+    fData.append('proposal', $('#proposal').val());
+    fData.append('moreinfo_proposal', $('#moreinfo_proposal').val());
+    fData.append('moreinfo_concern', $('#moreinfo_concern').val());
+    fData.append('volunteers_goal_num', $('#volunteers_goal_num').val());
+    fData.append('supporters_goal_num', 200);
+
+    $.ajax({
+      url: url[0] + "//" + url[2] + '/add_idea_to_user',
+      type: 'POST',
+      data: fData,
+      processData: false,
+      contentType: false,
+      success: function (json) {
+        //console.log(json);
+        if(json.result != 'OK'){
+          alert(json.result_msg);
+        } else {
+          alert(json.result_msg);
+        }
+      },
+      error: function(response){
+        console.log(response);
+      }
+    });
+  });
 });
 function showModal(id) {
     $('.modal').modal('hide');

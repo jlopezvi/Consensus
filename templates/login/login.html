@@ -4,7 +4,7 @@
 
 	<div class="row">
 		<div class="col-sm-7 home--content--left">
-			{% if message.result == 'invitation:OK' %}
+			{% if message.result_msg == 'Invitation OK' %}
 				<h1></h1>
 			{% else %}
 				<h1>Welcome</h1>
@@ -27,14 +27,14 @@
 				</div>
 
 				{% if message %}
-					{% if message.result == 'OK' %}
+					{% if message.result_msg == 'email sent' %}
 						<input type="text" value="{{ message.login_email }}" id="emailVerificated" hidden>
-					{% elif message.result == 'invitation:OK' %}
+					{% elif message.result_msg == 'Invitation OK' %}
 						<input type="text" value="{{ message.host_email }}" id="hostEmail" hidden>
-						<input type="text" value="{{ message.current_email }}" id="guestEmail" hidden>
+						<input type="text" value="{{ message.user_email }}" id="guestEmail" hidden>
 					{% else %}
 						<div class="col-sm-12 alert login--message2 alert-danger">
-							{{ message.result }}
+							{{ message.result_msg }}
 						</div>
 					{% endif %}
 				{% endif %}
