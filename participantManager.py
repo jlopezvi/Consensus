@@ -315,6 +315,8 @@ def get_notifications_for_user_aux(user_email):
     return
 
 
+###############################################
+
 def _addToParticipantsIndex(email, newparticipant) :
      getGraph().get_or_create_index(neo4j.Node, "Participants").add("email", email, newparticipant)
 def _addToUnverifiedParticipantsIndex(email, newparticipant):
@@ -327,6 +329,13 @@ def _getParticipantsIndex():
     return getGraph().get_or_create_index(neo4j.Node, "Participants")
 def _getUnverifiedParticipantsIndex():
     return getGraph().get_or_create_index(neo4j.Node, "UnverifiedParticipants")
+
+
+# <used by registration_send_invitation>
+def _get_fullname_for_participant(participant_email):
+    participant = _get_participant_node(participant_email)
+    fullname = participant["fullname"]
+    return fullname
 
 
 #NOT TESTED

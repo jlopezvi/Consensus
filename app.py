@@ -394,7 +394,7 @@ def get_all_participants_DEBUG():
 #    output: json {"result":"OK", "result_msg":"added idea to database"}
 #                 {"result":"Wrong", "result_msg":"proposal already exists"}
 @app.route('/add_idea_to_user', methods=['POST'])
-@app.route('/add_idea_to_user/<string:user_email>', methods=['POST'])
+@app.route('/add_idea_to_user/<string:user_email_DEBUG>', methods=['POST'])
 def add_idea_to_user(user_email_DEBUG=None) :
     if DEBUG and user_email_DEBUG is not None:
         user_email = user_email_DEBUG

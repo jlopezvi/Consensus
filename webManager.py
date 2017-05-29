@@ -1,4 +1,4 @@
-from participantManager import _get_participant_node, get_fullname_for_participant_aux
+from participantManager import _get_participant_node, _get_fullname_for_participant
 from ideaManager import get_idea_data_aux, remove_idea_aux
 from utils import getGraph, send_email
 from flask import jsonify, render_template, url_for
@@ -25,9 +25,7 @@ def registration_send_invitation_aux(host_email, guest_email):
     token = generate_confirmation_token(host_email)
     confirm_url = url_for('.registration_from_invitation', token=token, guest_email=guest_email, _external=True)
     html = render_template('login/invitation_email.html', confirm_url=confirm_url)
-    user_email=host_email
-    # get_fullname_for_participant_aux(host_email,user_email)
-    subject = ''.join(["fullnameTEST", " invites you to join Consensus"])
+    subject = ''.join([_get_fullname_for_participant(host_email), " invites you to join Consensus"])
     send_email(guest_email, subject, html)
     return jsonify({"result": "OK", "result_msg": "email sent"})
 
