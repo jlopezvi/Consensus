@@ -8,19 +8,19 @@ from datetime import datetime
 
 def registration_from_invitation_aux(token, guest_email):
     if not confirm_token(token, 10000):
-        jsondata = {"result": "Wrong", "result_msg" : "The confirmation link is invalid or has expired"}
+        jsondata = {"type": "registration", "result": "Wrong", "result_msg": "The confirmation link is invalid or has expired"}
         return render_template('login/login.html', message=jsondata)
     if confirm_token(token, 10000):
         host_email = confirm_token(token)
         jsondata = {
-            "result": "OK", "result_msg": "Invitation OK",
+            "result": "OK : With data", "result_msg": "Invitation OK",
             "user_email": guest_email,
             "host_email": host_email
         }
         return render_template('login/login.html', message=jsondata)
 
 
-# TODO repair getfullname, make it internal-external function
+
 def registration_send_invitation_aux(host_email, guest_email):
     token = generate_confirmation_token(host_email)
     confirm_url = url_for('.registration_from_invitation', token=token, guest_email=guest_email, _external=True)
@@ -32,20 +32,20 @@ def registration_send_invitation_aux(host_email, guest_email):
 
 def registration_receive_emailverification_aux(token):
     if not confirm_token(token, 3600):
-        jsondata = {"result": "Wrong : The confirmation link is invalid or has expired"}
+        jsondata = {"type": "login", "result": "Wrong", "result_msg": "The confirmation link is invalid or has expired"}
         return render_template('login/login.html', message=jsondata)
     if confirm_token(token, 3600):
         email = confirm_token(token)
         result_dict = _verifyEmail(email)
         if result_dict['result'] == 'OK':
             jsondata = {
-                "result": "OK",
+                "type": "login", "result": "OK : With data", "result_msg": "Email verified",
                 "login_email": email
             }
             return render_template('login/login.html', message=jsondata)
         else:
             jsondata = {
-                "result": result_dict['result']
+                "type": "login", "result": result_dict['result'], "result_msg": result_dict['result_msg']
             }
             # return redirect(url_for('.hello',message=jsondata))
             return render_template('login/login.html', message=jsondata)
@@ -119,17 +119,17 @@ def _if_isnewideaforparticipant(idea, participant):
 # <Used by registration_receive_emailverification_aux() >
 # input: email
 # output: python dictionary
-#  -> {'result': 'Wrong: Email already verified'}
-#  -> {'result': 'Wrong: Email not registered'}
-#  -> {'result': 'OK'}
+#  -> {'result': 'Wrong', 'result_msg': 'Email already verified'}
+#  -> {'result': 'Wrong', 'result_msg': 'Email not registered'}
+#  -> {'result': 'OK', 'result_msg': 'Email verified'}
 def _verifyEmail(email):
     from participantManager import _removeFromUnverifiedParticipantsIndex, _addToParticipantsIndex
     unverifiedparticipant = _get_participant_node(email, False)
     if unverifiedparticipant is None:
         if _get_participant_node(email, True):
-            return {'result': 'Wrong: Email already verified'}
+            return {'result': 'Wrong', 'result_msg': 'Email already verified'}
         else:
-            return {'result': 'Wrong: Email not registered'}
+            return {'result': 'Wrong', 'result_msg': 'Email not registered'}
     else:
         _removeFromUnverifiedParticipantsIndex(email, unverifiedparticipant)
         _addToParticipantsIndex(email, unverifiedparticipant)
@@ -137,5 +137,5 @@ def _verifyEmail(email):
         unverifiedparticipant.add_labels("participant")
         # TODO datestamp for registration
         # registered_on=datetime.datetime.now()
-        return {'result': 'OK'}
+        return {'result': 'OK', 'result_msg': 'Email verified'}
 

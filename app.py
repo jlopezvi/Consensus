@@ -584,8 +584,9 @@ def getConcerns(current):
 # TODO: try with redirect instead of render_template
 # input: URL token link from an invitation e-mail and that (guest) e-mail
 # output: redirects to login with a json called "message"
-#  -> json {"result": "Wrong", "result_msg" : "The confirmation link is invalid or has expired"}
-#  -> json {"result": "OK", "result_msg": "Invitation OK", "user_email": "guestemail@com", "host_email": host_email@com"}
+#  -> json {"type": "registration", "result": "Wrong", "result_msg": "The confirmation link is invalid or has expired"}
+#  -> json {"type": "registration", "result": "OK : With data", "result_msg": "Invitation OK",
+#            "user_email": "guestemail@com", "host_email": host_email@com"}
 @app.route('/registration_from_invitation/<token>/<guest_email>')
 def registration_from_invitation(token, guest_email):
     return registration_from_invitation_aux(token, guest_email)
@@ -602,10 +603,10 @@ def registration_send_invitation(host_email, guest_email):
 # TODO: try with redirect instead of render_template
 # input: URL token link from an invitation e-mail
 # output: redirects to login with a json called "message"
-#  -> json {"result": "Wrong: The confirmation link is invalid or has expired"}
-#  -> json {"result": "Wrong: Email already verified"}
-#  -> json {"result": "Wrong: Email not registered"}
-#  -> json {"result": "OK", "login_email": "asdf@dasdf.com"}
+#  -> json {"type": "login", "result": "Wrong", "result_msg": "The confirmation link is invalid or has expired"}
+#  -> json {"type": "login", "result": "Wrong", "result_msg": "Email already verified"}
+#  -> json {"type": "login", "result": "Wrong", "result_msg": "Email not registered"}
+#  -> json {"type": "login", "result": "OK : With data", "result_msg": "Email verified", "login_email": "asdf@dasdf.com"}
 @app.route('/registration_receive_emailverification/<token>')
 def registration_receive_emailverification(token):
     return registration_receive_emailverification_aux(token)
