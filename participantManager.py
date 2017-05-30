@@ -96,7 +96,7 @@ def _registration_send_emailverification(email):
     confirm_url = url_for('.registration_receive_emailverification', token=token, _external=True)
     html = render_template('login/verification_email.html', confirm_url=confirm_url)
     subject = "Please confirm your email"
-    send_email(email, subject, html)
+    #send_email(email, subject, html)
     return jsonify({"result": "OK", "result_msg":"email sent"})
 
 
