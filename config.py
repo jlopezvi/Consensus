@@ -14,10 +14,10 @@ class BaseConfig(object):
     # mail settings
     #MAIL_SERVER = 'smtp.googlemail.com'
     MAIL_SERVER = 'smtp.gmail.com'
-    #MAIL_PORT = 465
-    MAIL_PORT = 587
-    MAIL_USE_TLS = True
-    #MAIL_USE_SSL = True
+    MAIL_PORT = 465
+    #MAIL_PORT = 587
+    #MAIL_USE_TLS = True
+    MAIL_USE_SSL = True
 
     # gmail authentication
     MAIL_USERNAME = 'consensus.info@gmail.com'
