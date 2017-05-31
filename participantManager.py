@@ -8,6 +8,10 @@ from uuid_token import generate_confirmation_token
 import datetime
 from user_authentification import User
 import flask_login
+#New email dependencies
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 
 # input: python dict {'fullname':'Juan Lopez','email': 'jj@gmail.com', 'username': 'jlopezvi',
@@ -91,6 +95,7 @@ def _newParticipant(participantdict,profilepic_file_body):
 # input: email to be verified as an argument
 # output: e-mail to the email account with a URL token link for email verification
 #         and json {"result": "OK", "result_msg":"email sent"}
+"""
 def _registration_send_emailverification(email):
     token = generate_confirmation_token(email)
     confirm_url = url_for('.registration_receive_emailverification', token=token, _external=True)
@@ -124,6 +129,37 @@ def modify_user_data_aux(user_data, profilepic_file_body, user_email):
         image_url = save_file(ruta_dest, profilepic_file_body, filename)
         participant["profilepic_url"] = image_url
     return jsonify({'result': 'OK'})
+"""
+
+def _registration_send_emailverification(email):
+    toEmail = email
+    token = generate_confirmation_token(toEmail)
+    confirm_url = url_for('.registration_receive_emailverification', token=token, _external=True)
+    message = MIMEMultipart()
+    msgBody = """
+                    Welcome! Thanks for signing up. Please follow this link to activate your account:
+                    <br/>
+                    <a href="{}">"{}"</a>
+                    <br/>/
+                    Cheers!
+                 """
+    message.attach(MIMEText(msgBody.format(confirm_url, confirm_url), 'html'))
+    msgSubject = "Please confirm your email"
+    fromEmail = 'consensus.info@gmail.com'
+    fromEmailPass = 'consensusadmin'
+    message['From'] = fromEmail
+    message['To'] = toEmail
+    message['Subject'] = msgSubject
+    # Try email senging
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.starttls()
+    print (server)
+    try:
+       server.login(fromEmail, fromEmailPass)
+       server.sendmail(fromEmail, toEmail, message.as_string())
+    except Exception as e:
+       server.quit()
+    return jsonify({"result": "OK", "result_msg":"email sent"})
 
 
 def remove_user_aux(user_email) :
