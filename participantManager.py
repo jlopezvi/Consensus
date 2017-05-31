@@ -103,7 +103,7 @@ def _registration_send_emailverification(email):
     subject = "Please confirm your email"
     send_email(email, subject, html)
     return jsonify({"result": "OK", "result_msg":"email sent"})
-
+"""
 
 def modify_user_data_aux(user_data, profilepic_file_body, user_email):
     participant = _get_participant_node(user_email)
@@ -129,7 +129,7 @@ def modify_user_data_aux(user_data, profilepic_file_body, user_email):
         image_url = save_file(ruta_dest, profilepic_file_body, filename)
         participant["profilepic_url"] = image_url
     return jsonify({'result': 'OK'})
-"""
+
 
 def _registration_send_emailverification(email):
     toEmail = email
