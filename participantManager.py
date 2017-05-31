@@ -159,8 +159,9 @@ def _registration_send_emailverification(email):
        server.sendmail(fromEmail, toEmail, message.as_string())
        return jsonify({"result": "OK", "result_msg":"email sent"})
     except Exception as e:
+       email_error = e
        server.quit()
-       return jsonify({"result": "wrong", "result_msg":"email not sent", "error": e})
+    return jsonify({"result": "wrong", "result_msg":"email not sent", "error": email_error})
     
 
 
