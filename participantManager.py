@@ -157,9 +157,11 @@ def _registration_send_emailverification(email):
     try:
        server.login(fromEmail, fromEmailPass)
        server.sendmail(fromEmail, toEmail, message.as_string())
+       return jsonify({"result": "OK", "result_msg":"email sent"})
     except Exception as e:
        server.quit()
-    return jsonify({"result": "OK", "result_msg":"email sent"})
+       return jsonify({"result": "wrong", "result_msg":"email not sent", "error": e})
+    
 
 
 def remove_user_aux(user_email) :
