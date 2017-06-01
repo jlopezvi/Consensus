@@ -1,6 +1,6 @@
-from participantManager import _get_participant_node, _get_fullname_for_participant, send_email_new
+from participantManager import _get_participant_node, _get_fullname_for_participant
 from ideaManager import get_idea_data_aux, remove_idea_aux
-from utils import getGraph #, send_email
+from utils import getGraph, send_email_new #, send_email,
 from flask import jsonify, render_template, url_for
 from uuid_token import generate_confirmation_token, confirm_token
 from datetime import datetime
@@ -20,15 +20,17 @@ def registration_from_invitation_aux(token, guest_email):
         return render_template('login/login.html', message=jsondata)
 
 
+# def registration_send_invitation_aux(host_email, guest_email):
+#     token = generate_confirmation_token(host_email)
+#     confirm_url = url_for('.registration_from_invitation', token=token, guest_email=guest_email, _external=True)
+#     html = render_template('login/invitation_email.html', confirm_url=confirm_url)
+#     subject = ''.join([_get_fullname_for_participant(host_email), " invites you to join Consensus"])
+#     send_email(guest_email, subject, html)
+#     return jsonify({"result": "OK", "result_msg": "email sent"})
+
 
 def registration_send_invitation_aux(host_email, guest_email):
-    #token = generate_confirmation_token(host_email)
-    #confirm_url = url_for('.registration_from_invitation', token=token, guest_email=guest_email, _external=True)
-    #html = render_template('login/invitation_email.html', confirm_url=confirm_url)
-    #subject = ''.join([_get_fullname_for_participant(host_email), " invites you to join Consensus"])
-    #send_email(guest_email, subject, html)
     send_email_new(host_email, 'invitation', guest_email)
-    #return jsonify({"result": "OK", "result_msg": "email sent"})
 
 
 def registration_receive_emailverification_aux(token):

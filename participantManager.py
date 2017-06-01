@@ -8,10 +8,6 @@ from uuid_token import generate_confirmation_token
 import datetime
 from user_authentification import User
 import flask_login
-#New email dependencies
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 
 
 # input: python dict {'fullname':'Juan Lopez','email': 'jj@gmail.com', 'username': 'jlopezvi',
@@ -91,44 +87,19 @@ def _newParticipant(participantdict,profilepic_file_body):
     return {'result': 'OK'}
 
 
-#Used By <registration_aux>
-# input: email to be verified as an argument
-# output: e-mail to the email account with a URL token link for email verification
-#         and json {"result": "OK", "result_msg":"email sent"}
 
-def _registration_send_emailverification(email):
-    #token = generate_confirmation_token(email)
-    #confirm_url = url_for('.registration_receive_emailverification', token=token, _external=True)
-    #html = render_template('login/verification_email.html', confirm_url=confirm_url)
-    #subject = "Please confirm your email"
-    send_email_new(email, 'regular')
-    #return jsonify({"result": "OK", "result_msg":"email sent"})
+# #Used By <registration_aux>
+# # input: email to be verified as an argument
+# # output: e-mail to the email account with a URL token link for email verification
+# #         and json {"result": "OK", "result_msg":"email sent"}
+# def _registration_send_emailverification(email):
+#     token = generate_confirmation_token(email)
+#     confirm_url = url_for('.registration_receive_emailverification', token=token, _external=True)
+#     html = render_template('login/verification_email.html', confirm_url=confirm_url)
+#     subject = "Please confirm your email"
+#     send_email(email, subject, html)
+#     return jsonify({"result": "OK", "result_msg":"email sent"})
 
-
-def modify_user_data_aux(user_data, profilepic_file_body, user_email):
-    participant = _get_participant_node(user_email)
-    fields = ['email', 'position', 'group', 'password', 'ifsupportingproposalsvisible',
-              'ifrejectingproposalsvisible',
-              'username', 'ifpublicprofile', 'fullname']
-    data = {}
-    if 'new_email' in user_data:
-        new_email=user_data['new_email']
-        if _get_participant_node(new_email, 'all'):  # email exists?
-            return jsonify({'result': 'Wrong: New e-mail already exists'})
-        _removeFromParticipantsIndex(user_email, participant)
-        _addToParticipantsIndex(new_email, participant)
-        user_email = new_email
-    for k, v in user_data.items():
-        if k in fields:
-            data[k] = v
-    for k, v in data.items():
-        participant[k] = v
-    if profilepic_file_body is not None:
-        ruta_dest = '/static/assets/profile/'
-        filename = str(user_email) + '.png'
-        image_url = save_file(ruta_dest, profilepic_file_body, filename)
-        participant["profilepic_url"] = image_url
-    return jsonify({'result': 'OK'})
 
 
 def _registration_send_emailverification_test(email):
@@ -163,7 +134,32 @@ def _registration_send_emailverification_test(email):
        email_error = e
        server.quit()
     return jsonify({"result": "wrong", "result_msg":"email not sent", "error": email_error})
-    
+
+
+def modify_user_data_aux(user_data, profilepic_file_body, user_email):
+    participant = _get_participant_node(user_email)
+    fields = ['email', 'position', 'group', 'password', 'ifsupportingproposalsvisible',
+              'ifrejectingproposalsvisible',
+              'username', 'ifpublicprofile', 'fullname']
+    data = {}
+    if 'new_email' in user_data:
+        new_email=user_data['new_email']
+        if _get_participant_node(new_email, 'all'):  # email exists?
+            return jsonify({'result': 'Wrong: New e-mail already exists'})
+        _removeFromParticipantsIndex(user_email, participant)
+        _addToParticipantsIndex(new_email, participant)
+        user_email = new_email
+    for k, v in user_data.items():
+        if k in fields:
+            data[k] = v
+    for k, v in data.items():
+        participant[k] = v
+    if profilepic_file_body is not None:
+        ruta_dest = '/static/assets/profile/'
+        filename = str(user_email) + '.png'
+        image_url = save_file(ruta_dest, profilepic_file_body, filename)
+        participant["profilepic_url"] = image_url
+    return jsonify({'result': 'OK'})
 
 
 def remove_user_aux(user_email) :
@@ -387,53 +383,3 @@ def get_all_participants_aux():
     return participants
 
 
-
-def send_email_new(email, opt, guest_email=None):
-    token = generate_confirmation_token(email)
-    message = MIMEMultipart()
-    if opt == 'regular':
-        print('entre a regular')
-        toEmail = email
-        confirm_url = url_for('.registration_receive_emailverification', token=token, _external=True)
-        msgSubject = "Please confirm your email"
-        msgBody = """
-                    Welcome! Thanks for signing up. Please follow this link to activate your account:
-                    <br/>
-                    <a href="{}">"{}"</a>
-                    <br/>/
-                    Cheers!
-                 """
-        message.attach(MIMEText(msgBody.format(confirm_url, confirm_url), 'html'))
-    elif opt == 'invitation':
-        toEmail = guest_email
-        confirm_url = url_for('.registration_from_invitation', token=token, guest_email=guest_email, _external=True)
-        msgSubject = ''.join([_get_fullname_for_participant(email), " invites you to join Consensus"])
-        msgBody = """
-                    Welcome! {} is inviting you to use our aplication
-                    <br/>
-                    Please, follow the next link to access to our site
-                    <br />
-                    <a href="{}">"{}"</a>
-                    <br/>/
-                    Cheers!
-                 """
-        message.attach(MIMEText(msgBody.format(_get_fullname_for_participant(email),confirm_url, confirm_url), 'html'))
-    
-    fromEmail = 'noreply.consensus@gmail.com'
-    fromEmailPass = 'consensus2017'
-    message['From'] = fromEmail
-    message['To'] = toEmail
-    message['Subject'] = msgSubject
-    # Try email senging
-    server = smtplib.SMTP('smtp.gmail.com', 587)
-    server.starttls()
-    try:
-       server.login(fromEmail, fromEmailPass)
-       server.sendmail(fromEmail, toEmail, message.as_string())
-       print('email sent')
-       return jsonify({"result": "OK", "result_msg":"email sent"})
-    except Exception as e:
-       email_error = e
-       print(e)
-       server.quit()
-    return jsonify({"result": "wrong", "result_msg":"email not sent", "error": email_error})

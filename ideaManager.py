@@ -1,6 +1,6 @@
 from py2neo import neo4j
 from participantManager import _get_participant_node, _getIfContactRelationshipExists
-from utils import getGraph, save_file #, send_email
+from utils import getGraph, save_file
 from flask import jsonify, render_template
 import json, uuid
 from datetime import datetime,date
