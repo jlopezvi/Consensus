@@ -24,7 +24,7 @@ import flask_login
 from user_authentification import User
 from uuid_token import generate_confirmation_token, confirm_token
 from flask_mail import Mail
-from utils import send_email
+#from utils import send_email
 
 #TODO: logging, sending emails when errors take place.
 #logging.basicConfig(level=logging.DEBUG)

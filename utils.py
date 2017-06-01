@@ -32,6 +32,7 @@ def save_file(ruta_dest,file_upload,filename):
 from flask.ext.mail import Message
 
 
+"""
 def send_email(to, subject, template):
     from app import app,mail
     msg = Message(
@@ -42,3 +43,6 @@ def send_email(to, subject, template):
         sender=app.config['MAIL_USERNAME']
     )
     mail.send(msg)
+"""
+
+#input email as recipent, opt indicates if is a regular registration or registration by invitation
