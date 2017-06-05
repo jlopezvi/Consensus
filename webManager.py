@@ -20,6 +20,7 @@ def registration_from_invitation_aux(token, guest_email):
         return render_template('login/login.html', message=jsondata)
 
 
+# MAIL with Flask
 def registration_send_invitation_aux(host_email, guest_email):
     token = generate_confirmation_token(host_email)
     confirm_url = url_for('.registration_from_invitation', token=token, guest_email=guest_email, _external=True)
@@ -29,6 +30,7 @@ def registration_send_invitation_aux(host_email, guest_email):
     return jsonify({"result": "OK", "result_msg": "email sent"})
 
 
+# MAIL with Python
 # TODO : choose a mail method
 # def registration_send_invitation_aux(host_email, guest_email):
 #     send_email_new(host_email, 'invitation', guest_email)
