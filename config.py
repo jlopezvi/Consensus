@@ -13,20 +13,18 @@ class BaseConfig(object):
 
     # mail settings
     # LOCAL FLASK
-    # MAIL_SERVER = 'smtp.googlemail.com'
-    # MAIL_PORT = 465
-    # MAIL_USE_TLS = False
-    # MAIL_USE_SSL = True
-    # MAIL_SERVER = 'smtp.googlemail.com'
-    # SERVER MIME
-    #MAIL_SERVER = 'smtp.googlemail.com'
-    MAIL_SERVER = 'smtp.gmail.com'
+    MAIL_SERVER = 'smtp.googlemail.com'
     MAIL_PORT = 465
+    MAIL_USE_TLS = False
     MAIL_USE_SSL = True
+    # # SERVER MIME
+    # MAIL_SERVER = 'smtp.gmail.com'
+    # MAIL_PORT = 465
+    # MAIL_USE_SSL = True
 
     # gmail authentication
     MAIL_USERNAME = 'consensus.info@gmail.com'
-    MAIL_PASSWORD = 'consensusadmin'
+    MAIL_PASSWORD = 'consensusadmin2017'
 
     # mail accounts
     MAIL_DEFAULT_SENDER = 'consensus.info@gmail.com'
