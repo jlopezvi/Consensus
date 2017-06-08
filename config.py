@@ -22,9 +22,12 @@ class BaseConfig(object):
     # MAIL_PORT = 465
     # MAIL_USE_SSL = True
 
-    # gmail authentication
-    MAIL_USERNAME = 'consensus.info@gmail.com'
-    MAIL_PASSWORD = 'consensusadmin2017'
+    # #OLD gmail authentication
+    # MAIL_USERNAME = 'consensus.info@gmail.com'
+    # MAIL_PASSWORD = 'consensusadmin2017'
+    #NEW gmail authentification
+    MAIL_USERNAME = 'noreply.consensus@gmail.com'
+    MAIL_PASSWORD = 'consensus2017'
 
     # mail accounts
     MAIL_DEFAULT_SENDER = 'consensus.info@gmail.com'
