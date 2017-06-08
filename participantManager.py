@@ -41,7 +41,8 @@ def registration_aux(inputdict, profilepic_file_body):
                 return jsonify({"result": "OK: Participant registered previously, resend email verification",
                                 "ifemailexists": ifemailexists, "ifemailexists_msg":ifemailexists_msg,
                                 "ifemailverified": ifemailverified, "ifemailverified_msg": ifemailverified_msg[ifemailverified]})
-            else: raise NameError('PROBLEM')
+            else:
+                raise NameError('PROBLEM')
     # (Normal cases of registration)
     # save data for new (verified / unverified) participant in database
     ifemailverified = inputdict.get('ifregistrationfromemail')
@@ -50,13 +51,17 @@ def registration_aux(inputdict, profilepic_file_body):
         user = User(email)
         flask_login.login_user(user)
     else:
-        _registration_send_emailverification(email)
+        result_send_emailverification2 = _registration_send_emailverification(email)
+        if result_send_emailverification2 is "OK":
+            pass
+        else:
+            raise NameError('PROBLEM')
     ifhost = False
     if inputdict.get('host_email') is not None:
         # current_participant (verified/unverified) follows host
         ifhost = _if_add_following_contact_to_user_aux(email, inputdict.get('host_email'))
-    return jsonify({"result":"OK", "ifhost":ifhost, "ifhost_msg":ifhost_msg[ifhost],
-                    "ifemailverified":ifemailverified, "ifemailverified_msg":ifemailverified_msg[ifemailverified]})
+    return jsonify({"result": "OK", "ifhost": ifhost, "ifhost_msg": ifhost_msg[ifhost],
+                    "ifemailverified": ifemailverified, "ifemailverified_msg": ifemailverified_msg[ifemailverified]})
 
 
 #Used By <registration_aux>
@@ -86,20 +91,6 @@ def _newParticipant(participantdict,profilepic_file_body):
         newparticipant.add_labels("unverified_participant")
         _addToUnverifiedParticipantsIndex(email, newparticipant)
     return {'result': 'OK'}
-
-
-
-#Used By <registration_aux>
-# input: email to be verified as an argument
-# output: e-mail to the email account with a URL token link for email verification
-#         and json {"result": "OK", "result_msg":"email sent"}
-def _registration_send_emailverification(email):
-    token = generate_confirmation_token(email)
-    confirm_url = url_for('.registration_receive_emailverification', token=token, _external=True)
-    html = render_template('login/verification_email.html', confirm_url=confirm_url)
-    subject = "Please confirm your email"
-    send_email(email, subject, html)
-    return "OK"
 
 
 # TODO: choose mail method, either Flask or MIME
@@ -366,6 +357,19 @@ def _getParticipantsIndex():
     return getGraph().get_or_create_index(neo4j.Node, "Participants")
 def _getUnverifiedParticipantsIndex():
     return getGraph().get_or_create_index(neo4j.Node, "UnverifiedParticipants")
+
+
+# Used By <registration_aux>
+# input: email to be verified as an argument
+# output: e-mail to the email account with a URL token link for email verification
+#         and returns "OK"
+def _registration_send_emailverification(email):
+    token = generate_confirmation_token(email)
+    confirm_url = url_for('.registration_receive_emailverification', token=token, _external=True)
+    html = render_template('login/verification_email.html', confirm_url=confirm_url)
+    subject = "Please confirm your email"
+    send_email(email, subject, html)
+    return "OK"
 
 
 # <used by registration_send_invitation>
