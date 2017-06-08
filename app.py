@@ -97,12 +97,24 @@ def newsfeed():
 @flask_login.login_required
 #user_email=flask_login.current_user.id
 def home():
-    return render_template('login/home.html')
+    return render_template('home.html')
 
 
+#Renamed template from participants.html to search_participants.html
+#Renamed URL from participants to search-participants
+@app.route('/search-participants')
+@flask_login.login_required
+def search_participants():
+    return render_template('search_participants.html')
+
+
+#Added new Route for Participant template
 @app.route('/participants')
 def participants():
-    return render_template('/participants.html')
+    user = flask_login.current_user.id
+    #Passing email of current user logged in for host_email information
+    #to access to registration_send_invitation
+    return render_template('participants.html', user=user)
 
 
 ##############
