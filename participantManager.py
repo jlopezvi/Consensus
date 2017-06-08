@@ -35,12 +35,13 @@ def registration_aux(inputdict, profilepic_file_body):
             ifemailverified=True
             return jsonify({"result":"Wrong","ifemailexists":ifemailexists,"ifemailexists_msg":ifemailexists_msg})
         else:
-            ifemailverified=False
+            ifemailverified = False
             result_send_emailverification = _registration_send_emailverification(email)
-            if result_send_emailverification is "OK" :
+            if result_send_emailverification is "OK":
                 return jsonify({"result": "OK: Participant registered previously, resend email verification",
                                 "ifemailexists": ifemailexists, "ifemailexists_msg":ifemailexists_msg,
                                 "ifemailverified": ifemailverified, "ifemailverified_msg": ifemailverified_msg[ifemailverified]})
+            else: raise NameError('PROBLEM')
     # (Normal cases of registration)
     # save data for new (verified / unverified) participant in database
     ifemailverified = inputdict.get('ifregistrationfromemail')
@@ -98,7 +99,7 @@ def _registration_send_emailverification(email):
     html = render_template('login/verification_email.html', confirm_url=confirm_url)
     subject = "Please confirm your email"
     send_email(email, subject, html)
-    return jsonify({"result": "OK", "result_msg":"email sent"})
+    return "OK"
 
 
 # TODO: choose mail method, either Flask or MIME
