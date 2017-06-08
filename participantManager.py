@@ -88,52 +88,52 @@ def _newParticipant(participantdict,profilepic_file_body):
 
 
 
-# #Used By <registration_aux>
-# # input: email to be verified as an argument
-# # output: e-mail to the email account with a URL token link for email verification
-# #         and json {"result": "OK", "result_msg":"email sent"}
-# def _registration_send_emailverification(email):
-#     token = generate_confirmation_token(email)
-#     confirm_url = url_for('.registration_receive_emailverification', token=token, _external=True)
-#     html = render_template('login/verification_email.html', confirm_url=confirm_url)
-#     subject = "Please confirm your email"
-#     send_email(email, subject, html)
-#     return jsonify({"result": "OK", "result_msg":"email sent"})
-
-
-
-def _registration_send_emailverification_test(email):
-    toEmail = email
-    token = generate_confirmation_token(toEmail)
+#Used By <registration_aux>
+# input: email to be verified as an argument
+# output: e-mail to the email account with a URL token link for email verification
+#         and json {"result": "OK", "result_msg":"email sent"}
+def _registration_send_emailverification(email):
+    token = generate_confirmation_token(email)
     confirm_url = url_for('.registration_receive_emailverification', token=token, _external=True)
-    message = MIMEMultipart()
-    msgBody = """
-                    Welcome! Thanks for signing up. Please follow this link to activate your account:
-                    <br/>
-                    <a href="{}">"{}"</a>
-                    <br/>/
-                    Cheers!
-                 """
-    message.attach(MIMEText(msgBody.format(confirm_url, confirm_url), 'html'))
-    msgSubject = "Please confirm your email"
-    fromEmail = 'consensus.info@gmail.com'
-    fromEmailPass = 'consensusadmin'
-    message['From'] = fromEmail
-    message['To'] = toEmail
-    message['Subject'] = msgSubject
-    # Try email senging
-    server = smtplib.SMTP('smtp.gmail.com', 587)
-    server.starttls()
-    print (server)
-    try:
-       server.login(fromEmail, fromEmailPass)
-       server.sendmail(fromEmail, toEmail, message.as_string())
-       return jsonify({"result": "OK", "result_msg":"email sent"})
-    except Exception as e:
-       print(e)
-       email_error = e
-       server.quit()
-    return jsonify({"result": "wrong", "result_msg":"email not sent", "error": email_error})
+    html = render_template('login/verification_email.html', confirm_url=confirm_url)
+    subject = "Please confirm your email"
+    send_email(email, subject, html)
+    return jsonify({"result": "OK", "result_msg":"email sent"})
+
+
+# TODO: choose mail method, either Flask or MIME
+# def _registration_send_emailverification_test(email):
+#     toEmail = email
+#     token = generate_confirmation_token(toEmail)
+#     confirm_url = url_for('.registration_receive_emailverification', token=token, _external=True)
+#     message = MIMEMultipart()
+#     msgBody = """
+#                     Welcome! Thanks for signing up. Please follow this link to activate your account:
+#                     <br/>
+#                     <a href="{}">"{}"</a>
+#                     <br/>/
+#                     Cheers!
+#                  """
+#     message.attach(MIMEText(msgBody.format(confirm_url, confirm_url), 'html'))
+#     msgSubject = "Please confirm your email"
+#     fromEmail = 'consensus.info@gmail.com'
+#     fromEmailPass = 'consensusadmin'
+#     message['From'] = fromEmail
+#     message['To'] = toEmail
+#     message['Subject'] = msgSubject
+#     # Try email senging
+#     server = smtplib.SMTP('smtp.gmail.com', 587)
+#     server.starttls()
+#     print (server)
+#     try:
+#        server.login(fromEmail, fromEmailPass)
+#        server.sendmail(fromEmail, toEmail, message.as_string())
+#        return jsonify({"result": "OK", "result_msg":"email sent"})
+#     except Exception as e:
+#        print(e)
+#        email_error = e
+#        server.quit()
+#     return jsonify({"result": "wrong", "result_msg":"email not sent", "error": email_error})
 
 
 def modify_user_data_aux(user_data, profilepic_file_body, user_email):
