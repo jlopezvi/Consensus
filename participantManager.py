@@ -3,7 +3,7 @@ from flask import jsonify, abort, redirect,url_for, render_template
 import ast
 import json
 import logging
-from utils import getGraph, save_file #,send_email
+from utils import getGraph, save_file, send_email
 from uuid_token import generate_confirmation_token
 import datetime
 from user_authentification import User
