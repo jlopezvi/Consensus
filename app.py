@@ -9,7 +9,8 @@ from communityManager import saveCommunity,deleteCommunity,addCommunityToContact
 from participantManager import _get_participant_node, remove_user_aux, get_all_participants_aux, \
     _if_add_following_contact_to_user_aux, _if_remove_following_contact_to_user_aux, \
     get_participant_followers_info_aux,get_participant_followings_info_aux,\
-    get_fullname_for_participant_aux, registration_aux, get_participant_data_aux, modify_user_data_aux
+    get_fullname_for_participant_aux, registration_aux, get_participant_data_aux, modify_user_data_aux, \
+    get_participant_data_by_email_unrestricted_aux
 from ideaManager import get_ideas_data_created_by_participant_aux, get_ideas_created_by_participant_aux,\
      get_idea_data_aux, add_idea_to_user_aux, deleteOneIdea,getAllIdeas, \
     _getIdeaByIdeaIndex, vote_on_idea_aux, modify_idea_aux, remove_idea_aux, \
@@ -259,6 +260,23 @@ def get_participant_data(participant_email, user_email_DEBUG=None):
     else:
         user_email = flask_login.current_user.id
     return get_participant_data_aux(user_email, participant_email)
+
+
+# input: participant_email: new@gmail.com
+# output: json  {"result":"OK", "participant_data": participant_data }
+#        participant_data:
+#        {
+#            'id': 'email',
+#            'profilepic_url': 'assets/profile/perfil-mediano.png',
+#            'username': 'John',
+#            'fullname': 'Juan J. Lopez Villarejo',
+#            'ideas_num': 5,
+#            'followers_num': 5,
+#            'followings_num': 2
+#        }
+@app.route('/get_participant_data_by_email_unrestricted/<participant_email>')
+def get_participant_data_by_email_unrestricted(participant_email):
+    return get_participant_data_by_email_unrestricted_aux(participant_email)
 
 
 # input: email
