@@ -1,6 +1,26 @@
 var url = window.location.href;
 url = url.split("/");
 
+$(window).on('load', function() {
+	var page = $('#page').val();
+	var current_email = $('#host_email').val();
+	if(page == 'participant'){
+		$.ajax({
+			url: url[0] + "//" + url[2] + '/get_participant_data_by_email_unrestricted/'+current_email,
+			type: 'GET',
+			success: function (json) {
+				//console.log(json);
+				$('.profile--picture img').attr('src', json.participant_data.profilepic_url);
+				$('.participant__name a').append(json.participant_data.username);
+				$('.participant__name label').append(json.participant_data.fullname);
+				$('.participant__active--p').children().first().append(json.participant_data.ideas_num);
+				$('.participant__followers').children().first().append(json.participant_data.followers_num);
+				$('.participant__following').children().first().append(json.participant_data.followings_num);
+			}	
+		});
+	} 
+});
+
 $(document).ready( function() {
 	$('body').removeClass('container').addClass('container-fluid');
 	

@@ -22,40 +22,35 @@
         <!-- End of Search Form -->            
     </div>
     <div class="row participant__info"> 
-        {% for participant in participants %}
             <div class="row">
                 <div class="col-sm-2 profile__col">
                     <div class="participant__profile--pic">
-                        {% if (participant.picture == '') %}
-                            <i class="fa fa-user user--icon"></i>
-                        {% else %}
-                            <div class="profile--picture">
-                                <img src="{{ url_for('static',filename=participant.picture) }}">
-                            </div>
-                        {% endif %}
+                        <div class="profile--picture">
+                            <img src="">
+                        </div>
                     </div>
                 </div>
                 <div class="col-sm-2 info__col" style="padding:0;">
                     <div class="participant__name">
-                        <a href="#"> {{ participant.username }}</a><br>
-                        <label> {{ participant.name }} {{ participant.lastname }} </label>
+                        <a href="#"></a><br>
+                        <label></label>
                     </div>
                 </div>
                 <div class="col-sm-3 info2__col info2__col--first">
                     <div class="participant__active--p">
-                        <label> {{ participant.active_publications }}</label><br>
+                        <label></label><br>
                         <label> Active publications </label>
                     </div>
                 </div>
                 <div class="col-sm-2 info2__col">
                     <div class="participant__followers">
-                        <label> {{ participant.followers }}</label><br>
+                        <label></label><br>
                         <label> Followers </label>
                     </div>
                 </div>
                 <div class="col-sm-2 info2__col">
                     <div class="participant__following">
-                        <label> {{ participant.following }}</label><br>
+                        <label> </label><br>
                         <label> Following </label>
                     </div>
                 </div>
@@ -65,7 +60,6 @@
                     </div>
                 </div>
             </div>
-        {% endfor %}
     </div>
 
     <!-- Modal -->
