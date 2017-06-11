@@ -1,0 +1,61 @@
+{% extends 'new_template.html' %}
+{% block content %}
+
+<div class="container__search--participants" style="margin-top: 8%;">
+    <div class="col-md-6 col-md-offset-3">
+        <form role="form">
+            <div class="row">
+                <div class="form-group">
+                    <div class="input-group search__div--participants">
+                        <span class="span__search"><span class="glyphicon glyphicon-search search__icon--participants"></span><input class="form-control" type="text" name="search" placeholder="Search..." required/ id="search-input-participant"></span>
+                        <span class="input-group-btn" style="padding-right: 10px;">
+                            <button class="btn btn__search" type="submit"><span>Go!</button>
+                        </span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!-- End of Search Form -->            
+    </div>
+    <div class="col-sm-10 col-sm-push-1 search__participant"> 
+        <p>Type name to search for public participants and full e-mail + search button for others. </p>
+        <div class="addproposal--step__div">  
+            <ul class="addproposal--step2">
+            <legend>Executive board</legend>
+                <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="/static/assets/profile/perfil-mediano.png"><p><a href="#">Emile</a> <br>Emile Godard </p>
+                <input class="form-control invite__button" type="button" value="Follow">
+                </li>
+                <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="/static/assets/profile/perfil-mediano.png"><p><a href="#">JJacques</a> <br>Jean Jacques Richelieu </p>
+                <input class="form-control invite__button" type="button" value="Follow">
+                </li>
+                <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="/static/assets/profile/perfil-mediano.png"><p><a href="#">Zoe</a> <br>Zoe Martin Pescador </p>
+                <input class="form-control invite__button" type="button" value="Follow">
+                </li>
+                <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="/static/assets/profile/perfil-mediano.png"><p><a href="#">Joe</a> <br>Joe Black</p>
+                <input class="form-control invite__button" type="button" value="Follow">
+                </li>
+                 <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="/static/assets/profile/perfil-mediano.png"><p><a href="#">Daniela</a> <br>Daniela Roa</p>
+                <input class="form-control invite__button" type="button" value="Follow">
+                </li>
+                 <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="/static/assets/profile/perfil-mediano.png"><p><a href="#">José</a> <br>José Lopez</p>
+                <input class="form-control invite__button" type="button" value="Follow">
+                </li>
+                 <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="/static/assets/profile/perfil-mediano.png"><p><a href="#">Daniela</a> <br>Daniela Roa</p>
+                <input class="form-control invite__button" type="button" value="Follow">
+                </li>
+                 <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="/static/assets/profile/perfil-mediano.png"><p><a href="#">José</a> <br>José Lopez</p>
+                <input class="form-control invite__button" type="button" value="Follow">
+                </li>
+                 <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="/static/assets/profile/perfil-mediano.png"><p><a href="#">Daniela</a> <br>Daniela Roa</p>
+                <input class="form-control invite__button" type="button" value="Follow">
+                </li>
+                 <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="/static/assets/profile/perfil-mediano.png"><p><a href="#">José</a> <br>José Lopez</p>
+                <input class="form-control invite__button" type="button" value="Follow">
+                </li>
+            </ul>
+         </div>
+    </div>
+</div>
+<script src="{{ url_for('static',filename='js/participants.js') }}"></script>
+{% endblock %}
