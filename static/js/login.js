@@ -177,15 +177,17 @@ $(document).ready( function() {
     fData.append('ifregistrationfromemail', 'False');
 
     hostEmail = $('#hostEmail').val();
+    console.log(hostEmail);
     if(hostEmail != null){
-      fData.host_email = hostEmail;
-      fData.ifemailverified = 'True';
+      fData.set('host_email', hostEmail);
+      fData.set('ifemailverified', 'True');
+      fData.set('ifregistrationfromemail', 'True');
     }
-/*
+
     for (var pair of fData.entries()) {
       console.log(pair[0]+ ', ' + pair[1]);
     }
-*/
+
     $.ajax({
       url: url[0] + "//" + url[2] + '/registration',
       type: 'POST',
@@ -200,7 +202,7 @@ $(document).ready( function() {
           $('.register--button').prop('disabled', 'false');
         } else {
           if((json.ifhost) && (json.ifemailverified))
-            window.location('/newsfeed');
+            window.location = '/newsfeed';
           else{
             $('.register--message').removeClass('alert-danger').addClass('alert-success');
             $('.register--message').empty().append('E-mail verification sent.<br>Close this window and check your e-mail within the next few minutes.').show();

@@ -1,6 +1,7 @@
 {% extends 'new_template.html' %}
 {% block content %}
 
+<input type="hidden" id="page" value="participant">
 <div class="container__participants" style="margin-top: 8%; margin-bottom: 8%;">
  <h3 style="font-family: lato_bold; margin-bottom: 0;">Participants</h3>
     <div class="col-md-6 col-md-offset-3">
@@ -92,7 +93,7 @@
                     <p>1. Suggestion tell them first all about Consensus and why you are using it going to user.</p>
                     <p>2. Type your contacts e-mail to send them an invitation to connect with you:</p>
                     <input type="text" value="{{ user }}" hidden id="host_email">
-                    <textarea id="emails_input">some e-mails here</textarea>
+                    <textarea id="emails_input" placeholder="some e-mails here"></textarea>
                     <input class="form-control invite__button" type="button" id="send_invitation-btn" value="Send Invitation">
                 </div>
             </div>

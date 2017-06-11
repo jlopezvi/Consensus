@@ -1,6 +1,7 @@
 {% extends 'new_template.html' %}
 {% block content %}
 
+<input type="hidden" id="page" value="search">
 <div class="container__search--participants" style="margin-top: 8%;">
     <div class="col-md-6 col-md-offset-3">
         <form role="form">
@@ -20,7 +21,11 @@
     </div>
     <div class="col-sm-10 col-sm-push-1 search__participant"> 
         <p>Type name to search for public participants and full e-mail + search button for others. </p>
-        <div class="addproposal--step__div">  
+        <div class="addproposal--step__div"> 
+            <div class="spinner" hidden>
+                <div class="dot1"></div>
+                <div class="dot2"></div>
+            </div> 
             <ul class="addproposal--step2">
             <legend>Executive board</legend>
                 <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="/static/assets/profile/perfil-mediano.png"><p><a href="#">Emile</a> <br>Emile Godard </p>
