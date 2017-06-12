@@ -108,6 +108,12 @@ function seaarch_participant(search, page){
 				$('.spinner').hide();
 				div.append('<legend>No results for: '+search+'</legend>');
 			}, 2000);
+			$(document).on('click', '.btn__search', function(){
+				//$('.btn__search').on('click', function(){
+				$('#does-exist').append('No results for: '+search).show();
+
+			});
+
 		}
 	});
 }
