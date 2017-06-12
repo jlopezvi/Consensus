@@ -135,3 +135,31 @@ function follow_unfollow_participant(type, user){
 		}
 	});
 }
+$(document).ready( function(){
+	$.ajax({
+      url: url[0] + "//" + url[2] + '/get_all_public_participants',
+      type: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      dataType: 'json',
+
+       success: function(json) {
+       	
+       	for (var i = 0; i < json.length; i++) {
+       		newParti = '';
+       		newParti += '<li><input class="checkbox check--followers" type="checkbox" name="check[]">';
+       		newParti += '<img src="'+json[i].profilepic_url+'"><p>'; 
+       		newParti += '<a href="#">'+json[i].fullname+'</a>';
+       		newParti += '<br>'+json[i].email+'  |  '+json[i].position+'  |  '+json[i].group+'</p>';
+       		newParti += '<input class="form-control invite__button" type="button" value="Follow" id="btn-follow"></li>';
+       		$('.addproposal--step2').append(newParti);
+       		
+       		
+				
+       	}
+    
+       	console.log(newParti);
+		}
+	});
+});
