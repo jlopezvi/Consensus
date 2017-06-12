@@ -10,7 +10,7 @@ from participantManager import _get_participant_node, remove_user_aux, get_all_p
     _if_add_following_contact_to_user_aux, _if_remove_following_contact_to_user_aux, \
     get_participant_followers_info_aux,get_participant_followings_info_aux,\
     get_fullname_for_participant_aux, registration_aux, get_participant_data_aux, modify_user_data_aux, \
-    _get_participant_data_by_email
+    _get_participant_data_by_email, get_all_public_participants_aux
 from ideaManager import get_ideas_data_created_by_participant_aux, get_ideas_created_by_participant_aux,\
      get_idea_data_aux, add_idea_to_user_aux, deleteOneIdea,getAllIdeas, \
     _getIdeaByIdeaIndex, vote_on_idea_aux, modify_idea_aux, remove_idea_aux, \
@@ -404,7 +404,11 @@ def get_notifications_for_user(user_email_DEBUG=None):
 def get_all_participants_DEBUG():
     return json.dumps(get_all_participants_aux())
 
-
+# Output  json {"email": "new@gmail.com", "position": "Employee", "group": "IT",
+#               "fullname": "jlopezvi", "profilepic_url":'example.jpg'}
+@app.route('/get_all_public_participants', methods=['GET'])
+def get_all_public_participants():
+    return json.dumps(get_all_public_participants_aux())
 
 
 
