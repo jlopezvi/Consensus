@@ -235,26 +235,6 @@ def get_participant_data_aux(currentuser_email, participant_email):
     return jsonify({"result":"OK", 'ifallowed': ifallowed, "participant_data": participant_data})
 
 
-# TODO: correct CALL to get_ideas_data_created_by_participant_aux
-def get_participant_data_by_email_unrestricted_aux(participant_email):
-    #from ideaManager import get_ideas_data_created_by_participant_aux
-    participant = _get_participant_node(participant_email)
-    participant_data= {}
-    profilepic_url = participant.get_properties()['profilepic_url']
-    username = participant.get_properties()['username']
-    fullname = participant.get_properties()['fullname']
-    followers_num = len(_get_participant_followers(participant_email))
-    followings_num = len(_get_participant_followings(participant_email))
-    #ideas_num = len(get_ideas_data_created_by_participant_aux(participant_email))
-    participant_data.update({'id': participant_email,'profilepic_url': profilepic_url,
-                             'username' : username, 'fullname': fullname,
-#                             'ideas_num' : ideas_num,
-                             'followers_num': followers_num,
-                             'followings_num': followings_num})
-    return jsonify({"result":"OK", "participant_data": participant_data})
-
-
-
 # input: participant_email
 # output: list of nodes of following contacts
 def _get_participant_followings(participant_email) :
@@ -408,3 +388,20 @@ def get_all_participants_aux():
     return participants
 
 
+# <Used by /get_participant_data_by_email_unrestricted>
+def _get_participant_data_by_email(participant_email):
+    from ideaManager import _get_ideas_created_by_participant
+    participant = _get_participant_node(participant_email)
+    participant_data= {}
+    profilepic_url = participant['profilepic_url']
+    username = participant['username']
+    fullname = participant['fullname']
+    followers_num = len(_get_participant_followers(participant_email))
+    followings_num = len(_get_participant_followings(participant_email))
+    ideas_num = len(_get_ideas_created_by_participant(participant_email)['ideas_indices'])
+    participant_data.update({'id': participant_email,'profilepic_url': profilepic_url,
+                             'username': username, 'fullname': fullname,
+                             'ideas_num': ideas_num,
+                             'followers_num': followers_num,
+                             'followings_num': followings_num})
+    return {"result": "OK", "participant_data": participant_data}

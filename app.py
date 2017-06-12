@@ -10,7 +10,7 @@ from participantManager import _get_participant_node, remove_user_aux, get_all_p
     _if_add_following_contact_to_user_aux, _if_remove_following_contact_to_user_aux, \
     get_participant_followers_info_aux,get_participant_followings_info_aux,\
     get_fullname_for_participant_aux, registration_aux, get_participant_data_aux, modify_user_data_aux, \
-    get_participant_data_by_email_unrestricted_aux
+    _get_participant_data_by_email
 from ideaManager import get_ideas_data_created_by_participant_aux, get_ideas_created_by_participant_aux,\
      get_idea_data_aux, add_idea_to_user_aux, deleteOneIdea,getAllIdeas, \
     _getIdeaByIdeaIndex, vote_on_idea_aux, modify_idea_aux, remove_idea_aux, \
@@ -276,7 +276,7 @@ def get_participant_data(participant_email, user_email_DEBUG=None):
 #        }
 @app.route('/get_participant_data_by_email_unrestricted/<participant_email>')
 def get_participant_data_by_email_unrestricted(participant_email):
-    return get_participant_data_by_email_unrestricted_aux(participant_email)
+    return jsonify(_get_participant_data_by_email(participant_email))
 
 
 # input: email
