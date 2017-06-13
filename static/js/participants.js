@@ -5,6 +5,8 @@ $(window).on('load', function() {
 	var page = $('#page').val();
 	var current_email = $('#host_email').val();
 	if(page == 'participant'){
+		
+		//GET ALL INFORMATION OF CURRENT LOGGED USER OR SEARCHED
 		$.ajax({
 			url: url[0] + "//" + url[2] + '/get_participant_data_by_email_unrestricted/'+current_email,
 			type: 'GET',
@@ -18,7 +20,72 @@ $(window).on('load', function() {
 				$('.participant__following').children().first().append(json.participant_data.followings_num);
 			}	
 		});
-	} 
+
+		//GET ALL FOLLOWERS OF CURRENT LOGGED USER OR SEARCHED
+		$.ajax({
+			url: url[0] + "//" + url[2] + '/get_participant_followers_info/'+current_email,
+			type: 'GET',
+			success: function (json) {
+				//console.log(json);
+				if(json.followers_num > 0){
+					followerList = '';	
+					for(var i = 0; i < json.followers_num; i++){
+						followerList += '<li><input class="checkbox check--followers" type="checkbox" name="check[]">';
+						followerList += '<img src="/static/assets/profile/perfil-mediano.png">'
+						followerList += '<p><a href="#">'+json.followers_info[i].username+'</a>';
+						followerList += '<br>'+json.followers_info[i].fullname+'</p></li>';
+					}
+					$('#menu1 ul').append(followerList);
+				}
+			}	
+		});
+
+		//GET ALL FOLLOWINGS OF CURRENT LOGGED USER OR SEARCHED
+		$.ajax({
+			url: url[0] + "//" + url[2] + '/get_participant_followings_info/'+current_email,
+			type: 'GET',
+			success: function (json) {
+				//console.log(json);
+				if(json.followings_num > 0){
+					followingList = '';	
+					for(var i = 0; i < json.followings_num; i++){
+						followingList += '<li><input class="checkbox check--followers" type="checkbox" name="check[]">';
+						followingList += '<img src="/static/assets/profile/perfil-mediano.png">'
+						followingList += '<p><a href="#">'+json.followings_info[i].username+'</a>';
+						followingList += '<br>'+json.followings_info[i].fullname+'</p></li>';
+					}
+					$('#home ul').append(followingList);
+				}
+			}	
+		});
+		
+	} else { //else que valida el template en que le estamos (search_participants.html)
+		//Moví la funcion para aca, porque aqui carga antes de que cargue el HTML 
+		//Aparte, aqui tengo una validacion de los templates, search_participants 
+		//y participants, entonces, tener la informacion de todos los participantes
+		//precaragas en el template pparticipants, no es necesario.
+		$.ajax({
+		url: url[0] + "//" + url[2] + '/get_all_public_participants',
+		type: 'GET',
+		headers: {
+		'Content-Type': 'application/json'
+		},
+		dataType: 'json',
+		success: function(json) {
+	       	for (var i = 0; i < json.length; i++) {
+	       		newParti = '';
+	       		newParti += '<li><input class="checkbox check--followers" type="checkbox" name="check[]">';
+	       		newParti += '<img src="'+json[i].profilepic_url+'"><p>'; 
+	       		newParti += '<a href="#">'+json[i].fullname+'</a>';
+	       		newParti += '<br>'+json[i].email+'  |  '+json[i].position+'  |  '+json[i].group+'</p>';
+	       		newParti += '<input type="hidden" value="'+json[i].email+'">';
+	       		newParti += '<input class="form-control invite__button" type="button" value="Follow" id="btn-follow"></li>';
+	       		$('.addproposal--step2').append(newParti);	
+	       	}
+	       	console.log(newParti);
+		}
+	});
+	}
 });
 
 $(document).ready( function() {
@@ -108,6 +175,12 @@ function seaarch_participant(search, page){
 				$('.spinner').hide();
 				div.append('<legend>No results for: '+search+'</legend>');
 			}, 2000);
+			$(document).on('click', '.btn__search', function(){
+				//$('.btn__search').on('click', function(){
+				$('#does-exist').append('No results for: '+search).show();
+
+			});
+
 		}
 	});
 }
