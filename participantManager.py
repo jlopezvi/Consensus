@@ -387,14 +387,17 @@ def get_all_participants_aux():
          participants.append(node.get_properties())
     return participants
 
-def get_all_public_participants_aux():
+
+def get_all_public_participants_aux(user):
+    participant=_get_participant_node(user)
     allnodes = _getParticipantsIndex().query("email:*")
     participants = []
     for node in allnodes:
-        if node.get_properties()['ifpublicprofile'] == True:
+        if node.get_properties()['ifpublicprofile'] == True and node.get_properties()['email'] != user:
             participants.append({'email': node.get_properties()['email'], 'fullname': node.get_properties()['fullname'],
                                  'position':node.get_properties()['position'], 'group': node.get_properties()['group'],
-                                 'profilepic_url': node.get_properties()['profilepic_url']})
+                                 'profilepic_url': node.get_properties()['profilepic_url'],
+                                 'if_following': _getIfContactRelationshipExists(participant, node)})
     return participants
 
 # <Used by /get_participant_data_by_email_unrestricted>

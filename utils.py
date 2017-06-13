@@ -27,7 +27,7 @@ from werkzeug.utils import secure_filename
 def save_file(ruta_dest,file_upload,filename):
     path = basedir + ruta_dest
     file_upload.save(os.path.join(path, secure_filename(filename)))
-    url = str(path + secure_filename(filename))
+    url = str(ruta_dest + secure_filename(filename))
     return url
 
 

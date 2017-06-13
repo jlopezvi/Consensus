@@ -405,11 +405,11 @@ def get_all_participants_DEBUG():
     return json.dumps(get_all_participants_aux())
 
 # Output  json {"email": "new@gmail.com", "position": "Employee", "group": "IT",
-#               "fullname": "jlopezvi", "profilepic_url":'example.jpg'}
+#               "fullname": "jlopezvi", "profilepic_url":'example.jpg', "if_following":True/False}
 @app.route('/get_all_public_participants', methods=['GET'])
 def get_all_public_participants():
-    return json.dumps(get_all_public_participants_aux())
-
+    user = flask_login.current_user.id
+    return json.dumps(get_all_public_participants_aux(user))
 
 
 ###############
