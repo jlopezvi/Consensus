@@ -184,6 +184,9 @@ $(document).ready( function() {
       fData.set('ifregistrationfromemail', 'True');
     }
 
+    if($('#profile_photo').val() != '')
+      fData.append('fileUpload', $('#profile_photo')[0].files[0]);
+
     for (var pair of fData.entries()) {
       console.log(pair[0]+ ', ' + pair[1]);
     }
