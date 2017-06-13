@@ -8,10 +8,8 @@
             <div class="row">
                 <div class="form-group">
                     <div class="input-group search__div--participants">
-                        <span class="span__search"><span class="glyphicon glyphicon-search search__icon--participants"></span><input class="form-control" type="text" name="search" placeholder="Search..." required/ id="search-input-participant"></span>
-                        <span class="input-group-btn" style="padding-right: 10px;">
-                            <button class="btn btn__search" type="submit"><span>Go!</button>
-                        </span>
+                        <span class="span__search"><span class="glyphicon glyphicon-search search__icon--participants"></span><input  class="form-control"  oninput="w3.filterHTML('#id01', 'li', this.value)" type="text" name="search" placeholder="Search..." required/ id="search-input-participant"></span>
+                        
                         </span>
                     </div>
                 </div>
@@ -26,9 +24,11 @@
                 <div class="dot1"></div>
                 <div class="dot2"></div>
             </div> 
-            <ul class="addproposal--step2">
+            <ul id="id01" class="addproposal--step2">
+            <legend>Executive board</legend>
+                
             </ul>
-         </div>
+        </div>
     </div>
 </div>
 <script src="{{ url_for('static',filename='js/participants.js') }}"></script>
