@@ -271,7 +271,8 @@ def get_participant_followings_info_aux(participant_email, user_email):
             email = following['email']
             username = following['username']
             fullname = following['fullname']
-            followings_info.append({'email' : email, 'username': username, 'fullname': fullname })
+            profilepic_url = follower['profilepic_url']
+            followers_info.append({'email' : email, 'username': username, 'fullname': fullname, 'profilepic_url': profilepic_url})
     else:
         ifallowed = False
         followings = _get_participant_followings(participant_email)
@@ -293,7 +294,8 @@ def get_participant_followers_info_aux(participant_email, user_email):
             email = follower['email']
             username = follower['username']
             fullname = follower['fullname']
-            followers_info.append({'email' : email, 'username': username, 'fullname': fullname })
+            profilepic_url = follower['profilepic_url']
+            followers_info.append({'email' : email, 'username': username, 'fullname': fullname, 'profilepic_url': profilepic_url})
     else:
         ifallowed = False
         followers = _get_participant_followers(participant_email)
@@ -397,7 +399,7 @@ def get_all_public_participants_aux(user):
             participants.append({'email': node.get_properties()['email'], 'fullname': node.get_properties()['fullname'],
                                  'position':node.get_properties()['position'], 'group': node.get_properties()['group'],
                                  'profilepic_url': node.get_properties()['profilepic_url'],
-                                 'if_following': _getIfContactRelationshipExists(participant, node)})
+                                 'if_following': _getIfContactRelationshipExists(node, participant)})
     return participants
 
 # <Used by /get_participant_data_by_email_unrestricted>
