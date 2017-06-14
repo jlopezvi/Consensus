@@ -271,8 +271,8 @@ def get_participant_followings_info_aux(participant_email, user_email):
             email = following['email']
             username = following['username']
             fullname = following['fullname']
-            profilepic_url = follower['profilepic_url']
-            followers_info.append({'email' : email, 'username': username, 'fullname': fullname, 'profilepic_url': profilepic_url})
+            profilepic_url = following['profilepic_url']
+            followings_info.append({'email' : email, 'username': username, 'fullname': fullname, 'profilepic_url': profilepic_url})
     else:
         ifallowed = False
         followings = _get_participant_followings(participant_email)

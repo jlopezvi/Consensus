@@ -31,7 +31,7 @@ $(window).on('load', function() {
 					followerList = '';	
 					for(var i = 0; i < json.followers_num; i++){
 						followerList += '<li><input class="checkbox check--followers" type="checkbox" name="check[]">';
-						followerList += '<img src="/static/assets/profile/perfil-mediano.png">'
+						followerList += '<img src="'+json.followers_info[i].profilepic_url+'">'
 						followerList += '<p><a href="#">'+json.followers_info[i].username+'</a>';
 						followerList += '<br>'+json.followers_info[i].fullname+'</p></li>';
 					}
@@ -50,7 +50,7 @@ $(window).on('load', function() {
 					followingList = '';	
 					for(var i = 0; i < json.followings_num; i++){
 						followingList += '<li><input class="checkbox check--followers" type="checkbox" name="check[]">';
-						followingList += '<img src="/static/assets/profile/perfil-mediano.png">'
+						followingList += '<img src="'+json.followings_info[i].profilepic_url+'">'
 						followingList += '<p><a href="#">'+json.followings_info[i].username+'</a>';
 						followingList += '<br>'+json.followings_info[i].fullname+'</p></li>';
 					}
@@ -72,17 +72,23 @@ $(window).on('load', function() {
 		},
 		dataType: 'json',
 		success: function(json) {
+			//console.log(json);
 	       	for (var i = 0; i < json.length; i++) {
+	       		if_following = '';
+	       		if(json[i].if_following)
+	       			if_following = 'value="Unfollow"';
+	       		else
+	       			if_following = 'value="Follow"';
 	       		newParti = '';
 	       		newParti += '<li><input class="checkbox check--followers" type="checkbox" name="check[]">';
 	       		newParti += '<img src="'+json[i].profilepic_url+'"><p>'; 
 	       		newParti += '<a href="#">'+json[i].fullname+'</a>';
-	       		newParti += '<br>'+json[i].email+'  |  '+json[i].position+'  |  '+json[i].group+'</p>';
+	       		newParti += '<br><label>'+json[i].email+'</label>|<label>'+json[i].position+'</label>|<label>'+json[i].group+'</label></p>';
 	       		newParti += '<input type="hidden" value="'+json[i].email+'">';
-	       		newParti += '<input class="form-control invite__button" type="button" value="Follow" id="btn-follow"></li>';
+	       		newParti += '<input class="form-control invite__button" type="button" '+if_following+' id="btn-follow"></li>';
 	       		$('.addproposal--step2').append(newParti);	
 	       	}
-	       	console.log(newParti);
+	       	//console.log(newParti);
 		}
 	});
 	}
@@ -116,19 +122,19 @@ $(document).ready( function() {
 
 	$('#search-input-participant').keydown(function(e){
 		var code = e.which;
-		var page = $('#page').val();
+		//var page = $('#page').val();
 		if(code == 13){
 			e.preventDefault();
-			var search = $(this).val();
-			seaarch_participant(search, page);
+			//var search = $(this).val();
+			//seaarch_participant(search, page);
 		}
 	});
 
 	$(document).on('click', '.btn__search', function(e){
 		e.preventDefault();
-		var page = $('#page').val();
-		var search = $('#search-input-participant').val();
-		seaarch_participant(search, page);
+		//var page = $('#page').val();
+		//var search = $('#search-input-participant').val();
+		//seaarch_participant(search, page);
 	});
 
 	$(document).on('click', '#btn-follow', function(){
