@@ -64,9 +64,58 @@ $(document).ready(function(){
       }
     });
   });
+
+  var current_email = $('#host_email').val();
+  $.ajax({
+      url: url[0] + "//" + url[2] + '/get_participant_followers_info/'+current_email,
+      type: 'GET',
+      success: function (json){
+        //console.log(json);
+        if(json.followers_num > 0){
+          followerproposal = '';  
+          for(var i = 0; i < json.followers_num; i++){
+            followerproposal += '<li><input class="checkbox check--followers" type="checkbox" name="check[]">';
+            followerproposal += '<img src="'+json.followers_info[i].profilepic_url+'">';
+            followerproposal += '<p><a href="#">'+json.followers_info[i].username+'</a>';
+            followerproposal += '<br>'+json.followers_info[i].fullname+'</p></li>';
+            
+          }
+          $('#addpro ul').append(followerproposal);
+          
+        }
+      } 
+    });
+
+  $("#fileUpload").on('change', function () {
+
+        if (typeof (FileReader) != "undefined") {
+
+            var image_holder = $("#image-holder");
+            image_holder.empty();
+
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $("<img />", {
+                    "src": e.target.result,
+                    "class": "thumb-image"
+                }).appendTo(image_holder);
+
+            }
+            image_holder.show();
+            reader.readAsDataURL($(this)[0].files[0]);
+        } else {
+            alert("This browser does not support FileReader.");
+        }
+    });
 });
+
 function showModal(id) {
     $('.modal').modal('hide');
     $("#" + id).modal();
 
   }
+
+
+
+  
+  

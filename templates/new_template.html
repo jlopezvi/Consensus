@@ -57,15 +57,15 @@
                             <label class="input-group-btn">
                               <i class="fa fa-info" aria-hidden="true"></i>
                               <span class="btn">
-                                Choose:<input type="file" style="display: none;" id="profile_photo">
+                                Choose:<input type="file" style="display: none;" id="fileUpload">
                               </span>
                             </label>
-                            <input type="text" style="margin-left:10px;" class="form-control" placeholder=".../Home/" readonly>
+                            <input type="text" value="" style="margin-left:10px;" id="file" class="form-control" placeholder=".../Home/" readonly>
                         </div>
                     </div>
                     <div class="col-xs-6 col-xs-offset-1" style="padding-right:0;">
-                        <div class="addproposal--img">
-                            <img src="{{ url_for('static',filename='images/fondo-c.png') }}">
+                        <div id="image-holder" class="addproposal--img">
+                            <img src="{{ url_for('static',filename='images/fondo-c.png') }}" class="thumb-image" >
                         </div>  
                     </div>
                 </div>
@@ -115,12 +115,9 @@
                         <a href="#" id="select_all">All</a> | 
                         <a href="#" id="select_none">None</a>
                     </p>
-                    <div class="col-xs-12">
+                    <div id="addpro" class="col-xs-12">
                         <ul class="addproposal--step2">
-                            <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="{{ url_for('static',filename='assets/profile/perfil-mediano.png') }}"><p><a href="#">Emile</a> <br>Emile Godard </p></li>
-                            <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="{{ url_for('static',filename='assets/profile/perfil-mediano.png') }}"><p><a href="#">JJacques</a> <br>Jean Jacques Richelieu </p></li>
-                            <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="{{ url_for('static',filename='assets/profile/perfil-mediano.png') }}"><p><a href="#">Zoe</a> <br>Zoe Martin Pescador </p></li>
-                            <li><input class="checkbox check--followers" type="checkbox" name="check[]"><img src="{{ url_for('static',filename='assets/profile/perfil-mediano.png') }}"><p><a href="#">Joe</a> <br>Joe Black</p></li>
+                            
                         </ul>
                         
                     </div>
