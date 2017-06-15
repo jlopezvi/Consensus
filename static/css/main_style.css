@@ -906,6 +906,7 @@ a.add--proposal--button:hover, a.add--proposal--button:active, a.add--proposal--
 .addproposal--img img{
 	width: 100%;
     height: auto;
+    max-height: 130px;
 }
 .addproposal--img {
 	border: 1px solid #cecece;
@@ -1367,6 +1368,18 @@ a.add--proposal--provisional {
 
 .addproposal--step2 li p {
     width: 50%;
+}
+
+.new--user--icon--login{
+	max-width: 70px;
+	max-height: 70px;
+	border-radius: 46;
+}
+.list-to-proposal{
+	overflow-y: scroll;
+    overflow-x: hidden;
+    max-height: 400px;
+ 
 }
 
 /***** END NEW STILES ******************/

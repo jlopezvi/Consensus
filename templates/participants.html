@@ -152,8 +152,8 @@
             </div>
           </div>
           <div class="tabs__follow"> 
-            <input class="form-control invite__button" style="margin-right: -35px;" type="button" value="Follow">
-            <input class="form-control invite__button" type="button" value="Stop following">
+            <input id="follow-parti" class="form-control invite__button" style="margin-right: -35px;" type="button" value="Follow">
+            <input id="unfollow-parti" class="form-control invite__button" type="button" value="Stop following">
           </div>
         </div>
         </div>
@@ -300,17 +300,24 @@
                     </div>
                     </div>
                     <div class="col-sm-6">
-                        <div class="input-group modal__participants">
-                            <img src="{{ url_for('static',filename='assets/profile/perfil-mediano.png') }}" class="user--icon--login" style="height: 65px;top: 10px;position: relative;">
+
+
+                        <div  class="input-group modal__participants">
+                            <div id="image--holder">
+                                <img src="{{ url_for('static',filename='assets/profile/perfil-mediano.png') }}" class="new--user--icon--login" style="height: 65px;top: 10px;position: relative;">
+                            </div>
                                 <label class="input-group-btn">
                                   <i class="fa fa-info" aria-hidden="true"></i>
                                   <span class="btn" style="font-size: 11px;">
-                                    Choose:<input type="file" style="display: none;" id="profile_photo">
+                                    Choose:<input type="file" style="display: none;" id="change-photo">
                                   </span>
                                 </label>
                                 <input style="height: 29px;top: -1px;" type="text" class="form-control" placeholder=".../Home/" readonly>
                                 <br>
                         </div>
+
+
+
                         <div class="p__div" style="margin-top: 78px;padding-left: 35px;">
                             <span class="p__span">Position:</span><input class="form-control" type="text" id="p_position" name="p_position" placeholder="Position">
                         </div>

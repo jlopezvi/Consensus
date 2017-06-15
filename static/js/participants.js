@@ -28,9 +28,9 @@ $(window).on('load', function() {
 			if(json.followers_num > 0){
 				followerList = '';	
 				for(var i = 0; i < json.followers_num; i++){
-					followerList += '<li><input class="checkbox check--followers" type="checkbox" name="check[]">';
+					followerList += '<li><input value="'+json.followers_info[i].email+'" class="checkbox check--followers" type="checkbox" name="check[]">';
 					followerList += '<img src="'+json.followers_info[i].profilepic_url+'">'
-					followerList += '<p><a href="#">'+json.followers_info[i].username+'</a>';
+					followerList += '<p><a href="#">'+json.followers_info[i].username+'</a>';					
 					followerList += '<br>'+json.followers_info[i].fullname+'</p></li>';
 				}
 				$('#menu1 ul').append(followerList);
@@ -47,9 +47,9 @@ $(window).on('load', function() {
 			if(json.followings_num > 0){
 				followingList = '';	
 				for(var i = 0; i < json.followings_num; i++){
-					followingList += '<li><input class="checkbox check--followers" type="checkbox" name="check[]">';
+					followingList += '<li><input value="'+json.followings_info[i].email+'" class="checkbox check--followers" type="checkbox" name="check[]">';
 					followingList += '<img src="'+json.followings_info[i].profilepic_url+'">'
-					followingList += '<p><a href="#">'+json.followings_info[i].username+'</a>';
+					followingList += '<p><a href="#">'+json.followings_info[i].username+'</a>';					
 					followingList += '<br>'+json.followings_info[i].fullname+'</p></li>';
 				}
 				$('#home ul').append(followingList);
@@ -79,7 +79,7 @@ $(window).on('load', function() {
 	       		newParti += '<br><label>'+json[i].email+'</label>|<label>'+json[i].position+'</label>|<label>'+json[i].group+'</label></p>';
 	       		newParti += '<input type="hidden" value="'+json[i].email+'">';
 	       		newParti += '<input class="form-control invite__button" type="button" '+if_following+' id="btn-follow"></li>';
-	       		$('.addproposal--step2').append(newParti);	
+	       		$('#id01').append(newParti);	
 	       	}
 	       	//console.log(newParti);
 		}
@@ -192,9 +192,9 @@ function seaarch_participant(search, page){
 function follow_unfollow_participant(type, user){
 	if(type == 'Follow')
 		var finalUrl = '/add_following_contact_to_user/'+user;
+
 	else
 		var finalUrl = '/remove_following_contact_to_user/'+user;
-
 	$.ajax({
 		url: url[0] + "//" + url[2] + finalUrl,
 		type: 'GET',
@@ -220,3 +220,62 @@ function change_view(view){
 		}, 500);
 	}
 }
+$(document).ready(function(){
+$("#change-photo").on('change', function () {
+
+        if (typeof (FileReader) != "undefined") {
+
+            var image_holder = $("#image--holder");
+            image_holder.empty();
+
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $("<img />", {
+                    "src": e.target.result,
+                    "class": "new--user--icon--login img-circle"
+                }).appendTo(image_holder);
+            }       	
+            image_holder.show();
+            reader.readAsDataURL($(this)[0].files[0]);
+        } else {
+            alert("This browser does not support FileReader.");
+        }
+    });
+});
+
+
+
+/*
+$(document).ready(function(){	
+$('#follow-parti').on('click', function(){
+	var userf = $('#home ul li input').val();
+	var lista = $('#home ul li input').prop('checked') == true;
+	
+
+	for (var i = 0; i < lista.length; i++) {
+		var listaC = userf;
+		listaC += lista[i];
+		
+			console.log(listaC);
+		for (var i = 0; i < listaC.length; i++) {
+		
+		if (listaC[i] > 0) {
+			
+			$.ajax({
+				url: url[0] + "//" + url[2] + '/add_following_contact_to_user/'+listaC,
+				type: 'GET',
+					success: function (json) {
+						alert(json.result_msg);
+
+					},
+					error: function (response) {
+						alert('Sorry, something went wrong. Try again later.');		
+					}
+			});			
+		}		
+	}
+	}
+		
+	
+});
+});*/
