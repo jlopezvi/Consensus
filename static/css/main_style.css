@@ -1243,6 +1243,57 @@ ul.nav-tabs li.active a:before {
 }
 /***** END OF PARTICIPANTS STYLE *******/
 /***** NEW STILES **********************/
+#invitation-modal-info div.modal-header,
+#logout__modal div.modal-header{
+	background-color: #205817;
+	color: #fff;
+}
+#invitation-modal-info button.close,
+#logout__modal button.close{
+	color:#c1ff00!important;
+}
+#logout__modal div.modal-footer button:nth-child(1){
+	color: #fff;
+    background-color: #205817;
+    border-color: #0a2d05;
+    width: 60px;
+    height: 25px;
+    top: -8px;
+    position: relative;
+}
+#logout__modal div.modal-footer button:nth-child(2){
+	color: #fff;
+    border-color: #b70a0a;
+    background-color: #b30707;
+    top: -8px;
+    position: relative;
+    width: 60px;
+    height: 25px;
+}
+.logout__button{
+	position: absolute;
+    right: 5vw;
+    top: 0.8vw;
+    font-size: 16px;
+    color: #FFF;
+    cursor: pointer;
+}	
+.back__button {
+    float: right;
+    position: relative;
+    color: #3faf2e;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.back__button span:nth-child(1) {
+    top: 2px;
+    font-size: 20px;
+}
+.back__button span:nth-child(2) {
+    top: -2px;
+    position: relative;
+}
 a.add--proposal--provisional {
     background-image: url('/static/images/create-proposal-btn.png');
     color: #5f6252!important;

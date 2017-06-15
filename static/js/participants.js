@@ -2,69 +2,62 @@ var url = window.location.href;
 url = url.split("/");
 
 $(window).on('load', function() {
-	var page = $('#page').val();
 	var current_email = $('#host_email').val();
-	if(page == 'participant'){
 		
-		//GET ALL INFORMATION OF CURRENT LOGGED USER OR SEARCHED
-		$.ajax({
-			url: url[0] + "//" + url[2] + '/get_participant_data_by_email_unrestricted/'+current_email,
-			type: 'GET',
-			success: function (json) {
-				//console.log(json);
-				$('.profile--picture img').attr('src', json.participant_data.profilepic_url);
-				$('.participant__name a').append(json.participant_data.username);
-				$('.participant__name label').append(json.participant_data.fullname);
-				$('.participant__active--p').children().first().append(json.participant_data.ideas_num);
-				$('.participant__followers').children().first().append(json.participant_data.followers_num);
-				$('.participant__following').children().first().append(json.participant_data.followings_num);
-			}	
-		});
+	//GET ALL INFORMATION OF CURRENT LOGGED USER OR SEARCHED
+	$.ajax({
+		url: url[0] + "//" + url[2] + '/get_participant_data_by_email_unrestricted/'+current_email,
+		type: 'GET',
+		success: function (json) {
+			//console.log(json);
+			$('.profile--picture img').attr('src', json.participant_data.profilepic_url);
+			$('.participant__name a').append(json.participant_data.username);
+			$('.participant__name label').append(json.participant_data.fullname);
+			$('.participant__active--p').children().first().append(json.participant_data.ideas_num);
+			$('.participant__followers').children().first().append(json.participant_data.followers_num);
+			$('.participant__following').children().first().append(json.participant_data.followings_num);
+		}	
+	});
 
-		//GET ALL FOLLOWERS OF CURRENT LOGGED USER OR SEARCHED
-		$.ajax({
-			url: url[0] + "//" + url[2] + '/get_participant_followers_info/'+current_email,
-			type: 'GET',
-			success: function (json) {
-				//console.log(json);
-				if(json.followers_num > 0){
-					followerList = '';	
-					for(var i = 0; i < json.followers_num; i++){
-						followerList += '<li><input class="checkbox check--followers" type="checkbox" name="check[]">';
-						followerList += '<img src="'+json.followers_info[i].profilepic_url+'">'
-						followerList += '<p><a href="#">'+json.followers_info[i].username+'</a>';
-						followerList += '<br>'+json.followers_info[i].fullname+'</p></li>';
-					}
-					$('#menu1 ul').append(followerList);
+	//GET ALL FOLLOWERS OF CURRENT LOGGED USER OR SEARCHED
+	$.ajax({
+		url: url[0] + "//" + url[2] + '/get_participant_followers_info/'+current_email,
+		type: 'GET',
+		success: function (json) {
+			//console.log(json);
+			if(json.followers_num > 0){
+				followerList = '';	
+				for(var i = 0; i < json.followers_num; i++){
+					followerList += '<li><input class="checkbox check--followers" type="checkbox" name="check[]">';
+					followerList += '<img src="'+json.followers_info[i].profilepic_url+'">'
+					followerList += '<p><a href="#">'+json.followers_info[i].username+'</a>';
+					followerList += '<br>'+json.followers_info[i].fullname+'</p></li>';
 				}
-			}	
-		});
+				$('#menu1 ul').append(followerList);
+			}
+		}	
+	});
 
-		//GET ALL FOLLOWINGS OF CURRENT LOGGED USER OR SEARCHED
-		$.ajax({
-			url: url[0] + "//" + url[2] + '/get_participant_followings_info/'+current_email,
-			type: 'GET',
-			success: function (json) {
-				//console.log(json);
-				if(json.followings_num > 0){
-					followingList = '';	
-					for(var i = 0; i < json.followings_num; i++){
-						followingList += '<li><input class="checkbox check--followers" type="checkbox" name="check[]">';
-						followingList += '<img src="'+json.followings_info[i].profilepic_url+'">'
-						followingList += '<p><a href="#">'+json.followings_info[i].username+'</a>';
-						followingList += '<br>'+json.followings_info[i].fullname+'</p></li>';
-					}
-					$('#home ul').append(followingList);
+	//GET ALL FOLLOWINGS OF CURRENT LOGGED USER OR SEARCHED
+	$.ajax({
+		url: url[0] + "//" + url[2] + '/get_participant_followings_info/'+current_email,
+		type: 'GET',
+		success: function (json) {
+			//console.log(json);
+			if(json.followings_num > 0){
+				followingList = '';	
+				for(var i = 0; i < json.followings_num; i++){
+					followingList += '<li><input class="checkbox check--followers" type="checkbox" name="check[]">';
+					followingList += '<img src="'+json.followings_info[i].profilepic_url+'">'
+					followingList += '<p><a href="#">'+json.followings_info[i].username+'</a>';
+					followingList += '<br>'+json.followings_info[i].fullname+'</p></li>';
 				}
-			}	
-		});
-		
-	} else { //else que valida el template en que le estamos (search_participants.html)
-		//Moví la funcion para aca, porque aqui carga antes de que cargue el HTML 
-		//Aparte, aqui tengo una validacion de los templates, search_participants 
-		//y participants, entonces, tener la informacion de todos los participantes
-		//precaragas en el template pparticipants, no es necesario.
-		$.ajax({
+				$('#home ul').append(followingList);
+			}
+		}	
+	});
+
+	$.ajax({
 		url: url[0] + "//" + url[2] + '/get_all_public_participants',
 		type: 'GET',
 		headers: {
@@ -91,7 +84,6 @@ $(window).on('load', function() {
 	       	//console.log(newParti);
 		}
 	});
-	}
 });
 
 $(document).ready( function() {
@@ -120,21 +112,27 @@ $(document).ready( function() {
 		});
 	});
 
-	$('#search-input-participant').keydown(function(e){
+	$('#search-input-participant').on('keydown', function(e){
 		var code = e.which;
-		//var page = $('#page').val();
 		if(code == 13){
 			e.preventDefault();
-			//var search = $(this).val();
-			//seaarch_participant(search, page);
 		}
+	});
+
+	$('#search-input-participant').on('focus', function(){
+		change_view('search');
 	});
 
 	$(document).on('click', '.btn__search', function(e){
 		e.preventDefault();
+		change_view('search');
 		//var page = $('#page').val();
 		//var search = $('#search-input-participant').val();
 		//seaarch_participant(search, page);
+	});
+
+	$(document).on('click', '.back__button', function(){
+		change_view('participant');
 	});
 
 	$(document).on('click', '#btn-follow', function(){
@@ -207,4 +205,18 @@ function follow_unfollow_participant(type, user){
 			alert('Sorry, something went wrong. Try again later.');		
 		}
 	});
+}
+
+function change_view(view){
+	if(view == 'search'){
+		$('.participant__general').fadeOut(500);
+		setTimeout(function(){
+			$('.search__participant').fadeIn(500);
+		}, 500);
+	} else {
+		$('.search__participant').fadeOut(500);
+		setTimeout(function(){
+			$('.participant__general').fadeIn(500);
+		}, 500);
+	}
 }

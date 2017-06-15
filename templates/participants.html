@@ -1,7 +1,24 @@
 {% extends 'new_template.html' %}
 {% block content %}
 
-<input type="hidden" id="page" value="participant">
+<div class="container__search--participants" style="margin-top: 8%;" hidden>
+    <div class="col-md-6 col-md-offset-3">
+        <form role="form">
+            <div class="row">
+                <div class="form-group">
+                    <div class="input-group search__div--participants">
+                        <span class="span__search"><span class="glyphicon glyphicon-search search__icon--participants"></span><input  class="form-control"  oninput="w3.filterHTML('#id01', 'ul#id01 li', this.value)" type="text" name="search" placeholder="Search..." required/ id="search-input-participant2"></span>
+                        
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!-- End of Search Form -->            
+    </div>
+    
+</div>
+
 <div class="container__participants" style="margin-top: 8%; margin-bottom: 8%;">
  <h3 style="font-family: lato_bold; margin-bottom: 0;">Participants</h3>
     <div class="col-md-6 col-md-offset-3">
@@ -9,7 +26,7 @@
             <div class="row">
                 <div class="form-group">
                     <div class="input-group search__div--participants">
-                        <span class="span__search"><span class="glyphicon glyphicon-search search__icon--participants"></span><input class="form-control" type="text" name="search" placeholder="Search..." required id="search-input-participant"/></span>
+                        <span class="span__search"><span class="glyphicon glyphicon-search search__icon--participants"></span><input class="form-control" type="text" oninput="w3.filterHTML('#id01', 'ul#id01 li', this.value)" name="search" placeholder="Search..." required id="search-input-participant"/></span>
                         <span class="input-group-btn" style="padding-right: 10px;">
                             <button class="btn btn__search" type="submit"><span>Go!</button>
                         </span>
@@ -22,7 +39,27 @@
         </form>
         <!-- End of Search Form -->            
     </div>
-    <div class="row participant__info"> 
+
+    <div class="col-sm-10 col-sm-push-1 search__participant" hidden> 
+        <div class="back__button">
+            <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
+            <span>Go Back</span>
+        </div>  
+        <p>Type name to search for public participants and full e-mail + search button for others. </p>
+        <div class="addproposal--step__div"> 
+            <div class="spinner" hidden>
+                <div class="dot1"></div>
+                <div class="dot2"></div>
+            </div> 
+            <ul id="id01" class="addproposal--step2">
+            <legend>Executive board</legend>
+                
+            </ul>
+        </div>
+    </div>
+
+    <div class="participant__general">
+        <div class="row participant__info"> 
             <div class="row">
                 <div class="col-sm-2 profile__col">
                     <div class="participant__profile--pic">
@@ -61,22 +98,22 @@
                     </div>
                 </div>
             </div>
-    </div>
+        </div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="invitation-modal-info" role="dialog">
-        <div class="modal-dialog modal-sm" style="margin-top:100px;">
-            <div class="modal-content">
-                <div class="modal-header" style="background-color: #205817;color: #fff;">
-                    <button type="button" class="close" data-dismiss="modal" style="color:#c1ff00!important;">&times;</button>
-                    <h4 class="modal-title"></h4>
-                </div>
-                <div class="modal-body">
-                    <p></p>
+        <!-- Modal -->
+        <div class="modal fade" id="invitation-modal-info" role="dialog">
+            <div class="modal-dialog modal-sm" style="margin-top:100px;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title"></h4>
+                    </div>
+                    <div class="modal-body">
+                        <p></p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
     <div class="row participant__body">
         <div class="col-sm-6 participant__content">
@@ -231,7 +268,7 @@
         </div>
     </div>
     {% endfor %}
-        </div>
+    </div>
     </div>
     <div id="modal_participant" class="modal fade" role="dialog">
       <div class="modal-dialog">
