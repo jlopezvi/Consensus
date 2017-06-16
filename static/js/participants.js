@@ -3,7 +3,7 @@ url = url.split("/");
 
 $(window).on('load', function() {
 	var current_email = $('#host_email').val();
-		
+	
 	//GET ALL INFORMATION OF CURRENT LOGGED USER OR SEARCHED
 	$.ajax({
 		url: url[0] + "//" + url[2] + '/get_participant_data_by_email_unrestricted/'+current_email,
@@ -24,7 +24,7 @@ $(window).on('load', function() {
 		url: url[0] + "//" + url[2] + '/get_participant_followers_info/'+current_email,
 		type: 'GET',
 		success: function (json) {
-			//console.log(json);
+			
 			if(json.followers_num > 0){
 				followerList = '';	
 				for(var i = 0; i < json.followers_num; i++){
@@ -34,6 +34,7 @@ $(window).on('load', function() {
 					followerList += '<br>'+json.followers_info[i].fullname+'</p></li>';
 				}
 				$('#menu1 ul').append(followerList);
+				
 			}
 		}	
 	});
@@ -245,23 +246,18 @@ $("#change-photo").on('change', function () {
 
 
 
-/*
-$(document).ready(function(){	
-$('#follow-parti').on('click', function(){
-	var userf = $('#home ul li input').val();
-	var lista = $('#home ul li input').prop('checked') == true;
-	
 
-	for (var i = 0; i < lista.length; i++) {
-		var listaC = userf;
-		listaC += lista[i];
-		
-			console.log(listaC);
-		for (var i = 0; i < listaC.length; i++) {
-		
-		if (listaC[i] > 0) {
-			
-			$.ajax({
+$(document).ready(function(){	
+$('#follow-parti').on('click', function(){	
+	var lista = [$('#following li input:checked').val()];			
+			for (var i = 0; i < lista.length; i++) {					
+					var listaC ='';
+					listaC += lista[i];																								
+			//console.log(listaC);			
+			if (listaC > 0) {
+				var Url =  '/add_following_contact_to_user/'+listaC;
+			}else{
+				$.ajax({
 				url: url[0] + "//" + url[2] + '/add_following_contact_to_user/'+listaC,
 				type: 'GET',
 					success: function (json) {
@@ -271,11 +267,35 @@ $('#follow-parti').on('click', function(){
 					error: function (response) {
 						alert('Sorry, something went wrong. Try again later.');		
 					}
-			});			
+				});
+			}
 		}		
-	}
-	}
-		
-	
+	});
 });
-});*/
+
+$(document).ready(function(){	
+$('#unfollow-parti').on('click', function(){	
+	var lista = [$('#followers li input:checked').val()];			
+			for (var i = 0; i < lista.length; i++) {					
+					var listaC ='';
+					listaC += lista[i];																								
+			//console.log(listaC);			
+			if (listaC > 0) {
+				var Url =  '/remove_following_contact_to_user/'+listaC;
+			}else{
+				$.ajax({
+				url: url[0] + "//" + url[2] + '/remove_following_contact_to_user/'+listaC,
+				type: 'GET',
+					success: function (json) {
+						alert(json.result_msg);
+
+					},
+					error: function (response) {
+						alert('Sorry, something went wrong. Try again later.');		
+					}
+				});
+			}
+		}		
+	});
+});
+
