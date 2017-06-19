@@ -247,55 +247,61 @@ $("#change-photo").on('change', function () {
 
 
 
-$(document).ready(function(){	
-$('#follow-parti').on('click', function(){	
-	var lista = [$('#following li input:checked').val()];			
-			for (var i = 0; i < lista.length; i++) {					
-					var listaC ='';
-					listaC += lista[i];																								
-			//console.log(listaC);			
-			if (listaC > 0) {
-				var Url =  '/add_following_contact_to_user/'+listaC;
-			}else{
+
+$(document).ready(function() {
+    $('#unfollow-parti').on('click',function(){
+        var selected = '';    
+        $('#followers li input[type=checkbox]').each(function(){
+            if (this.checked) {
+                selected += $(this).val()+',';
+            	
+            																								
+			//console.log(selected);			
+			
 				$.ajax({
-				url: url[0] + "//" + url[2] + '/add_following_contact_to_user/'+listaC,
+				url: url[0] + "//" + url[2] + '/remove_following_contact_to_user/'+selected,
 				type: 'GET',
 					success: function (json) {
 						alert(json.result_msg);
 
 					},
 					error: function (response) {
-						alert('Sorry, something went wrong. Try again later.');		
+						alert('you have to select a participant that you want stop follow');		
 					}
 				});
 			}
-		}		
-	});
-});
+        }); 
 
-$(document).ready(function(){	
-$('#unfollow-parti').on('click', function(){	
-	var lista = [$('#followers li input:checked').val()];			
-			for (var i = 0; i < lista.length; i++) {					
-					var listaC ='';
-					listaC += lista[i];																								
-			//console.log(listaC);			
-			if (listaC > 0) {
-				var Url =  '/remove_following_contact_to_user/'+listaC;
-			}else{
+        
+    });         
+});   
+$(document).ready(function() {
+    $('#follow-parti').on('click',function(){
+        var selectedfollow = '';   	 
+        $('#following li input[type=checkbox]').each(function(){
+            if (this.checked) {
+                selectedfollow += $(this).val()+',';
+                
+            
+            																								
+			console.log(selectedfollow);			
+			
 				$.ajax({
-				url: url[0] + "//" + url[2] + '/remove_following_contact_to_user/'+listaC,
+				url: url[0] + "//" + url[2] + '/add_following_contact_to_user/'+selectedfollow,
 				type: 'GET',
 					success: function (json) {
 						alert(json.result_msg);
 
 					},
 					error: function (response) {
-						alert('Sorry, something went wrong. Try again later.');		
+						alert('you have to select a participant that you want follow');		
 					}
 				});
 			}
-		}		
-	});
-});
+        }); 
+
+        
+    });         
+});   
+
 
