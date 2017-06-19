@@ -300,7 +300,8 @@ def get_fullname_for_participant(participant_email, user_email_DEBUG=None):
 # 		    {
 # 		      "email": "ale@gmail.com",
 # 		      "fullname": "alejandro perez",
-# 		      "username": "ale"
+# 		      "username": "ale",
+#             "profilepic_url": "http://path"
 # 		    }
 # 		   ]
 # 		  }
@@ -323,8 +324,9 @@ def get_participant_followers_info(participant_email, user_email_DEBUG=None):
 # 		    {
 # 		      "email": "ale@gmail.com",
 # 		      "fullname": "alejandro perez",
-# 		      "username": "ale"
-# 		    }
+# 		      "username": "ale",
+#             "profilepic_url": "http://path"
+#  		    }
 # 		   ]
 # 		  }
 #       2.{"result":"OK", "ifallowed": False, "followings_num": 1, "followings_info": []}
