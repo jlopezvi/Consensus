@@ -200,7 +200,7 @@ $(document).ready( function() {
         }
       }
     });
-/*
+
     $.ajax({
       url: url[0] + "//" + url[2] + '/registration',
       type: 'POST',
@@ -230,7 +230,7 @@ $(document).ready( function() {
         console.log(response);
       }
     });
-*/
+
   });
 
   function archive(evt) {
