@@ -74,10 +74,9 @@ $(window).on('load', function(){
 	       		else
 	       			if_following = 'value="Follow"';
 	       		newParti = '';
-	       		newParti += '<li><input class="checkbox check--followers" type="checkbox" name="check[]">';
-	       		newParti += '<img src="'+json[i].profilepic_url+'"><p>'; 
+	       		newParti += '<li><img class="new--user--icon--login" src="'+json[i].profilepic_url+'"><p>'; 
 	       		newParti += '<a href="#">'+json[i].fullname+'</a>';
-	       		newParti += '<br><label>'+json[i].email+'</label>|<label>'+json[i].position+'</label>|<label>'+json[i].group+'</label></p>';
+	       		newParti += '<br><label>'+json[i].position+'</label> | <label>'+json[i].group+'</label></p>';
 	       		newParti += '<input type="hidden" value="'+json[i].email+'">';
 	       		newParti += '<input class="form-control invite__button" type="button" '+if_following+' id="btn-follow"></li>';
 	       		$('#id01').append(newParti);	
@@ -86,41 +85,7 @@ $(window).on('load', function(){
 		}
 	});
 
-	/*$.ajax({
-		url: url[0] + "//" + url[2] + 'get_ideas_data_created_by_participant/'+current_email,
-		type: 'GET',
-		headers: {
-		'Content-Type': 'application/json'
-		},
-		dataType: 'json',
-
-		success: function(json) {
-		
-			if (json.author_photo_url == '') {
-				$('.home--header div').append('<i class="fa fa-user user--icon"></i>');
-			}else{
-				$('.home--profile--picture').append('<img src="'+json.author_photo_url+'">');
-			}
-			$('.home--name a').append(json.author_username);
-			$('.newsfeed--duration p').append(json.duration);
-			$('.home--progress input').val(json.supporters_num*100/json.supporters_goal_num);
-			$('.home--progress2 input').val(json.volunteers_num*100/json.volunteers_goal_num);
-			$('.newsfeed--goals p').append(json.supporters_num/json.supporters_goal_num+' supporters goal <br>'
-				+json.volunteers_num/json.volunteers_goal_num+' volunteers goal');
-			$('.newsfeed--problem').append(json.concern+'<br>'+json.concern+'<br>'+json.concern);
-			$('.newsfeed--proposal').append(json.proposal+'<br><br>'+json.proposal);
-			$('.newsfeed--support input').val(json.support_rate);
-			$('.neewsfeed--moreinfo input').on('click', function(){
-				$('.neewsfeed--moreinfo').append(json.moreinfo);
-			});	
-			
-		},
-		error: function(response){
-			console.log(response);
-
-		}
 	
-	});*/
 
 });
 
