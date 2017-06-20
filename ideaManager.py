@@ -139,7 +139,8 @@ def get_idea_data_aux(idea):
     author_username = _get_participant_node(author_email)['username']
     idea_proposal = idea['proposal']
     uuid=idea['uuid']
-    timestamp = datetime.strptime(idea['timestamp'], '%d.%m.%Y')
+    #timestamp = datetime.strptime(idea['timestamp'], '%d.%m.%Y')
+    timestamp = datetime.strptime(getGraph().match_one(end_node=idea, rel_type="CREATED")["timestamp"], '%d.%m.%Y')
     duration = str((datetime.now() - timestamp).days) + ' days'
     #voters_num = len(list(getGraph().match(end_node=idea, rel_type="VOTED_ON")))
     supporters_num = _get_vote_statistics_for_idea(idea_proposal)[0]

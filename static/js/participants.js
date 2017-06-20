@@ -4,6 +4,15 @@ url = url.split("/");
 $(window).on('load', function(){
 	var current_email = $('#host_email').val();
 	
+	//GET ALL INFORMATION OF ALL IDEAS CREATED BY PARTICIPANT
+	$.ajax({
+		url: url[0] + "//" + url[2] + '/get_ideas_data_created_by_participant/'+current_email,
+		type: 'GET',
+		success: function (json) {
+			console.log(json);
+		}	
+	});
+
 	//GET ALL INFORMATION OF CURRENT LOGGED USER OR SEARCHED
 	$.ajax({
 		url: url[0] + "//" + url[2] + '/get_participant_data_by_email_unrestricted/'+current_email,
@@ -14,8 +23,8 @@ $(window).on('load', function(){
 			$('.participant__name a').append(json.participant_data.username);
 			$('.participant__name label').append(json.participant_data.fullname);
 			$('.participant__active--p').children().first().append(json.participant_data.ideas_num);
-			$('.participant__followers').children().first().append(json.participant_data.followers_num);
-			$('.participant__following').children().first().append(json.participant_data.followings_num);
+			$('.participant__following').children().first().append(json.participant_data.followers_num);
+			$('.participant__followers').children().first().append(json.participant_data.followings_num);
 		}	
 	});
 
@@ -33,7 +42,7 @@ $(window).on('load', function(){
 					followerList += '<p><a href="#">'+json.followers_info[i].username+'</a>';					
 					followerList += '<br>'+json.followers_info[i].fullname+'</p></li>';
 				}
-				$('#menu1 ul').append(followerList);
+				$('#home ul').append(followerList);
 				
 			}
 		}	
@@ -53,7 +62,7 @@ $(window).on('load', function(){
 					followingList += '<p><a href="#">'+json.followings_info[i].username+'</a>';					
 					followingList += '<br>'+json.followings_info[i].fullname+'</p></li>';
 				}
-				$('#home ul').append(followingList);
+				$('#menu1 ul').append(followingList);
 			}
 		}	
 	});
@@ -190,6 +199,26 @@ function seaarch_participant(search, page){
 
 		}
 	});
+
+	$("#change-photo").on('change', function () {
+        if (typeof (FileReader) != "undefined") {
+
+            var image_holder = $("#image--holder");
+            image_holder.empty();
+
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $("<img />", {
+                    "src": e.target.result,
+                    "class": "new--user--icon--login img-circle"
+                }).appendTo(image_holder);
+            }       	
+            image_holder.show();
+            reader.readAsDataURL($(this)[0].files[0]);
+        } else {
+            alert("This browser does not support FileReader.");
+        }
+    });
 }
 
 function follow_unfollow_participant(type, user){
@@ -227,37 +256,15 @@ function change_view(view){
 
 $(document).ready(function(){
 
-	$("#change-photo").on('change', function () {
-        if (typeof (FileReader) != "undefined") {
-
-            var image_holder = $("#image--holder");
-            image_holder.empty();
-
-            var reader = new FileReader();
-            reader.onload = function (e) {
-                $("<img />", {
-                    "src": e.target.result,
-                    "class": "new--user--icon--login img-circle"
-                }).appendTo(image_holder);
-            }       	
-            image_holder.show();
-            reader.readAsDataURL($(this)[0].files[0]);
-        } else {
-            alert("This browser does not support FileReader.");
-        }
-    });
-
     $('#unfollow-parti').on('click',function(){
         var selected = '';    
         $('#followers li input[type=checkbox]').each(function(){
             if (this.checked) {
                 selected = $(this).val();           	            																															
 				$.ajax({
-				url: url[0] + "//" + url[2] + '/remove_following_contact_to_user/'+selected,
-				type: 'GET',
+					url: url[0] + "//" + url[2] + '/remove_following_contact_to_user/'+selected,
+					type: 'GET',
 					success: function (json) {
-						
-
 					},
 					error: function (response) {
 						alert('you have to select a participant that you want stop follow');		
@@ -274,11 +281,9 @@ $(document).ready(function(){
             if (this.checked) {
                 selectedfollow = $(this).val();                                																																
 				$.ajax({
-				url: url[0] + "//" + url[2] + '/add_following_contact_to_user/'+selectedfollow,
-				type: 'GET',
+					url: url[0] + "//" + url[2] + '/add_following_contact_to_user/'+selectedfollow,
+					type: 'GET',
 					success: function (json) {
-						
-
 					},
 					error: function (response) {
 						alert('you have to select a participant that you want follow');		

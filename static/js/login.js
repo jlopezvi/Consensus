@@ -177,7 +177,6 @@ $(document).ready( function() {
     fData.append('ifregistrationfromemail', 'False');
 
     hostEmail = $('#hostEmail').val();
-    console.log(hostEmail);
     if(hostEmail != null){
       fData.set('host_email', hostEmail);
       fData.set('ifemailverified', 'True');
@@ -190,6 +189,17 @@ $(document).ready( function() {
     for (var pair of fData.entries()) {
       console.log(pair[0]+ ', ' + pair[1]);
     }
+    
+    var redirect = false;
+    $.ajax({
+      url: url[0] + "//" + url[2] + '/get_ideas_created_by_participant/'+hostEmail,
+      type: 'GET',
+      success: function(data){
+        if(data.ideas_indices.length > 0){
+          redirect = true;
+        }
+      }
+    });
 
     $.ajax({
       url: url[0] + "//" + url[2] + '/registration',
@@ -198,14 +208,17 @@ $(document).ready( function() {
       processData: false,
       contentType: false,
       success: function (json) {
-        //console.log(json);
         if(json.result != 'OK'){
           $('.register--message').removeClass('alert-danger').addClass('alert-success');
           $('.register--message').empty().append('Participant registered previously, resend email verification.').show();
           $('.register--button').prop('disabled', 'false');
         } else {
-          if((json.ifhost) && (json.ifemailverified))
-            window.location = '/newsfeed';
+          if((json.ifhost) && (json.ifemailverified)){
+            if(redirect)
+              window.location = '/newsfeed';
+            else
+              window.location = '/home';
+          }
           else{
             $('.register--message').removeClass('alert-danger').addClass('alert-success');
             $('.register--message').empty().append('E-mail verification sent.<br>Close this window and check your e-mail within the next few minutes.').show();
