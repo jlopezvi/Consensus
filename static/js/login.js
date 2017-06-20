@@ -102,7 +102,7 @@ $(document).ready( function() {
             } else if(json.result == 'Wrong: Bad e-mail'){
               $('.login--message').empty().append('e-mail not found / not verified').show();
             } else if(json.result == 'OK'){
-              window.location = '/newsfeed';
+              window.location = '/home';
             }
           },
           error: function(response){
