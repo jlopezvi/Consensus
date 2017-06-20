@@ -189,17 +189,19 @@ $(document).ready( function() {
     for (var pair of fData.entries()) {
       console.log(pair[0]+ ', ' + pair[1]);
     }
-    
+
     var redirect = false;
-    $.ajax({
-      url: url[0] + "//" + url[2] + '/get_ideas_created_by_participant/'+hostEmail,
-      type: 'GET',
-      success: function(data){
-        if(data.ideas_indices.length > 0){
-          redirect = true;
+    if((hostEmail != '') || (hostEmail != null)){
+      $.ajax({
+        url: url[0] + "//" + url[2] + '/get_ideas_created_by_participant/'+hostEmail,
+        type: 'GET',
+        success: function(data){
+          if(data.ideas_indices.length > 0){
+            redirect = true;
+          }
         }
-      }
-    });
+      });
+    }
 
     $.ajax({
       url: url[0] + "//" + url[2] + '/registration',
