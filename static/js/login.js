@@ -191,18 +191,16 @@ $(document).ready( function() {
     }
 
     var redirect = false;
-    if((hostEmail != '') || (hostEmail != null)){
-      $.ajax({
-        url: url[0] + "//" + url[2] + '/get_ideas_created_by_participant/'+hostEmail,
-        type: 'GET',
-        success: function(data){
-          if(data.ideas_indices.length > 0){
-            redirect = true;
-          }
+    $.ajax({
+      url: url[0] + "//" + url[2] + '/get_ideas_created_by_participant/'+hostEmail,
+      type: 'GET',
+      success: function(data){
+        if(data.ideas_indices.length > 0){
+          redirect = true;
         }
-      });
-    }
-
+      }
+    });
+/*
     $.ajax({
       url: url[0] + "//" + url[2] + '/registration',
       type: 'POST',
@@ -232,6 +230,7 @@ $(document).ready( function() {
         console.log(response);
       }
     });
+*/
   });
 
   function archive(evt) {
