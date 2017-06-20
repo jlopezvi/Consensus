@@ -1,7 +1,7 @@
 var url = window.location.href;
 url = url.split("/");
 
-$(window).on('load', function() {
+$(window).on('load', function(){
 	var current_email = $('#host_email').val();
 	
 	//GET ALL INFORMATION OF CURRENT LOGGED USER OR SEARCHED
@@ -85,6 +85,43 @@ $(window).on('load', function() {
 	       	//console.log(newParti);
 		}
 	});
+
+	/*$.ajax({
+		url: url[0] + "//" + url[2] + 'get_ideas_data_created_by_participant/'+current_email,
+		type: 'GET',
+		headers: {
+		'Content-Type': 'application/json'
+		},
+		dataType: 'json',
+
+		success: function(json) {
+		
+			if (json.author_photo_url == '') {
+				$('.home--header div').append('<i class="fa fa-user user--icon"></i>');
+			}else{
+				$('.home--profile--picture').append('<img src="'+json.author_photo_url+'">');
+			}
+			$('.home--name a').append(json.author_username);
+			$('.newsfeed--duration p').append(json.duration);
+			$('.home--progress input').val(json.supporters_num*100/json.supporters_goal_num);
+			$('.home--progress2 input').val(json.volunteers_num*100/json.volunteers_goal_num);
+			$('.newsfeed--goals p').append(json.supporters_num/json.supporters_goal_num+' supporters goal <br>'
+				+json.volunteers_num/json.volunteers_goal_num+' volunteers goal');
+			$('.newsfeed--problem').append(json.concern+'<br>'+json.concern+'<br>'+json.concern);
+			$('.newsfeed--proposal').append(json.proposal+'<br><br>'+json.proposal);
+			$('.newsfeed--support input').val(json.support_rate);
+			$('.neewsfeed--moreinfo input').on('click', function(){
+				$('.neewsfeed--moreinfo').append(json.moreinfo);
+			});	
+			
+		},
+		error: function(response){
+			console.log(response);
+
+		}
+	
+	});*/
+
 });
 
 $(document).ready( function() {
@@ -221,9 +258,11 @@ function change_view(view){
 		}, 500);
 	}
 }
-$(document).ready(function(){
-$("#change-photo").on('change', function () {
 
+
+$(document).ready(function(){
+
+	$("#change-photo").on('change', function () {
         if (typeof (FileReader) != "undefined") {
 
             var image_holder = $("#image--holder");
@@ -242,55 +281,38 @@ $("#change-photo").on('change', function () {
             alert("This browser does not support FileReader.");
         }
     });
-});
 
-
-
-
-
-$(document).ready(function() {
     $('#unfollow-parti').on('click',function(){
         var selected = '';    
         $('#followers li input[type=checkbox]').each(function(){
             if (this.checked) {
-                selected += $(this).val()+',';
-            	
-            																								
-			//console.log(selected);			
-			
+                selected = $(this).val();           	            																															
 				$.ajax({
 				url: url[0] + "//" + url[2] + '/remove_following_contact_to_user/'+selected,
 				type: 'GET',
 					success: function (json) {
-						alert(json.result_msg);
+						
 
 					},
 					error: function (response) {
 						alert('you have to select a participant that you want stop follow');		
 					}
 				});
-			}
+			}		
         }); 
-
-        
+        alert('Has stopped following the participants');    
     });         
-});   
-$(document).ready(function() {
+  
     $('#follow-parti').on('click',function(){
         var selectedfollow = '';   	 
         $('#following li input[type=checkbox]').each(function(){
             if (this.checked) {
-                selectedfollow += $(this).val()+',';
-                
-            
-            																								
-			console.log(selectedfollow);			
-			
+                selectedfollow = $(this).val();                                																																
 				$.ajax({
 				url: url[0] + "//" + url[2] + '/add_following_contact_to_user/'+selectedfollow,
 				type: 'GET',
 					success: function (json) {
-						alert(json.result_msg);
+						
 
 					},
 					error: function (response) {
@@ -299,9 +321,9 @@ $(document).ready(function() {
 				});
 			}
         }); 
+        alert('Participants have been followed');       
+    });  
 
-        
-    });         
 });   
 
 
