@@ -145,7 +145,7 @@ $(document).ready( function() {
 				$('#send_invitation-btn').prop('disabled', false);
 				if(json.result_msg == 'email sent'){
 					$('.modal-title').empty().append('Success!!');
-					$('.modal-body p').empty().append('An email with an invitation sent to <strong>'+guest_email+'</strong>');
+					$('.modal-body p#modal--invitation').empty().append('An email with an invitation sent to <strong>'+guest_email+'</strong>');
 					$('#invitation-modal-info').modal('toggle');
 				}
 			},

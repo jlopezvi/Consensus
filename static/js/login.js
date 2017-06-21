@@ -102,7 +102,7 @@ $(document).ready( function() {
             } else if(json.result == 'Wrong: Bad e-mail'){
               $('.login--message').empty().append('e-mail not found / not verified').show();
             } else if(json.result == 'OK'){
-              window.location = '/newsfeed';
+              window.location = '/home';
             }
           },
           error: function(response){
@@ -189,7 +189,7 @@ $(document).ready( function() {
     for (var pair of fData.entries()) {
       console.log(pair[0]+ ', ' + pair[1]);
     }
-    
+
     var redirect = false;
     $.ajax({
       url: url[0] + "//" + url[2] + '/get_ideas_created_by_participant/'+hostEmail,
@@ -230,6 +230,7 @@ $(document).ready( function() {
         console.log(response);
       }
     });
+
   });
 
   function archive(evt) {
