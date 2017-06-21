@@ -88,7 +88,7 @@
                 </div>
                 <div class="col-sm-2 info2__col">
                     <div class="participant__following">
-                        <label> </label><br>
+                        <label class="followingss"></label><br>
                         <label> Following </label>
                     </div>
                 </div>
@@ -158,70 +158,80 @@
         </div>
         </div>
 
-        <div class="col-sm-6 participant__newsfeed" style="min-height: 1024px;">
-        {% for feed_p in feed %}
+        <div class="col-sm-6 participant__newsfeed" id="newIdea" style="min-height: 1024px;">
+        <!--
         <div class="col-sm-12">  
             <div class="row home--header">
                 <div class="col-sm-2" style="padding-left: 0px;margin-left: -15px;">
-                {% if (feed_p.picture == '') %}
+               
                     <i class="fa fa-user user--icon"></i>
-                {% else %}
+                
                     <div class="home--profile--picture">
-                        <img src="{{ url_for('static',filename=feed_p.picture) }}">
+                        <img src="">
                     </div>
-                {% endif %}
+                
                 </div>
                 <div class="col-sm-1 home--name">
-                    <a href="#">{{ feed_p.name }}</a>
+                    <a href="#"></a>
                 </div>
                 <div class="col-sm-2 newsfeed--duration">
                     <p><img style="width: 15px;position: relative;top: -3px;" src="{{ url_for('static',filename='images/clock-icon.png') }}">&nbsp;
-                    {{ feed_p.duration }}</p>
+                    </p>
                 </div>
                 <div class="col-sm-3 home--charge">
                     <div class="progress home--progress">
-                        <input type="text" value="{{ (feed_p.supporters_current * 100)/ feed_p.supporters_goal }}" id="supporters--percent" hidden>
+                        <input type="text" value="" id="supporters--percent" hidden>
                         <div class="progress-bar newsfeed--bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style=""></div>
                     </div>
 
                     <div class="progress home--progress2">
-                        <input type="text" value="{{ (feed_p.volunters_current * 100)/ feed_p.volunters_goal }}" id="volunters--percent" hidden>
+                        <input type="text" value="" id="volunters--percent" hidden>
                         <div class="progress-bar newsfeed--bar2" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style=""></div>
                     </div>
                 </div>
                 <div class="col-sm-4 newsfeed--goals">
-                    <p>{{ feed_p.supporters_current }}/{{ feed_p.supporters_goal }} supporters goals<br>
-                    {{ feed_p.volunters_current }}/{{ feed_p.volunters_goal }} volunteers goals</p>
+                    <p>supporters goals<br>
+                    volunteers goals</p>
                 </div>
             </div>
             <div class="row home--proposals--body">
                 <div class="col-sm-12">
                     <div class="col-sm-8 newsfeed--problem">
-                        {{ feed_p.problem }}<br>{{ feed_p.problem }}<br>{{ feed_p.problem }}
+                        <br><br>
                     </div>
                 </div>
                 <div class="col-sm-12" style="margin-top: 180px;">
                     <div class="col-sm-8 col-sm-offset-4 newsfeed--proposal">
-                        {{ feed_p.proposal }}<br>{{ feed_p.proposal }}<br>{{ feed_p.proposal }}
+                       <br><br>
                     </div>
                 </div>
             </div>
+
             <div class="row newsfeed--footer">
                 <div class="col-sm-12" style="padding-right: 0px; padding-left: 0px;">
                     <div class="col-sm-1 redflag--img">
                         <img src="{{ url_for('static',filename='images/redflag.png') }}">
                     </div>
                     <div class="col-sm-9 newsfeed--support" style="padding-right:0;padding-left:30px;">
-                        <input type="text" value="{{ (feed_p.liked|length * 100)/(feed_p.liked|length + feed_p.disliked|length) }}" id="percent" hidden>
+                        <input type="text" value="" id="percent" hidden>
                         <div class="input--percent">    
                             <label> Support Rate: </label>
                         </div>
                     </div>
+
+
                     <div class="col-sm-2 neewsfeed--moreinfo" style="float:right;">
                         <input type="button" name="more-info" class="home--button">
                     </div>
                 </div>
             </div>
+
+
+
+
+
+
+
             <div class="row newsfeed--persons">
                 <div class="col-sm-12">
                     <div class="col-sm-1" style="padding:0;">
@@ -229,12 +239,10 @@
                     </div>
                     <div class="col-sm-11 newsfeed--likes">
                         <ul>
-                        {% for likes in feed_p.liked %}
-                            {% if loop.index <= 3 %}
-                                <a href="#"><li>{{ likes.name }}</li></a>
-                            {% endif %}
-                        {% endfor %}
-                            <a href="#" class="last--liked"><li>+ {{ feed_p.liked|length -3 }} people</li></a>
+                        
+                                <a href="#"><li></li></a>
+                            
+                            <a href="#" class="last--liked"><li> people</li></a>
                         </ul>
                     </div>
                 </div>
@@ -243,11 +251,11 @@
                         <img src="{{ url_for('static',filename='images/x-small.png') }}">
                     </div>
                     <div class="col-sm-11 newsfeed--likes">
-                        {% for dislikes in feed_p.disliked %}
+                        
                         <ul>
-                            <a href="#"><li>{{ dislikes.name }}</li></a>
+                            <a href="#"><li></li></a>
                         </ul>
-                        {% endfor %}
+                        
                     </div>
                 </div>
             </div>
@@ -265,9 +273,14 @@
                     </div>
                 </div>
             </div>
-        </div>
+
+        </div>-->
+ 
+
+
+
     </div>
-    {% endfor %}
+   
     </div>
     </div>
     <div id="modal_participant" class="modal fade" role="dialog">

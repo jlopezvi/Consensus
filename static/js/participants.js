@@ -8,8 +8,39 @@ $(window).on('load', function(){
 	$.ajax({
 		url: url[0] + "//" + url[2] + '/get_ideas_data_created_by_participant/'+current_email,
 		type: 'GET',
-		success: function (json) {
-			console.log(json);
+		success: function (json) {		
+				var newIdea = '';
+			for (var i = 0; i < json.ideas_data.length; i++) {						
+				newIdea += '<div class="col-sm-12"><div class="row home--header"><div class="col-sm-2" style="padding-left: 0px;margin-left: -15px;">';
+				newIdea += '<div class="home--profile--picture"><img src="'+json.ideas_data[i].author_photo_url+'"></div></div><div class="col-sm-1 home--name">';
+				newIdea += '<a href="#">'+json.ideas_data[i].author_username+'</a></div><div class="col-sm-2 newsfeed--duration">';
+				newIdea += '<p><img style="width: 15px;position: relative;top: -3px;" src="static/images/clock-icon.png">&nbsp;'+json.ideas_data[i].duration+'</p>';
+				newIdea += '</div><div class="col-sm-3 home--charge"><div class="progress home--progress">';
+				newIdea += '<input type="text" value="'+json.ideas_data[i].supporters_num*100/json.ideas_data[i].supporters_goal_num+'" id="supporters--percent" hidden>';
+				newIdea += '<div class="progress-bar newsfeed--bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style=""></div></div>';
+				newIdea += '<div class="progress home--progress2"><input type="text" value="'+json.ideas_data[i].volunteers_num*100/json.ideas_data[i].volunteers_goal_num+'" id="volunters--percent" hidden>';
+				newIdea += '<div class="progress-bar newsfeed--bar2" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style=""></div></div></div>';
+				newIdea += '<div class="col-sm-4 newsfeed--goals"><p>'+json.ideas_data[i].supporters_num/json.ideas_data[i].supporters_goal_num+' supporters goals';
+				newIdea += '<br>'+json.ideas_data[i].volunteers_num/json.ideas_data[i].volunteers_goal_num+' volunteers goals</p></div></div>';
+				newIdea += '<div class="row home--proposals--body"><div class="col-sm-12">';
+				newIdea += '<div class="col-sm-8 newsfeed--problem">'+json.ideas_data[i].concern+'</div></div><div class="col-sm-12" style="margin-top: 180px;">';
+				newIdea += '<div class="col-sm-8 col-sm-offset-4 newsfeed--proposal">'+json.ideas_data[i].proposal+'</div></div></div>';
+				newIdea += '<div class="row newsfeed--footer"><div class="col-sm-12" style="padding-right: 0px; padding-left: 0px;"><div class="col-sm-1 redflag--img">';
+				newIdea += '<img src="static/images/redflag.png"></div><div class="col-sm-9 newsfeed--support" style="padding-right:0;padding-left:30px;">';
+				newIdea += '<input type="text" value="'+json.ideas_data[i].supporters_num*100/json.ideas_data[i].supporters_num+json.ideas_data[i].rejectors+'" id="percent" hidden><div class="input--percent">';
+				newIdea += '<label> Support Rate: </label></div></div><div class="col-sm-2 neewsfeed--moreinfo" style="float:right;">';
+				newIdea += '<input type="button" name="more-info" class="home--button"></div></div></div>';
+				newIdea += '<div class="row newsfeed--persons"><div class="col-sm-12"><div class="col-sm-1" style="padding:0;">';
+				newIdea += '<img src=""></div><div class="col-sm-11 newsfeed--likes">';
+				newIdea += '<ul><a href="#" class="last--liked"><li>'+json.ideas_data[i].supporters_num+' people</li></a></ul></div></div>';
+				newIdea += '<div class="col-sm-12"><div class="col-sm-1" style="padding:0;"><img src="static/images/x-small.png">';
+				newIdea += '</div><div class="col-sm-11 newsfeed--likes"><ul><a href="#"><li>'+json.ideas_data[i].rejectors+'</li></a></ul></div></div></div>';
+				newIdea += '<div class="row home--share"><div class="col-sm-12 home--share--icons"><div class="col-sm-6" style="padding:0;width: 100%;">';
+				newIdea += '<img src="static/images/x-icon.png"><img style="width: 50px;" src="static/images/check-icon.png"><img style="width: 48px;" src="static/images/checkmark.png">';
+			    newIdea += '<img style="width: 50px;" src="static/images/ignore-icon.png"></div><div class="col-sm-6 home--followers" style="width: 100%;"><i class="fa fa-share-alt"></i>';
+			    newIdea += '<p>Share with: followers</p></div></div></div></div>';
+			    }
+			$('#newIdea').append(newIdea);		
 		}	
 	});
 
@@ -49,6 +80,7 @@ $(window).on('load', function(){
 	});
 
 	//GET ALL FOLLOWINGS OF CURRENT LOGGED USER OR SEARCHED
+	
 	$.ajax({
 		url: url[0] + "//" + url[2] + '/get_participant_followings_info/'+current_email,
 		type: 'GET',
@@ -58,7 +90,7 @@ $(window).on('load', function(){
 				followingList = '';	
 				for(var i = 0; i < json.followings_num; i++){
 					followingList += '<li><input value="'+json.followings_info[i].email+'" class="checkbox check--followers" type="checkbox" name="check[]">';
-					followingList += '<img src="'+json.followings_info[i].profilepic_url+'">'
+					followingList += '<img src="'+json.followings_info[i].profilepic_url+'">';
 					followingList += '<p><a href="#">'+json.followings_info[i].username+'</a>';					
 					followingList += '<br>'+json.followings_info[i].fullname+'</p></li>';
 				}
@@ -66,7 +98,7 @@ $(window).on('load', function(){
 			}
 		}	
 	});
-
+    
 	$.ajax({
 		url: url[0] + "//" + url[2] + '/get_all_public_participants',
 		type: 'GET',
@@ -258,13 +290,16 @@ $(document).ready(function(){
 
     $('#unfollow-parti').on('click',function(){
         var selected = '';    
-        $('#followers li input[type=checkbox]').each(function(){
+        $('#following li input[type=checkbox]').each(function(){
             if (this.checked) {
-                selected = $(this).val();           	            																															
+                selected = $(this).val();          	            																															
 				$.ajax({
 					url: url[0] + "//" + url[2] + '/remove_following_contact_to_user/'+selected,
 					type: 'GET',
-					success: function (json) {
+					success: function (json) {	
+						$('#following li input:checked').parent().fadeOut('slow');
+						
+						
 					},
 					error: function (response) {
 						alert('you have to select a participant that you want stop follow');		
@@ -272,18 +307,23 @@ $(document).ready(function(){
 				});
 			}		
         }); 
-        alert('Has stopped following the participants');    
+        alert('Has stopped following the participants');  
+        var resta = $('#following li input:checked').length;
+		var num = parseFloat($('.followingss').text());	
+		$('.followingss').empty();	
+		$('.followingss').append(num-resta);  
     });         
   
     $('#follow-parti').on('click',function(){
         var selectedfollow = '';   	 
-        $('#following li input[type=checkbox]').each(function(){
+        $('#followers li input[type=checkbox]').each(function(){
             if (this.checked) {
                 selectedfollow = $(this).val();                                																																
 				$.ajax({
 					url: url[0] + "//" + url[2] + '/add_following_contact_to_user/'+selectedfollow,
 					type: 'GET',
 					success: function (json) {
+						
 					},
 					error: function (response) {
 						alert('you have to select a participant that you want follow');		
@@ -291,7 +331,31 @@ $(document).ready(function(){
 				});
 			}
         }); 
-        alert('Participants have been followed');       
+        alert('Participants have been followed');   
+        var resta = $('#followers li input:checked').length;
+		var num = parseFloat($('.followingss').text());	
+		$('.followingss').empty();	
+		$('.followingss').append(num+resta); 
+		var current_email = $('#host_email').val();
+		$.ajax({
+		url: url[0] + "//" + url[2] + '/get_participant_followings_info/'+current_email,
+		type: 'GET',
+		success: function (json) {
+			
+			
+			if(json.followings_num > 0){
+				followingList = '';	
+				for(var i = 0; i < json.followings_num; i++){
+					followingList += '<li><input value="'+json.followings_info[i].email+'" class="checkbox check--followers" type="checkbox" name="check[]">';
+					followingList += '<img src="'+json.followings_info[i].profilepic_url+'">';
+					followingList += '<p><a href="#">'+json.followings_info[i].username+'</a>';					
+					followingList += '<br>'+json.followings_info[i].fullname+'</p></li>';
+				}
+				$('#following').append(followingList);
+			}
+		}	
+		});
+
     });  
 
 });   
