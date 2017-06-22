@@ -59,17 +59,17 @@ def registration_aux(inputdict, profilepic_file_body):
     ifhost = False
     if inputdict.get('host_email') is not None:
         # current_participant (verified/unverified) follows host
-        ifhost = _if_add_following_contact_to_user_aux(email, inputdict.get('host_email'))
+        ifhost = _if_added_following_contact_to_user(email, inputdict.get('host_email'))
     return jsonify({"result": "OK", "ifhost": ifhost, "ifhost_msg": ifhost_msg[ifhost],
                     "ifemailverified": ifemailverified, "ifemailverified_msg": ifemailverified_msg[ifemailverified]})
 
 
-#Used By <registration_aux>
-#input: python dict {'fullname':'Juan Lopez','email': 'jj@gmail.com', 'username': 'jlopezvi',
+# Used By <registration_aux>
+# input: python dict {'fullname':'Juan Lopez','email': 'jj@gmail.com', 'username': 'jlopezvi',
 #              'position': 'employee', 'group': 'Human Resources', 'password': 'MD5password',
 #              'ifregistrationfromemail': True / False, 'ifpublicprofile': True / False,}
 #       profilepic_file_body: None/ (file)
-#output: python dict {'result':'OK'}
+# output: python dict {'result':'OK'}
 def _newParticipant(participantdict,profilepic_file_body):
     image_url = 'static/assets/profile/perfil-mediano.png'
     email = participantdict.get('email')
@@ -91,41 +91,6 @@ def _newParticipant(participantdict,profilepic_file_body):
         newparticipant.add_labels("unverified_participant")
         _addToUnverifiedParticipantsIndex(email, newparticipant)
     return {'result': 'OK'}
-
-
-# TODO: choose mail method, either Flask or MIME
-# def _registration_send_emailverification_test(email):
-#     toEmail = email
-#     token = generate_confirmation_token(toEmail)
-#     confirm_url = url_for('.registration_receive_emailverification', token=token, _external=True)
-#     message = MIMEMultipart()
-#     msgBody = """
-#                     Welcome! Thanks for signing up. Please follow this link to activate your account:
-#                     <br/>
-#                     <a href="{}">"{}"</a>
-#                     <br/>/
-#                     Cheers!
-#                  """
-#     message.attach(MIMEText(msgBody.format(confirm_url, confirm_url), 'html'))
-#     msgSubject = "Please confirm your email"
-#     fromEmail = 'consensus.info@gmail.com'
-#     fromEmailPass = 'consensusadmin'
-#     message['From'] = fromEmail
-#     message['To'] = toEmail
-#     message['Subject'] = msgSubject
-#     # Try email senging
-#     server = smtplib.SMTP('smtp.gmail.com', 587)
-#     server.starttls()
-#     print (server)
-#     try:
-#        server.login(fromEmail, fromEmailPass)
-#        server.sendmail(fromEmail, toEmail, message.as_string())
-#        return jsonify({"result": "OK", "result_msg":"email sent"})
-#     except Exception as e:
-#        print(e)
-#        email_error = e
-#        server.quit()
-#     return jsonify({"result": "wrong", "result_msg":"email not sent", "error": email_error})
 
 
 def modify_user_data_aux(user_data, profilepic_file_body, user_email):
@@ -162,54 +127,6 @@ def remove_user_aux(user_email) :
     return jsonify({'result': 'OK'})
 
 
-#input: email, ifemailverified_category ('all'/True/False)
-#output:
-#  -> participant_node
-#  -> None
-#TODO: participantFound[0] is a node or a dictionary?
-def _get_participant_node(email, ifemailverified_category=True) :
-    if ifemailverified_category in ('all', True):
-        participantFound = _getParticipantsIndex().get("email", email)
-        if participantFound:
-            return participantFound[0]  # node
-    if ifemailverified_category in ('all', False):
-        unverifiedparticipantFound = _getUnverifiedParticipantsIndex().get("email", email)
-        if unverifiedparticipantFound :
-            return unverifiedparticipantFound[0] #node
-    else:
-        return None
-
-# def _getUnverifiedParticipantByEmail(email) :
-#     participantFound = _getUnverifiedParticipantsIndex().get("email", email)
-#     if participantFound :
-#          return participantFound[0]
-#     return None
-
-
-def get_fullname_for_participant_aux(participant_email, user_email):
-    user=_get_participant_node(user_email)
-    participant = _get_participant_node(participant_email)
-    ifpublicprofile = participant.get_properties()['ifpublicprofile']
-    fullname=None
-    if participant_email == user_email or _getIfContactRelationshipExists(participant, user) is True \
-            or ifpublicprofile is True:
-        ifallowed = True
-        fullname=participant["fullname"]
-    else:
-        ifallowed = False
-    return jsonify({"result": "OK", "ifallowed": ifallowed, "fullname": fullname})
-
-
-#currentParticipant, newFollowingContact are graph nodes
-def _getIfContactRelationshipExists(currentParticipant, newFollowingContact) :
-    contactRelationshipFound = getGraph().match_one(start_node=currentParticipant, end_node=newFollowingContact,
-                                                rel_type="FOLLOWS")
-    print ("contactRelationshipFound",contactRelationshipFound)
-    if contactRelationshipFound is not None:
-         return True
-    return False
-
-
 def get_participant_data_aux(currentuser_email, participant_email):
     from ideaManager import get_ideas_data_created_by_participant_aux
     currentuser = _get_participant_node(currentuser_email)
@@ -235,26 +152,28 @@ def get_participant_data_aux(currentuser_email, participant_email):
     return jsonify({"result":"OK", 'ifallowed': ifallowed, "participant_data": participant_data})
 
 
-# input: participant_email
-# output: list of nodes of following contacts
-def _get_participant_followings(participant_email) :
-    participant = _get_participant_node(participant_email)
-    rels = list(getGraph().match(start_node=participant, rel_type="FOLLOWS"))
-    followings = []
-    for rel in rels:
-        followings.append(rel.end_node)
-    return followings
+def get_participant_data_by_email_unrestricted_aux(participant_email):
+    return jsonify(_get_participant_data_by_email(participant_email))
 
 
-# input: participant_email
-# output: list of nodes of follower contacts
-def _get_participant_followers(participant_email) :
+def if_participant_exists_by_email_aux(participant_email):
+    if _get_participant_node(participant_email, 'all'):
+        return jsonify({"result": True})
+    return jsonify({"result": False})
+
+
+def get_fullname_for_participant_aux(participant_email, user_email):
+    user=_get_participant_node(user_email)
     participant = _get_participant_node(participant_email)
-    rels = list(getGraph().match(end_node=participant, rel_type="FOLLOWS"))
-    followers = []
-    for rel in rels:
-        followers.append(rel.start_node)
-    return followers
+    ifpublicprofile = participant.get_properties()['ifpublicprofile']
+    fullname=None
+    if participant_email == user_email or _getIfContactRelationshipExists(participant, user) is True \
+            or ifpublicprofile is True:
+        ifallowed = True
+        fullname=participant["fullname"]
+    else:
+        ifallowed = False
+    return jsonify({"result": "OK", "ifallowed": ifallowed, "fullname": fullname})
 
 
 def get_participant_followings_info_aux(participant_email, user_email):
@@ -303,50 +222,47 @@ def get_participant_followers_info_aux(participant_email, user_email):
     return jsonify({"result":"OK", "ifallowed": ifallowed, "followers_num": followers_num, "followers_info": followers_info})
 
 
-# USED BY: add_following_contact_to_user() [app.py], registration_aux()
-# input: user email, new following contact email
-# output:
-#   ->  True
-#   ->  False
-#   ->  [False,'Following contact exists already']
-def _if_add_following_contact_to_user_aux(user_email, followingcontact_email) :
-    user = _get_participant_node(user_email, 'all')  # current's email could be unverified
-    followingcontact = _get_participant_node(followingcontact_email)
-    if (followingcontact is None) or (followingcontact is user) :
-        return False
-    if _getIfContactRelationshipExists(user, followingcontact) is True:
-        return [False,'Following contact exists already']
-    getGraph().create((user, "FOLLOWS", followingcontact))
-    return True
+def add_following_contact_to_user_aux(followingcontact_email, user_email):
+    result = _if_added_following_contact_to_user(followingcontact_email, user_email)
+    if result is True:
+        _add_notification_relationship_from_participant1_to_participant2(user_email, followingcontact_email)
+        return jsonify({"result": "OK", "result_msg": "Following contact was added"})
+    else:
+        return jsonify({"result": "Wrong", "result_msg": "Following contact not possible or exists already"})
 
 
-# USED BY: remove_following_contact_to_user() [app.py]
-# input: user email, following contact email
-# output:
-#   ->  True
-#   ->  False
-def _if_remove_following_contact_to_user_aux(user_email, followingcontact_email) :
-    user = _get_participant_node(user_email, 'all')  # current's email could be unverified
-    followingcontact = _get_participant_node(followingcontact_email)
-    if _getIfContactRelationshipExists(user, followingcontact) is True:
-        contact_rel = getGraph().match_one(start_node=user, rel_type="FOLLOWS", end_node=followingcontact)
-        getGraph().delete(contact_rel)
-        return True
-    return False
+def remove_following_contact_to_user_aux(followingcontact_email, user_email):
+    result = _if_removed_following_contact_to_user(followingcontact_email, user_email)
+    if result is True:
+        return jsonify({"result": "OK", "result_msg": "Following contact was removed"})
+    else:
+        return jsonify({"result": "Wrong", "result_msg": "Following contact does not exist"})
 
+# NOT TESTED
+def get_all_participants_aux():
+    allnodes = _getParticipantsIndex().query("email:*")
+    participants = []
+    for node in allnodes:
+        participants.append(node.get_properties())
+    return participants
 
-# TODO complete
-def get_notifications_for_user_aux(user_email):
-    user = _get_participant_node(user_email)
-    notification_rels = list(getGraph().match(rel_type="HAS_NOTIFICATION_FOR", end_node=user))
-    notification_rels_from_idea = [x for x in notification_rels if x.start_node.labels == {'idea'}]
-    notification_rels_from_participant = [x for x in notification_rels if (x.start_node.labels == {'participant'})
-                                          or (x.start_node.labels == {'unverified_participant'}) ]
-    return
+def get_all_public_participants_aux(user):
+    participant = _get_participant_node(user)
+    allnodes = _getParticipantsIndex().query("email:*")
+    participants = []
+    for node in allnodes:
+        if node.get_properties()['ifpublicprofile'] == True and node.get_properties()['email'] != user:
+            participants.append(
+                {'email': node.get_properties()['email'], 'fullname': node.get_properties()['fullname'],
+                 'position': node.get_properties()['position'], 'group': node.get_properties()['group'],
+                 'profilepic_url': node.get_properties()['profilepic_url'],
+                 'if_following': _getIfContactRelationshipExists(node, participant)})
+    return participants
 
 
 ###############################################
 
+# <USED BY MANY FUNCTIONS>
 def _addToParticipantsIndex(email, newparticipant) :
      getGraph().get_or_create_index(neo4j.Node, "Participants").add("email", email, newparticipant)
 def _addToUnverifiedParticipantsIndex(email, newparticipant):
@@ -359,6 +275,35 @@ def _getParticipantsIndex():
     return getGraph().get_or_create_index(neo4j.Node, "Participants")
 def _getUnverifiedParticipantsIndex():
     return getGraph().get_or_create_index(neo4j.Node, "UnverifiedParticipants")
+
+
+# <USED BY MANY FUNCTIONS>
+#input: email, ifemailverified_category ('all'/True/False)
+#output:
+#  -> participant_node
+#  -> None
+#TODO: participantFound[0] is a node or a dictionary?
+def _get_participant_node(email, ifemailverified_category=True) :
+    if ifemailverified_category in ('all', True):
+        participantFound = _getParticipantsIndex().get("email", email)
+        if participantFound:
+            return participantFound[0]  # node
+    if ifemailverified_category in ('all', False):
+        unverifiedparticipantFound = _getUnverifiedParticipantsIndex().get("email", email)
+        if unverifiedparticipantFound :
+            return unverifiedparticipantFound[0] #node
+    else:
+        return None
+
+
+# currentParticipant, newFollowingContact are graph nodes
+def _getIfContactRelationshipExists(currentParticipant, newFollowingContact):
+    contactRelationshipFound = getGraph().match_one(start_node=currentParticipant, end_node=newFollowingContact,
+                                                    rel_type="FOLLOWS")
+    print("contactRelationshipFound", contactRelationshipFound)
+    if contactRelationshipFound is not None:
+        return True
+    return False
 
 
 # Used By <registration_aux>
@@ -381,26 +326,60 @@ def _get_fullname_for_participant(participant_email):
     return fullname
 
 
-#NOT TESTED
-def get_all_participants_aux():
-    allnodes = _getParticipantsIndex().query("email:*")
-    participants = []
-    for node in allnodes:
-         participants.append(node.get_properties())
-    return participants
+# input: participant_email
+# output: list of nodes of following contacts
+def _get_participant_followings(participant_email) :
+    participant = _get_participant_node(participant_email)
+    rels = list(getGraph().match(start_node=participant, rel_type="FOLLOWS"))
+    followings = []
+    for rel in rels:
+        followings.append(rel.end_node)
+    return followings
 
 
-def get_all_public_participants_aux(user):
-    participant=_get_participant_node(user)
-    allnodes = _getParticipantsIndex().query("email:*")
-    participants = []
-    for node in allnodes:
-        if node.get_properties()['ifpublicprofile'] == True and node.get_properties()['email'] != user:
-            participants.append({'email': node.get_properties()['email'], 'fullname': node.get_properties()['fullname'],
-                                 'position':node.get_properties()['position'], 'group': node.get_properties()['group'],
-                                 'profilepic_url': node.get_properties()['profilepic_url'],
-                                 'if_following': _getIfContactRelationshipExists(node, participant)})
-    return participants
+# input: participant_email
+# output: list of nodes of follower contacts
+def _get_participant_followers(participant_email) :
+    participant = _get_participant_node(participant_email)
+    rels = list(getGraph().match(end_node=participant, rel_type="FOLLOWS"))
+    followers = []
+    for rel in rels:
+        followers.append(rel.start_node)
+    return followers
+
+
+# <USED BY: add_following_contact_to_user_aux(), registration_aux()>
+# input: user email, new following contact email
+# output:
+#   ->  True
+#   ->  False
+#   ->  [False,'Following contact exists already']
+def _if_added_following_contact_to_user(user_email, followingcontact_email) :
+    user = _get_participant_node(user_email, 'all')  # current's email could be unverified
+    followingcontact = _get_participant_node(followingcontact_email)
+    if (followingcontact is None) or (followingcontact is user) :
+        return False
+    if _getIfContactRelationshipExists(user, followingcontact) is True:
+        return [False,'Following contact exists already']
+    getGraph().create((user, "FOLLOWS", followingcontact))
+    return True
+
+
+# <USED BY: remove_following_contact_to_user_aux()>
+# input: user email, following contact email
+# output:
+#   ->  True
+#   ->  False
+def _if_removed_following_contact_to_user(user_email, followingcontact_email) :
+    user = _get_participant_node(user_email, 'all')  # current's email could be unverified
+    followingcontact = _get_participant_node(followingcontact_email)
+    if _getIfContactRelationshipExists(user, followingcontact) is True:
+        contact_rel = getGraph().match_one(start_node=user, rel_type="FOLLOWS", end_node=followingcontact)
+        getGraph().delete(contact_rel)
+        return True
+    return False
+
+
 
 # <Used by /get_participant_data_by_email_unrestricted>
 def _get_participant_data_by_email(participant_email):
@@ -419,3 +398,37 @@ def _get_participant_data_by_email(participant_email):
                              'followers_num': followers_num,
                              'followings_num': followings_num})
     return {"result": "OK", "participant_data": participant_data}
+
+
+
+####################
+
+####################
+#  NOTIFICATIONS SYSTEM
+####################
+
+####################
+
+# TODO complete
+def get_notifications_for_user_aux(user_email):
+    user = _get_participant_node(user_email)
+    notification_rels = list(getGraph().match(rel_type="HAS_NOTIFICATION_FOR", end_node=user))
+    notification_rels_from_idea = [x for x in notification_rels if x.start_node.labels == {'idea'}]
+    notification_rels_from_participant = [x for x in notification_rels if (x.start_node.labels == {'participant'})
+                                          or (x.start_node.labels == {'unverified_participant'}) ]
+    return
+
+
+
+#########
+# PURE INTERNAL
+#########
+
+# "notification_type": "following"
+def _add_notification_relationship_from_participant1_to_participant2(participant1_email, participant2_email):
+    participant1 = _get_participant_node(participant1_email)
+    participant2 = _get_participant_node(participant2_email)
+    notification_rel_found = getGraph().match_one(start_node=participant1, rel_type="HAS_NOTIFICATION_FOR", end_node=participant2)
+    if notification_rel_found is None:
+        getGraph().create((participant1, "HAS_NOTIFICATION_FOR", participant2, {"type": "following"}))
+    return

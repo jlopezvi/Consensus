@@ -7,19 +7,20 @@ import ast
 import json
 from communityManager import saveCommunity,deleteCommunity,addCommunityToContact,getCommunities
 from participantManager import _get_participant_node, remove_user_aux, get_all_participants_aux, \
-    _if_add_following_contact_to_user_aux, _if_remove_following_contact_to_user_aux, \
     get_participant_followers_info_aux,get_participant_followings_info_aux,\
     get_fullname_for_participant_aux, registration_aux, get_participant_data_aux, modify_user_data_aux, \
-    _get_participant_data_by_email, get_all_public_participants_aux
+    get_participant_data_by_email_unrestricted_aux, get_all_public_participants_aux, if_participant_exists_by_email_aux, \
+    add_following_contact_to_user_aux, remove_following_contact_to_user_aux
 from ideaManager import get_ideas_data_created_by_participant_aux, get_ideas_created_by_participant_aux,\
      get_idea_data_aux, add_idea_to_user_aux, deleteOneIdea,getAllIdeas, \
     _getIdeaByIdeaIndex, vote_on_idea_aux, modify_idea_aux, remove_idea_aux, \
     _get_supporters_emails_for_idea_aux, _get_volunteers_emails_for_idea_aux, \
     _get_vote_statistics_for_idea
+from ideaManager import get_ideanotifications_for_user_aux, remove_notification_from_idea_to_participant_aux, \
+    _do_tasks_for_idea_editedproposal
 from webManager import ideas_for_newsfeed_aux, ideas_for_home_aux, registration_receive_emailverification_aux, \
     registration_from_invitation_aux, registration_send_invitation_aux, do_cron_tasks_aux, _verifyEmail
-from notificationManager import get_notifications_for_user_aux, remove_notification_from_idea_to_participant_aux, \
-    _do_tasks_for_idea_editedproposal
+
 import logging
 import flask_login
 from user_authentification import User
@@ -268,16 +269,14 @@ def get_participant_data(participant_email, user_email_DEBUG=None):
 #        }
 @app.route('/get_participant_data_by_email_unrestricted/<participant_email>')
 def get_participant_data_by_email_unrestricted(participant_email):
-    return jsonify(_get_participant_data_by_email(participant_email))
+    return get_participant_data_by_email_unrestricted_aux(participant_email)
 
 
 # input: email
 # output: json {"result" : true / false }
 @app.route('/if_participant_exists_by_email/<participant_email>')
 def if_participant_exists_by_email(participant_email):
-    if _get_participant_node(participant_email, 'all'):
-        return jsonify({"result": True})
-    return jsonify({"result": False})
+    return if_participant_exists_by_email_aux(participant_email)
 
 
 # input: participant_email, user_email  (user logged in)
@@ -349,11 +348,7 @@ def add_following_contact_to_user(followingcontact_email, user_email_DEBUG=None)
         user_email = user_email_DEBUG
     else:
         user_email = flask_login.current_user.id
-    result = _if_add_following_contact_to_user_aux(followingcontact_email, user_email)
-    if result is True:
-        return jsonify({"result": "OK", "result_msg": "Following contact was added"})
-    else:
-        return jsonify({"result": "Wrong", "result_msg": "Following contact not possible or exists already"})
+    return add_following_contact_to_user_aux(followingcontact_email, user_email)
 
 
 # input: followingcontact email, user email (user logged in)
@@ -365,32 +360,7 @@ def remove_following_contact_to_user(followingcontact_email, user_email_DEBUG=No
         user_email = user_email_DEBUG
     else:
         user_email = flask_login.current_user.id
-    result = _if_remove_following_contact_to_user_aux(followingcontact_email, user_email)
-    if result is True:
-        return jsonify({"result": "OK", "result_msg": "Following contact was removed"})
-    else:
-        return jsonify({"result": "Wrong", "result_msg": "Following contact does not exist"})
-
-
-#TODO  REDO for participants and ideas
-# input: email: new@gmail.com
-# Output: json
-# {"result":"OK",
-#  "data" : [
-#    {
-#      "notification_type": "successful",
-#      "proposal": "this and this"
-#    }
-#  ]
-# }
-@app.route('/get_notifications_for_user', methods=['GET'])
-@app.route('/get_notifications_for_user/<user_email_DEBUG>', methods=['GET'])
-def get_notifications_for_user(user_email_DEBUG=None):
-    if DEBUG and user_email_DEBUG is not None:
-        user_email = user_email_DEBUG
-    else:
-        user_email = flask_login.current_user.id
-    return get_notifications_for_user_aux(user_email)
+    return remove_following_contact_to_user_aux(followingcontact_email, user_email)
 
 
 #DEBUG
@@ -586,6 +556,32 @@ def vote_on_idea(user_email_DEBUG = None):
         user_email = flask_login.current_user.id
     return vote_on_idea_aux(user_email, request.get_json())
 
+# TODO
+@app.route('/getConcerns/<string:current>', methods=['GET', 'OPTIONS'])
+def getConcerns(current):
+    print (current)
+    return json.dumps(getAllConcerns(current))
+
+
+##### IDEA NOTIFICATIONS
+
+# TODO: test
+# input:  [user logged in]
+# output: json {"result": "OK", "data": notifications}) with
+#       notifications = [
+#                     {'notification_type': 'failurewarning'/'successful'/'sucessful_to_author'/'edited',
+#                      'idea_index': idea_proposal },
+#                     {   }
+#                     ]
+@app.route('/get_ideanotifications_for_user',methods=['GET'])
+@app.route('/get_ideanotifications_for_user/<user_email_DEBUG>',methods=['GET'])
+def get_ideanotifications_for_user(user_email_DEBUG):
+    if DEBUG and user_email_DEBUG is not None:
+        user_email = user_email_DEBUG
+    else:
+        user_email = flask_login.current_user.id
+    return get_ideanotifications_for_user_aux(user_email)
+
 
 # input: json {"email":"asdf@asdf", "proposal":"this is a proposal"}
 # output:
@@ -598,10 +594,6 @@ def remove_notification_from_idea_to_participant():
     return remove_notification_from_idea_to_participant_aux(email, idea_index)
 
 
-@app.route('/getConcerns/<string:current>', methods=['GET', 'OPTIONS'])
-def getConcerns(current):
-    print (current)
-    return json.dumps(getAllConcerns(current))
 
 
 ##############

@@ -1,6 +1,6 @@
 from participantManager import _get_participant_node, _get_fullname_for_participant
 from ideaManager import get_idea_data_aux, remove_idea_aux
-from utils import getGraph, send_email, send_email_new
+from utils import getGraph, send_email #, send_email_new
 from flask import jsonify, render_template, url_for
 from uuid_token import generate_confirmation_token, confirm_token
 from datetime import datetime
