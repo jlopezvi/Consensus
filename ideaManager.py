@@ -44,7 +44,6 @@ def add_idea_to_user_aux(user_email, idea_dict, ideapic_file_body):
 
 # Used By < modify_idea >
 def modify_idea_aux(idea_dict,ideapic_file_body):
-    from notificationManager import _do_tasks_for_idea_editedproposal
     idea_index = idea_dict['current_proposal']
     idea = _getIdeaByIdeaIndex(idea_index)
     fields = ['concern','proposal','moreinfo_concern','moreinfo_proposal',
@@ -255,7 +254,6 @@ def getAllIdeas(email):
 
 def vote_on_idea_aux(user_email, inputdict):
     from app import SUPPORT_RATE_MIN
-    from notificationManager import _do_tasks_for_idea_failurewarning, _do_tasks_for_idea_successful
     user = _get_participant_node(user_email)
     idea_index=inputdict['idea_proposal']
     idea = _getIdeaByIdeaIndex(idea_index)
@@ -378,23 +376,50 @@ def get_ideanotifications_for_user_aux(email):
     participant = _get_participant_node(email)
     notifications = []
     current_notification = {}
-    for NotificationRelationshipFound in (list(getGraph().match(end_node= participant ,rel_type="HAS_NOTIFICATION_FOR"))):
-        current_notification.update({'notification_type' : NotificationRelationshipFound["type"],
-                                     'idea_index' : NotificationRelationshipFound.start_node['proposal']})
-        notifications.append(current_notification)
+    #1 notifications as author of ideas
+    author_rels = list(getGraph().match(start_node=participant, rel_type="CREATED"))
+    for author_rel in author_rels:
+        if author_rel["ifnotification_successful"] is True:
+            current_notification.update({'notification_type': 'successful' ,
+                                         'idea_index': author_rel.end_node['proposal']})
+            notifications.append(current_notification)
+        if author_rel["ifnotification_failurewarning"] is True:
+            current_notification.update({'notification_type': 'failurewarning' ,
+                                         'idea_index': author_rel.end_node['proposal']})
+            notifications.append(current_notification)
+    #2 notifications as supporter of ideas
+    vote_rels = list(getGraph().match(start_node=participant, rel_type="VOTED_ON"))
+    support_rels = [x for x in vote_rels if x["type"] == "supported"]
+    for support_rel in support_rels:
+        if support_rel["ifnotification_successful"] is True:
+            current_notification.update({'notification_type': 'successful' ,
+                                         'idea_index': support_rel.end_node['proposal']})
+            notifications.append(current_notification)
+        if support_rel["ifnotification_editedproposal"] is True:
+            current_notification.update({'notification_type': 'editedproposal' ,
+                                         'idea_index': support_rel.end_node['proposal']})
+            notifications.append(current_notification)
+    #
     return jsonify({"result": "OK", "data": notifications})
 
 
 # Used By <remove_notification_to_participant>
-def remove_notification_from_idea_to_participant_aux(participant_email, proposal_index):
+def remove_notification_from_idea_to_participant_aux(participant_email, proposal_index, notification_type):
     idea = _getIdeaByIdeaIndex(proposal_index)
     participant = _get_participant_node(participant_email)
-    notification_rel_found = getGraph().match_one(start_node=idea, rel_type="HAS_NOTIFICATION_FOR",
-                                                  end_node=participant)
-    if notification_rel_found is not None:
-        getGraph().delete(notification_rel_found)
-        return jsonify({"result": "OK", "result_msg": "Notification was deleted"})
-    return jsonify({"result": "Wrong", "result_msg": "Notification does not exist"})
+    notification_field_str = 'ifnotification_' + notification_type
+    #1 remove notification as author of idea
+    author_rel_found = getGraph().match_one(start_node=participant, rel_type="CREATED",
+                                                  end_node=idea)
+    if author_rel_found[notification_field_str]:
+        author_rel_found[notification_field_str] = False
+    #2 remove notification as supporter of idea
+    vote_rel_found = getGraph().match_one(start_node=participant, rel_type="VOTED_ON",
+                                                  end_node=idea)
+    if vote_rel_found[notification_field_str]:
+        vote_rel_found[notification_field_str] = False
+    #
+    return jsonify({"result": "OK", "result_msg": "Notification was deleted"})
 
 
 ####################
@@ -404,9 +429,9 @@ def remove_notification_from_idea_to_participant_aux(participant_email, proposal
 # <used by modify_idea_aux>
 def _do_tasks_for_idea_editedproposal(idea_index):
     idea=_getIdeaByIdeaIndex(idea_index)
-    idea['if_proposal_edited'] = True
-    idea['if_proposal_edited_timestamp'] = ((datetime.now()).strftime("%d.%m.%Y"))
-    _add_notification_relationships_from_idea_to_supporters(idea_index, 'edited')
+    idea['if_editedproposal'] = True
+    idea['if_editedproposal_timestamp'] = ((datetime.now()).strftime("%d.%m.%Y"))
+    _add_notifications_from_idea_to_supporters(idea_index, 'edited')
     _send_notification_emails_from_idea_to_supporters(idea_index, 'edited')
     return
 
@@ -414,7 +439,7 @@ def _do_tasks_for_idea_editedproposal(idea_index):
 # <used by vote_on_idea_aux>
 def _do_tasks_for_idea_failurewarning(idea_index):
     idea=_getIdeaByIdeaIndex(idea_index)
-    idea['failurewarning'] = True
+    idea['if_failurewarning'] = True
     idea['if_failurewarning_timestamp'] = ((datetime.now()).strftime("%d.%m.%Y"))
     _add_notification_relationship_from_idea_to_author(idea_index, 'failurewarning')
     _send_notification_email_from_idea_to_author(idea_index, 'failurewarning')
@@ -426,7 +451,7 @@ def _do_tasks_for_idea_successful(idea_index):
     idea=_getIdeaByIdeaIndex(idea_index)
     idea['if_successful'] = True
     idea['if_successful_timestamp'] = ((datetime.now()).strftime("%d.%m.%Y"))
-    _add_notification_relationships_from_idea_to_supporters(idea_index, 'successful')
+    _add_notifications_from_idea_to_supporters(idea_index, 'successful')
     _add_notification_relationship_from_idea_to_author(idea_index, 'successful_to_author')
     _send_notification_emails_from_idea_to_supporters(idea_index, 'successful')
     _send_notification_email_from_idea_to_author(idea_index, 'successful_to_author')
@@ -434,24 +459,20 @@ def _do_tasks_for_idea_successful(idea_index):
 
 
 # <used by _do_tasks_for_idea_editedproposal, _do_tasks_for_idea_failurewarning, _do_tasks_for_idea_successful>
-def _add_notification_relationships_from_idea_to_supporters(idea_index, notification_type):
-    idea=_getIdeaByIdeaIndex(idea_index)
+#  notification_type_possibilities = ['editedproposal', 'successful']
+def _add_notifications_from_idea_to_supporters(idea_index, notification_type):
+    notification_field_str = 'ifnotification_' + notification_type
+    idea = _getIdeaByIdeaIndex(idea_index)
     vote_rels = list(getGraph().match(end_node=idea, rel_type="VOTED_ON"))
     support_rels = [x for x in vote_rels if x["type"] == "supported"]
-    supporters = [x.start_node for x in support_rels]
-    for supporter in supporters:
-        notification_rel_found = getGraph().match_one(start_node=idea, rel_type="HAS_NOTIFICATION_FOR",
-                                                      end_node=supporter)
-    if notification_rel_found is None:
-        getGraph().create((idea, "HAS_NOTIFICATION_FOR", supporter, {"type": notification_type}))
-    else:
-        notification_rel_found["type"] = notification_type
+    for support_rel in support_rels:
+        support_rel[notification_field_str] = True
     return
 
 
 # <used by _do_tasks_for_idea_editedproposal, _do_tasks_for_idea_failurewarning, _do_tasks_for_idea_successful>
 def _send_notification_emails_from_idea_to_supporters(idea_index, notification_type):
-    idea=_getIdeaByIdeaIndex(idea_index)
+    idea = _getIdeaByIdeaIndex(idea_index)
     subject = "Consensus, New Notifications"
     if notification_type == 'edited':
         html = render_template('emails/idea_edited.html', msg_proposal=idea['proposal'])
@@ -465,19 +486,17 @@ def _send_notification_emails_from_idea_to_supporters(idea_index, notification_t
     return
 
 
-# <used by _do_tasks_for_idea_editedproposal, _do_tasks_for_idea_failurewarning, _do_tasks_for_idea_successful>
+# <used by _do_tasks_for_idea_failurewarning, _do_tasks_for_idea_successful>
+#  notification_type_possibilities = ['successful', failurewarning]
 def _add_notification_relationship_from_idea_to_author(idea_index, notification_type):
-    idea=_getIdeaByIdeaIndex(idea_index)
-    author = getGraph().match_one(rel_type="CREATED", end_node=idea).start_node
-    notification_rel_found = getGraph().match_one(start_node=idea, rel_type="HAS_NOTIFICATION_FOR", end_node=author)
-    if notification_rel_found is None:
-        getGraph().create((idea, "HAS_NOTIFICATION_FOR", author, {"type":notification_type}))
-    else:
-        notification_rel_found["type"] = notification_type
+    notification_field_str = 'ifnotification_' + notification_type
+    idea = _getIdeaByIdeaIndex(idea_index)
+    author_rel = getGraph().match_one(rel_type="CREATED", end_node=idea)
+    author_rel[notification_field_str] = True
     return
 
 
-# <used by _do_tasks_for_idea_editedproposal, _do_tasks_for_idea_failurewarning, _do_tasks_for_idea_successful>
+# <used by _do_tasks_for_idea_failurewarning, _do_tasks_for_idea_successful>
 def _send_notification_email_from_idea_to_author(idea_index, notification_type):
     idea=_getIdeaByIdeaIndex(idea_index)
     author = getGraph().match_one(rel_type="CREATED", end_node=idea).start_node
