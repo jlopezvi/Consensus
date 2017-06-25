@@ -59,7 +59,7 @@ def registration_aux(inputdict, profilepic_file_body):
     ifhost = False
     if inputdict.get('host_email') is not None:
         # current_participant (verified/unverified) follows host
-        ifhost = _if_added_following_contact_to_user(email, inputdict.get('host_email'))
+        ifhost = _if_added_following_contact_to_user(inputdict.get('host_email'), email)
     return jsonify({"result": "OK", "ifhost": ifhost, "ifhost_msg": ifhost_msg[ifhost],
                     "ifemailverified": ifemailverified, "ifemailverified_msg": ifemailverified_msg[ifemailverified]})
 
@@ -354,7 +354,7 @@ def _get_participant_followers(participant_email) :
 #   ->  True
 #   ->  False
 #   ->  [False,'Following contact exists already']
-def _if_added_following_contact_to_user(user_email, followingcontact_email) :
+def _if_added_following_contact_to_user(followingcontact_email, user_email) :
     user = _get_participant_node(user_email, 'all')  # current's email could be unverified
     followingcontact = _get_participant_node(followingcontact_email)
     if (followingcontact is None) or (followingcontact is user) :
