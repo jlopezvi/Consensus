@@ -11,6 +11,7 @@ from participantManager import _get_participant_node, remove_user_aux, get_all_p
     get_fullname_for_participant_aux, registration_aux, get_participant_data_aux, modify_user_data_aux, \
     get_participant_data_by_email_unrestricted_aux, get_all_public_participants_aux, if_participant_exists_by_email_aux, \
     add_following_contact_to_user_aux, remove_following_contact_to_user_aux
+from participantManager import get_participantnotifications_for_user_aux, remove_notification_from_participant1_to_participant2_aux
 from ideaManager import get_ideas_data_created_by_participant_aux, get_ideas_created_by_participant_aux,\
      get_idea_data_aux, add_idea_to_user_aux, deleteOneIdea,getAllIdeas, \
     _getIdeaByIdeaIndex, vote_on_idea_aux, modify_idea_aux, remove_idea_aux, \
@@ -363,7 +364,7 @@ def remove_following_contact_to_user(followingcontact_email, user_email_DEBUG=No
     return remove_following_contact_to_user_aux(followingcontact_email, user_email)
 
 
-#DEBUG
+# TODO: DEBUG
 @app.route('/get_all_participants_DEBUG', methods=['GET','OPTIONS'])
 def get_all_participants_DEBUG():
     return json.dumps(get_all_participants_aux())
@@ -374,6 +375,39 @@ def get_all_participants_DEBUG():
 def get_all_public_participants():
     user = flask_login.current_user.id
     return json.dumps(get_all_public_participants_aux(user))
+
+
+##### PARTICIPANT NOTIFICATIONS
+
+# TODO: test
+# input:  [user logged in]
+# output: json {"result": "OK", "data": notifications}) with
+#       notifications = [
+#                     {'notification_type': 'newfollower',
+#                      'participant_index': participant_email },
+#                     {   }
+#                     ]
+@app.route('/get_participantnotifications_for_user',methods=['GET'])
+@app.route('/get_participantnotifications_for_user/<user_email_DEBUG>',methods=['GET'])
+def get_participantnotifications_for_user(user_email_DEBUG):
+    if DEBUG and user_email_DEBUG is not None:
+        user_email = user_email_DEBUG
+    else:
+        user_email = flask_login.current_user.id
+    return get_participantnotifications_for_user_aux(user_email)
+
+
+# TODO: test
+# input: json {"participant1_email":"asdf@asdf", "participant2_email":"asdf2@asdf",
+#             "notification_type": "newfollower"}
+# output:
+#   json {"result": "OK", "result_msg": "Notification was deleted"} /
+@app.route('/remove_notification_from_participant1_to_participant2',methods=['POST'])
+def remove_notification_from_participant1_to_participant2():
+    participant1_email = request.get_json()['participant1_email']
+    participant2_email = request.get_json()['participant2_email']
+    notification_type = request.get_json()['notification_type']
+    return remove_notification_from_participant1_to_participant2_aux(participant1_email, participant2_email, notification_type)
 
 
 ###############
@@ -583,15 +617,17 @@ def get_ideanotifications_for_user(user_email_DEBUG):
     return get_ideanotifications_for_user_aux(user_email)
 
 
-# input: json {"email":"asdf@asdf", "proposal":"this is a proposal"}
+# TODO: test
+# input: json {"participant_email":"asdf@asdf", "proposal":"this is a proposal",
+#             "notification_type": "failurewarning"/"successful"/"sucessful_to_author"/"edited"}
 # output:
 #   json {"result": "OK", "result_msg": "Notification was deleted"} /
-#   json {"result": "Wrong", "result_msg": "Notification does not exist"}
 @app.route('/remove_notification_from_idea_to_participant',methods=['POST'])
 def remove_notification_from_idea_to_participant():
-    email = request.get_json()['email']
+    participant_email = request.get_json()['participant_email']
     idea_index = request.get_json()['proposal']
-    return remove_notification_from_idea_to_participant_aux(email, idea_index)
+    notification_type = request.get_json()['notification_type']
+    return remove_notification_from_idea_to_participant_aux(participant_email, idea_index, notification_type)
 
 
 

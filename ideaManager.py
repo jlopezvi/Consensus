@@ -372,12 +372,12 @@ def _get_ideas_data_created_by_participant(participant_email):
 from utils import send_email
 
 
-def get_ideanotifications_for_user_aux(email):
-    participant = _get_participant_node(email)
+def get_ideanotifications_for_user_aux(user_email):
+    user = _get_participant_node(user_email)
     notifications = []
     current_notification = {}
     #1 notifications as author of ideas
-    author_rels = list(getGraph().match(start_node=participant, rel_type="CREATED"))
+    author_rels = list(getGraph().match(start_node=user, rel_type="CREATED"))
     for author_rel in author_rels:
         if author_rel["ifnotification_successful"] is True:
             current_notification.update({'notification_type': 'successful' ,
@@ -388,7 +388,7 @@ def get_ideanotifications_for_user_aux(email):
                                          'idea_index': author_rel.end_node['proposal']})
             notifications.append(current_notification)
     #2 notifications as supporter of ideas
-    vote_rels = list(getGraph().match(start_node=participant, rel_type="VOTED_ON"))
+    vote_rels = list(getGraph().match(start_node=user, rel_type="VOTED_ON"))
     support_rels = [x for x in vote_rels if x["type"] == "supported"]
     for support_rel in support_rels:
         if support_rel["ifnotification_successful"] is True:

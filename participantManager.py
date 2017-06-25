@@ -225,7 +225,7 @@ def get_participant_followers_info_aux(participant_email, user_email):
 def add_following_contact_to_user_aux(followingcontact_email, user_email):
     result = _if_added_following_contact_to_user(followingcontact_email, user_email)
     if result is True:
-        _add_notification_relationship_from_participant1_to_participant2(user_email, followingcontact_email)
+        _add_newfollower_notification_from_participant1_to_participant2(user_email, followingcontact_email)
         return jsonify({"result": "OK", "result_msg": "Following contact was added"})
     else:
         return jsonify({"result": "Wrong", "result_msg": "Following contact not possible or exists already"})
@@ -401,34 +401,66 @@ def _get_participant_data_by_email(participant_email):
 
 
 
-####################
-
-####################
-#  NOTIFICATIONS SYSTEM
-####################
 
 ####################
 
-# TODO complete
-def get_notifications_for_user_aux(user_email):
+####################
+#  NOTIFICATIONS
+###################
+
+####################
+from utils import send_email
+
+
+def get_participantnotifications_for_user_aux(user_email):
     user = _get_participant_node(user_email)
-    notification_rels = list(getGraph().match(rel_type="HAS_NOTIFICATION_FOR", end_node=user))
-    notification_rels_from_idea = [x for x in notification_rels if x.start_node.labels == {'idea'}]
-    notification_rels_from_participant = [x for x in notification_rels if (x.start_node.labels == {'participant'})
-                                          or (x.start_node.labels == {'unverified_participant'}) ]
+    notifications = []
+    current_notification = {}
+    # notifications from new followers
+    follower_rels = list(getGraph().match(end_node=user, rel_type="FOLLOWS"))
+    for follower_rel in follower_rels:
+        if follower_rel["ifnotification_newfollower"] is True:
+            current_notification.update({'notification_type': 'newfollower' ,
+                                         'participant_index': follower_rel.start_node['email']})
+            notifications.append(current_notification)
+    #
+    return jsonify({"result": "OK", "data": notifications})
+
+
+# Used By <remove_notification_to_participant>
+def remove_notification_from_participant1_to_participant2_aux(participant1_index, participant2_index, notification_type):
+    participant_sender = _get_participant_node(participant1_index)
+    participant_receiver = _get_participant_node(participant2_index)
+    notification_field_str = 'ifnotification_' + notification_type
+    # remove notification from new followers
+    follower_rel_found = getGraph().match_one(start_node=participant_sender, end_node= participant_receiver,
+                                              rel_type="FOLLOWS")
+    if follower_rel_found[notification_field_str]:
+        follower_rel_found[notification_field_str] = False
+    #
+    return jsonify({"result": "OK", "result_msg": "Notification was deleted"})
+
+
+####################
+#  PURE INTERNAL
+###################
+
+
+# <Used by add_following_contact_to_user_aux>
+# "notification_type": "newfollower"
+def _add_newfollower_notification_from_participant1_to_participant2(participant1_email, participant2_email):
+    participant1 = _get_participant_node(participant1_email)
+    participant2 = _get_participant_node(participant2_email)
+    following_rel = getGraph().match_one(start_node=participant1, rel_type="FOLLOWS", end_node=participant2)
+    following_rel["ifnotification_newfollower"] = True
     return
 
 
-
-#########
-# PURE INTERNAL
-#########
-
-# "notification_type": "following"
-def _add_notification_relationship_from_participant1_to_participant2(participant1_email, participant2_email):
+# <Used by add_following_contact_to_user_aux>
+# "notification_type": "newfollower"
+def _send_newfollower_notification_email_from_participant1_to_participant2(participant1_email, participant2_email):
     participant1 = _get_participant_node(participant1_email)
-    participant2 = _get_participant_node(participant2_email)
-    notification_rel_found = getGraph().match_one(start_node=participant1, rel_type="HAS_NOTIFICATION_FOR", end_node=participant2)
-    if notification_rel_found is None:
-        getGraph().create((participant1, "HAS_NOTIFICATION_FOR", participant2, {"type": "following"}))
+    subject = "Consensus, New Notifications"
+    html = render_template('emails/participant_newfollower.html', msg_proposal=participant1['fullname'])
+    send_email(participant2_email, subject, html)
     return
