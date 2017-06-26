@@ -12,7 +12,7 @@ $(window).on('load', function(){
 				var newIdea = '';
 			for (var i = 0; i < json.ideas_data.length; i++) {						
 				newIdea += '<div class="col-sm-12"><div class="row home--header"><div class="col-sm-2" style="padding-left: 0px;margin-left: -15px;">';
-				newIdea += '<div class="home--profile--picture"><img src="'+json.ideas_data[i].author_photo_url+'"></div></div><div class="col-sm-1 home--name">';
+				newIdea += '<div class="home--profile--picture"><img src=""></div></div><div class="col-sm-1 home--name">';
 				newIdea += '<a href="#">'+json.ideas_data[i].author_username+'</a></div><div class="col-sm-2 newsfeed--duration">';
 				newIdea += '<p><img style="width: 15px;position: relative;top: -3px;" src="static/images/clock-icon.png">&nbsp;'+json.ideas_data[i].duration+'</p>';
 				newIdea += '</div><div class="col-sm-3 home--charge"><div class="progress home--progress">';
