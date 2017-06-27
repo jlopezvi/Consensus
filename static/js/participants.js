@@ -2,7 +2,11 @@ var url = window.location.href;
 url = url.split("/");
 
 $(document).ready( function() {
-	var current_email = $('#host_email').val();
+	console.log($('#participant_email').val());
+	if($('#participant_email').val() == 'None')
+		var current_email = $('#host_email').val();
+	else
+		var current_email = $('#participant_email').val();
 	
 	//GET ALL INFORMATION OF ALL IDEAS CREATED BY PARTICIPANT
 	$.ajax({
@@ -209,7 +213,8 @@ $(document).ready( function() {
     
     $(document).on('click', '.addproposal--step2 li a', function(e){
     	e.preventDefault();
-    	console.log($(this).parent().parent().children('input').val());
+    	var redirect = $(this).parent().parent().children('input').val();
+    	window.location = '/participants/'+redirect;
     });
 
 });
