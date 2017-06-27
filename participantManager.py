@@ -256,7 +256,7 @@ def get_all_public_participants_aux(user):
                 {'email': node.get_properties()['email'], 'fullname': node.get_properties()['fullname'],
                  'position': node.get_properties()['position'], 'group': node.get_properties()['group'],
                  'profilepic_url': node.get_properties()['profilepic_url'],
-                 'if_following': _getIfContactRelationshipExists(node, participant)})
+                 'if_following': _getIfContactRelationshipExists(participant, node)})
     return participants
 
 
