@@ -136,11 +136,11 @@ $(document).ready(function(){
             alert("This browser does not support FileReader.");
         }
     });
-
+/*
   $(document).on('click', '.logout__button', function(){
     $('#logout__modal').modal('toggle');
   });
-
+*/
   $(document).on('click', '#accept__logout', function(){
     $.ajax({
       url: url[0] + "//" + url[2] + '/logout',
