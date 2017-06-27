@@ -156,7 +156,6 @@ $(document).ready(function(){
 function showModal(id) {
     $('.modal').modal('hide');
     $("#" + id).modal();
-
   }
 
 

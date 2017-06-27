@@ -2,23 +2,28 @@ var url = window.location.href;
 url = url.split("/");
 
 $(document).ready( function() {
-	console.log($('#participant_email').val());
 	if($('#participant_email').val() == 'None')
 		var current_email = $('#host_email').val();
-	else
+	else {
 		var current_email = $('#participant_email').val();
+		$('.setting__adapt').hide();
+		$('.participant__invite').hide();
+		$('.participant__follow').css({'margin-top': '0px'});
+	}
 	
 	//GET ALL INFORMATION OF ALL IDEAS CREATED BY PARTICIPANT
 	$.ajax({
 		url: url[0] + "//" + url[2] + '/get_ideas_data_created_by_participant/'+current_email,
 		type: 'GET',
 		success: function (json) {		
+			//console.log(json);
 			var newIdea = '';
+			var url_new = url[0] +'//'+ url[2] +'/static/';
 			for (var i = 0; i < json.ideas_data.length; i++) {						
 				newIdea += '<div class="col-sm-12"><div class="row home--header"><div class="col-sm-2" style="padding-left: 0px;margin-left: -15px;">';
 				newIdea += '<div class="home--profile--picture"><img src=""></div></div><div class="col-sm-1 home--name">';
 				newIdea += '<a href="#">'+json.ideas_data[i].author_username+'</a></div><div class="col-sm-2 newsfeed--duration">';
-				newIdea += '<p><img style="width: 15px;position: relative;top: -3px;" src="static/images/clock-icon.png">&nbsp;'+json.ideas_data[i].duration+'</p>';
+				newIdea += '<p><img style="width: 15px;position: relative;top: -3px;" src="'+url_new+'images/clock-icon.png">&nbsp;'+json.ideas_data[i].duration+'</p>';
 				newIdea += '</div><div class="col-sm-3 home--charge"><div class="progress home--progress">';
 				newIdea += '<input type="text" value="'+json.ideas_data[i].supporters_num*100/json.ideas_data[i].supporters_goal_num+'" id="supporters--percent" hidden>';
 				newIdea += '<div class="progress-bar newsfeed--bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style=""></div></div>';
@@ -30,18 +35,18 @@ $(document).ready( function() {
 				newIdea += '<div class="col-sm-8 newsfeed--problem">'+json.ideas_data[i].concern+'</div></div><div class="col-sm-12" style="margin-top: 180px;">';
 				newIdea += '<div class="col-sm-8 col-sm-offset-4 newsfeed--proposal">'+json.ideas_data[i].proposal+'</div></div></div>';
 				newIdea += '<div class="row newsfeed--footer"><div class="col-sm-12" style="padding-right: 0px; padding-left: 0px;"><div class="col-sm-1 redflag--img">';
-				newIdea += '<img src="static/images/redflag.png"></div><div class="col-sm-9 newsfeed--support" style="padding-right:0;padding-left:30px;">';
+				newIdea += '<img src="'+url_new+'images/redflag.png"></div><div class="col-sm-9 newsfeed--support" style="padding-right:0;padding-left:30px;">';
 				newIdea += '<input type="text" value="'+json.ideas_data[i].supporters_num*100/json.ideas_data[i].supporters_num+json.ideas_data[i].rejectors+'" id="percent" hidden><div class="input--percent">';
 				newIdea += '<label> Support Rate: </label></div></div><div class="col-sm-2 neewsfeed--moreinfo" style="float:right;">';
 				newIdea += '<input type="button" name="more-info" class="home--button"></div></div></div>';
 				newIdea += '<div class="row newsfeed--persons"><div class="col-sm-12"><div class="col-sm-1" style="padding:0;">';
 				newIdea += '<img src=""></div><div class="col-sm-11 newsfeed--likes">';
 				newIdea += '<ul><a href="#" class="last--liked"><li>'+json.ideas_data[i].supporters_num+' people</li></a></ul></div></div>';
-				newIdea += '<div class="col-sm-12"><div class="col-sm-1" style="padding:0;"><img src="static/images/x-small.png">';
+				newIdea += '<div class="col-sm-12"><div class="col-sm-1" style="padding:0;"><img src="'+url_new+'images/x-small.png">';
 				newIdea += '</div><div class="col-sm-11 newsfeed--likes"><ul><a href="#"><li>'+json.ideas_data[i].rejectors+'</li></a></ul></div></div></div>';
 				newIdea += '<div class="row home--share"><div class="col-sm-12 home--share--icons"><div class="col-sm-6" style="padding:0;width: 100%;">';
-				newIdea += '<img src="static/images/x-icon.png"><img style="width: 50px;" src="static/images/check-icon.png"><img style="width: 48px;" src="static/images/checkmark.png">';
-			    newIdea += '<img style="width: 50px;" src="static/images/ignore-icon.png"></div><div class="col-sm-6 home--followers" style="width: 100%;"><i class="fa fa-share-alt"></i>';
+				newIdea += '<img src="'+url_new+'images/x-icon.png"><img style="width: 50px;" src="'+url_new+'images/check-icon.png"><img style="width: 48px;" src="'+url_new+'images/checkmark.png">';
+			    newIdea += '<img style="width: 50px;" src="'+url_new+'images/ignore-icon.png"></div><div class="col-sm-6 home--followers" style="width: 100%;"><i class="fa fa-share-alt"></i>';
 			    newIdea += '<p>Share with: followers</p></div></div></div></div>';
 		    }
 			$('#newIdea').append(newIdea);		
@@ -159,7 +164,7 @@ $(document).ready( function() {
 			e.preventDefault();
 			seaarch_participant(search);
 		} else if(code == 8){
-			$('.addproposal--step__div ul').find('li#participants__li__private').remove();
+			$('.addproposal--step__div ul').find('li.participants__li__private').remove();
 			$('#legend__results').remove();
 			$('#legend__board').show();
 		}
@@ -172,7 +177,6 @@ $(document).ready( function() {
 	$(document).on('click', '.btn__search', function(e){
 		e.preventDefault();
 		change_view('search');
-		$('.addproposal--step__div ul').find('li#participants__li__private').remove();
 		var search = $('#search-input-participant').val();
 		seaarch_participant(search);
 	});
@@ -214,7 +218,10 @@ $(document).ready( function() {
     $(document).on('click', '.addproposal--step2 li a', function(e){
     	e.preventDefault();
     	var redirect = $(this).parent().parent().children('input').val();
-    	window.location = '/participants/'+redirect;
+    	if($(this).parent().parent().hasClass('participants__li__private'))
+    		console.log('Not Allowed');
+    	else
+    		window.location = '/participants/'+redirect;
     });
 
 });
@@ -223,6 +230,7 @@ function seaarch_participant(search){
 	var div = $('.addproposal--step__div ul');
 	$('#legend__results').remove();
 	$('#legend__board').show();
+	$('.addproposal--step__div ul').find('li.participants__li__private').remove();
 	$.ajax({
 		url: url[0] + "//" + url[2] + '/get_participant_data_by_email_unrestricted/'+search,
 		type: 'GET',
@@ -231,7 +239,7 @@ function seaarch_participant(search){
 			if(json.result == 'OK'){
 				$('.spinner').show();
 				var newAppend = '';
-            	newAppend += '<li id="participants__li__private">';
+            	newAppend += '<li class="participants__li__private">';
             	newAppend += '<img src="'+json.participant_data.profilepic_url+'"><p>';
             	newAppend += '<a href="#">'+json.participant_data.username+'</a>'; 
             	newAppend += '<br>'+json.participant_data.fullname+'</p>';
@@ -239,6 +247,7 @@ function seaarch_participant(search){
                 newAppend += '<input class="form-control invite__button" type="button" value="Follow" id="btn-follow"></li>';
                 setTimeout(function(){
                 	$('.spinner').hide();
+					$('.addproposal--step__div ul').find('li.participants__li__private').remove();
 					div.append(newAppend);
 				}, 2000);
 			}
@@ -274,6 +283,7 @@ function follow_unfollow_participant(type, user){
 			alert('Sorry, something went wrong. Try again later.');		
 		}
 	});
+	console.log();
 }
 
 function change_view(view){
