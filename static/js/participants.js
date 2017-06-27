@@ -1,7 +1,7 @@
 var url = window.location.href;
 url = url.split("/");
 
-$(window).on('load', function(){
+$(document).ready( function() {
 	var current_email = $('#host_email').val();
 	
 	//GET ALL INFORMATION OF ALL IDEAS CREATED BY PARTICIPANT
@@ -9,7 +9,7 @@ $(window).on('load', function(){
 		url: url[0] + "//" + url[2] + '/get_ideas_data_created_by_participant/'+current_email,
 		type: 'GET',
 		success: function (json) {		
-				var newIdea = '';
+			var newIdea = '';
 			for (var i = 0; i < json.ideas_data.length; i++) {						
 				newIdea += '<div class="col-sm-12"><div class="row home--header"><div class="col-sm-2" style="padding-left: 0px;margin-left: -15px;">';
 				newIdea += '<div class="home--profile--picture"><img src=""></div></div><div class="col-sm-1 home--name">';
@@ -39,7 +39,7 @@ $(window).on('load', function(){
 				newIdea += '<img src="static/images/x-icon.png"><img style="width: 50px;" src="static/images/check-icon.png"><img style="width: 48px;" src="static/images/checkmark.png">';
 			    newIdea += '<img style="width: 50px;" src="static/images/ignore-icon.png"></div><div class="col-sm-6 home--followers" style="width: 100%;"><i class="fa fa-share-alt"></i>';
 			    newIdea += '<p>Share with: followers</p></div></div></div></div>';
-			    }
+		    }
 			$('#newIdea').append(newIdea);		
 		}	
 	});
@@ -54,8 +54,8 @@ $(window).on('load', function(){
 			$('.participant__name a').append(json.participant_data.username);
 			$('.participant__name label').append(json.participant_data.fullname);
 			$('.participant__active--p').children().first().append(json.participant_data.ideas_num);
-			$('.participant__following').children().first().append(json.participant_data.followers_num);
-			$('.participant__followers').children().first().append(json.participant_data.followings_num);
+			$('.participant__following').children().first().append(json.participant_data.followings_num);
+			$('.participant__followers').children().first().append(json.participant_data.followers_num);
 		}	
 	});
 
@@ -73,7 +73,7 @@ $(window).on('load', function(){
 					followerList += '<p><a href="#">'+json.followers_info[i].username+'</a>';					
 					followerList += '<br>'+json.followers_info[i].fullname+'</p></li>';
 				}
-				$('#home ul').append(followerList);
+				$('#menu1 ul').append(followerList);
 				
 			}
 		}	
@@ -94,7 +94,7 @@ $(window).on('load', function(){
 					followingList += '<p><a href="#">'+json.followings_info[i].username+'</a>';					
 					followingList += '<br>'+json.followings_info[i].fullname+'</p></li>';
 				}
-				$('#menu1 ul').append(followingList);
+				$('#home ul').append(followingList);
 			}
 		}	
 	});
@@ -126,34 +126,26 @@ $(window).on('load', function(){
 		}
 	});
 
-	
-
-});
-
-$(document).ready( function() {
 	$('body').removeClass('container').addClass('container-fluid');
 	
 	$(document).on('click', '#send_invitation-btn', function(){
 		$('#send_invitation-btn').prop('disabled', true);
-		var guest_email = $('#emails_input').val();
+		var guest_email = $('#emails_input').val().split(",");
 		var host_email = $('#host_email').val();
-		$.ajax({
-			url: url[0] + "//" + url[2] + '/registration_send_invitation/'+host_email+'/'+guest_email,
-			type: 'GET',
-			success: function (json) {
-				//console.log(json);
-				$('#send_invitation-btn').prop('disabled', false);
-				if(json.result_msg == 'email sent'){
-					$('.modal-title').empty().append('Success!!');
-					$('.modal-body p#modal--invitation').empty().append('An email with an invitation sent to <strong>'+guest_email+'</strong>');
-					$('#invitation-modal-info').modal('toggle');
-				}
-			},
-			error: function(response){
-				$('#send_invitation-btn').prop('disabled', false);
-				//console.log(response);
-			}
-		});
+		var msg = '';
+		for(var i=0; i<guest_email.length; i++){
+			$.ajax({
+				url: url[0] + "//" + url[2] + '/registration_send_invitation/'+host_email+'/'+guest_email[i],
+				type: 'GET'
+			});
+			msg += '<br><strong>'+guest_email[i]+'</strong>';
+		}
+		setTimeout(function(){
+			$('#send_invitation-btn').prop('disabled', false);
+			$('.modal-title').empty().append('Success!!');
+			$('.modal-body p#modal--invitation').empty().append('An email with an invitation sent to:'+msg);
+			$('#invitation-modal-info').modal('toggle');
+		},3000);
 	});
 
 	$('#search-input-participant').on('keydown', function(e){
@@ -256,14 +248,18 @@ function seaarch_participant(search, page){
 function follow_unfollow_participant(type, user){
 	if(type == 'Follow')
 		var finalUrl = '/add_following_contact_to_user/'+user;
-
 	else
 		var finalUrl = '/remove_following_contact_to_user/'+user;
 	$.ajax({
 		url: url[0] + "//" + url[2] + finalUrl,
 		type: 'GET',
 		success: function (json) {
-			alert(json.result_msg);	
+			var count = $('.participant__following').children().first().text();
+			if(type=='Follow')
+				count++;
+			else
+				count--;
+			$('.participant__following').children().first().text(count);
 		},
 		error: function (response) {
 			alert('Sorry, something went wrong. Try again later.');		
@@ -298,8 +294,6 @@ $(document).ready(function(){
 					type: 'GET',
 					success: function (json) {	
 						$('#following li input:checked').parent().fadeOut('slow');
-						
-						
 					},
 					error: function (response) {
 						alert('you have to select a participant that you want stop follow');		
