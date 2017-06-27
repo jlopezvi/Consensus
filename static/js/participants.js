@@ -150,8 +150,14 @@ $(document).ready( function() {
 
 	$('#search-input-participant').on('keydown', function(e){
 		var code = e.which;
+		var search = $('#search-input-participant').val();
 		if(code == 13){
 			e.preventDefault();
+			seaarch_participant(search);
+		} else if(code == 8){
+			$('.addproposal--step__div ul').find('li#participants__li__private').remove();
+			$('#legend__results').remove();
+			$('#legend__board').show();
 		}
 	});
 
@@ -162,9 +168,9 @@ $(document).ready( function() {
 	$(document).on('click', '.btn__search', function(e){
 		e.preventDefault();
 		change_view('search');
-		//var page = $('#page').val();
-		//var search = $('#search-input-participant').val();
-		//seaarch_participant(search, page);
+		$('.addproposal--step__div ul').find('li#participants__li__private').remove();
+		var search = $('#search-input-participant').val();
+		seaarch_participant(search);
 	});
 
 	$(document).on('click', '.back__button', function(){
@@ -180,49 +186,6 @@ $(document).ready( function() {
 		else
 			$(this).val('Follow');
 	});	
-
-});
-
-function seaarch_participant(search, page){
-	var div = $('.addproposal--step__div ul');
-	div.empty();
-	$.ajax({
-		url: url[0] + "//" + url[2] + '/get_participant_data_by_email_unrestricted/'+search,
-		type: 'GET',
-		success: function (json) {
-			//console.log(json);
-			if(json.result == 'OK'){
-				if(page == 'search'){
-					$('.spinner').show();
-					var newAppend = '<legend>Executive board</legend>';
-	            	newAppend += '<li><input class="checkbox check--followers" type="checkbox" name="check[]">';
-	            	newAppend += '<img src="'+json.participant_data.profilepic_url+'"><p>';
-	            	newAppend += '<a href="#">'+json.participant_data.username+'</a>'; 
-	            	newAppend += '<br>'+json.participant_data.fullname+'</p>';
-	            	newAppend += '<input type="hidden" value="'+json.participant_data.id+'">';
-	                newAppend += '<input class="form-control invite__button" type="button" value="Follow" id="btn-follow"></li>';
-	                setTimeout(function(){
-	                	$('.spinner').hide();
-						div.append(newAppend);
-					}, 2000);
-	                
-				}
-			}
-		},
-		error: function(response){
-			$('.spinner').show();
-			setTimeout(function(){
-				$('.spinner').hide();
-				div.append('<legend>No results for: '+search+'</legend>');
-			}, 2000);
-			$(document).on('click', '.btn__search', function(){
-				//$('.btn__search').on('click', function(){
-				$('#does-exist').append('No results for: '+search).show();
-
-			});
-
-		}
-	});
 
 	$("#change-photo").on('change', function () {
         if (typeof (FileReader) != "undefined") {
@@ -243,6 +206,47 @@ function seaarch_participant(search, page){
             alert("This browser does not support FileReader.");
         }
     });
+    
+    $(document).on('click', '.addproposal--step2 li a', function(e){
+    	e.preventDefault();
+    	console.log($(this).parent().parent().children('input').val());
+    });
+
+});
+
+function seaarch_participant(search){
+	var div = $('.addproposal--step__div ul');
+	$('#legend__results').remove();
+	$('#legend__board').show();
+	$.ajax({
+		url: url[0] + "//" + url[2] + '/get_participant_data_by_email_unrestricted/'+search,
+		type: 'GET',
+		success: function (json) {
+			//console.log(json);
+			if(json.result == 'OK'){
+				$('.spinner').show();
+				var newAppend = '';
+            	newAppend += '<li id="participants__li__private">';
+            	newAppend += '<img src="'+json.participant_data.profilepic_url+'"><p>';
+            	newAppend += '<a href="#">'+json.participant_data.username+'</a>'; 
+            	newAppend += '<br>'+json.participant_data.fullname+'</p>';
+            	newAppend += '<input type="hidden" value="'+json.participant_data.id+'">';
+                newAppend += '<input class="form-control invite__button" type="button" value="Follow" id="btn-follow"></li>';
+                setTimeout(function(){
+                	$('.spinner').hide();
+					div.append(newAppend);
+				}, 2000);
+			}
+		},
+		error: function(response){
+			$('.spinner').show();
+			$('#legend__board').hide();
+			setTimeout(function(){
+				$('.spinner').hide();
+				div.append('<legend id="legend__results">No results for: '+search+'</legend>');
+			}, 2000);
+		}
+	});
 }
 
 function follow_unfollow_participant(type, user){
