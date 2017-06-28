@@ -16,12 +16,12 @@ $(document).ready( function() {
 		url: url[0] + "//" + url[2] + '/get_ideas_data_created_by_participant/'+current_email,
 		type: 'GET',
 		success: function (json) {		
-			//console.log(json);
+			console.log(json.ideas_data[8]);
 			var newIdea = '';
 			var url_new = url[0] +'//'+ url[2] +'/static/';
 			for (var i = 0; i < json.ideas_data.length; i++) {						
 				newIdea += '<div class="col-sm-12"><div class="row home--header"><div class="col-sm-2" style="padding-left: 0px;margin-left: -15px;">';
-				newIdea += '<div class="home--profile--picture"><img src=""></div></div><div class="col-sm-1 home--name">';
+				newIdea += '<div class="home--profile--picture"><img class="img-circle" src="'+json.ideas_data[i].author_photo_url+'"></div></div><div class="col-sm-1 home--name">';
 				newIdea += '<a href="#">'+json.ideas_data[i].author_username+'</a></div><div class="col-sm-2 newsfeed--duration">';
 				newIdea += '<p><img style="width: 15px;position: relative;top: -3px;" src="'+url_new+'images/clock-icon.png">&nbsp;'+json.ideas_data[i].duration+'</p>';
 				newIdea += '</div><div class="col-sm-3 home--charge"><div class="progress home--progress">';
@@ -43,7 +43,7 @@ $(document).ready( function() {
 				newIdea += '<img src=""></div><div class="col-sm-11 newsfeed--likes">';
 				newIdea += '<ul><a href="#" class="last--liked"><li>'+json.ideas_data[i].supporters_num+' people</li></a></ul></div></div>';
 				newIdea += '<div class="col-sm-12"><div class="col-sm-1" style="padding:0;"><img src="'+url_new+'images/x-small.png">';
-				newIdea += '</div><div class="col-sm-11 newsfeed--likes"><ul><a href="#"><li>'+json.ideas_data[i].rejectors+'</li></a></ul></div></div></div>';
+				newIdea += '</div><div class="col-sm-11 newsfeed--likes"><ul><a href="#"><li>'+json.ideas_data[i].rejectors.length+'</li></a></ul></div></div></div>';
 				newIdea += '<div class="row home--share"><div class="col-sm-12 home--share--icons"><div class="col-sm-6" style="padding:0;width: 100%;">';
 				newIdea += '<img src="'+url_new+'images/x-icon.png"><img style="width: 50px;" src="'+url_new+'images/check-icon.png"><img style="width: 48px;" src="'+url_new+'images/checkmark.png">';
 			    newIdea += '<img style="width: 50px;" src="'+url_new+'images/ignore-icon.png"></div><div class="col-sm-6 home--followers" style="width: 100%;"><i class="fa fa-share-alt"></i>';
@@ -52,6 +52,7 @@ $(document).ready( function() {
 			$('#newIdea').append(newIdea);		
 		}	
 	});
+	
 
 	//GET ALL INFORMATION OF CURRENT LOGGED USER OR SEARCHED
 	$.ajax({

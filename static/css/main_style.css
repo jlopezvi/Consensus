@@ -327,6 +327,15 @@ body.modal-open {
 	margin-top: 2%;
 	box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
+.home--proposals--body--lol {
+	height: 60%;
+	
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	margin-top: 2%;
+	box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
 .newsfeed--problem, .newsfeed--proposal {
 	background-color: rgba(0, 0, 0, 0.6);
 	margin-top: 15px;
@@ -352,7 +361,7 @@ body.modal-open {
     background-image: -webkit-gradient(linear,left top,left bottom,from(#737373),to(#a6a6a6))!important;
     background-image: linear-gradient(to bottom,#737373 0,#a6a6a6 100%)!important;
 }
-.newsfeed--progress{
+.newsfeed--progres
     margin-bottom: 13px;
 }
 .newsfeed--bar, .newsfeed--bar2{
