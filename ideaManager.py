@@ -134,7 +134,7 @@ def get_ideas_data_created_by_participant_aux(participant_email, user_email):
 def get_idea_data_aux(idea):
     from app import SUPPORT_RATE_MIN
     author_email = getGraph().match_one(end_node=idea, rel_type="CREATED").start_node['email']
-    author_photo_url = _get_participant_node(author_email)['image_url']
+    author_photo_url = _get_participant_node(author_email)['profilepic_url']
     author_username = _get_participant_node(author_email)['username']
     idea_proposal = idea['proposal']
     uuid=idea['uuid']
