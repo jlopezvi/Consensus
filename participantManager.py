@@ -233,6 +233,7 @@ def add_following_contact_to_user_aux(followingcontact_email, user_email):
 
 def remove_following_contact_to_user_aux(followingcontact_email, user_email):
     result = _if_removed_following_contact_to_user(followingcontact_email, user_email)
+    print result
     if result is True:
         return jsonify({"result": "OK", "result_msg": "Following contact was removed"})
     else:
@@ -370,7 +371,7 @@ def _if_added_following_contact_to_user(followingcontact_email, user_email) :
 # output:
 #   ->  True
 #   ->  False
-def _if_removed_following_contact_to_user(user_email, followingcontact_email) :
+def _if_removed_following_contact_to_user(followingcontact_email, user_email) :
     user = _get_participant_node(user_email, 'all')  # current's email could be unverified
     followingcontact = _get_participant_node(followingcontact_email)
     if _getIfContactRelationshipExists(user, followingcontact) is True:
