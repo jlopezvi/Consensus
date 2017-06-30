@@ -311,7 +311,7 @@ body.modal-open {
 .newsfeed--body {
 	height: 500px;
 	background-image: url('/static/images/fondo-c.png');
-	background-size: cover;
+	
 	background-position-x: center;
 	background-position-y: bottom;
 	background-repeat: no-repeat;
@@ -319,23 +319,12 @@ body.modal-open {
 	box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 .home--proposals--body {
-	height: 60%;
-	background-image: url('/static/images/fondo-c.png');
-	background-size: cover;
-	background-position: center;
+	background-size: 1300px 300px;
 	background-repeat: no-repeat;
 	margin-top: 2%;
 	box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
-.home--proposals--body--lol {
-	height: 60%;
-	
-	background-size: cover;
-	background-position: center;
-	background-repeat: no-repeat;
-	margin-top: 2%;
-	box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
+
 .newsfeed--problem, .newsfeed--proposal {
 	background-color: rgba(0, 0, 0, 0.6);
 	margin-top: 15px;
@@ -1393,13 +1382,16 @@ a.add--proposal--provisional {
  
 }
 #more--info--modal{
+	z-index: 100;
 	position: absolute;
-	margin-left: -200px;
-	height: 100px;
-	width: 400px;
+	margin-left: 150px;
+	margin-top: 50px;
+	height: 300px;
+	width: 350px;
 	background-color:#3faf2e;
 	border-style:ridge;
 	border-color:#fff;
+	border-radius: 2px;
 
 }
 .arrow__newsfeed__left,

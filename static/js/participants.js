@@ -16,12 +16,12 @@ $(document).ready( function() {
 		url: url[0] + "//" + url[2] + '/get_ideas_data_created_by_participant/'+current_email,
 		type: 'GET',
 		success: function (json) {	
-			console.log(json.ideas_data[8]);	
+			
 			var newIdea = '';
 			var url_new = url[0] +'//'+ url[2] +'/static/';
 			for (var i = 0; i < json.ideas_data.length; i++) {						
 				newIdea += '<div class="col-sm-12"><div class="row home--header"><div class="col-sm-2" style="padding-left: 0px;margin-left: -15px;">';
-				newIdea += '<div class="home--profile--picture"><img class="img-circle" src="'+json.ideas_data[i].author_photo_url+'"></div></div><div class="col-sm-1 home--name">';
+				newIdea += '<div class="home--profile--picture"><img class="img-circle new--user--icon--login" src="'+json.ideas_data[i].author_photo_url+'"></div></div><div class="col-sm-1 home--name">';
 				newIdea += '<a href="#">'+json.ideas_data[i].author_username+'</a></div><div class="col-sm-2 newsfeed--duration">';
 				newIdea += '<p><img style="width: 15px;position: relative;top: -3px;" src="'+url_new+'images/clock-icon.png">&nbsp;'+json.ideas_data[i].duration+'</p>';
 				newIdea += '</div><div class="col-sm-3 home--charge"><div class="progress home--progress">';
@@ -38,7 +38,7 @@ $(document).ready( function() {
 				newIdea += '<img src="'+url_new+'images/redflag.png"></div><div class="col-sm-9 newsfeed--support" style="padding-right:0;padding-left:30px;">';
 				newIdea += '<input type="text" value="'+json.ideas_data[i].supporters_num*100/json.ideas_data[i].supporters_num+json.ideas_data[i].rejectors+'" id="percent" hidden><div class="input--percent">';
 				newIdea += '<label> Support Rate: </label></div></div><div class="col-sm-2 neewsfeed--moreinfo" style="float:right;">';
-				newIdea += '<input type="button" name="more-info" class="home--button"><div id="more--info--modal" hidden><p> problema: '+json.ideas_data[i].moreinfo_concern+'</br></br>propuesta: '+json.ideas_data[i].moreinfo_proposal+'</p></div></div></div></div>';
+				newIdea += '<input type="button" name="more-info" class="home--button"></div><div id="more--info--modal" hidden><p> problema: '+json.ideas_data[i].moreinfo_concern+'</br></br></br></br>propuesta: '+json.ideas_data[i].moreinfo_proposal+'</p></div></div></div>';
 				newIdea += '<div class="row newsfeed--persons"><div class="col-sm-12"><div class="col-sm-1" style="padding:0;">';
 				newIdea += '<img src=""></div><div class="col-sm-11 newsfeed--likes">';
 				newIdea += '<ul><a href="#" class="last--liked"><li>'+json.ideas_data[i].supporters_num+' people</li></a></ul></div></div>';
@@ -50,12 +50,12 @@ $(document).ready( function() {
 			    newIdea += '<p>Share with: followers</p></div></div></div></div>';
 		    }
 			$('#newIdea').append(newIdea);
-			$('.home--button').mouseenter(function(){
-				$('#more--info--modal').show('slow');		
+			$('.neewsfeed--moreinfo').mouseenter(function(){
+				$(this).next('div').show('slow');		
 			});
-			$('.home--button').mouseleave(function(){
-				$('#more--info--modal').hide('slow');		
-			});	
+			$('.neewsfeed--moreinfo').mouseleave(function(){
+				$(this).next('div').hide('slow');		
+			});
 		}	
 	});
 	
@@ -85,7 +85,7 @@ $(document).ready( function() {
 				followerList = '';	
 				for(var i = 0; i < json.followers_num; i++){
 					followerList += '<li><input value="'+json.followers_info[i].email+'" class="checkbox check--followers" type="checkbox" name="check[]">';
-					followerList += '<img src="'+json.followers_info[i].profilepic_url+'">'
+					followerList += '<img class="new--user--icon--login" src="'+json.followers_info[i].profilepic_url+'">'
 					followerList += '<p><a href="#">'+json.followers_info[i].username+'</a>';					
 					followerList += '<br>'+json.followers_info[i].fullname+'</p></li>';
 				}
@@ -106,7 +106,7 @@ $(document).ready( function() {
 				followingList = '';	
 				for(var i = 0; i < json.followings_num; i++){
 					followingList += '<li><input value="'+json.followings_info[i].email+'" class="checkbox check--followers" type="checkbox" name="check[]">';
-					followingList += '<img src="'+json.followings_info[i].profilepic_url+'">';
+					followingList += '<img class="new--user--icon--login" src="'+json.followings_info[i].profilepic_url+'">';
 					followingList += '<p><a href="#">'+json.followings_info[i].username+'</a>';					
 					followingList += '<br>'+json.followings_info[i].fullname+'</p></li>';
 				}
@@ -247,7 +247,7 @@ function seaarch_participant(search){
 				$('.spinner').show();
 				var newAppend = '';
             	newAppend += '<li class="participants__li__private">';
-            	newAppend += '<img src="'+json.participant_data.profilepic_url+'"><p>';
+            	newAppend += '<img class="new--user--icon--login" src="'+json.participant_data.profilepic_url+'"><p>';
             	newAppend += '<a href="#">'+json.participant_data.username+'</a>'; 
             	newAppend += '<br>'+json.participant_data.fullname+'</p>';
             	newAppend += '<input type="hidden" value="'+json.participant_data.id+'">';
@@ -356,26 +356,24 @@ $(document).ready(function(){
 		var num = parseFloat($('.followingss').text());	
 		$('.followingss').empty();	
 		$('.followingss').append(num+resta); 
-		var current_email = $('#host_email').val();
-		$.ajax({
-		url: url[0] + "//" + url[2] + '/get_participant_followings_info/'+current_email,
-		type: 'GET',
-		success: function (json) {
-			
-			
-			if(json.followings_num > 0){
-				followingList = '';	
-				for(var i = 0; i < json.followings_num; i++){
-					followingList += '<li><input value="'+json.followings_info[i].email+'" class="checkbox check--followers" type="checkbox" name="check[]">';
-					followingList += '<img src="'+json.followings_info[i].profilepic_url+'">';
-					followingList += '<p><a href="#">'+json.followings_info[i].username+'</a>';					
-					followingList += '<br>'+json.followings_info[i].fullname+'</p></li>';
-				}
-				$('#following').append(followingList);
-			}
-		}	
-		});
 
+		$('#followers li input[type=checkbox]').each(function(){
+            if (this.checked) {
+                selectedfollow = $(this).val();                                																																
+				$.ajax({
+					url: url[0] + "//" + url[2] + '/get_participant_data_by_email_unrestricted/'+selectedfollow,
+					type: 'GET',
+					success: function (json) {	
+						var folloNew = '';
+						folloNew += '<li><input value="'+json.participant_data.id+'" class="checkbox check--followers" type="checkbox" name="check[]">';
+						folloNew += '<img class="new--user--icon--login" src="'+json.participant_data.profilepic_url+'">';
+						folloNew += '<p><a href="#">'+json.participant_data.username+'</a>';					
+						folloNew += '<br>'+json.participant_data.fullname+'</p></li>';			
+						$('#home ul').append(folloNew);
+					}		
+				});
+			}
+        }); 
     });  
 
 });   
