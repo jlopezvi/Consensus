@@ -102,7 +102,24 @@ $(document).ready( function() {
             } else if(json.result == 'Wrong: Bad e-mail'){
               $('.login--message').empty().append('e-mail not found / not verified').show();
             } else if(json.result == 'OK'){
-              window.location = '/home';
+              //GETTING ALL IDEAS FOR NEWSFEED TO VALIDATE THE REDIRECT
+              $.ajax({
+                url: url[0] + "//" + url[2] + '/ideas_for_newsfeed',
+                type: 'GET',
+                data: JSON.stringify(data),
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                dataType: 'json',
+                success: function (json) {
+                  //console.log(json.data);
+                  if(json.data.length > 0)
+                    window.location = '/newsfeed';
+                  else
+                    window.location = '/home';
+                }
+              });
+              
             }
           },
           error: function(response){
