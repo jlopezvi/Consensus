@@ -29,21 +29,25 @@ $(document).ready( function() {
 				newIdea += '<div class="progress-bar newsfeed--bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style=""></div></div>';
 				newIdea += '<div class="progress home--progress2"><input type="text" value="'+json.ideas_data[i].volunteers_num*100/json.ideas_data[i].volunteers_goal_num+'" id="volunters--percent" hidden>';
 				newIdea += '<div class="progress-bar newsfeed--bar2" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style=""></div></div></div>';
-				newIdea += '<div class="col-sm-4 newsfeed--goals"><p>'+json.ideas_data[i].supporters_num/json.ideas_data[i].supporters_goal_num+' supporters goals';
-				newIdea += '<br>'+json.ideas_data[i].volunteers_num/json.ideas_data[i].volunteers_goal_num+' volunteers goals</p></div></div>';
+				newIdea += '<div class="col-sm-4 newsfeed--goals"><p>'+json.ideas_data[i].supporters_num+'/'+json.ideas_data[i].supporters_goal_num+' supporters goals';
+				newIdea += '<br>'+json.ideas_data[i].volunteers_num+'/'+json.ideas_data[i].volunteers_goal_num+' volunteers goals</p></div></div>';
 				newIdea += '<div class="row home--proposals--body" style="background-image: url('+json.ideas_data[i].image_url+');"><div class="col-sm-12">';
 				newIdea += '<div class="col-sm-8 newsfeed--problem">'+json.ideas_data[i].concern+'</div></div><div class="col-sm-12" style="margin-top: 180px;">';
 				newIdea += '<div class="col-sm-8 col-sm-offset-4 newsfeed--proposal">'+json.ideas_data[i].proposal+'</div></div></div>';
 				newIdea += '<div class="row newsfeed--footer"><div class="col-sm-12" style="padding-right: 0px; padding-left: 0px;"><div class="col-sm-1 redflag--img">';
 				newIdea += '<img src="'+url_new+'images/redflag.png"></div><div class="col-sm-9 newsfeed--support" style="padding-right:0;padding-left:30px;">';
-				newIdea += '<input type="text" value="'+json.ideas_data[i].supporters_num*100/json.ideas_data[i].supporters_num+json.ideas_data[i].rejectors+'" id="percent" hidden><div class="input--percent">';
-				newIdea += '<label> Support Rate: </label></div></div><div class="col-sm-2 neewsfeed--moreinfo" style="float:right;">';
-				newIdea += '<input type="button" name="more-info" class="home--button"></div><div id="more--info--modal" hidden><p> problema: '+json.ideas_data[i].moreinfo_concern+'</br></br></br></br>propuesta: '+json.ideas_data[i].moreinfo_proposal+'</p></div></div></div>';
+				var rate = ((json.ideas_data[i].supporters_num) * 100 / (json.ideas_data[i].supporters_num + json.ideas_data[i].rejectors.length));
+				if (json.ideas_data[i].supporters_num + json.ideas_data[i].rejectors.length == 0) {
+					rate = 0
+				}
+				newIdea += '<input type="text" value="'+Math.floor(rate)+'" id="percent" hidden><div class="input--percent">';
+				newIdea += '<label> Support Rate: '+Math.floor(rate)+'% </label></div></div><div class="col-sm-2 neewsfeed--moreinfo" style="float:right;">';
+				newIdea += '<input type="button" name="more-info" class="home--button"></div><div id="more--info--modal" hidden><p> <strong>problema :</strong></br> '+json.ideas_data[i].moreinfo_concern+'</br></br></br></br></br><strong>propuesta :</strong></br>'+json.ideas_data[i].moreinfo_proposal+'</p></div></div></div>';
 				newIdea += '<div class="row newsfeed--persons"><div class="col-sm-12"><div class="col-sm-1" style="padding:0;">';
-				newIdea += '<img src=""></div><div class="col-sm-11 newsfeed--likes">';
+				newIdea += '<img src="'+url_new+'images/check-small.png"></div><div class="col-sm-11 newsfeed--likes">';
 				newIdea += '<ul><a href="#" class="last--liked"><li>'+json.ideas_data[i].supporters_num+' people</li></a></ul></div></div>';
 				newIdea += '<div class="col-sm-12"><div class="col-sm-1" style="padding:0;"><img src="'+url_new+'images/x-small.png">';
-				newIdea += '</div><div class="col-sm-11 newsfeed--likes"><ul><a href="#"><li>'+json.ideas_data[i].rejectors.length+'</li></a></ul></div></div></div>';
+				newIdea += '</div><div class="col-sm-11 newsfeed--likes"><ul><a href="#" class="last--liked"><li>'+json.ideas_data[i].rejectors.length+' people</li></a></ul></div></div></div>';
 				newIdea += '<div class="row home--share"><div class="col-sm-12 home--share--icons"><div class="col-sm-6" style="padding:0;width: 100%;">';
 				newIdea += '<img src="'+url_new+'images/x-icon.png"><img style="width: 50px;" src="'+url_new+'images/check-icon.png"><img style="width: 48px;" src="'+url_new+'images/checkmark.png">';
 			    newIdea += '<img style="width: 50px;" src="'+url_new+'images/ignore-icon.png"></div><div class="col-sm-6 home--followers" style="width: 100%;"><i class="fa fa-share-alt"></i>';

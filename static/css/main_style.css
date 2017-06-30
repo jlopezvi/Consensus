@@ -311,7 +311,6 @@ body.modal-open {
 .newsfeed--body {
 	height: 500px;
 	background-image: url('/static/images/fondo-c.png');
-	
 	background-position-x: center;
 	background-position-y: bottom;
 	background-repeat: no-repeat;
@@ -319,8 +318,9 @@ body.modal-open {
 	box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 .home--proposals--body {
-	background-size: 1300px 300px;
 	background-repeat: no-repeat;
+	background-position-y: bottom;
+	background-position-x: center;
 	margin-top: 2%;
 	box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
@@ -1384,7 +1384,7 @@ a.add--proposal--provisional {
 #more--info--modal{
 	z-index: 100;
 	position: absolute;
-	margin-left: 150px;
+	margin-left: 200px;
 	margin-top: 50px;
 	height: 300px;
 	width: 350px;
