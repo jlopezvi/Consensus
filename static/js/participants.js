@@ -16,7 +16,7 @@ $(document).ready( function() {
 		url: url[0] + "//" + url[2] + '/get_ideas_data_created_by_participant/'+current_email,
 		type: 'GET',
 		success: function (json) {	
-			console.log(json.ideas_data[8]);	
+			
 			var newIdea = '';
 			var url_new = url[0] +'//'+ url[2] +'/static/';
 			for (var i = 0; i < json.ideas_data.length; i++) {						
@@ -356,26 +356,24 @@ $(document).ready(function(){
 		var num = parseFloat($('.followingss').text());	
 		$('.followingss').empty();	
 		$('.followingss').append(num+resta); 
-		var current_email = $('#host_email').val();
-		$.ajax({
-		url: url[0] + "//" + url[2] + '/get_participant_followings_info/'+current_email,
-		type: 'GET',
-		success: function (json) {
-			
-			
-			if(json.followings_num > 0){
-				followingList = '';	
-				for(var i = 0; i < json.followings_num; i++){
-					followingList += '<li><input value="'+json.followings_info[i].email+'" class="checkbox check--followers" type="checkbox" name="check[]">';
-					followingList += '<img src="'+json.followings_info[i].profilepic_url+'">';
-					followingList += '<p><a href="#">'+json.followings_info[i].username+'</a>';					
-					followingList += '<br>'+json.followings_info[i].fullname+'</p></li>';
-				}
-				$('#following').append(followingList);
-			}
-		}	
-		});
 
+		$('#followers li input[type=checkbox]').each(function(){
+            if (this.checked) {
+                selectedfollow = $(this).val();                                																																
+				$.ajax({
+					url: url[0] + "//" + url[2] + '/get_participant_data_by_email_unrestricted/'+selectedfollow,
+					type: 'GET',
+					success: function (json) {	
+						var folloNew = '';
+						folloNew += '<li><input value="'+json.participant_data.id+'" class="checkbox check--followers" type="checkbox" name="check[]">';
+						folloNew += '<img class="new--user--icon--login" src="'+json.participant_data.profilepic_url+'">';
+						folloNew += '<p><a href="#">'+json.participant_data.username+'</a>';					
+						folloNew += '<br>'+json.participant_data.fullname+'</p></li>';			
+						$('#home ul').append(folloNew);
+					}		
+				});
+			}
+        }); 
     });  
 
 });   
