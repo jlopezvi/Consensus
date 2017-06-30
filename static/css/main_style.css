@@ -1402,5 +1402,21 @@ a.add--proposal--provisional {
 	border-color:#fff;
 
 }
-
+.arrow__newsfeed__left,
+.arrow__newsfeed__right{
+	position: absolute;
+	top: 300px;
+	font-size: 80px;
+	left: -15%;
+	color: #d4d4d4;
+	display: none;
+	cursor: pointer;
+}
+.arrow__newsfeed__right{
+	left: 105%;
+}
+.arrow__newsfeed__left:hover,
+.arrow__newsfeed__right:hover{
+	color: #bfbfbf;
+}
 /***** END NEW STILES ******************/

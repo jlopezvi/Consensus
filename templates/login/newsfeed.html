@@ -2,11 +2,18 @@
 
 {% block content %}
 <div class="row newsfeed--content">
-	<div class="col-sm-8 col-sm-offset-2">
+	
+	<div class="spinner">
+        <div class="dot1"></div>
+        <div class="dot2"></div>
+    </div>
+	
+	<div class="col-sm-8 col-sm-offset-2" id="newsfeed__body" hidden>
         <div class="row newsfeed--header">
+        	<input type="hidden" id="list__id">
 			<div class="col-sm-2" style="padding-left: 0px;">
 				<div class="profile--picture">
-                    <img src="" hidden>
+                    <img src="" id="picture__profile" hidden>
 					<img src="{{ url_for('static',filename='assets/profile/perfil-mediano.png') }}">
 				</div>
 			</div>
@@ -34,8 +41,10 @@
 				<p></p>
 			</div>
 		</div>
-
+		
+		<span class="glyphicon glyphicon-chevron-left arrow__newsfeed__left" id="left__feed"></span>
         <div class="row newsfeed--body">
+			
 			<div class="col-sm-12">
 				<div class="col-sm-8 newsfeed--problem">
 				</div>
@@ -45,8 +54,10 @@
 					<br><br>
 				</div>
 			</div>
+			
 		</div>
-
+		<span class="glyphicon glyphicon-chevron-right arrow__newsfeed__right" id="right__feed"></span>
+		
         <div class="row newsfeed--footer">
 			<div class="col-sm-12" style="padding-right: 0px; padding-left: 0px;">
 				<div class="col-sm-1 redflag--img">
