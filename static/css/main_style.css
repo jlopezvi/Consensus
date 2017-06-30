@@ -1392,5 +1392,15 @@ a.add--proposal--provisional {
     max-height: 400px;
  
 }
+#more--info--modal{
+	position: absolute;
+	margin-left: -200px;
+	height: 100px;
+	width: 400px;
+	background-color:#3faf2e;
+	border-style:ridge;
+	border-color:#fff;
+
+}
 
 /***** END NEW STILES ******************/

@@ -15,8 +15,8 @@ $(document).ready( function() {
 	$.ajax({
 		url: url[0] + "//" + url[2] + '/get_ideas_data_created_by_participant/'+current_email,
 		type: 'GET',
-		success: function (json) {		
-			console.log(json.ideas_data[8]);
+		success: function (json) {	
+			console.log(json.ideas_data[8]);	
 			var newIdea = '';
 			var url_new = url[0] +'//'+ url[2] +'/static/';
 			for (var i = 0; i < json.ideas_data.length; i++) {						
@@ -38,7 +38,7 @@ $(document).ready( function() {
 				newIdea += '<img src="'+url_new+'images/redflag.png"></div><div class="col-sm-9 newsfeed--support" style="padding-right:0;padding-left:30px;">';
 				newIdea += '<input type="text" value="'+json.ideas_data[i].supporters_num*100/json.ideas_data[i].supporters_num+json.ideas_data[i].rejectors+'" id="percent" hidden><div class="input--percent">';
 				newIdea += '<label> Support Rate: </label></div></div><div class="col-sm-2 neewsfeed--moreinfo" style="float:right;">';
-				newIdea += '<input type="button" name="more-info" class="home--button"></div></div></div>';
+				newIdea += '<input type="button" name="more-info" class="home--button"><div id="more--info--modal" hidden><p> problema: '+json.ideas_data[i].moreinfo_concern+'</br></br>propuesta: '+json.ideas_data[i].moreinfo_proposal+'</p></div></div></div></div>';
 				newIdea += '<div class="row newsfeed--persons"><div class="col-sm-12"><div class="col-sm-1" style="padding:0;">';
 				newIdea += '<img src=""></div><div class="col-sm-11 newsfeed--likes">';
 				newIdea += '<ul><a href="#" class="last--liked"><li>'+json.ideas_data[i].supporters_num+' people</li></a></ul></div></div>';
@@ -49,7 +49,13 @@ $(document).ready( function() {
 			    newIdea += '<img style="width: 50px;" src="'+url_new+'images/ignore-icon.png"></div><div class="col-sm-6 home--followers" style="width: 100%;"><i class="fa fa-share-alt"></i>';
 			    newIdea += '<p>Share with: followers</p></div></div></div></div>';
 		    }
-			$('#newIdea').append(newIdea);		
+			$('#newIdea').append(newIdea);
+			$('.home--button').mouseenter(function(){
+				$('#more--info--modal').show('slow');		
+			});
+			$('.home--button').mouseleave(function(){
+				$('#more--info--modal').hide('slow');		
+			});	
 		}	
 	});
 	
