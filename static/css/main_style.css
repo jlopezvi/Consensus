@@ -1393,14 +1393,18 @@ a.add--proposal--provisional {
  
 }
 #more--info--modal{
+	z-index: 100;
 	position: absolute;
-	margin-left: -200px;
-	height: 100px;
-	width: 400px;
+	margin-left: 150px;
+	margin-top: 50px;
+	height: 300px;
+	width: 350px;
 	background-color:#3faf2e;
 	border-style:ridge;
 	border-color:#fff;
+	border-radius: 2px;
 
 }
+
 
 /***** END NEW STILES ******************/
