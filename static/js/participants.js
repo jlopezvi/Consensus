@@ -42,7 +42,7 @@ $(document).ready( function() {
 				}
 				newIdea += '<input type="text" value="'+Math.floor(rate)+'" id="percent" hidden><div class="input--percent">';
 				newIdea += '<label> Support Rate: '+Math.floor(rate)+'% </label></div></div><div class="col-sm-2 neewsfeed--moreinfo" style="float:right;">';
-				newIdea += '<input type="button" name="more-info" class="home--button"></div><div id="more--info--modal" hidden><p> <strong>problema :</strong></br> '+json.ideas_data[i].moreinfo_concern+'</br></br></br></br></br><strong>propuesta :</strong></br>'+json.ideas_data[i].moreinfo_proposal+'</p></div></div></div>';
+				newIdea += '<input type="button" name="more-info" class="home--button"></div><div id="more--info--modal" hidden><p><h4>  More problem information: </h4></br> '+json.ideas_data[i].moreinfo_concern+'</br><h4> More information about the proposal: </h4></br>'+json.ideas_data[i].moreinfo_proposal+'</p></div></div></div>';
 				newIdea += '<div class="row newsfeed--persons"><div class="col-sm-12"><div class="col-sm-1" style="padding:0;">';
 				newIdea += '<img src="'+url_new+'images/check-small.png"></div><div class="col-sm-11 newsfeed--likes">';
 				newIdea += '<ul><a href="#" class="last--liked"><li>'+json.ideas_data[i].supporters_num+' people</li></a></ul></div></div>';
@@ -54,12 +54,17 @@ $(document).ready( function() {
 			    newIdea += '<p>Share with: followers</p></div></div></div></div>';
 		    }
 			$('#newIdea').append(newIdea);
-			$('.neewsfeed--moreinfo').mouseenter(function(){
-				$(this).next('div').show('slow');		
-			});
-			$('.neewsfeed--moreinfo').mouseleave(function(){
-				$(this).next('div').hide('slow');		
-			});
+			var left = 1;
+  			$(document).on('click', '.neewsfeed--moreinfo', function(){
+  				if(left == 1){
+            		$(this).next('div').show('slow');	
+            	left = 0;
+            	} else{
+            	left = 1;
+              		$(this).next('div').hide('slow');
+        		}	
+
+   			});	
 		}	
 	});
 	
