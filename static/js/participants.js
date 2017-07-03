@@ -8,7 +8,9 @@ $(document).ready( function() {
 		var current_email = $('#participant_email').val();
 		$('.setting__adapt').hide();
 		$('.participant__invite').hide();
-		$('.participant__follow').css({'margin-top': '0px'});
+		$('#follow-parti').hide();
+    	$('#unfollow-parti').hide();
+    	$('#newIdea').css('margin-top', '90px');
 	}
 	
 	//GET ALL INFORMATION OF ALL IDEAS CREATED BY PARTICIPANT
@@ -63,7 +65,6 @@ $(document).ready( function() {
             	left = 1;
               		$(this).next('div').hide('slow');
         		}	
-
    			});	
 		}	
 	});
@@ -238,6 +239,7 @@ $(document).ready( function() {
     		console.log('Not Allowed');
     	else
     		window.location = '/participants/'+redirect;
+
     });
 
 });
