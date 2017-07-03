@@ -296,12 +296,11 @@ def _get_participant_node(email, ifemailverified_category=True) :
         return None
 
 
-# currentParticipant, newFollowingContact are graph nodes
-def _getIfContactRelationshipExists(currentParticipant, newFollowingContact):
-    contactRelationshipFound = getGraph().match_one(start_node=currentParticipant, end_node=newFollowingContact,
-                                                    rel_type="FOLLOWS")
-    print("contactRelationshipFound", contactRelationshipFound)
-    if contactRelationshipFound is not None:
+# follower, following are participant nodes
+def _getIfContactRelationshipExists(follower, following):
+    contact_relationship_found = getGraph().match_one(start_node=follower, end_node=following, rel_type="FOLLOWS")
+    print("contactRelationshipFound", contact_relationship_found)
+    if contact_relationship_found is not None:
         return True
     return False
 

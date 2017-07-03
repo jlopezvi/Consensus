@@ -57,26 +57,24 @@ def registration_receive_emailverification_aux(token):
             return render_template('login/login.html', message=jsondata)
 
 
-def ideas_for_newsfeed_aux(participant_email):
-    participant = _get_participant_node(participant_email)
-    dic = []
+def ideas_for_newsfeed_aux(user_email):
+    user = _get_participant_node(user_email)
     list_ideas = []
-    followings_rels = list(getGraph().match(start_node=participant, rel_type="FOLLOWS"))
-    if len(followings_rels) is 0:
+    list_ideas_data = []
+    followings = [x.end_node for x in list(getGraph().match(start_node=user, rel_type="FOLLOWS"))]
+    if len(followings) is 0:
         return jsonify({"result": "OK", "data": []})
-    for following_rel in followings_rels:
-        following = following_rel.end_node
-        ideas_rels = list(getGraph().match(start_node=following, rel_type="CREATED"))
-        if len(ideas_rels) is 0:
+    for following in followings:
+        ideas = [x.end_node for x in list(getGraph().match(start_node=following, rel_type="CREATED"))]
+        if len(ideas) is 0:
             continue
-        for idea_rel in ideas_rels:
-            idea = idea_rel.end_node
-            if _if_isnewideaforparticipant(idea, participant):
-                dic.append(idea)
-    for dic_idea in dic:
-        newfeed = get_idea_data_aux(dic_idea)
-        list_ideas.append(newfeed)
-    return jsonify({"result": "OK", "data": list_ideas})
+        for idea in ideas:
+            if _if_isnewideaforparticipant(idea, user):
+                list_ideas.append(idea)
+    for idea in list_ideas:
+        newfeed = get_idea_data_aux(idea)
+        list_ideas_data.append(newfeed)
+    return jsonify({"result": "OK", "data": list_ideas_data})
 
 
 def ideas_for_home_aux(participant_email, vote_type):
