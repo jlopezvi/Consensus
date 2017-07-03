@@ -286,8 +286,8 @@ def vote_on_idea_aux(user_email, inputdict):
             return response
     else:
         response = _create_or_modify_voting_relationship_to_given_type(user, idea, vote_type, vote_ifvolunteered, vote_timestamp)
-        supporters_num= _get_vote_statistics_for_idea(idea_index)[0]
-        volunteers_num=_get_vote_statistics_for_idea(idea_index)[3]
+        supporters_num = _get_vote_statistics_for_idea(idea_index)[0]
+        volunteers_num =_get_vote_statistics_for_idea(idea_index)[3]
         support_rate = (supporters_num / voters_num)*100 if voters_num is not 0 else 100
         if support_rate < SUPPORT_RATE_MIN and support == True:
             _do_tasks_for_idea_failurewarning(idea_index)
@@ -321,7 +321,7 @@ def _if_voting_relationship_exists_of_given_type(participant, idea, vote_type, v
     return False
 
 
-#<used by vote_on_idea_aux>
+# <used by vote_on_idea_aux>
 def _create_or_modify_voting_relationship_to_given_type(participant, idea, vote_type, vote_ifvolunteered, vote_timestamp):
     voting_rel = getGraph().match_one(start_node=participant, rel_type="VOTED_ON", end_node=idea)
     if voting_rel is not None:

@@ -181,8 +181,8 @@ def get_participant_followings_info_aux(participant_email, user_email):
     participant = _get_participant_node(participant_email)
     ifpublicprofile = participant['ifpublicprofile']
     followings_info = []
-    if participant_email == user_email or _getIfContactRelationshipExists(participant, user) is True \
-            or ifpublicprofile is True:
+    if (participant_email == user_email) or (_getIfContactRelationshipExists(participant, user) is True) \
+            or (ifpublicprofile is True):
         ifallowed = True
         followings = _get_participant_followings(participant_email)
         followings_num = len(followings)
@@ -204,8 +204,8 @@ def get_participant_followers_info_aux(participant_email, user_email):
     participant = _get_participant_node(participant_email)
     ifpublicprofile = participant['ifpublicprofile']
     followers_info = []
-    if participant_email == user_email or _getIfContactRelationshipExists(participant, user) is True \
-            or ifpublicprofile is True:
+    if (participant_email == user_email) or (_getIfContactRelationshipExists(participant, user) is True) \
+            or (ifpublicprofile is True):
         ifallowed = True
         followers = _get_participant_followers(participant_email)
         followers_num = len(followers)
