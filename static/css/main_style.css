@@ -1383,9 +1383,10 @@ a.add--proposal--provisional {
 }
 #more--info--modal{
 	z-index: 100;
+	position: absolute;
 	margin-top: 50px;
 	height: auto;
-	width: 350px;
+	width: 100%;
 	background-color:#3faf2e;
 	border: 8px double #66ff66;
 	border-color:#fff;
