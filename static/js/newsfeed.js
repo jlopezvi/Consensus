@@ -120,7 +120,13 @@ function showContent(id){
   $('.input--percent label').empty().append('Support Rate: '+Math.floor(total)+'%');
   /****************************************** Add Supporters to the Supporters List ****************************************/
   if(list[id].supporters.length > 0){
-    for(var i =0; i<=2; i++){
+    if(list[id].supporters.length == 1)
+      var endLoop = 0;
+    else if(list[id].supporters.length == 2)
+      var endLoop = 1;
+    else if(list[id].supporters.length == 2)
+      var endLoop = 2;
+    for(var i =0; i<=endLoop; i++){
       $('#newsfeed--supporters ul').empty().append("<a href='#'><li>"+list[id].supporters[i].username+"</li></a>");
     }
   }
@@ -132,6 +138,12 @@ function showContent(id){
   }
   /****************************************** Add Supporters to the Supporters List ****************************************/
   if(list[id].supporters.rejectors > 0){
+    if(list[id].rejectors.length == 1)
+      var endLoop = 0;
+    else if(list[id].rejectors.length == 2)
+      var endLoop = 1;
+    else if(list[id].rejectors.length == 2)
+      var endLoop = 2;
     for(var i =0; i<=2; i++){
       $('#newsfeed--rejectors ul').empty().append("<a href='#'><li>"+list[id].rejectors[i].username+"</li></a>");
     }
