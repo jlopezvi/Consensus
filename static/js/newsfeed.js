@@ -21,8 +21,11 @@ $(document).ready(function(){
     dataType: 'json',
     success: function(json) {
       list = json.data;
-      //console.log(list);
+      console.log(list.length);
       $('#list__id').val(0);
+      if(list.length == 0){
+        window.location = '/home';
+      }
       if(list.length > 1){
         $('.arrow__newsfeed__right').show();
       }
