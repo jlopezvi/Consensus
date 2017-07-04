@@ -782,8 +782,8 @@ def ideas_for_newsfeed(user_email_DEBUG = None):
 #    }
 #  ]
 # }
-@app.route('/ideas_for_home',methods=['GET'])
-@app.route('/ideas_for_home/<user_email_DEBUG>',methods=['GET'])
+@app.route('/ideas_for_home',methods=['POST'])
+@app.route('/ideas_for_home/<user_email_DEBUG>',methods=['POST'])
 def ideas_for_home(user_email_DEBUG = None):
     if DEBUG and user_email_DEBUG is not None:
         user_email = user_email_DEBUG
