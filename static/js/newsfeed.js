@@ -44,12 +44,58 @@ $(document).ready(function(){
     var side = $(this).attr('id');
     var id = $('#list__id').val();
     moveFeed(side, id);
-  })
+  });
+  
+  $(document).on('click', '.vote__idea--button', function(){
+      var vote_ifvolunteered = false;
+      var type = $(this).attr('id');
+      if(type == 'support__plus--button'){
+        vote_ifvolunteered = true;
+        type = 'supported';
+      }
+      var id = $('#list__id').val();
+      
+      var data = {
+        'idea_proposal': $(document).find('#idea__id').val(),
+        'vote_ifvolunteered': vote_ifvolunteered,
+        'vote_type': type
+      };
+      
+      removeElementFromList(id);
+    	$.ajax({
+        url: url[0] + "//" + url[2] + '/vote_on_idea',
+        type: 'POST',
+        data: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        dataType: 'json',
+        success: function(json){
+          //console.log(json);
+          $('#invitation-modal-info h4.modal-title').empty().append('Operation Completed');
+          if(data.vote_type == 'supported')
+            var answer = 'Now you are supporting this idea!';
+          if(data.vote_type == 'rejected')
+            var answer = 'Idea rejected successfully!';
+          else
+            var answer = 'You ignored this idea!';
+          if(list.length == 0)
+            answer += '<br><br>There are no more ideas left! <br>Redirecting to <strong>Home</strong>';
+          if(json.result == 'OK: User vote was created')
+            $('#invitation-modal-info p#modal--invitation').empty().append(answer);
+          $('#invitation-modal-info').modal('toggle');
+        },
+        error: function(response){
+          console.log('error');
+          console.log(response);
+        }
+    	});
+  });
 });
 
 function showContent(id){
   $('#list__id').val(id);
-  console.log(id);
+  $('#idea__id').val(list[id].proposal);
   if(list[id].author_photo_url != ''){
     $('#picture__profile').attr('src', list[id].author_photo_url).show();
     $('#picture__profile').next().hide();
@@ -100,7 +146,6 @@ function moveFeed(element, id){
   if((element == 'left__feed') && (id > 0)){
     $('#newsfeed__body').hide();
     $('.spinner').show();
-    
     $('#right__feed').show();
     showContent(intID-1);
     setTimeout(function(){
@@ -126,5 +171,30 @@ function moveFeed(element, id){
       $('#'+element).hide();
     else
       $('#'+element).show();
+  }
+}
+
+function removeElementFromList(id){
+  list.splice(id,1);
+  if(list.length > 0){
+    if(list.length == 1){
+      $('#newsfeed__body').hide();
+      $('.spinner').show();
+      showContent(0);
+      setTimeout(function(){
+        $('#newsfeed__body').show();
+        $('.spinner').hide();
+      }, 2500);
+      $('.arrow__newsfeed__right').hide();
+      $('.arrow__newsfeed__left').hide();
+    } else if(id == (list.length-1)) {
+      moveFeed('left__feed', id);
+    } else {
+      moveFeed('right__feed', id);
+    }
+  } else {
+    setTimeout(function(){
+      window.location = '/home';
+    }, 6000);
   }
 }
