@@ -1411,4 +1411,7 @@ a.add--proposal--provisional {
 .arrow__newsfeed__right:hover{
 	color: #bfbfbf;
 }
+.vote__idea--button{
+	cursor: pointer;
+}
 /***** END NEW STILES ******************/
