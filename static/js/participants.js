@@ -51,14 +51,18 @@ $(document).ready( function() {
 				newIdea += '<div class="col-sm-12"><div class="col-sm-1" style="padding:0;"><img src="'+url_new+'images/x-small.png">';
 				newIdea += '</div><div class="col-sm-11 newsfeed--likes"><ul><a href="#" class="last--liked"><li>'+json.ideas_data[i].rejectors.length+' people</li></a></ul></div></div></div>';
 				newIdea += '<div class="row home--share"><div class="col-sm-12 home--share--icons"><div class="col-sm-6" style="padding:0;width: 100%;">';
-				newIdea += '<img src="'+url_new+'images/x-icon.png"><img style="width: 50px;" src="'+url_new+'images/check-icon.png"><img style="width: 48px;" src="'+url_new+'images/checkmark.png">';
-			    newIdea += '<img style="width: 50px;" src="'+url_new+'images/ignore-icon.png"></div><div class="col-sm-6 home--followers" style="width: 100%;"><i class="fa fa-share-alt"></i>';
-			    newIdea += '<p>Share with: followers</p></div></div></div></div>';
+				newIdea += '<img class="icons" src="'+url_new+'images/x-icon.png" hidden><img class="icons" style="width: 50px;" src="'+url_new+'images/check-icon.png" hidden><img class="icons" style="width: 48px;" src="'+url_new+'images/checkmark.png" hidden>';
+			    newIdea += '</div><div class="col-sm-6 home--followers" style="width: 100%;">';
+			    newIdea += '</div></div></div></div>';
 		    }
 		    if (json.ideas_data.length != 0) {
 		    	$('#newIdea').append(newIdea);
 		    }else{
 		    	$('#newIdea').append('<center><h3>You have no active publications</h3></center> ');
+		    }
+		    if($('#participant_email').val() != 'None'){
+		    	$('.icons').show();
+		    	$('.home--followers').append('<i class="fa fa-share-alt"></i><p>Share with: followers</p>');
 		    }
 			
 			var left = 1;
