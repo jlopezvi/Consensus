@@ -3,6 +3,21 @@
 {% block content %}
 <div class="row newsfeed--content">
 	
+	<!-- Modal -->
+    <div class="modal fade" id="invitation-modal-info" role="dialog">
+        <div class="modal-dialog modal-sm" style="margin-top:100px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body">
+                    <p id="modal--invitation"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+	
 	<div class="spinner">
         <div class="dot1"></div>
         <div class="dot2"></div>
@@ -11,6 +26,7 @@
 	<div class="col-sm-8 col-sm-offset-2" id="newsfeed__body" hidden>
         <div class="row newsfeed--header">
         	<input type="hidden" id="list__id">
+        	<input type="hidden" id="idea__id">
 			<div class="col-sm-2" style="padding-left: 0px;">
 				<div class="profile--picture">
                     <img src="" id="picture__profile" hidden>
@@ -98,10 +114,10 @@
         <div class="row newsfeed--share">
             <div class="col-sm-12 newsfeed--share--icons">
                 <div class="col-sm-6" style="padding:0;">
-                    <img src="{{ url_for('static',filename='images/x-icon.png') }}">
-                    <img style="width: 65px;" src="{{ url_for('static',filename='images/check-icon.png') }}">
-                    <img style="width: 62px;" src="{{ url_for('static',filename='images/checkmark.png') }}">
-                    <img src="{{ url_for('static',filename='images/ignore-icon.png') }}">
+                    <img src="{{ url_for('static',filename='images/x-icon.png') }}" id="rejected" class="vote__idea--button">
+                    <img style="width: 65px;" src="{{ url_for('static',filename='images/check-icon.png') }}" id="supported" class="vote__idea--button">
+                    <img style="width: 62px;" src="{{ url_for('static',filename='images/checkmark.png') }}" id="support__plus--button" class="vote__idea--button">
+                    <img src="{{ url_for('static',filename='images/ignore-icon.png') }}" id="ignored" class="vote__idea--button">
                 </div>
                 <div class="col-sm-6 newsfeed--followers">
                     <i class="fa fa-share-alt"></i>
