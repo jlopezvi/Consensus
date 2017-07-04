@@ -78,7 +78,7 @@ $(document).ready(function(){
           $('#invitation-modal-info h4.modal-title').empty().append('Operation Completed');
           if(data.vote_type == 'supported')
             var answer = 'Now you are supporting this idea!';
-          if(data.vote_type == 'rejected')
+          else if(data.vote_type == 'rejected')
             var answer = 'Idea rejected successfully!';
           else
             var answer = 'You ignored this idea!';
