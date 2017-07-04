@@ -181,8 +181,8 @@ def get_participant_followings_info_aux(participant_email, user_email):
     participant = _get_participant_node(participant_email)
     ifpublicprofile = participant['ifpublicprofile']
     followings_info = []
-    if participant_email == user_email or _getIfContactRelationshipExists(participant, user) is True \
-            or ifpublicprofile is True:
+    if (participant_email == user_email) or (_getIfContactRelationshipExists(participant, user) is True) \
+            or (ifpublicprofile is True):
         ifallowed = True
         followings = _get_participant_followings(participant_email)
         followings_num = len(followings)
@@ -204,8 +204,8 @@ def get_participant_followers_info_aux(participant_email, user_email):
     participant = _get_participant_node(participant_email)
     ifpublicprofile = participant['ifpublicprofile']
     followers_info = []
-    if participant_email == user_email or _getIfContactRelationshipExists(participant, user) is True \
-            or ifpublicprofile is True:
+    if (participant_email == user_email) or (_getIfContactRelationshipExists(participant, user) is True) \
+            or (ifpublicprofile is True):
         ifallowed = True
         followers = _get_participant_followers(participant_email)
         followers_num = len(followers)
@@ -296,12 +296,11 @@ def _get_participant_node(email, ifemailverified_category=True) :
         return None
 
 
-# currentParticipant, newFollowingContact are graph nodes
-def _getIfContactRelationshipExists(currentParticipant, newFollowingContact):
-    contactRelationshipFound = getGraph().match_one(start_node=currentParticipant, end_node=newFollowingContact,
-                                                    rel_type="FOLLOWS")
-    print("contactRelationshipFound", contactRelationshipFound)
-    if contactRelationshipFound is not None:
+# follower, following are participant nodes
+def _getIfContactRelationshipExists(follower, following):
+    contact_relationship_found = getGraph().match_one(start_node=follower, end_node=following, rel_type="FOLLOWS")
+    print("contactRelationshipFound", contact_relationship_found)
+    if contact_relationship_found is not None:
         return True
     return False
 
