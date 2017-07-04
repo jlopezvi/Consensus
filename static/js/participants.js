@@ -58,7 +58,7 @@ $(document).ready( function() {
 		    if (json.ideas_data.length != 0) {
 		    	$('#newIdea').append(newIdea);
 		    }else{
-		    	$('#newIdea').append('<center><h1>Has not yet created a proposal</h1></center> ');
+		    	$('#newIdea').append('<center><h3>You have no active publications</h3></center> ');
 		    }
 			
 			var left = 1;
@@ -104,7 +104,7 @@ $(document).ready( function() {
 				}if (json.followers_num != 0) {
 					$('#menu1 ul').append(followerList);
 				}else{
-					$('#menu1 ul').append('<center><h1>You do not have followers</h1></center>');
+					$('#menu1 ul').append('<center><h3>No one is following you</h3></center>');
 				}					
 			
 		}	
@@ -127,7 +127,7 @@ $(document).ready( function() {
 				if (json.followings_num != 0) {
 					$('#home ul').append(followingList);
 				}else{
-					$('#home ul').append('<center><h1>Does not follow a participant</h1></center>');
+					$('#home ul').append('<center><h3 id="msg">You are following no one</h3></center>');
 				}				
 		}	
 	});
@@ -338,6 +338,7 @@ $(document).ready(function(){
 					type: 'GET',
 					success: function (json) {	
 						$('#following li input:checked').parent().fadeOut('slow');
+						$('#msg').fadeIn('slow');
 					},
 					error: function (response) {
 						alert('you have to select a participant that you want stop follow');		
@@ -388,6 +389,8 @@ $(document).ready(function(){
 						folloNew += '<p><a href="#">'+json.participant_data.username+'</a>';					
 						folloNew += '<br>'+json.participant_data.fullname+'</p></li>';			
 						$('#home ul').append(folloNew);
+						$('#msg').hide();
+
 					}		
 				});
 			}
