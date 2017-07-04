@@ -1392,9 +1392,10 @@ a.add--proposal--provisional {
 	border-color:#fff;
 	border-radius: 2px;
 	font-family: lato_regular;
-	opacity: 0.99;
-    filter: alpha(opacity=99);
-
+	opacity: 0.98;
+    filter: alpha(opacity=98);
+    padding-left: 8px;
+    color: #ffffff;
 
 }
 .arrow__newsfeed__left,

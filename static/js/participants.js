@@ -44,7 +44,7 @@ $(document).ready( function() {
 				}
 				newIdea += '<input type="text" value="'+Math.floor(rate)+'" id="percent" hidden><div class="input--percent">';
 				newIdea += '<label> Support Rate: '+Math.floor(rate)+'% </label></div></div><div class="col-sm-2 neewsfeed--moreinfo" style="float:right;">';
-				newIdea += '<input type="button" name="more-info" class="home--button"></div><div id="more--info--modal" hidden><p><h4>  More problem information: </h4></br> '+json.ideas_data[i].moreinfo_concern+'</br><h4> More information about the proposal: </h4></br>'+json.ideas_data[i].moreinfo_proposal+'</p></div></div></div>';
+				newIdea += '<input type="button" name="more-info" class="home--button"></div><div id="more--info--modal" hidden><p><h4>  More information about the problem: </h4> '+json.ideas_data[i].moreinfo_concern+'</br></br><h4> More information about the proposal: </h4>'+json.ideas_data[i].moreinfo_proposal+'</p></div></div></div>';
 				newIdea += '<div class="row newsfeed--persons"><div class="col-sm-12"><div class="col-sm-1" style="padding:0;">';
 				newIdea += '<img src="'+url_new+'images/check-small.png"></div><div class="col-sm-11 newsfeed--likes">';
 				newIdea += '<ul><a href="#" class="last--liked"><li>'+json.ideas_data[i].supporters_num+' people</li></a></ul></div></div>';
@@ -55,7 +55,12 @@ $(document).ready( function() {
 			    newIdea += '<img style="width: 50px;" src="'+url_new+'images/ignore-icon.png"></div><div class="col-sm-6 home--followers" style="width: 100%;"><i class="fa fa-share-alt"></i>';
 			    newIdea += '<p>Share with: followers</p></div></div></div></div>';
 		    }
-			$('#newIdea').append(newIdea);
+		    if (json.ideas_data.length != 0) {
+		    	$('#newIdea').append(newIdea);
+		    }else{
+		    	$('#newIdea').append('<center><h1>Has not yet created a proposal</h1></center> ');
+		    }
+			
 			var left = 1;
   			$(document).on('click', '.neewsfeed--moreinfo', function(){
   				if(left == 1){
@@ -89,19 +94,19 @@ $(document).ready( function() {
 	$.ajax({
 		url: url[0] + "//" + url[2] + '/get_participant_followers_info/'+current_email,
 		type: 'GET',
-		success: function (json) {
-			
-			if(json.followers_num > 0){
+		success: function (json) {			
 				followerList = '';	
 				for(var i = 0; i < json.followers_num; i++){
 					followerList += '<li><input value="'+json.followers_info[i].email+'" class="checkbox check--followers" type="checkbox" name="check[]">';
 					followerList += '<img class="new--user--icon--login" src="'+json.followers_info[i].profilepic_url+'">'
 					followerList += '<p><a href="#">'+json.followers_info[i].username+'</a>';					
 					followerList += '<br>'+json.followers_info[i].fullname+'</p></li>';
-				}
-				$('#menu1 ul').append(followerList);
-				
-			}
+				}if (json.followers_num != 0) {
+					$('#menu1 ul').append(followerList);
+				}else{
+					$('#menu1 ul').append('<center><h1>You do not have followers</h1></center>');
+				}					
+			
 		}	
 	});
 
@@ -111,8 +116,7 @@ $(document).ready( function() {
 		url: url[0] + "//" + url[2] + '/get_participant_followings_info/'+current_email,
 		type: 'GET',
 		success: function (json) {
-			//console.log(json);
-			if(json.followings_num > 0){
+			//console.log(json);	
 				followingList = '';	
 				for(var i = 0; i < json.followings_num; i++){
 					followingList += '<li><input value="'+json.followings_info[i].email+'" class="checkbox check--followers" type="checkbox" name="check[]">';
@@ -120,8 +124,11 @@ $(document).ready( function() {
 					followingList += '<p><a href="#">'+json.followings_info[i].username+'</a>';					
 					followingList += '<br>'+json.followings_info[i].fullname+'</p></li>';
 				}
-				$('#home ul').append(followingList);
-			}
+				if (json.followings_num != 0) {
+					$('#home ul').append(followingList);
+				}else{
+					$('#home ul').append('<center><h1>Does not follow a participant</h1></center>');
+				}				
 		}	
 	});
     
