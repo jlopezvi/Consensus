@@ -133,7 +133,7 @@ function showIdeas(list, index){
   var total = Math.floor(percent);
 	code += '<div class="input--percent"><label>	Support Rate: '+total+'%</label></div>';
 	code += '</div>	<div class="col-sm-2 neewsfeed--moreinfo" style="float:right;"><input type="button" name="more-info" class="home--button">';
-	code += '</div></div></div><div class="row newsfeed--persons"><div class="col-sm-12">';
+	code += '</div><div id="more--info--modal" hidden><p><h4>  More information about the problem: </h4> '+list.moreinfo_concern+'</br></br><h4> More information about the proposal: </h4>'+list.moreinfo_proposal+'</p></div></div></div><div class="row newsfeed--persons"><div class="col-sm-12">';
 	code += '<div class="col-sm-1" style="padding:0;"><img src="/static/images/check-small.png"></div>';
 	code += '<div class="col-sm-11 newsfeed--likes"><ul>';
 	if(list.supporters.length > 0){
@@ -176,3 +176,13 @@ function showIdeas(list, index){
 	
 	$('#home--proposals').append(code);
 }
+var left = 1;
+    $(document).on('click', '.neewsfeed--moreinfo', function(){
+    if(left == 1){
+      $(this).next('div').show('slow'); 
+      left = 0;
+    } else{
+      left = 1;
+        $(this).next('div').hide('slow');
+    } 
+}); 

@@ -115,6 +115,7 @@ function showContent(id){
   $('.newsfeed--goals p').empty().append(list[id].supporters_num+"/"+list[id].supporters_goal_num+" supporters goals<br>"+list[id].volunteers_num+"/"+list[id].volunteers_goal_num+" volunteers goals");
   $('.newsfeed--problem').empty().append(list[id].concern);
   $('.newsfeed--proposal').empty().append(list[id].proposal);
+  $('.modal--info').append('<div id="more--info--modal" hidden><p><h4>  More information about the problem: </h4> '+list[id].moreinfo_concern+'</br></br><h4> More information about the proposal: </h4>'+list[id].moreinfo_proposal+'</p></div>');
   var total = ((list[id].supporters.length * 100) / (list[id].supporters.length + list[id].rejectors.length));
   if((list[id].supporters.length + list[id].rejectors.length) == 0)
     total = 0;
@@ -208,3 +209,16 @@ function removeElementFromList(id){
     }, 6000);
   }
 }
+$(document).ready(function(){
+  var left = 1;
+  $('.neewsfeed--moreinfo').on('click', function(){
+    if(left == 1){
+      $(this).next('div').show('slow'); 
+      left = 0;
+    } else{
+      left = 1;
+      $(this).next('div').hide('slow');
+    } 
+}); 
+});
+
