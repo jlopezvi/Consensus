@@ -18,7 +18,8 @@ $(document).ready( function() {
 		url: url[0] + "//" + url[2] + '/get_ideas_data_created_by_participant/'+current_email,
 		type: 'GET',
 		success: function (json) {	
-			
+			list = json.ideas_data[0];
+			console.log(list);
 			var newIdea = '';
 			var url_new = url[0] +'//'+ url[2] +'/static/';
 			for (var i = 0; i < json.ideas_data.length; i++) {						
@@ -35,7 +36,7 @@ $(document).ready( function() {
 				newIdea += '<br>'+json.ideas_data[i].volunteers_num+'/'+json.ideas_data[i].volunteers_goal_num+' volunteers goals</p></div></div>';
 				newIdea += '<div class="row home--proposals--body" style="background-image: url('+json.ideas_data[i].image_url+');"><div class="col-sm-12">';
 				newIdea += '<div class="col-sm-8 newsfeed--problem">'+json.ideas_data[i].concern+'</div></div><div class="col-sm-12" style="margin-top: 180px;">';
-				newIdea += '<div class="col-sm-8 col-sm-offset-4 newsfeed--proposal">'+json.ideas_data[i].proposal+'</div></div></div>';
+				newIdea += '<div class="col-sm-8 col-sm-offset-4 newsfeed--proposal">'+json.ideas_data[i].proposal+'</div></div></div> <input type="hidden" value="'+json.ideas_data[i].idea_id+'" id="idea__id">';
 				newIdea += '<div class="row newsfeed--footer"><div class="col-sm-12" style="padding-right: 0px; padding-left: 0px;"><div class="col-sm-1 redflag--img">';
 				newIdea += '<img src="'+url_new+'images/redflag.png"></div><div class="col-sm-9 newsfeed--support" style="padding-right:0;padding-left:30px;">';
 				var rate = ((json.ideas_data[i].supporters_num) * 100 / (json.ideas_data[i].supporters_num + json.ideas_data[i].rejectors.length));
@@ -50,8 +51,8 @@ $(document).ready( function() {
 				newIdea += '<ul><a href="#" class="last--liked"><li>'+json.ideas_data[i].supporters_num+' people</li></a></ul></div></div>';
 				newIdea += '<div class="col-sm-12"><div class="col-sm-1" style="padding:0;"><img src="'+url_new+'images/x-small.png">';
 				newIdea += '</div><div class="col-sm-11 newsfeed--likes"><ul><a href="#" class="last--liked"><li>'+json.ideas_data[i].rejectors.length+' people</li></a></ul></div></div></div>';
-				newIdea += '<div class="row home--share"><div class="col-sm-12 home--share--icons"><div class="col-sm-6" style="padding:0;width: 100%;">';
-				newIdea += '<img class="icons" src="'+url_new+'images/x-icon.png" hidden><img class="icons" style="width: 50px;" src="'+url_new+'images/check-icon.png" hidden><img class="icons" style="width: 48px;" src="'+url_new+'images/checkmark.png" hidden>';
+				newIdea += '<div class="row home--share"><div class="col-sm-12 home--share--icons"><div class="col-sm-6" style="padding:0;width: 100%;"><input type="hidden" class="id" value="'+json.ideas_data[i].proposal+'">';
+				newIdea += '<img class="icons" src="'+url_new+'images/x-icon.png" id="rejected" hidden><img class="icons" style="width: 50px;" src="'+url_new+'images/check-icon.png" id="supported" hidden><img class="icons" style="width: 48px;" src="'+url_new+'images/checkmark.png" id="support__plus--button" hidden>';
 			    newIdea += '</div><div class="col-sm-6 home--followers" style="width: 100%;">';
 			    newIdea += '</div></div></div></div>';
 		    }
@@ -252,6 +253,51 @@ $(document).ready( function() {
     		window.location = '/participants/'+redirect;
 
     });
+    
+    $(document).on('click', '.icons', function(){
+    	var vote_ifvolunteered = false;
+    	var type = $(this).attr('id');
+       	if(type == 'support__plus--button'){
+        	vote_ifvolunteered = true;
+        	type = 'supported';
+      	}
+      	var id = $(this).parent().children('input').val();
+      	var data = {
+      		'idea_proposal': id,
+        	'vote_ifvolunteered': vote_ifvolunteered,
+        	'vote_type': type
+      	};
+      	$.ajax({
+        url: url[0] + "//" + url[2] + '/vote_on_idea',
+        type: 'POST',
+        data: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        dataType: 'json',
+        success: function(json){   	
+          		if(data.vote_type == 'supported' || data.vote_type == 'support__plus--button')
+          			var answer = 'Now you are supporting this idea!';
+       			else
+          			var answer = 'Idea rejected successfully!';
+        		if(json.result == 'OK: User vote was modified'){
+          			$('#invitation-modal-info h4.modal-title').empty().append('Operation Completed');
+          			$('#invitation-modal-info p#modal--invitation').empty().append(answer);       			
+        		} else if (json.result == 'Wrong: User vote exists of same type'){
+          			$('#invitation-modal-info h4.modal-title').empty().append('Error');
+          			$('#invitation-modal-info p#modal--invitation').empty().append('You can not vote the same for this idea.');
+        		}
+        		$('#invitation-modal-info').modal('toggle');
+          	
+        },
+        error: function(response){
+          console.log('error');
+          console.log(response);
+        }
+
+        });
+    });
+
 
 });
 
