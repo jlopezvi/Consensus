@@ -99,6 +99,7 @@ $(document).ready(function(){
 function showContent(id){
   $('#list__id').val(id);
   $('#idea__id').val(list[id].proposal);
+  console.log(list[id]);
   if(list[id].author_photo_url != ''){
     $('#picture__profile').attr('src', list[id].author_photo_url).show();
     $('#picture__profile').next().hide();
@@ -120,14 +121,11 @@ function showContent(id){
   $('.input--percent label').empty().append('Support Rate: '+Math.floor(total)+'%');
   /****************************************** Add Supporters to the Supporters List ****************************************/
   if(list[id].supporters.length > 0){
-    if(list[id].supporters.length == 1)
-      var endLoop = 0;
-    else if(list[id].supporters.length == 2)
-      var endLoop = 1;
-    else if(list[id].supporters.length == 2)
-      var endLoop = 2;
-    for(var i =0; i<=endLoop; i++){
-      $('#newsfeed--supporters ul').empty().append("<a href='#'><li>"+list[id].supporters[i].username+"</li></a>");
+    cont = 1;
+    for(var i =0; i<list[id].supporters.length; i++){
+      if(cont <= 3)
+        $('#newsfeed--supporters ul').empty().append("<a href='#'><li>"+list[id].supporters[i].username+"</li></a>");
+      cont++;
     }
   }
   if(list[id].supporters.length > 3){
@@ -137,15 +135,12 @@ function showContent(id){
     $('#newsfeed--supporters ul').empty().append("<a href='#' class='last--liked'><li>0 people</li></a>");
   }
   /****************************************** Add Supporters to the Supporters List ****************************************/
-  if(list[id].supporters.rejectors > 0){
-    if(list[id].rejectors.length == 1)
-      var endLoop = 0;
-    else if(list[id].rejectors.length == 2)
-      var endLoop = 1;
-    else if(list[id].rejectors.length == 2)
-      var endLoop = 2;
-    for(var i =0; i<=2; i++){
-      $('#newsfeed--rejectors ul').empty().append("<a href='#'><li>"+list[id].rejectors[i].username+"</li></a>");
+  if(list[id].rejectors.length > 0){
+    cont = 1;
+    for(var i=0; i<list[id].rejectors.length; i++){
+      if(cont <= 3)
+        $('#newsfeed--rejectors ul').empty().append("<a href='#'><li>"+list[id].rejectors[i].username+"</li></a>");
+      cont++;
     }
   }
   if(list[id].rejectors.length > 3){
