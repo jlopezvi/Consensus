@@ -1424,4 +1424,10 @@ a.add--proposal--provisional {
     margin: 10px;
     width: 48%;
 }
+.progress-bar {
+    background-image: -webkit-linear-gradient(top,#bfff00 0,#9fcb1b 100%)!important;
+    background-image: -o-linear-gradient(top,#bfff00 0,#9fcb1b 100%)!important;
+    background-image: -webkit-gradient(linear,left top,left bottom,from(#bfff00),to(#9fcb1b))!important;
+    background-image: linear-gradient(to bottom,#bfff00 0,#9fcb1b 100%)!important;
+}
 /***** END NEW STILES ******************/
