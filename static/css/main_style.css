@@ -487,7 +487,7 @@ body.modal-open {
 }
 .home--button {
     padding: 4px 10px;
-    margin-left: -10px;
+    margin-left: -18px;
     background-image: url("/static/images/more-info.png");
 	background-size: contain;
 	background-repeat: no-repeat;
@@ -499,8 +499,9 @@ body.modal-open {
     margin-bottom: 13px;
 }
 .home--followers {
-	padding-top: 20px;
-	display: inline-block;
+	top: 15px;
+    display: inline-block;
+    right: -50px;
 }
 .home--followers p{
 	display: inline-block;
@@ -510,6 +511,7 @@ body.modal-open {
 }
 .home--share--icons img{
 	width: 60px;
+	cursor: pointer;
 }
 .home--share--icons {
 	padding-left: 0;
@@ -1417,5 +1419,9 @@ a.add--proposal--provisional {
 }
 .vote__idea--button{
 	cursor: pointer;
+}
+.home--content--proposal {
+    margin: 10px;
+    width: 48%;
 }
 /***** END NEW STILES ******************/

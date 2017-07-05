@@ -2,6 +2,22 @@
 
 {% block content %}
 <div class="row home--content--logged">
+	
+	<!-- Modal -->
+    <div class="modal fade" id="invitation-modal-info" role="dialog">
+        <div class="modal-dialog modal-sm" style="margin-top:100px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body">
+                    <p id="modal--invitation"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+	
 	<div class="col-sm-12 home--voted">
 		<div class="col-sm-3" style="padding-right:0;width: 320px;">
 			<h2>You Voted:</h2>	<br>
@@ -16,7 +32,12 @@
 		</div>
 	</div>
 	
-	<div id="home--proposals"></div>
+	<div class="spinner" style="right:50%;top:25%;position:absolute;">
+        <div class="dot1"></div>
+        <div class="dot2"></div>
+    </div>
+	
+	<div id="home--proposals" hidden></div>
 	{% for person_h in persons_home %}
 	<div class="col-sm-6 home--content--proposal">
 		<div class="row home--header">
