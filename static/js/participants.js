@@ -53,7 +53,7 @@ $(document).ready( function() {
 				newIdea += '</div><div class="col-sm-11 newsfeed--likes"><ul><a href="#" class="last--liked"><li>'+json.ideas_data[i].rejectors.length+' people</li></a></ul></div></div></div>';
 				newIdea += '<div class="row home--share"><div class="col-sm-12 home--share--icons"><div class="col-sm-6" style="padding:0;width: 100%;"><input type="hidden" class="id" value="'+json.ideas_data[i].proposal+'">';
 				newIdea += '<img class="icons" src="'+url_new+'images/x-icon.png" id="rejected" hidden><img class="icons" style="width: 50px;" src="'+url_new+'images/check-icon.png" id="supported" hidden><img class="icons" style="width: 48px;" src="'+url_new+'images/checkmark.png" id="support__plus--button" hidden>';
-			    newIdea += '</div><div class="col-sm-6 home--followers" style="width: 100%;">';
+			    newIdea += '</div><div class="col-sm-6 home--followers hidden" style="width: 100%;">';
 			    newIdea += '</div></div></div></div>';
 		    }
 		    if (json.ideas_data.length != 0) {

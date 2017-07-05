@@ -172,7 +172,7 @@ function showIdeas(list, index){
 	code += '<img src="/static/images/x-icon.png" class="home--share--button" id="rejected">';
 	code += '<img style="width: 50px;" src="/static/images/check-icon.png" class="home--share--button" id="supported">';
 	code += '<img style="width: 48px;" src="/static/images/checkmark.png" class="home--share--button" id="supported-plus">';
-	code += '</div><div class="col-sm-6 home--followers"><i class="fa fa-share-alt"></i><p>Share with: followers</p></div></div></div></div>';
+	code += '</div><div class="col-sm-6 home--followers hidden"><i class="fa fa-share-alt"></i><p>Share with: followers</p></div></div></div></div>';
 	
 	$('#home--proposals').append(code);
 }
