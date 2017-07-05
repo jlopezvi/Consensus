@@ -276,14 +276,18 @@ $(document).ready( function() {
         },
         dataType: 'json',
         success: function(json){   	
-          		if(data.vote_type == 'supported' || data.vote_type == 'support__plus--button')
+          		if(data.vote_type == 'supported' )
           			var answer = 'Now you are supporting this idea!';
        			else
           			var answer = 'Idea rejected successfully!';
         		if(json.result == 'OK: User vote was modified'){
           			$('#invitation-modal-info h4.modal-title').empty().append('Operation Completed');
           			$('#invitation-modal-info p#modal--invitation').empty().append(answer);       			
-        		} else if (json.result == 'Wrong: User vote exists of same type'){
+        		} else if (json.result == 'OK: User vote was created'){
+        			$('#invitation-modal-info h4.modal-title').empty().append('Operation Completed');
+          			$('#invitation-modal-info p#modal--invitation').empty().append(answer); 
+        		}
+        		else if (json.result == 'Wrong: User vote exists of same type'){
           			$('#invitation-modal-info h4.modal-title').empty().append('Error');
           			$('#invitation-modal-info p#modal--invitation').empty().append('You can not vote the same for this idea.');
         		}
