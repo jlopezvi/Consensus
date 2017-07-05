@@ -448,6 +448,7 @@ body.modal-open {
 .newsfeed--followers {
 	padding-top: 20px;
 	display: inline-block;
+    text-align: right;
 }
 .newsfeed--followers p{
 	display: inline-block;
