@@ -169,7 +169,7 @@ def get_idea_data_aux(idea):
     return idea_data
 
 
-#used by get_idea_data_aux
+# <used by get_idea_data_aux> [0]->supporters, [1]->rejectors, [2]->passives, [3]->volunteers
 def _get_vote_statistics_for_idea(idea_index):
     idea=_getIdeaByIdeaIndex(idea_index)
     rejectors_num=0
@@ -183,7 +183,7 @@ def _get_vote_statistics_for_idea(idea_index):
             rejectors_num+=1
         elif vote_rel["type"] == "ignored":
             passives_num+=1
-        if vote_rel["volunteered"] == True:
+        if vote_rel["ifvolunteered"] == True:
            volunteers_num+=1
     return (supporters_num, rejectors_num, passives_num, volunteers_num)
 
@@ -203,7 +203,7 @@ def _get_volunteers_emails_for_idea_aux(idea_index):
     idea=_getIdeaByIdeaIndex(idea_index)
     volunteers_emails = []
     vote_rels = list(getGraph().match(end_node=idea, rel_type="VOTED_ON"))
-    volunteer_rels = [x for x in vote_rels if x["volunteered"] == True]
+    volunteer_rels = [x for x in vote_rels if x["ifvolunteered"] == True]
     volunteers = [x.start_node for x in volunteer_rels]
     for volunteer in volunteers:
         volunteers_emails.append(volunteer['email'])
@@ -260,42 +260,35 @@ def vote_on_idea_aux(user_email, inputdict):
     vote_type=inputdict['vote_type']
     vote_ifvolunteered=inputdict['vote_ifvolunteered']
     vote_timestamp=(datetime.now()).strftime("%d.%m.%Y")
-    supporters_num= _get_vote_statistics_for_idea(idea_index)[0]
-    voters_num = len(list(getGraph().match(end_node=idea, rel_type="VOTED_ON")))
-    if voters_num == 0:
-        support_rate = 100
+    previous_supporters_num= _get_vote_statistics_for_idea(idea_index)[0]
+    previous_rejectors_num = _get_vote_statistics_for_idea(idea_index)[1]
+    previous_activevoters_num = previous_supporters_num + previous_rejectors_num
+    # previous support rate
+    if previous_activevoters_num == 0:
+        previous_support_rate = 100
     else:
-        support_rate = (supporters_num / voters_num)*100
-    if support_rate < SUPPORT_RATE_MIN:
-        support = False
+        previous_support_rate = (previous_supporters_num / previous_activevoters_num)*100
+    if previous_support_rate < SUPPORT_RATE_MIN:
+        if_previous_support_rate_OK = False
     else:
-        support = True
+        if_previous_support_rate_OK = True
+    #
     if _if_voting_relationship_exists(user, idea):
         if _if_voting_relationship_exists_of_given_type(user, idea, vote_type, vote_ifvolunteered):
             return jsonify({"result": "Wrong: User vote exists of same type"})
-        else:
-            response = _create_or_modify_voting_relationship_to_given_type(user, idea, vote_type, vote_ifvolunteered, vote_timestamp)
-            supporters_num= _get_vote_statistics_for_idea(idea_index)[0]
-            volunteers_num=_get_vote_statistics_for_idea(idea_index)[3]
-            support_rate = (supporters_num / voters_num)*100
-            print (support_rate)
-            if support_rate < SUPPORT_RATE_MIN and support == True:
-                _do_tasks_for_idea_failurewarning(idea_index)
-            if supporters_num >= (idea['supporters_goal_num']) and volunteers_num >= (idea['supporters_goal_num']):
-                _do_tasks_for_idea_successful(idea_index)
-            return response
     else:
         response = _create_or_modify_voting_relationship_to_given_type(user, idea, vote_type, vote_ifvolunteered, vote_timestamp)
         supporters_num = _get_vote_statistics_for_idea(idea_index)[0]
-        volunteers_num =_get_vote_statistics_for_idea(idea_index)[3]
-        support_rate = (supporters_num / voters_num)*100 if voters_num is not 0 else 100
-        if support_rate < SUPPORT_RATE_MIN and support == True:
+        rejectors_num =  _get_vote_statistics_for_idea(idea_index)[1]
+        activevoters_num = supporters_num + rejectors_num
+        volunteers_num = _get_vote_statistics_for_idea(idea_index)[3]
+        support_rate = (supporters_num / activevoters_num)*100 if activevoters_num is not 0 else 100
+        # TODO: further condition for failure warning, it should not be re-fired before two days from the previous one.
+        if support_rate < SUPPORT_RATE_MIN and if_previous_support_rate_OK is True:
             _do_tasks_for_idea_failurewarning(idea_index)
         if supporters_num >= (idea['supporters_goal_num']) and volunteers_num >= (idea['supporters_goal_num']):
             _do_tasks_for_idea_successful(idea_index)
         return response
-
-
 
 
 ####################
