@@ -49,10 +49,16 @@ $(document).ready( function() {
 				newIdea += '<input type="button" name="more-info" class="home--button"></div><div id="more--info--modal" hidden><p><h4>  More information about the problem: </h4> '+json.ideas_data[i].moreinfo_concern+'</br></br><h4> More information about the proposal: </h4>'+json.ideas_data[i].moreinfo_proposal+'</p></div></div></div>';
 				newIdea += '<div class="row newsfeed--persons"><div class="col-sm-12"><div class="col-sm-1" style="padding:0;">';
 				newIdea += '<img src="'+url_new+'images/check-small.png"></div><div class="col-sm-11 newsfeed--likes">';
-				newIdea += '<ul><a href="#" class="last--liked"><li>'+json.ideas_data[i].supporters_num+' people</li></a></ul></div></div>';
+				newIdea += '<ul class="ul--liked"><a href="#" class="last--liked"><li>'+json.ideas_data[i].supporters_num+' people</li></a></ul></div></div>';
 				newIdea += '<div class="col-sm-12"><div class="col-sm-1" style="padding:0;"><img src="'+url_new+'images/x-small.png">';
-				newIdea += '</div><div class="col-sm-11 newsfeed--likes"><ul><a href="#" class="last--liked"><li>'+json.ideas_data[i].rejectors.length+' people</li></a></ul></div></div></div>';
-				newIdea += '<div class="row home--share"><div class="col-sm-12 home--share--icons"><div class="col-sm-6" style="padding:0;width: 100%;"><input type="hidden" class="id" value="'+json.ideas_data[i].proposal+'">';
+				newIdea += '</div><div class="col-sm-11 newsfeed--likes"><ul class="ul--disliked"><a href="#" class="last--liked"><li>'+json.ideas_data[i].rejectors.length+' people</li></a></ul></div></div></div>';
+				newIdea += '<div class="row home--share"><div class="col-sm-12 home--share--icons">';
+				newIdea += '<input type="hidden" class="supporters--input" value="'+json.ideas_data[i].supporters_num+'">';
+				newIdea += '<input type="hidden" class="volunteers--input" value="'+json.ideas_data[i].volunteers_num+'">';
+				newIdea += '<input type="hidden" class="rejectors--input" value="'+json.ideas_data[i].rejectors.length+'">';
+				newIdea += '<input type="hidden" class="supporters--goal--input" value="'+json.ideas_data[i].supporters_goal_num+'">';
+				newIdea += '<input type="hidden" class="volunteers--goal--input" value="'+json.ideas_data[i].volunteers_goal_num+'">';
+				newIdea += '<div class="col-sm-6" style="padding:0;width: 100%;"><input type="hidden" class="id" value="'+json.ideas_data[i].proposal+'">';
 				newIdea += '<img class="icons" src="'+url_new+'images/x-icon.png" id="rejected" hidden><img class="icons" style="width: 50px;" src="'+url_new+'images/check-icon.png" id="supported" hidden><img class="icons" style="width: 48px;" src="'+url_new+'images/checkmark.png" id="support__plus--button" hidden>';
 			    newIdea += '</div><div class="col-sm-6 home--followers hidden" style="width: 100%;">';
 			    newIdea += '</div></div></div></div>';
@@ -255,7 +261,9 @@ $(document).ready( function() {
 
     });
     
+    
     $(document).on('click', '.icons', function(){
+    	var element = $(this);
     	var vote_ifvolunteered = false;
     	var type = $(this).attr('id');
        	if(type == 'support__plus--button'){
@@ -277,22 +285,44 @@ $(document).ready( function() {
         },
         dataType: 'json',
         success: function(json){   	
-          		if(data.vote_type == 'supported' )
-          			var answer = 'Now you are supporting this idea!';
-       			else
-          			var answer = 'Idea rejected successfully!';
-        		if(json.result == 'OK: User vote was modified'){
-          			$('#invitation-modal-info h4.modal-title').empty().append('Operation Completed');
-          			$('#invitation-modal-info p#modal--invitation').empty().append(answer);       			
-        		} else if (json.result == 'OK: User vote was created'){
-        			$('#invitation-modal-info h4.modal-title').empty().append('Operation Completed');
-          			$('#invitation-modal-info p#modal--invitation').empty().append(answer); 
-        		}
-        		else if (json.result == 'Wrong: User vote exists of same type'){
-          			$('#invitation-modal-info h4.modal-title').empty().append('Error');
-          			$('#invitation-modal-info p#modal--invitation').empty().append('You can not vote the same for this idea.');
-        		}
-        		$('#invitation-modal-info').modal('toggle');
+        	var div_header = element.parent().parent().parent().siblings('.home--header');
+        	var div_persons = element.parent().parent().parent().siblings('.newsfeed--persons');
+      		if(data.vote_type == 'supported' ){
+      			var answer = 'Now you are supporting this idea!';
+      			if (json.result != 'Wrong: User vote exists of same type'){
+      				var volunt = parseInt(element.parent().parent().children('input.volunteers--input').val());
+      				if(vote_ifvolunteered){
+      					var volunt_goal = element.parent().parent().children('input.volunteers--goal--input').val();
+      					volunt += 1;
+      					var volunt_percent = ((volunt*100)/volunt_goal)+'%';
+      					div_header.children('.home--charge').children('.home--progress2').children('div').attr('style', '').css('width', volunt_percent);
+      				}
+      				var support_goal = element.parent().parent().children('input.supporters--goal--input').val();
+  					var support = parseInt(element.parent().parent().children('input.supporters--input').val()) + 1;
+  					var support_percent = ((support*100)/support_goal)+'%';
+  					div_header.children('.home--charge').children('.home--progress').children('div').attr('style', '').css('width', support_percent);
+  					div_header.children('.newsfeed--goals').children('p').empty().append(support+'/200 supporters goals<br>'+volunt+'/14 volunteers goals');
+      				div_persons.find('.newsfeed--likes ul.ul--liked a.last--liked li').empty().append(support+' people');
+      			}
+      		} else {
+      			var answer = 'Idea rejected successfully!';
+      			if (json.result != 'Wrong: User vote exists of same type'){
+      				var volunt = parseInt(element.parent().parent().children('input.volunteers--input').val()) + 1;
+      				div_persons.find('.newsfeed--likes ul.ul--disliked a.last--liked li').empty().append(volunt+' people');
+      			}
+      		}
+    		if(json.result == 'OK: User vote was modified'){
+      			$('#invitation-modal-info h4.modal-title').empty().append('Operation Completed');
+      			$('#invitation-modal-info p#modal--invitation').empty().append(answer);       			
+    		} else if (json.result == 'OK: User vote was created'){
+    			$('#invitation-modal-info h4.modal-title').empty().append('Operation Completed');
+      			$('#invitation-modal-info p#modal--invitation').empty().append(answer); 
+    		}
+    		else if (json.result == 'Wrong: User vote exists of same type'){
+      			$('#invitation-modal-info h4.modal-title').empty().append('Error');
+      			$('#invitation-modal-info p#modal--invitation').empty().append('You can not vote the same for this idea.');
+    		}
+    		$('#invitation-modal-info').modal('toggle');
           	
         },
         error: function(response){
