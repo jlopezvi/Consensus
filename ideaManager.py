@@ -35,10 +35,16 @@ def add_idea_to_user_aux(user_email, idea_dict, ideapic_file_body):
                                   "moreinfo_concern": idea_dict.get('moreinfo_concern'),
                                   "moreinfo_proposal": idea_dict.get('moreinfo_proposal'),
                                   "supporters_goal_num": idea_dict.get('supporters_goal_num'),
-                                  "volunteers_goal_num": idea_dict.get('volunteers_goal_num')})
+                                  "volunteers_goal_num": idea_dict.get('volunteers_goal_num'),
+                                  "if_author_public": idea_dict.get('if_author_public')})
     newidea.add_labels("idea")
     _addIdeaToIndex(newidea_index, newidea)
     getGraph().create((user, "CREATED", newidea, {"timestamp":timestamp}))
+    # first receivers
+    first_receivers = map(_get_participant_node, idea_dict.get('first_receivers_emails'))
+    for participant in first_receivers:
+        getGraph().create((newidea, "GOES FIRST TO", participant))
+    #
     return jsonify({"result":"OK", "result_msg":"added idea to database"})
 
 
@@ -276,19 +282,18 @@ def vote_on_idea_aux(user_email, inputdict):
     if _if_voting_relationship_exists(user, idea):
         if _if_voting_relationship_exists_of_given_type(user, idea, vote_type, vote_ifvolunteered):
             return jsonify({"result": "Wrong: User vote exists of same type"})
-    else:
-        response = _create_or_modify_voting_relationship_to_given_type(user, idea, vote_type, vote_ifvolunteered, vote_timestamp)
-        supporters_num = _get_vote_statistics_for_idea(idea_index)[0]
-        rejectors_num =  _get_vote_statistics_for_idea(idea_index)[1]
-        activevoters_num = supporters_num + rejectors_num
-        volunteers_num = _get_vote_statistics_for_idea(idea_index)[3]
-        support_rate = (supporters_num / activevoters_num)*100 if activevoters_num is not 0 else 100
-        # TODO: further condition for failure warning, it should not be re-fired before two days from the previous one.
-        if support_rate < SUPPORT_RATE_MIN and if_previous_support_rate_OK is True:
-            _do_tasks_for_idea_failurewarning(idea_index)
-        if supporters_num >= (idea['supporters_goal_num']) and volunteers_num >= (idea['supporters_goal_num']):
-            _do_tasks_for_idea_successful(idea_index)
-        return response
+    response = _create_or_modify_voting_relationship_to_given_type(user, idea, vote_type, vote_ifvolunteered, vote_timestamp)
+    supporters_num = _get_vote_statistics_for_idea(idea_index)[0]
+    rejectors_num =  _get_vote_statistics_for_idea(idea_index)[1]
+    activevoters_num = supporters_num + rejectors_num
+    volunteers_num = _get_vote_statistics_for_idea(idea_index)[3]
+    support_rate = (supporters_num / activevoters_num)*100 if activevoters_num is not 0 else 100
+    # TODO: further condition for failure warning, it should not be re-fired before two days from the previous one.
+    if support_rate < SUPPORT_RATE_MIN and if_previous_support_rate_OK is True:
+        _do_tasks_for_idea_failurewarning(idea_index)
+    if supporters_num >= (idea['supporters_goal_num']) and volunteers_num >= (idea['supporters_goal_num']):
+        _do_tasks_for_idea_successful(idea_index)
+    return response
 
 
 ####################
@@ -302,7 +307,7 @@ def _if_voting_relationship_exists(participant, idea):
     else: return False
 
 
-#vote_ifvolunteered = True / False / 'all'   ('all' is default)
+# vote_ifvolunteered = True / False / 'all'   ('all' is default)
 def _if_voting_relationship_exists_of_given_type(participant, idea, vote_type, vote_ifvolunteered ='all'):
     voting_rel = getGraph().match_one(start_node=participant, rel_type="VOTED_ON", end_node=idea)
     if voting_rel is not None:
