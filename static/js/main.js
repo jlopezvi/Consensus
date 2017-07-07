@@ -44,21 +44,41 @@ $(document).ready(function(){
     fData.append('volunteers_goal_num', $('#volunteers_goal_num').val());
     fData.append('supporters_goal_num', 200);
     
+    if ($('input[name=proposal-anon]').is(":checked"))
+        opt = true;
+    else
+        opt = false;
+    fData.append('if_author_public', opt);
+    
+    var first_receivers_emails = [];
+    var list_followers = $('#addpro ul').find('input[type=checkbox]');
+    for(var i=0; i< list_followers.length; i++){
+    	if(list_followers[i].checked)
+    	  first_receivers_emails.push(list_followers[i].value);
+    }
+    fData.append('first_receivers_emails', first_receivers_emails);
+    
     if($('#fileUpload').val() != '')
       fData.append('fileUpload', $('#fileUpload')[0].files[0]);
-    var img = $('#fileUpload').val();
+    //var img = $('#fileUpload').val();
+    
+    for (var pair of fData.entries()) {
+      console.log(pair[0]+ ', ' + pair[1]); 
+    }
+    
     $.ajax({
       url: url[0] + "//" + url[2] + '/add_idea_to_user',
       type: 'POST',
-      data: fData,
-      processData: false,
-      contentType: false,
+      data: fData,
+      processData: false,
+      contentType: false,
       success: function (json) {
         alert(json.result_msg);
-        window.location = '../home';
+        //window.location = '../home';
       },
       error: function(response){
-        
+        console.log('Error');
+        console.log(response);
       }
     });
   });
@@ -72,7 +92,7 @@ $(document).ready(function(){
         if(json.followers_num > 0){
           followerproposal = '';  
           for(var i = 0; i < json.followers_num; i++){
-            followerproposal += '<li><input class="checkbox check--followers" type="checkbox" name="check[]">';
+            followerproposal += '<li><input class="checkbox check--followers" type="checkbox" name="check[]" value="'+json.followers_info[i].email+'">';
             followerproposal += '<img src="'+json.followers_info[i].profilepic_url+'">';
             followerproposal += '<p><a href="#">'+json.followers_info[i].username+'</a>';
             followerproposal += '<br>'+json.followers_info[i].fullname+'</p></li>';

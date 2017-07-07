@@ -19,7 +19,7 @@ $(document).ready( function() {
 		type: 'GET',
 		success: function (json) {	
 			list = json.ideas_data[0];
-			console.log(list);
+			//console.log(list);
 			var newIdea = '';
 			var url_new = url[0] +'//'+ url[2] +'/static/';
 			for (var i = 0; i < json.ideas_data.length; i++) {						
