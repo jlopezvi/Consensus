@@ -425,7 +425,7 @@ def remove_notification_from_participant1_to_participant2():
 #       	                moreinfo_concern=I have to say as well this and this and this about the concern...&
 #                           moreinfo_proposal=I have to say as well this and this and this about the proposal...&
 #                           supporters_goal_num=500&volunteers_goal_num=5
-#                           &if_author_public=True/False&first_receivers_emails=[asdf@asd.com, bdsd@sds.com]
+#                           &if_author_public=True/False&first_receivers_emails=asdf@asd.com bdsd@sds.com dssa@gmail.com
 #    output: json {"result":"OK", "result_msg":"added idea to database"}
 #                 {"result":"Wrong", "result_msg":"proposal already exists"}
 @app.route('/add_idea_to_user', methods=['POST'])
@@ -442,6 +442,7 @@ def add_idea_to_user(user_email_DEBUG=None) :
     if 'volunteers_goal_num' in idea_dict: idea_dict['volunteers_goal_num'] = int(idea_dict.get('volunteers_goal_num'))
     if idea_dict['if_author_public'] == 'True': idea_dict['if_author_public'] = True
     if idea_dict['if_author_public'] == 'False': idea_dict['if_author_public'] = False
+    idea_dict['first_receivers_emails'] = idea_dict['first_receivers_emails'].split()
     #
     if 'fileUpload' in request.files:
         ideapic_file_body = request.files['fileUpload']
