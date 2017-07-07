@@ -15,7 +15,7 @@
 	<title>Consensus</title>
 </head>
 <body class="container">
-
+    
     <nav class="navbar navbar-fixed-top nav--style">
     <div class="menu--mobile--icon"><span class="glyphicon glyphicon-menu-hamburger"></span></div>
     <a href="#" data-toggle="modal" data-target="#modal_proposal1" class="add--proposal--button"></a>
@@ -47,7 +47,7 @@
             <div class="modal-body">
               <p style="font-size: 16px;">Are you sure you want to end session?</p>
             </div>
-            <div class="modal-footer" style="height:40px;">
+            <div class="modal-footer" style="height:50px;">
               <button type="button" id="accept__logout">Accept</button>
               <button type="button" data-dismiss="modal">Cancel</button>
             </div>
@@ -142,8 +142,8 @@
                         <a href="#" id="select_all">All</a> | 
                         <a href="#" id="select_none">None</a>
                     </p>
-                    <div id="addpro" class="list-to-proposal col-xs-12">
-                        <ul class="addproposal--step2">
+                    <div  class="list-to-proposal col-xs-12">
+                        <ul id="addpro" class="addproposal--step2">
                             
                         </ul>
                         
@@ -207,7 +207,26 @@
       </div>
     </div>
     <!--  ************************** ADD PROPOSAL 3 ******************-->
-
+    <div class="modal fade" id="redflag-modal" role="dialog">
+        <div class="modal-dialog modal-md" style="margin-top:100px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <center><h4 class="modal-title"> Why do you want to redflag this proposal? </h4></center>
+                </div>
+                <div class="modal-body">
+                    <center><textarea rows="4" cols="50" class="max-area">  </textarea>
+                    <p> Your reasons will transmitted to all the supporters with your name.</p>
+                    <p>The proposal will be deleted immediately </p></center></br></br>        
+                </div>
+                <div class="modal-footer" style="height:40px;">
+                    <button type="button" id="accept__logout">Accept</button>
+                    <button type="button" data-dismiss="modal">Go back</button>
+                </div>
+            </div>
+        </div>
+    </div>
+   
     {% block content %}
     
     {% endblock %}

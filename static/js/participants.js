@@ -39,7 +39,7 @@ $(document).ready( function() {
 				newIdea += '<div class="col-sm-8 newsfeed--problem">'+json.ideas_data[i].concern+'</div></div><div class="col-sm-12" style="margin-top: 180px;">';
 				newIdea += '<div class="col-sm-8 col-sm-offset-4 newsfeed--proposal">'+json.ideas_data[i].proposal+'</div></div></div> <input type="hidden" value="'+json.ideas_data[i].idea_id+'" id="idea__id">';
 				newIdea += '<div class="row newsfeed--footer"><div class="col-sm-12" style="padding-right: 0px; padding-left: 0px;"><div class="col-sm-1 redflag--img">';
-				newIdea += '<img src="'+url_new+'images/redflag.png"></div><div class="col-sm-9 newsfeed--support" style="padding-right:0;padding-left:30px;">';
+				newIdea += '<img id="redflag" src="'+url_new+'images/redflag.png"></div><div class="col-sm-9 newsfeed--support" style="padding-right:0;padding-left:30px;">';
 				var rate = ((json.ideas_data[i].supporters_num) * 100 / (json.ideas_data[i].supporters_num + json.ideas_data[i].rejectors.length));
 				if (json.ideas_data[i].supporters_num + json.ideas_data[i].rejectors.length == 0) {
 					rate = 0
@@ -83,6 +83,7 @@ $(document).ready( function() {
               		$(this).next('div').hide('slow');
         		}	
    			});	
+   			
 		}	
 	});
 	
@@ -411,8 +412,7 @@ function change_view(view){
 }
 
 
-$(document).ready(function(){
-
+$(document).ready(function(){	
     $('#unfollow-parti').on('click',function(){
         var selected = '';    
         $('#following li input[type=checkbox]').each(function(){
@@ -481,6 +481,7 @@ $(document).ready(function(){
 			}
         }); 
     });  
+
 
 });   
 

@@ -139,6 +139,9 @@ $(document).ready(function(){
       } 
     });
   });
+  $(document).on('click', '#redflag', function(){
+    $('#redflag-modal').modal('toggle');
+  });
 
 });
 

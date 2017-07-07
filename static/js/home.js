@@ -128,7 +128,7 @@ function showIdeas(list, index){
 	code += '</div><div class="col-sm-12" style="margin-top: 180px;"><div class="col-sm-8 col-sm-offset-4 newsfeed--proposal">'+list.proposal+'</div></div>';
 	code += '</div><div class="row newsfeed--footer">';
 	code += '<div class="col-sm-12" style="padding-right: 0px; padding-left: 0px;"><div class="col-sm-1 redflag--img">';
-	code += '<img src="/static/images/redflag.png"></div><div class="col-sm-9 newsfeed--support" style="padding-right:0;padding-left:30px;">';
+	code += '<img id="redflag" src="/static/images/redflag.png"></div><div class="col-sm-9 newsfeed--support" style="padding-right:0;padding-left:30px;">';
   var percent = (list.supporters.length * 100)/(list.supporters.length + list.rejectors.length);
   var total = Math.floor(percent);
 	code += '<div class="input--percent"><label>	Support Rate: '+total+'%</label></div>';

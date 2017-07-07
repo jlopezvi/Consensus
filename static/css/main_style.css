@@ -1247,6 +1247,38 @@ ul.nav-tabs li.active a:before {
 }
 /***** END OF PARTICIPANTS STYLE *******/
 /***** NEW STILES **********************/
+#redflag-modal div.modal-header,
+#logout__modal div.modal-header{
+	background-color: #205817;
+	color: #fff;	
+}
+#redflag-modal div.modal-footer button:nth-child(1){
+	color: #fff;
+    background-color: #205817;
+    border-color: #0a2d05;
+    width: 60px;
+    height: 25px;
+    top: -8px;
+    position: relative;
+}
+#redflag-modal div.modal-footer button:nth-child(2) {
+    color: #fff;
+    border-color: #b70a0a;
+    background-color: #b30707;
+    top: -8px;
+    position: relative;
+    width: 90px;
+    height: 25px;
+}
+.max-area{
+	height: 170px;
+	max-height: 180px;
+	max-width: 500px;
+}
+#redflag-modal div.modal-body{
+	height: 250px;
+}
+
 #invitation-modal-info div.modal-header,
 #logout__modal div.modal-header{
 	background-color: #205817;
