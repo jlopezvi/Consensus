@@ -15,7 +15,7 @@
 	<title>Consensus</title>
 </head>
 <body class="container">
-    
+    <input type="text" value="{{ message.user }}" hidden id="host_email">
     <nav class="navbar navbar-fixed-top nav--style">
     <div class="menu--mobile--icon"><span class="glyphicon glyphicon-menu-hamburger"></span></div>
     <a href="#" data-toggle="modal" data-target="#modal_proposal1" class="add--proposal--button"></a>
@@ -217,7 +217,7 @@
                 <div class="modal-body">
                     <center><textarea rows="4" cols="50" class="max-area">  </textarea>
                     <p> Your reasons will transmitted to all the supporters with your name.</p>
-                    <p>The proposal will be deleted immediately </p></center></br></br>        
+                    <p>The proposal will be deleted immediately </p></center></br></br>
                 </div>
                 <div class="modal-footer" style="height:40px;">
                     <button type="button" id="accept__logout">Accept</button>
@@ -226,7 +226,7 @@
             </div>
         </div>
     </div>
-   
+
     {% block content %}
     
     {% endblock %}

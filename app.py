@@ -100,7 +100,9 @@ def newsfeed():
 @flask_login.login_required
 #user_email=flask_login.current_user.id
 def home():
-    return render_template('home.html')
+    user_email = flask_login.current_user.id
+    message = {"user": user_email}
+    return render_template('home.html', message = message)
 
 
 @app.route('/participants')
