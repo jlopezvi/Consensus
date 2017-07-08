@@ -10,8 +10,8 @@ def getGraph():
         graph_db = neo4j.GraphDatabaseService('http://{host}:{port}/db/data'.format(host=graph_db_url.hostname, port=graph_db_url.port))
     else:
         # used by Nicol Ridente with local configuration
-        # neo4j.authenticate('{host}:{port}.format(host='localhost', port='7474'), 'neo4j', '0000')
-        graph_db = neo4j.GraphDatabaseService(‘http://localhost:7474/db/data')
+        # neo4j.authenticate('{host}:{port}'.format(host='localhost', port='7474'), 'neo4j', '0000')
+        graph_db = neo4j.GraphDatabaseService('http://localhost:7474/db/data')
     return graph_db
 
 

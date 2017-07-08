@@ -1,5 +1,5 @@
 from participantManager import _get_participant_node, _get_fullname_for_participant
-from ideaManager import get_idea_data_aux, remove_idea_aux
+from ideaManager import get_idea_data_aux, remove_idea_aux, _if_ideaisinfirstphase
 from utils import getGraph, send_email #, send_email_new
 from flask import jsonify, render_template, url_for
 from uuid_token import generate_confirmation_token, confirm_token
@@ -59,22 +59,40 @@ def registration_receive_emailverification_aux(token):
 
 def ideas_for_newsfeed_aux(user_email):
     user = _get_participant_node(user_email)
-    list_ideas = []
-    list_ideas_data = []
+    ideas = []
+    ideas_data = []
     followings = [x.end_node for x in list(getGraph().match(start_node=user, rel_type="FOLLOWS"))]
     if len(followings) is 0:
         return jsonify({"result": "OK", "data": []})
+    # ideas of followings that have created them
     for following in followings:
-        ideas = [x.end_node for x in list(getGraph().match(start_node=following, rel_type="CREATED"))]
-        if len(ideas) is 0:
+        ideas_created = [x.end_node for x in list(getGraph().match(start_node=following, rel_type="CREATED"))]
+        if len(ideas_created) is 0:
             continue
-        for idea in ideas:
-            if _if_isnewideaforparticipant(idea, user):
-                list_ideas.append(idea)
-    for idea in list_ideas:
+        for idea_created in ideas_created:
+            if _if_isnewideaforparticipant(idea_created, user):
+                if _if_ideaisinfirstphase(idea_created):
+                    if getGraph().match_one(start_node=idea_created, rel_type="GOES_FIRST_TO", end_node=user):
+                        ideas.append(idea_created)
+                else:
+                    ideas.append(idea_created)
+    # ideas of followings that have voted on them
+    for following in followings:
+        ideas_supported = [x.end_node for x in list(getGraph().match(start_node=following, rel_type="VOTED_ON")) if x["type"] == "supported"]
+        if len(ideas_supported) is 0:
+            continue
+        for idea_voted in ideas_supported:
+            if _if_isnewideaforparticipant(idea_voted, user) and \
+                    not getGraph().match_one(start_node=user, rel_type="CREATED", end_node=idea_voted):
+                if _if_ideaisinfirstphase(idea_voted):
+                    continue
+                else:
+                    ideas.append(idea_voted)
+    #
+    for idea in ideas:
         newfeed = get_idea_data_aux(idea)
-        list_ideas_data.append(newfeed)
-    return jsonify({"result": "OK", "data": list_ideas_data})
+        ideas_data.append(newfeed)
+    return jsonify({"result": "OK", "data": ideas_data})
 
 
 def ideas_for_home_aux(participant_email, vote_type):

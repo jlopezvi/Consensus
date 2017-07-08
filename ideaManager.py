@@ -353,6 +353,20 @@ def _get_ideas_data_created_by_participant(participant_email):
     return {'result': 'OK', 'ideas_data': ideas_data}
 
 
+def _if_ideaisinfirstphase(idea):
+    # if (one day has passed since creation of the idea) then False
+    # datetime_now = ((datetime.now()).strftime("%d.%m.%Y"))
+    datetime_ideacreation = datetime.strptime(getGraph().match_one(rel_type="CREATED", end_node=idea)["timestamp"], '%d.%m.%Y')
+    if ((datetime.now()) - datetime_ideacreation).days >= 1:
+        return False
+    # if (any of the first receivers has not voted) then True
+    idea_first_receivers = [x.end_node for x in list(getGraph().match(start_node=idea, rel_type="GOES_FIRST_TO"))]
+    for idea_first_receiver in idea_first_receivers:
+        if not getGraph().match_one(start_node=idea_first_receiver, rel_type="HAS_VOTED_ON", end_node=idea):
+            return True
+    # else False
+    return True
+
 
 ####################
 
