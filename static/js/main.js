@@ -98,7 +98,7 @@ $(document).ready(function(){
             followerproposal += '<br>'+json.followers_info[i].fullname+'</p></li>';
             
           }
-          $('#addpro ul').append(followerproposal);
+          $('#addpro').append(followerproposal);
           
         }
       } 
