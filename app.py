@@ -93,7 +93,9 @@ def hello(message=None):
 @flask_login.login_required
 #user_email=flask_login.current_user.id
 def newsfeed():
-    return render_template('login/newsfeed.html')
+    user_email = flask_login.current_user.id
+    message = {"user": user_email}
+    return render_template('login/newsfeed.html', message = message)
 
 
 @app.route('/home')
