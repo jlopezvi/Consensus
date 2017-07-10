@@ -126,8 +126,8 @@ def remove_user_aux(user_email) :
         for rel in list(getGraph().match(start_node=created_idea, bidirectional=True)):
             rel.delete()
         created_idea.delete()
-    for rel in list(getGraph().match(start_node=user, bidirectional=True)):
-        rel.delete()
+    for rel2 in list(getGraph().match(start_node=user, bidirectional=True)):
+        rel2.delete()
     user.delete()
     return jsonify({'result': 'OK'})
 
