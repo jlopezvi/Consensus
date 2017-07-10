@@ -615,7 +615,7 @@ def vote_on_idea(user_email_DEBUG = None):
 @app.route('/getConcerns/<string:current>', methods=['GET', 'OPTIONS'])
 def getConcerns(current):
     print (current)
-    return json.dumps(getAllConcerns(current))
+    # return json.dumps(getAllConcerns(current))
 
 
 ##### IDEA NOTIFICATIONS

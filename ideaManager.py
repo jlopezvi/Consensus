@@ -43,7 +43,7 @@ def add_idea_to_user_aux(user_email, idea_dict, ideapic_file_body):
     # first receivers
     first_receivers = map(_get_participant_node, idea_dict.get('first_receivers_emails'))
     for participant in first_receivers:
-        getGraph().create((newidea, "GOES FIRST TO", participant))
+        getGraph().create((newidea, "GOES_FIRST_TO", participant))
     #
     return jsonify({"result":"OK", "result_msg":"added idea to database"})
 
