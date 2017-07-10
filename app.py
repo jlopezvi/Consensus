@@ -225,7 +225,7 @@ def modify_user_data(user_email_DEBUG=None):
 
 
 # input:   user_email  (user logged in)
-# output: json {"result": "OK"/"Wrong"}
+# output: json {"result": "OK"}
 @app.route('/remove_user', methods=['DELETE'])
 @app.route('/remove_user/<user_email_DEBUG>', methods=['DELETE'])
 def remove_user(user_email_DEBUG=None) :
