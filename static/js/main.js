@@ -15,32 +15,15 @@ $(document).ready(function(){
 			$('.menu--mobile--icon').removeClass('open');
 		}
 	});
-  $('#next').on('click', function(){
-    if ( $('#concern').val() != "" && $('#proposal').val() != "" ) {
-      showModal('modal_proposal2');
-    }else{
-      if ($('#concern').val() == "") {
-        $('#concern').css("border-color", "red");
-      }else if ($('#proposal').val() == "") {
-        $('#proposal').css("border-color", "red");
-      }else{
-        $('#concern').css("border-color", "red");
-        $('#proposal').css("border-color", "red");
-      }   
-    }
+	  $('.next--proposal1').on('click',function(){
+    $('#modal_proposal1').css('visibility','hidden');
   });
-  
-  $('.next--proposal1').on('click',function(){
-    $('#modal_proposal1').css('visibility','hidden'); 
-  });
-
   /** check all ***/
   $('#select_all').on('click',function(){ 
       $("#select_none").removeClass('check-selection'); 
       $(this).addClass("check-selection");
       $('.addproposal--step2').find('.check--followers').prop('checked',true);
   });
-
   $('#select_none').on('click',function(){ 
       $("#select_all").removeClass('check-selection');
       $(this).addClass("check-selection");
@@ -49,8 +32,6 @@ $(document).ready(function(){
           $(this).prop('checked',false);
       });
   });
- 
-  
   /** end of check all  ***/
 
   $(document).on('click', '.add--proposal--provisional', function(){
@@ -62,7 +43,6 @@ $(document).ready(function(){
     fData.append('moreinfo_concern', $('#moreinfo_concern').val());
     fData.append('volunteers_goal_num', $('#volunteers_goal_num').val());
     fData.append('supporters_goal_num', 200);
-
     
     if ($('input[name=proposal-anon]').is(":checked"))
         opt = true;
@@ -71,7 +51,7 @@ $(document).ready(function(){
     fData.append('if_author_public', opt);
     
     var first_receivers_emails = [];
-    var list_followers = $('#addpro').find('input[type=checkbox]');
+    var list_followers = $('#addpro ul').find('input[type=checkbox]');
     for(var i=0; i< list_followers.length; i++){
     	if(list_followers[i].checked)
     	  first_receivers_emails.push(list_followers[i].value);
@@ -85,8 +65,8 @@ $(document).ready(function(){
     for (var pair of fData.entries()) {
       console.log(pair[0]+ ', ' + pair[1]); 
     }
-    if ($('#volunteers_goal_num').val() > 0 ) {
-      $.ajax({
+    
+    $.ajax({
       url: url[0] + "//" + url[2] + '/add_idea_to_user',
       type: 'POST',
       data: fData,
@@ -94,19 +74,14 @@ $(document).ready(function(){
       contentType: false,
       success: function (json) {
         alert(json.result_msg);
-        //window.location = '../home';
+        window.location = '../home';
       },
       error: function(response){
         console.log('Error');
         console.log(response);
       }
     });
-    }else{
-      $('#volunteers_goal_num').css("border-color", "red");
-    }
-    
   });
-
 
   var current_email = $('#host_email').val();
   $.ajax({
@@ -117,7 +92,7 @@ $(document).ready(function(){
         if(json.followers_num > 0){
           followerproposal = '';  
           for(var i = 0; i < json.followers_num; i++){
-            followerproposal += '<li><input class="checkbox check--followers" type="checkbox" name="check[]" value="'+json.followers_info[i].email+'" checked>';
+            followerproposal += '<li><input class="checkbox check--followers" type="checkbox" name="check[]" value="'+json.followers_info[i].email+'">';
             followerproposal += '<img src="'+json.followers_info[i].profilepic_url+'">';
             followerproposal += '<p><a href="#">'+json.followers_info[i].username+'</a>';
             followerproposal += '<br>'+json.followers_info[i].fullname+'</p></li>';
