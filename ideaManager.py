@@ -258,6 +258,18 @@ def getAllIdeas(email):
     return ideas
 
 
+def get_voting_rel_between_user_and_idea_aux(user_email, idea_proposal):
+    user = _get_participant_node(user_email)
+    idea = _getIdeaByIdeaIndex(idea_proposal)
+    if _if_voting_relationship_exists(user,idea):
+        voting_rel = getGraph().match_one(start_node=user, rel_type="VOTED_ON", end_node=idea)
+        vote_type= voting_rel["type"]
+        vote_ifvolunteered = voting_rel["ifvolunteered"]
+        return jsonify({"result": "OK", "vote_type":vote_type, "vote_ifvolunteered":vote_ifvolunteered})
+    else:
+        return jsonify({"result": "Wrong", "result_msg":"Voting relationship does not exist"})
+
+
 def vote_on_idea_aux(user_email, inputdict):
     from app import SUPPORT_RATE_MIN
     user = _get_participant_node(user_email)

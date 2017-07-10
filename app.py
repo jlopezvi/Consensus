@@ -16,7 +16,7 @@ from ideaManager import get_ideas_data_created_by_participant_aux, get_ideas_cre
      get_idea_data_aux, add_idea_to_user_aux, deleteOneIdea,getAllIdeas, \
     _getIdeaByIdeaIndex, vote_on_idea_aux, modify_idea_aux, remove_idea_aux, \
     _get_supporters_emails_for_idea_aux, _get_volunteers_emails_for_idea_aux, \
-    _get_vote_statistics_for_idea
+    _get_vote_statistics_for_idea, get_voting_rel_between_user_and_idea_aux
 from ideaManager import get_ideanotifications_for_user_aux, remove_notification_from_idea_to_participant_aux, \
     _do_tasks_for_idea_editedproposal
 from webManager import ideas_for_newsfeed_aux, ideas_for_home_aux, registration_receive_emailverification_aux, \
@@ -558,14 +558,6 @@ def get_idea_data_DEBUG(idea_proposal):
     return get_idea_data_aux(idea)
 
 
-#input   idea_proposal
-#output  {"result": "OK", "vote_statistics" : [supporters_num, rejectors_num, passives_num, volunteers_num]}
-@app.route('/get_vote_statistics_for_idea/<idea_proposal>', methods=['GET'])
-def get_vote_statistics_for_idea(idea_proposal):
-    vote_statistics = _get_vote_statistics_for_idea(idea_proposal)
-    return jsonify({"result": "OK", "vote_statistics" : vote_statistics})
-
-
 # input   idea_proposal
 # output  json {"result": "OK", "volunteers_emails": [email1, email2,...]}
 @app.route('/get_volunteers_emails_for_idea/<idea_proposal>', methods=['GET'])
@@ -580,6 +572,27 @@ def get_volunteers_emails_for_idea(idea_proposal):
 def get_supporters_emails_for_idea(idea_proposal):
     supporters_emails = _get_supporters_emails_for_idea_aux(idea_proposal)
     return jsonify({"result": "OK", "supporters_emails": supporters_emails})
+
+
+#input   idea_proposal
+#output  {"result": "OK", "vote_statistics" : [supporters_num, rejectors_num, passives_num, volunteers_num]}
+@app.route('/get_vote_statistics_for_idea/<idea_proposal>', methods=['GET'])
+def get_vote_statistics_for_idea(idea_proposal):
+    vote_statistics = _get_vote_statistics_for_idea(idea_proposal)
+    return jsonify({"result": "OK", "vote_statistics" : vote_statistics})
+
+
+# input:  user's email (flask_login.current_user.id), idea_proposal
+# output: json  {"result": "OK", "vote_type":"supported/rejected/ignored", "vote_ifvolunteered":true/false}
+#               {"result": "Wrong", "result_msg": "Voting relationship does not exist"}
+@app.route('/get_voting_rel_between_user_and_idea/<idea_proposal>',methods=['GET'])
+@app.route('/get_voting_rel_between_user_and_idea/<idea_proposal>/<user_email_DEBUG>',methods=['GET'])
+def vote_status_idea(idea_proposal, user_email_DEBUG = None):
+    if DEBUG and user_email_DEBUG is not None:
+        user_email = user_email_DEBUG
+    else:
+        user_email = flask_login.current_user.id
+    return get_voting_rel_between_user_and_idea_aux(user_email, idea_proposal)
 
 
 # TODO: format for vote_timestamp
