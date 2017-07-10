@@ -72,9 +72,9 @@
                     <p class="addproposal--summarize">Firts: Summarize your proposal</p>
                     <p>OPTIONAL: A shared issue that you feel strongly about and for which you have proposal (140 characters).</p>
                     <div class="form-group">
-                        <input type="text" name="" id="concern" class="form-control">
+                        <input type="text" name="" id="concern" class="form-control" required>
                         <br><p>A proposal that may be consensual (140 characters). </p>
-                        <input type="text" name="" id="proposal" class="form-control">
+                        <input type="text" name="" id="proposal" class="form-control" required>
                     </div>
                 </div>
                 <div class="col-xs-12">
@@ -112,7 +112,7 @@
                 </div>
             </div>
             <div class="col-sm-12 modal-next">
-                <button onclick="showModal('modal_proposal2')"><img src="{{ url_for('static',filename='images/next.png') }}"></button>
+                <button id="next" ><img src="{{ url_for('static',filename='images/next.png') }}"></button>
            </div>
           </div>
         </div>

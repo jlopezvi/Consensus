@@ -15,15 +15,25 @@ $(document).ready(function(){
 			$('.menu--mobile--icon').removeClass('open');
 		}
 	});
-	  $('.next--proposal1').on('click',function(){
-    $('#modal_proposal1').css('visibility','hidden');
+  $('#next').on('click', function(){
+    if ( $('#concern').val() != "" && $('#proposal').val() != "" ) {
+      showModal('modal_proposal2');
+    }else{
+      alert('Please fill in the proposal and concern fields');
+    }
   });
+  
+  $('.next--proposal1').on('click',function(){
+    $('#modal_proposal1').css('visibility','hidden'); 
+  });
+
   /** check all ***/
   $('#select_all').on('click',function(){ 
       $("#select_none").removeClass('check-selection'); 
       $(this).addClass("check-selection");
       $('.addproposal--step2').find('.check--followers').prop('checked',true);
   });
+
   $('#select_none').on('click',function(){ 
       $("#select_all").removeClass('check-selection');
       $(this).addClass("check-selection");
@@ -32,6 +42,8 @@ $(document).ready(function(){
           $(this).prop('checked',false);
       });
   });
+
+  $('#volunteers_goal_num').val('1');
   /** end of check all  ***/
 
   $(document).on('click', '.add--proposal--provisional', function(){
@@ -51,7 +63,7 @@ $(document).ready(function(){
     fData.append('if_author_public', opt);
     
     var first_receivers_emails = [];
-    var list_followers = $('#addpro ul').find('input[type=checkbox]');
+    var list_followers = $('#addpro').find('input[type=checkbox]');
     for(var i=0; i< list_followers.length; i++){
     	if(list_followers[i].checked)
     	  first_receivers_emails.push(list_followers[i].value);
@@ -83,6 +95,7 @@ $(document).ready(function(){
     });
   });
 
+
   var current_email = $('#host_email').val();
   $.ajax({
       url: url[0] + "//" + url[2] + '/get_participant_followers_info/'+current_email,
@@ -92,7 +105,7 @@ $(document).ready(function(){
         if(json.followers_num > 0){
           followerproposal = '';  
           for(var i = 0; i < json.followers_num; i++){
-            followerproposal += '<li><input class="checkbox check--followers" type="checkbox" name="check[]" value="'+json.followers_info[i].email+'">';
+            followerproposal += '<li><input class="checkbox check--followers" type="checkbox" name="check[]" value="'+json.followers_info[i].email+'" checked>';
             followerproposal += '<img src="'+json.followers_info[i].profilepic_url+'">';
             followerproposal += '<p><a href="#">'+json.followers_info[i].username+'</a>';
             followerproposal += '<br>'+json.followers_info[i].fullname+'</p></li>';
