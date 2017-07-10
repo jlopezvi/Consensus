@@ -19,7 +19,14 @@ $(document).ready(function(){
     if ( $('#concern').val() != "" && $('#proposal').val() != "" ) {
       showModal('modal_proposal2');
     }else{
-      alert('Please fill in the proposal and concern fields');
+      if ($('#concern').val() == "") {
+        $('#concern').css("border-color", "red");
+      }else if ($('#proposal').val() == "") {
+        $('#proposal').css("border-color", "red");
+      }else{
+        $('#concern').css("border-color", "red");
+        $('#proposal').css("border-color", "red");
+      }   
     }
   });
   
@@ -42,8 +49,8 @@ $(document).ready(function(){
           $(this).prop('checked',false);
       });
   });
-
-  $('#volunteers_goal_num').val('1');
+ 
+  
   /** end of check all  ***/
 
   $(document).on('click', '.add--proposal--provisional', function(){
@@ -55,6 +62,7 @@ $(document).ready(function(){
     fData.append('moreinfo_concern', $('#moreinfo_concern').val());
     fData.append('volunteers_goal_num', $('#volunteers_goal_num').val());
     fData.append('supporters_goal_num', 200);
+
     
     if ($('input[name=proposal-anon]').is(":checked"))
         opt = true;
@@ -77,8 +85,8 @@ $(document).ready(function(){
     for (var pair of fData.entries()) {
       console.log(pair[0]+ ', ' + pair[1]); 
     }
-    
-    $.ajax({
+    if ($('#volunteers_goal_num').val() > 0 ) {
+      $.ajax({
       url: url[0] + "//" + url[2] + '/add_idea_to_user',
       type: 'POST',
       data: fData,
@@ -93,6 +101,10 @@ $(document).ready(function(){
         console.log(response);
       }
     });
+    }else{
+      $('#volunteers_goal_num').css("border-color", "red");
+    }
+    
   });
 
 
