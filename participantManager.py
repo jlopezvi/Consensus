@@ -123,10 +123,10 @@ def remove_user_aux(user_email) :
     user = _get_participant_node(user_email, 'all')
     created_ideas = [x.end_node for x in list(getGraph().match(start_node=user, rel_type="CREATED"))]
     for created_idea in created_ideas:
-        for rel in getGraph().match(start_node=created_idea, bidirectional=True):
+        for rel in list(getGraph().match(start_node=created_idea, bidirectional=True)):
             rel.delete()
         created_idea.delete()
-    for rel in getGraph().match(start_node=user, bidirectional=True):
+    for rel in list(getGraph().match(start_node=user, bidirectional=True)):
         rel.delete()
     user.delete()
     return jsonify({'result': 'OK'})
