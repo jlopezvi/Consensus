@@ -304,7 +304,6 @@ def _get_participant_node(email, ifemailverified_category=True) :
 # follower, following are participant nodes
 def _getIfContactRelationshipExists(follower, following):
     contact_relationship_found = getGraph().match_one(start_node=follower, end_node=following, rel_type="FOLLOWS")
-    print("contactRelationshipFound", contact_relationship_found)
     if contact_relationship_found is not None:
         return True
     return False
@@ -439,7 +438,7 @@ def remove_notification_from_participant1_to_participant2_aux(participant1_index
     # remove notification from new followers
     follower_rel_found = getGraph().match_one(start_node=participant_sender, end_node= participant_receiver,
                                               rel_type="FOLLOWS")
-    if follower_rel_found[notification_field_str]:
+    if follower_rel_found[notification_field_str] is not None:
         follower_rel_found[notification_field_str] = False
     #
     return jsonify({"result": "OK", "result_msg": "Notification was deleted"})

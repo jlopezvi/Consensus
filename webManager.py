@@ -72,18 +72,18 @@ def ideas_for_newsfeed_aux(user_email):
         for idea_created in ideas_created:
             if _if_isnewideaforparticipant(idea_created, user):
                 if _if_ideaisinfirstphase(idea_created):
-                    if getGraph().match_one(start_node=idea_created, rel_type="GOES_FIRST_TO", end_node=user):
+                    if getGraph().match_one(start_node=idea_created, rel_type="GOES_FIRST_TO", end_node=user) is not None:
                         ideas.append(idea_created)
                 else:
                     ideas.append(idea_created)
     # ideas of followings that have voted on them
-    for following in followings:
-        ideas_supported = [x.end_node for x in list(getGraph().match(start_node=following, rel_type="VOTED_ON")) if x["type"] == "supported"]
+    for following2 in followings:
+        ideas_supported = [x.end_node for x in list(getGraph().match(start_node=following2, rel_type="VOTED_ON")) if x["type"] == "supported"]
         if len(ideas_supported) is 0:
             continue
         for idea_voted in ideas_supported:
             if _if_isnewideaforparticipant(idea_voted, user) and \
-                    not getGraph().match_one(start_node=user, rel_type="CREATED", end_node=idea_voted):
+                    getGraph().match_one(start_node=user, rel_type="CREATED", end_node=idea_voted) is None:
                 if _if_ideaisinfirstphase(idea_voted):
                     continue
                 else:

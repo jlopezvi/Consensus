@@ -374,7 +374,7 @@ def _if_ideaisinfirstphase(idea):
     # if (any of the first receivers has not voted) then True
     idea_first_receivers = [x.end_node for x in list(getGraph().match(start_node=idea, rel_type="GOES_FIRST_TO"))]
     for idea_first_receiver in idea_first_receivers:
-        if not getGraph().match_one(start_node=idea_first_receiver, rel_type="HAS_VOTED_ON", end_node=idea):
+        if getGraph().match_one(start_node=idea_first_receiver, rel_type="HAS_VOTED_ON", end_node=idea) is None:
             return True
     # else False
     return True
@@ -435,12 +435,12 @@ def remove_notification_from_idea_to_participant_aux(participant_email, proposal
     #1 remove notification as author of idea
     author_rel_found = getGraph().match_one(start_node=participant, rel_type="CREATED",
                                                   end_node=idea)
-    if author_rel_found[notification_field_str]:
+    if author_rel_found[notification_field_str] is not None:
         author_rel_found[notification_field_str] = False
     #2 remove notification as supporter of idea
     vote_rel_found = getGraph().match_one(start_node=participant, rel_type="VOTED_ON",
                                                   end_node=idea)
-    if vote_rel_found[notification_field_str]:
+    if vote_rel_found[notification_field_str] is not None:
         vote_rel_found[notification_field_str] = False
     #
     return jsonify({"result": "OK", "result_msg": "Notification was deleted"})
