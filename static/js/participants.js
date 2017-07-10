@@ -19,8 +19,8 @@ $(document).ready( function() {
 		url: url[0] + "//" + url[2] + '/get_ideas_data_created_by_participant/'+current_email,
 		type: 'GET',
 		success: function (json) {	
-			list = json.ideas_data[0];
-			//console.log(list);
+			
+			//console.log(json);
 			var newIdea = '';
 			var url_new = url[0] +'//'+ url[2] +'/static/';
 			for (var i = 0; i < json.ideas_data.length; i++) {						
@@ -64,12 +64,16 @@ $(document).ready( function() {
 			    newIdea += '</div><div class="col-sm-6 home--followers hidden" style="width: 100%;">';
 			    newIdea += '</div></div></div></div>';
 		    }
-		    if (json.ideas_data.length != 0) {
+		    if (json.ifallowed == false) {
+		    	$('#newIdea').append('<center><h3>User private</h3></center> ');  	
+		    }else if($('#participant_email').val() != 'None' && json.ideas_data.length == 0){
+		    	$('#newIdea').append('<center><h3>this user has no active publications</h3></center> ');
+		    }else if (json.ideas_data.length != 0) {
 		    	$('#newIdea').append(newIdea);
 		    }else{
 		    	$('#newIdea').append('<center><h3>You have no active publications</h3></center> ');
 		    }
-		    if($('#participant_email').val() != 'None'){
+		    if($('#participant_email').val() != 'None' ){
 		    	$('.icons').show();
 		    	$('.home--followers').append('<i class="fa fa-share-alt"></i><p>Share with: followers</p>');
 		    }
@@ -108,17 +112,23 @@ $(document).ready( function() {
 	$.ajax({
 		url: url[0] + "//" + url[2] + '/get_participant_followers_info/'+current_email,
 		type: 'GET',
-		success: function (json) {			
+		success: function (json) {
+				//console.log(json);		
 				followerList = '';	
 				for(var i = 0; i < json.followers_num; i++){
 					followerList += '<li><input value="'+json.followers_info[i].email+'" class="checkbox check--followers" type="checkbox" name="check[]">';
 					followerList += '<img class="new--user--icon--login" src="'+json.followers_info[i].profilepic_url+'">'
 					followerList += '<p><a href="#">'+json.followers_info[i].username+'</a>';					
 					followerList += '<br>'+json.followers_info[i].fullname+'</p></li>';
-				}if (json.followers_num != 0) {
+				}
+				if (json.ifallowed == false) {
+					$('#menu1 ul').append('<center><h3 >User private</h3></center>');
+				}else if ($('#participant_email').val() != 'None' && json.followers_num == 0){
+					$('#menu1 ul').append('<center><h3 >this user has no followers</h3></center>');
+				}else if (json.followers_num != 0) {
 					$('#menu1 ul').append(followerList);
 				}else{
-					$('#menu1 ul').append('<center><h3>No one is following you</h3></center>');
+					$('#menu1 ul').append('<center><h3 >No one is following you</h3></center>');
 				}					
 			
 		}	
@@ -138,7 +148,11 @@ $(document).ready( function() {
 					followingList += '<p><a href="#">'+json.followings_info[i].username+'</a>';					
 					followingList += '<br>'+json.followings_info[i].fullname+'</p></li>';
 				}
-				if (json.followings_num != 0) {
+				if (json.ifallowed == false){
+					$('#home ul').append('<center><h3 id="msg">User private</h3></center>');
+				}else if ($('#participant_email').val() != 'None' && json.followings_num == 0){
+					$('#home ul').append('<center><h3 id="msg">this user has no followings</h3></center>');
+				}else if (json.followings_num != 0) {
 					$('#home ul').append(followingList);
 				}else{
 					$('#home ul').append('<center><h3 id="msg">You are following no one</h3></center>');
