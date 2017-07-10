@@ -1,5 +1,6 @@
 var url = window.location.href;
 url = url.split("/");
+var current_vote = '';
 
 $(document).ready( function() {
 	if($('#participant_email').val() == 'None')
@@ -272,69 +273,165 @@ $(document).ready( function() {
         	type = 'supported';
       	}
       	var id = $(this).parent().children('input').val();
-      	var data = {
+      	var data_input = {
       		'idea_proposal': id,
         	'vote_ifvolunteered': vote_ifvolunteered,
         	'vote_type': type
       	};
-      	$.ajax({
-        url: url[0] + "//" + url[2] + '/vote_on_idea',
-        type: 'POST',
-        data: JSON.stringify(data),
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        dataType: 'json',
-        success: function(json){   	
-        	var div_header = element.parent().parent().parent().siblings('.home--header');
-        	var div_persons = element.parent().parent().parent().siblings('.newsfeed--persons');
-      		if(data.vote_type == 'supported' ){
-      			var answer = 'Now you are supporting this idea!';
-      			if (json.result != 'Wrong: User vote exists of same type'){
-      				var volunt = parseInt(element.parent().parent().children('input.volunteers--input').val());
-      				if(vote_ifvolunteered){
-      					var volunt_goal = element.parent().parent().children('input.volunteers--goal--input').val();
-      					volunt += 1;
-      					var volunt_percent = ((volunt*100)/volunt_goal)+'%';
-      					div_header.children('.home--charge').children('.home--progress2').children('div').attr('style', '').css('width', volunt_percent);
-      				}
-      				var support_goal = element.parent().parent().children('input.supporters--goal--input').val();
-  					var support = parseInt(element.parent().parent().children('input.supporters--input').val()) + 1;
-  					var support_percent = ((support*100)/support_goal)+'%';
-  					div_header.children('.home--charge').children('.home--progress').children('div').attr('style', '').css('width', support_percent);
-  					div_header.children('.newsfeed--goals').children('p').empty().append(support+'/200 supporters goals<br>'+volunt+'/14 volunteers goals');
-      				div_persons.find('.newsfeed--likes ul.ul--liked a.last--liked li').empty().append(support+' people');
-      			}
-      		} else {
-      			var answer = 'Idea rejected successfully!';
-      			if (json.result != 'Wrong: User vote exists of same type'){
-      				var volunt = parseInt(element.parent().parent().children('input.volunteers--input').val()) + 1;
-      				div_persons.find('.newsfeed--likes ul.ul--disliked a.last--liked li').empty().append(volunt+' people');
-      			}
-      		}
-    		if(json.result == 'OK: User vote was modified'){
-      			$('#invitation-modal-info h4.modal-title').empty().append('Operation Completed');
-      			$('#invitation-modal-info p#modal--invitation').empty().append(answer);       			
-    		} else if (json.result == 'OK: User vote was created'){
-    			$('#invitation-modal-info h4.modal-title').empty().append('Operation Completed');
-      			$('#invitation-modal-info p#modal--invitation').empty().append(answer); 
-    		}
-    		else if (json.result == 'Wrong: User vote exists of same type'){
-      			$('#invitation-modal-info h4.modal-title').empty().append('Error');
-      			$('#invitation-modal-info p#modal--invitation').empty().append('You can not vote the same for this idea.');
-    		}
-    		$('#invitation-modal-info').modal('toggle');
-          	
-        },
-        error: function(response){
-          console.log('error');
-          console.log(response);
-        }
-
-        });
+        	
+    	/********* GET CURRENT VALUE OF VOTE IF DIFERENT OF SAME TYPE **********/
+		$.ajax({
+			url: url[0] + "//" + url[2] + '/get_voting_rel_between_user_and_idea/'+data_input.idea_proposal,
+			type: 'GET',
+			success: function(data){
+      			console.log(data);
+				if(data.result == 'OK' && ((data.vote_ifvolunteered) && (data.vote_type == 'supported')))
+					current_vote = 'volunteer';
+				else if(data.result == 'OK' && ((!data.vote_ifvolunteered) && (data.vote_type == 'supported')))
+					current_vote = 'supported';
+				else if(data.result == 'OK' && data.vote_type == 'rejected')
+					current_vote = 'rejected';
+				else
+					current_vote = 'ignored';
+					
+				$.ajax({
+			        url: url[0] + "//" + url[2] + '/vote_on_idea',
+			        type: 'POST',
+			        data: JSON.stringify(data_input),
+			        headers: {
+			          'Content-Type': 'application/json'
+			        },
+			        dataType: 'json',
+			        success: function(json){   	
+			        	var div_header = element.parent().parent().parent().siblings('.home--header');
+			        	var div_persons = element.parent().parent().parent().siblings('.newsfeed--persons');
+			        	var div_footer = element.parent().parent().parent().siblings('.newsfeed--footer');
+		        		var support_goal = element.parent().parent().children('input.supporters--goal--input').val();
+		        		var volunt_goal = element.parent().parent().children('input.volunteers--goal--input').val();
+        				var volunt = parseInt(element.parent().parent().children('input.volunteers--input').val());
+        				var rejector = parseInt(element.parent().parent().children('input.rejectors--input').val());
+        				var support = parseInt(element.parent().parent().children('input.supporters--input').val());
+		        		
+		        		if (json.result != 'Wrong: User vote exists of same type'){
+		        			if(data_input.vote_type == 'supported'){
+		        				var answer = 'Now you are supporting this idea!';
+		        				if(vote_ifvolunteered){
+		        					volunt++;
+		        					element.parent().parent().children('input.volunteers--input').val(volunt);
+		        					if(current_vote == 'rejected'){
+		        						support++;
+			        					element.parent().parent().children('input.supporters--input').val(support);
+		        					}
+		        				} else {
+		        					if(current_vote == 'volunteer'){
+		        						volunt--;
+		        						element.parent().parent().children('input.volunteers--input').val(volunt);
+		        					} else {
+			        					support++;
+			        					element.parent().parent().children('input.supporters--input').val(support);
+		        					}
+		        				}
+		        				if(current_vote == 'rejected'){
+		        					rejector--;
+		        					element.parent().parent().children('input.rejectors--input').val(rejector);
+		        				}
+		        			} else {
+		        				var answer = 'Idea rejected successfully!';
+		        				rejector++;
+	        					element.parent().parent().children('input.rejectors--input').val(rejector);
+	        					if(current_vote == 'volunteer'){
+	        						volunt--;
+		        					element.parent().parent().children('input.volunteers--input').val(volunt);
+		        					support--;
+		        					element.parent().parent().children('input.supporters--input').val(support);
+	        					} else if(current_vote == 'supported'){
+	        						support--;
+		        					element.parent().parent().children('input.supporters--input').val(support);
+	        					}
+		        			}
+		        			var volunt_percent = ((volunt*100)/volunt_goal)+'%';
+			        		var support_percent = ((support*100)/support_goal)+'%';
+			        		div_header.children('.home--charge').children('.home--progress2').children('div').attr('style', '').css('width', volunt_percent);
+			        		div_header.children('.home--charge').children('.home--progress').children('div').attr('style', '').css('width', support_percent);
+			        		div_header.children('.newsfeed--goals').children('p').empty().append(support+'/'+support_goal+' supporters goals<br>'+volunt+'/'+volunt_goal+' volunteers goals');
+			        		div_persons.find('.newsfeed--likes ul.ul--liked a.last--liked li').empty().append(support+' people');
+			        		div_persons.find('.newsfeed--likes ul.ul--disliked a.last--liked li').empty().append(rejector+' people');
+			        		var rate = ((support * 100) / (support + rejector));
+			        		if(support + rejector == 0)
+			        			rate = 0;
+			        		div_footer.find('.input--percent label').empty().append('Support Rate: '+rate+'%');
+		        		
+			        		$('#invitation-modal-info h4.modal-title').empty().append('Operation Completed');
+			      			$('#invitation-modal-info p#modal--invitation').empty().append(answer); 
+		        		} else {
+		        			$('#invitation-modal-info h4.modal-title').empty().append('Error');
+			      			$('#invitation-modal-info p#modal--invitation').empty().append('You can not vote the same for this idea.');
+		        		}
+		        		$('#invitation-modal-info').modal('toggle');
+/*		        		
+			      		if(data_input.vote_type == 'supported' ){
+			      			var answer = 'Now you are supporting this idea!';
+			      			if (json.result != 'Wrong: User vote exists of same type'){
+			      				var volunt = parseInt(element.parent().parent().children('input.volunteers--input').val());
+			      				if(vote_ifvolunteered){
+			      					
+			      					if(current_vote != 'volunteer')
+			      						volunt += 1;
+			      					var volunt_percent = ((volunt*100)/volunt_goal)+'%';
+			      					div_header.children('.home--charge').children('.home--progress2').children('div').attr('style', '').css('width', volunt_percent);
+			      				}
+			      				
+			      				if(current_vote != 'supported')
+			  						
+			  					else if(current_vote == 'supported')
+			  						var support = parseInt(element.parent().parent().children('input.supporters--input').val());
+			  					var support_percent = ((support*100)/support_goal)+'%';
+			  					div_header.children('.home--charge').children('.home--progress').children('div').attr('style', '').css('width', support_percent);
+			  					div_header.children('.newsfeed--goals').children('p').empty().append(support+'/200 supporters goals<br>'+volunt+'/14 volunteers goals');
+			      				div_persons.find('.newsfeed--likes ul.ul--liked a.last--liked li').empty().append(support+' people');
+			      				
+		      					if(current_vote == 'rejected'){
+		      						
+		      						div_persons.find('.newsfeed--likes ul.ul--disliked a.last--liked li').empty().append(rejector+' people');
+		      					}
+			      			}
+			      		} else {
+			      			
+			      			if (json.result != 'Wrong: User vote exists of same type'){
+			      				var volunt = parseInt(element.parent().parent().children('input.volunteers--input').val()) + 1;
+			      				div_persons.find('.newsfeed--likes ul.ul--disliked a.last--liked li').empty().append(volunt+' people');
+			      				if(current_vote == 'supported' || current_vote == 'volunteer'){
+			      					var support = parseInt(element.parent().parent().children('input.supporters--input').val()) - 1;
+			      					div_persons.find('.newsfeed--likes ul.ul--liked a.last--liked li').empty().append(support+' people');
+			      				}
+			      			}
+			      		}
+			    		if(json.result == 'OK: User vote was modified'){
+			      			$('#invitation-modal-info h4.modal-title').empty().append('Operation Completed');
+			      			$('#invitation-modal-info p#modal--invitation').empty().append(answer);       			
+			    		} else if (json.result == 'OK: User vote was created'){
+			    			$('#invitation-modal-info h4.modal-title').empty().append('Operation Completed');
+			      			$('#invitation-modal-info p#modal--invitation').empty().append(answer); 
+			    		}
+			    		else if (json.result == 'Wrong: User vote exists of same type'){
+			      			$('#invitation-modal-info h4.modal-title').empty().append('Error');
+			      			$('#invitation-modal-info p#modal--invitation').empty().append('You can not vote the same for this idea.');
+			    		}
+			    		$('#invitation-modal-info').modal('toggle');
+*/
+			        },
+			        error: function(response){
+			          console.log('error');
+			          console.log(response);
+			        }
+		        });
+			},
+			error: function(response){
+				console.log('error');
+				console.log(response);
+			}
+		});
     });
-
-
 });
 
 function seaarch_participant(search){
