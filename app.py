@@ -583,8 +583,7 @@ def get_vote_statistics_for_idea(idea_proposal):
 
 
 # input:  user's email (flask_login.current_user.id), idea_proposal
-# output: json  {"result": "OK", "vote_type":"supported/rejected/ignored",
-#                "vote_ifvolunteered":true/false, "idea_proposal": "we should do..."}
+# output: json  {"result": "OK", "vote_type":"supported/rejected/ignored", "vote_ifvolunteered":true/false}
 #               {"result": "Wrong", "result_msg": "Voting relationship does not exist"}
 @app.route('/get_voting_rel_between_user_and_idea/<idea_proposal>',methods=['GET'])
 @app.route('/get_voting_rel_between_user_and_idea/<idea_proposal>/<user_email_DEBUG>',methods=['GET'])
