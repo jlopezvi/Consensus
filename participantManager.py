@@ -121,6 +121,11 @@ def modify_user_data_aux(user_data, profilepic_file_body, user_email):
 
 def remove_user_aux(user_email) :
     user = _get_participant_node(user_email, 'all')
+    created_ideas = [x.end_node for x in list(getGraph().match(start_node=user, rel_type="CREATED"))]
+    for rel in getGraph().match(start_node=created_ideas, bidirectional=True):
+        rel.delete()
+    for created_idea in created_ideas:
+        created_idea.delete()
     for rel in getGraph().match(start_node=user, bidirectional=True):
         rel.delete()
     user.delete()
