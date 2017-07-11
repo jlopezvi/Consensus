@@ -15,6 +15,15 @@ $(document).ready(function(){
 			$('.menu--mobile--icon').removeClass('open');
 		}
 	});
+
+  $('#next').on('click', function(){
+    if ($('#proposal').val() != "" ) {
+        showModal('modal_proposal2');
+      }else{
+        $('#proposal').css("border-color", "red");
+      }  
+  });
+
 	  $('.next--proposal1').on('click',function(){
     $('#modal_proposal1').css('visibility','hidden');
   });
@@ -65,7 +74,7 @@ $(document).ready(function(){
     for (var pair of fData.entries()) {
       console.log(pair[0]+ ', ' + pair[1]); 
     }
-    
+    if ($('#volunteers_goal_num').val() > 0 ) {
     $.ajax({
       url: url[0] + "//" + url[2] + '/add_idea_to_user',
       type: 'POST',
@@ -81,6 +90,9 @@ $(document).ready(function(){
         console.log(response);
       }
     });
+    }else{
+      $('#volunteers_goal_num').css("border-color", "red");
+    }
   });
 
   var current_email = $('#host_email').val();
@@ -92,7 +104,7 @@ $(document).ready(function(){
         if(json.followers_num > 0){
           followerproposal = '';  
           for(var i = 0; i < json.followers_num; i++){
-            followerproposal += '<li><input class="checkbox check--followers" type="checkbox" name="check[]" value="'+json.followers_info[i].email+'">';
+            followerproposal += '<li><input class="checkbox check--followers" type="checkbox" name="check[]" value="'+json.followers_info[i].email+'" checked>';
             followerproposal += '<img src="'+json.followers_info[i].profilepic_url+'">';
             followerproposal += '<p><a href="#">'+json.followers_info[i].username+'</a>';
             followerproposal += '<br>'+json.followers_info[i].fullname+'</p></li>';
