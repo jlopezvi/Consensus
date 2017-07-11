@@ -18,7 +18,7 @@ from ideaManager import get_ideas_data_created_by_participant_aux, get_ideas_cre
     _get_supporters_emails_for_idea_aux, _get_volunteers_emails_for_idea_aux, \
     _get_vote_statistics_for_idea, get_voting_rel_between_user_and_idea_aux
 from ideaManager import get_ideanotifications_for_user_aux, remove_notification_from_idea_to_participant_aux, \
-    _do_tasks_for_idea_editedproposal
+    _do_tasks_for_idea_editedproposal, redflag_idea_aux
 from webManager import ideas_for_newsfeed_aux, ideas_for_home_aux, registration_receive_emailverification_aux, \
     registration_from_invitation_aux, registration_send_invitation_aux, do_cron_tasks_aux, _verifyEmail
 
@@ -650,6 +650,21 @@ def remove_notification_from_idea_to_participant():
     notification_type = request.get_json()['notification_type']
     return remove_notification_from_idea_to_participant_aux(participant_email, idea_index, notification_type)
 
+# input:   user's email (flask_login.current_user.id),
+#          json {"idea_index":"let's do this",
+#               "reason":"this and this"}
+# output: jsonify({"result":"OK", "result_msg":"Idea was removed"})
+@app.route('/redflag_idea',methods=['POST'])
+@app.route('/redflag_idea/<user_email_DEBUG>',methods=['POST'])
+@flask_login.login_required
+def redflag_idea(user_email_DEBUG = None):
+    if DEBUG and user_email_DEBUG is not None:
+        user_email = user_email_DEBUG
+    else:
+        user_email = flask_login.current_user.id
+    reason=request.get_json()['reason']
+    idea_index=request.get_json()['idea_index']
+    return redflag_idea_aux(user_email, idea_index, reason)
 
 
 

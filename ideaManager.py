@@ -75,14 +75,13 @@ def modify_idea_aux(idea_dict,ideapic_file_body):
     return jsonify({"result":"OK", "result_msg":"Idea was modified"})
 
 
-# <Used by do_cron_tasks_aux>
+# <Used by do_cron_tasks_aux>, <redflag_idea_aux>
 def remove_idea_aux(idea_index) :
     idea = _getIdeaByIdeaIndex(idea_index)
     for rel in getGraph().match(start_node=idea, bidirectional=True):
         rel.delete()
     idea.delete()
     return jsonify({"result":"OK", "result_msg":"Idea was removed"})
-
 
 def get_ideas_created_by_participant_aux(participant_email, user_email):
     user = _get_participant_node(user_email)
@@ -307,6 +306,13 @@ def vote_on_idea_aux(user_email, inputdict):
         _do_tasks_for_idea_successful(idea_index)
     return response
 
+def redflag_idea_aux(user_email, idea_index, reason):
+    user = _get_participant_node(user_email)
+    idea = _getIdeaByIdeaIndex(idea_index)
+    if (_get_vote_statistics_for_idea(idea_index)[0]) > 0:
+        _send_notification_emails_from_idea_to_supporters(idea_index, 'redflag', reason, user['fullname'])
+    _send_notification_email_from_idea_to_author(idea_index, 'redflag', reason, user['fullname'])
+    return remove_idea_aux(idea_index)
 
 ####################
 #  PURE INTERNAL
@@ -495,13 +501,15 @@ def _add_notifications_from_idea_to_supporters(idea_index, notification_type):
 
 
 # <used by _do_tasks_for_idea_editedproposal, _do_tasks_for_idea_failurewarning, _do_tasks_for_idea_successful>
-def _send_notification_emails_from_idea_to_supporters(idea_index, notification_type):
+def _send_notification_emails_from_idea_to_supporters(idea_index, notification_type, reason = None, participant_fullname = None):
     idea = _getIdeaByIdeaIndex(idea_index)
     subject = "Consensus, New Notifications"
     if notification_type == 'edited':
         html = render_template('emails/idea_edited.html', msg_proposal=idea['proposal'])
     elif notification_type == 'successful':
         html = render_template('emails/idea_successful.html', msg_proposal=idea['proposal'])
+    elif notification_type == 'redflag':
+        html = render_template('emails/idea_redflag.html', msg_proposal=idea['proposal'], msg_reason= reason, msg_participant= participant_fullname)
     vote_rels = list(getGraph().match(end_node=idea, rel_type="VOTED_ON"))
     support_rels = [x for x in vote_rels if x["type"] == "supported"]
     supporters = [x.start_node for x in support_rels]
@@ -521,12 +529,14 @@ def _add_notification_relationship_from_idea_to_author(idea_index, notification_
 
 
 # <used by _do_tasks_for_idea_failurewarning, _do_tasks_for_idea_successful>
-def _send_notification_email_from_idea_to_author(idea_index, notification_type):
+def _send_notification_email_from_idea_to_author(idea_index, notification_type, reason = None, participant_fullname = None):
     idea=_getIdeaByIdeaIndex(idea_index)
     author = getGraph().match_one(rel_type="CREATED", end_node=idea).start_node
     subject = "Consensus, New Notifications"
     if notification_type == 'failurewarning':
         html = render_template('emails/idea_failurewarning.html', msg_proposal=idea['proposal'])
+    elif notification_type == 'redflag':
+        html = render_template('emails/idea_redflag.html', msg_proposal=idea['proposal'], msg_reason= reason, msg_participant= participant_fullname)
     elif notification_type == 'successful_to_author':
         volunteers = _get_volunteers_emails_for_idea_aux(idea_index)
         if len(volunteers) > 0 :
