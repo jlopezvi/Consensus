@@ -83,14 +83,6 @@ def remove_idea_aux(idea_index) :
     idea.delete()
     return jsonify({"result":"OK", "result_msg":"Idea was removed"})
 
-def redflag_idea_aux(user_email, idea_index, reason):
-    user = _get_participant_node(user_email)
-    idea = _getIdeaByIdeaIndex(idea_index)
-    if (_get_vote_statistics_for_idea(idea_index)[0]) > 0:
-        _send_notification_emails_from_idea_to_supporters(idea_index, 'redflag', reason, user['fullname'])
-    _send_notification_email_from_idea_to_author(idea_index, 'redflag', reason, user['fullname'])
-    return remove_idea_aux(idea_index)
-
 def get_ideas_created_by_participant_aux(participant_email, user_email):
     user = _get_participant_node(user_email)
     participant = _get_participant_node(participant_email)
@@ -314,6 +306,13 @@ def vote_on_idea_aux(user_email, inputdict):
         _do_tasks_for_idea_successful(idea_index)
     return response
 
+def redflag_idea_aux(user_email, idea_index, reason):
+    user = _get_participant_node(user_email)
+    idea = _getIdeaByIdeaIndex(idea_index)
+    if (_get_vote_statistics_for_idea(idea_index)[0]) > 0:
+        _send_notification_emails_from_idea_to_supporters(idea_index, 'redflag', reason, user['fullname'])
+    _send_notification_email_from_idea_to_author(idea_index, 'redflag', reason, user['fullname'])
+    return remove_idea_aux(idea_index)
 
 ####################
 #  PURE INTERNAL
