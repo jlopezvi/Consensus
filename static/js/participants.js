@@ -116,7 +116,7 @@ $(document).ready( function() {
 				//console.log(json);
 				if (json.ifallowed == false) {
 					$('#menu1 ul').append('<center><h3 >User private</h3></center>');
-				}		
+				}else{		
 				followerList = '';	
 				for(var i = 0; i < json.followers_num; i++){
 					followerList += '<li><input value="'+json.followers_info[i].email+'" class="checkbox check--followers" type="checkbox" name="check[]">';
@@ -131,7 +131,7 @@ $(document).ready( function() {
 				}else{
 					$('#menu1 ul').append('<center><h3 >No one is following you</h3></center>');
 				}					
-			
+			}
 		}
 
 	});
@@ -145,7 +145,7 @@ $(document).ready( function() {
 			//console.log(json);
 				if (json.ifallowed == false){
 					$('#home ul').append('<center><h3>User private</h3></center>');
-				}	
+				}else{
 				followingList = '';	
 				for(var i = 0; i < json.followings_num; i++){
 					followingList += '<li><input value="'+json.followings_info[i].email+'" class="checkbox check--followers" type="checkbox" name="check[]">';
@@ -159,7 +159,8 @@ $(document).ready( function() {
 					$('#home ul').append(followingList);
 				}else{
 					$('#home ul').append('<center><h3 id="msg">You are following no one</h3></center>');
-				}				
+				}
+			}					
 		}	
 	});
     
