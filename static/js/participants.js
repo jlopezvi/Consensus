@@ -113,7 +113,10 @@ $(document).ready( function() {
 		url: url[0] + "//" + url[2] + '/get_participant_followers_info/'+current_email,
 		type: 'GET',
 		success: function (json) {
-				//console.log(json);		
+				//console.log(json);
+				if (json.ifallowed == false) {
+					$('#menu1 ul').append('<center><h3 >User private</h3></center>');
+				}		
 				followerList = '';	
 				for(var i = 0; i < json.followers_num; i++){
 					followerList += '<li><input value="'+json.followers_info[i].email+'" class="checkbox check--followers" type="checkbox" name="check[]">';
@@ -121,9 +124,7 @@ $(document).ready( function() {
 					followerList += '<p><a href="#">'+json.followers_info[i].username+'</a>';					
 					followerList += '<br>'+json.followers_info[i].fullname+'</p></li>';
 				}
-				if (json.ifallowed == false) {
-					$('#menu1 ul').append('<center><h3 >User private</h3></center>');
-				}else if ($('#participant_email').val() != 'None' && json.followers_num == 0){
+				if ($('#participant_email').val() != 'None' && json.followers_num == 0){
 					$('#menu1 ul').append('<center><h3 >this user has no followers</h3></center>');
 				}else if (json.followers_num != 0) {
 					$('#menu1 ul').append(followerList);
@@ -131,7 +132,8 @@ $(document).ready( function() {
 					$('#menu1 ul').append('<center><h3 >No one is following you</h3></center>');
 				}					
 			
-		}	
+		}
+
 	});
 
 	//GET ALL FOLLOWINGS OF CURRENT LOGGED USER OR SEARCHED
@@ -140,7 +142,10 @@ $(document).ready( function() {
 		url: url[0] + "//" + url[2] + '/get_participant_followings_info/'+current_email,
 		type: 'GET',
 		success: function (json) {
-			//console.log(json);	
+			//console.log(json);
+				if (json.ifallowed == false){
+					$('#home ul').append('<center><h3>User private</h3></center>');
+				}	
 				followingList = '';	
 				for(var i = 0; i < json.followings_num; i++){
 					followingList += '<li><input value="'+json.followings_info[i].email+'" class="checkbox check--followers" type="checkbox" name="check[]">';
@@ -148,10 +153,8 @@ $(document).ready( function() {
 					followingList += '<p><a href="#">'+json.followings_info[i].username+'</a>';					
 					followingList += '<br>'+json.followings_info[i].fullname+'</p></li>';
 				}
-				if (json.ifallowed == false){
-					$('#home ul').append('<center><h3 id="msg">User private</h3></center>');
-				}else if ($('#participant_email').val() != 'None' && json.followings_num == 0){
-					$('#home ul').append('<center><h3 id="msg">this user has no followings</h3></center>');
+				if ($('#participant_email').val() != 'None' && json.followings_num == 0){
+					$('#home ul').append('<center><h3 >this user has no followings</h3></center>');
 				}else if (json.followings_num != 0) {
 					$('#home ul').append(followingList);
 				}else{
