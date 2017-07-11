@@ -22,7 +22,7 @@ def add_idea_to_user_aux(user_email, idea_dict, ideapic_file_body):
     user = _get_participant_node(user_email)
     newidea_index = idea_dict.get('proposal')
     code_uuid = str(uuid.uuid4())
-    image_url = 'static/images/concerns/social_coffee_break.jpg'
+    image_url = '/static/images/concerns/social_coffee_break.jpg'
     if _getIdeaByIdeaIndex(newidea_index):
         return jsonify({"result": "Wrong", "result_msg": "proposal already exists"})
     if ideapic_file_body is not None:
