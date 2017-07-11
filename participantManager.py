@@ -71,7 +71,7 @@ def registration_aux(inputdict, profilepic_file_body):
 #       profilepic_file_body: None/ (file)
 # output: python dict {'result':'OK'}
 def _newParticipant(participantdict,profilepic_file_body):
-    image_url = 'static/assets/profile/perfil-mediano.png'
+    image_url = '/static/assets/profile/perfil-mediano.png'
     email = participantdict.get('email')
     if profilepic_file_body is not None:
         ruta_dest = '/static/assets/profile/'
