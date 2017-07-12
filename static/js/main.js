@@ -60,7 +60,7 @@ $(document).ready(function(){
     fData.append('if_author_public', opt);
     
     var first_receivers_emails = [];
-    var list_followers = $('#addpro ul').find('input[type=checkbox]');
+    var list_followers = $('#addpro').find('input[type=checkbox]');
     for(var i=0; i< list_followers.length; i++){
     	if(list_followers[i].checked)
     	  first_receivers_emails.push(list_followers[i].value);
@@ -84,6 +84,7 @@ $(document).ready(function(){
       success: function (json) {
         alert(json.result_msg);
         window.location = '../home';
+        console.log(json);
       },
       error: function(response){
         console.log('Error');
@@ -153,6 +154,27 @@ $(document).ready(function(){
   });
   $(document).on('click', '#redflag', function(){
     $('#redflag-modal').modal('toggle');
+    $('#idea_index').val($('.redflag--img').children('input').val());
+  });
+  $('#accept_redflag').on('click', function(){
+    var data = { 'reason' : $('#reason').val(), 
+                'idea_index' : $('#idea_index').val() };
+    
+    $.ajax({
+      url: url[0] + "//" + url[2] + '/redflag_idea',
+      data: data,
+      type: 'POST',
+      success: function (json) {
+        alert(json.result_msg);
+        
+      },
+      error: function(response){
+        console.log('Error');
+        console.log(response);
+      }
+    });
+    
+
   });
 
 });

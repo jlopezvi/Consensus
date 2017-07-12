@@ -215,12 +215,15 @@
                     <center><h4 class="modal-title"> Why do you want to redflag this proposal? </h4></center>
                 </div>
                 <div class="modal-body">
-                    <center><textarea rows="4" cols="50" class="max-area">  </textarea>
+                <form method="post">
+                    <center><textarea rows="4" cols="50" class="max-area" id="reason">  </textarea>
                     <p> Your reasons will transmitted to all the supporters with your name.</p>
                     <p>The proposal will be deleted immediately </p></center></br></br>
+                    <input type="hidden" id="idea_index">
+                    </form>
                 </div>
                 <div class="modal-footer" style="height:40px;">
-                    <button type="button" id="accept__logout">Accept</button>
+                    <button type="button" id="accept_redflag">Accept</button>
                     <button type="button" data-dismiss="modal">Go back</button>
                 </div>
             </div>
