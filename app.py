@@ -650,20 +650,20 @@ def remove_notification_from_idea_to_participant():
     notification_type = request.get_json()['notification_type']
     return remove_notification_from_idea_to_participant_aux(participant_email, idea_index, notification_type)
 
+
 # input:   user's email (flask_login.current_user.id),
 #          json {"idea_index":"let's do this",
 #               "reason":"this and this"}
 # output: jsonify({"result":"OK", "result_msg":"Idea was removed"})
 @app.route('/redflag_idea',methods=['POST'])
 @app.route('/redflag_idea/<user_email_DEBUG>',methods=['POST'])
-@flask_login.login_required
 def redflag_idea(user_email_DEBUG = None):
     if DEBUG and user_email_DEBUG is not None:
         user_email = user_email_DEBUG
     else:
         user_email = flask_login.current_user.id
-    reason=request.get_json()['reason']
-    idea_index=request.get_json()['idea_index']
+    reason = request.get_json()['reason']
+    idea_index = request.get_json()['idea_index']
     return redflag_idea_aux(user_email, idea_index, reason)
 
 
