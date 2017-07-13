@@ -58,11 +58,11 @@ $(document).ready(function(){
         opt = true;
     //fData.append('if_author_public', opt);
     
-    var first_receivers_emails = [];
+    var first_receivers_emails = '';
     var list_followers = $('#addpro').find('input[type=checkbox]');
     for(var i=0; i< list_followers.length; i++){
     	if(list_followers[i].checked)
-    	  first_receivers_emails.push(list_followers[i].value);
+    	  first_receivers_emails += list_followers[i].value + ' ';
     }
     //fData.append('first_receivers_emails', first_receivers_emails);
     
@@ -166,21 +166,28 @@ $(document).ready(function(){
       } 
     });
   });
-  $(document).on('click', '#redflag', function(){
+  
+  $(document).on('click', '.redflag', function(){
     $('#redflag-modal').modal('toggle');
     $('#idea_index').val($('.redflag--img').children('input').val());
   });
+  
   $('#accept_redflag').on('click', function(){
-    var data = { 'reason' : $('#reason').val(), 
-                'idea_index' : $('#idea_index').val() };
+    var data = { 
+      'reason' : $('#reason').val(), 
+      'idea_index' : $('#idea_index').val() 
+    };
     
     $.ajax({
       url: url[0] + "//" + url[2] + '/redflag_idea',
-      data: data,
       type: 'POST',
+      data: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      dataType: 'json',
       success: function (json) {
         alert(json.result_msg);
-        
       },
       error: function(response){
         console.log('Error');
@@ -188,7 +195,6 @@ $(document).ready(function(){
       }
     });
     
-
   });
 
 });

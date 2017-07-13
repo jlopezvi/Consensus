@@ -379,6 +379,7 @@ body.modal-open {
 .newsfeed--footer .redflag--img img {
 	width: auto;
 	height: auto;
+	cursor: pointer;
 }
 .newsfeed--footer .redflag--img {
 	padding: 0;
