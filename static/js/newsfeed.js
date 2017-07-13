@@ -98,7 +98,7 @@ $(document).ready(function(){
 
 function showContent(id){
   $('#list__id').val(id);
-  $('#idea__id').val(list[id].proposal);
+  $('.idea__id').val(list[id].proposal);
   console.log(list[id]);
   if(list[id].author_photo_url != ''){
     $('#picture__profile').attr('src', list[id].author_photo_url).show();

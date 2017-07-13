@@ -108,6 +108,7 @@ function showIdeas(list, index){
   var code = '';
   code += '<div class="col-sm-6 home--content--proposal">';
   code += '<div class="row home--header">';
+  code += '<input type="hidden" class="idea__id" value="'+list.proposal+'">';
 	code += '<div class="col-sm-2" style="padding-left: 0px;">';
 	code += '<div class="home--profile--picture"><img src="'+list.author_photo_url+'"></div></div>';
 	code += '<div class="col-sm-1 home--name"><a href="#">'+list.author_username+'</a></div>';

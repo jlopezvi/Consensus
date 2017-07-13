@@ -24,7 +24,9 @@ $(document).ready( function() {
 			var newIdea = '';
 			var url_new = url[0] +'//'+ url[2] +'/static/';
 			for (var i = 0; i < json.ideas_data.length; i++) {						
-				newIdea += '<div class="col-sm-12"><div class="row home--header"><div class="col-sm-2" style="padding-left: 0px;margin-left: -15px;">';
+				newIdea += '<div class="col-sm-12"><div class="row home--header">';
+				newIdea += '<input type="hidden" class="idea__id" value="'+json.ideas_data[i].proposal+'">';
+				newIdea += '<div class="col-sm-2" style="padding-left: 0px;margin-left: -15px;">';
 				newIdea += '<div class="home--profile--picture"><img class="img-circle new--user--icon--login" src="'+json.ideas_data[i].author_photo_url+'"></div></div><div class="col-sm-1 home--name">';
 				newIdea += '<a href="#">'+json.ideas_data[i].author_username+'</a></div><div class="col-sm-2 newsfeed--duration">';
 				newIdea += '<p><img style="width: 15px;position: relative;top: -3px;" src="'+url_new+'images/clock-icon.png">&nbsp;'+json.ideas_data[i].duration+'</p>';

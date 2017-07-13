@@ -169,7 +169,8 @@ $(document).ready(function(){
   
   $(document).on('click', '.redflag', function(){
     $('#redflag-modal').modal('toggle');
-    $('#idea_index').val($('.redflag--img').children('input').val());
+    var proposal = $(this).parent().parent().parent().parent().children().first().children('input.idea__id').val();
+    $('#idea_index').val(proposal);
   });
   
   $('#accept_redflag').on('click', function(){
@@ -178,22 +179,32 @@ $(document).ready(function(){
       'idea_index' : $('#idea_index').val() 
     };
     
-    $.ajax({
-      url: url[0] + "//" + url[2] + '/redflag_idea',
-      type: 'POST',
-      data: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      dataType: 'json',
-      success: function (json) {
-        alert(json.result_msg);
-      },
-      error: function(response){
-        console.log('Error');
-        console.log(response);
+    if($('#reason').val() != ''){
+      $('#reason').css({'border-color': 'rgb(169, 169, 169)'});
+      if(confirm("Are you sure you want to delete this?")){
+        $.ajax({
+          url: url[0] + "//" + url[2] + '/redflag_idea',
+          type: 'POST',
+          data: JSON.stringify(data),
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          dataType: 'json',
+          success: function (json) {
+            alert(json.result_msg);
+          },
+          error: function(response){
+            console.log('Error');
+            console.log(response);
+          }
+        });
       }
-    });
+      else{
+        return false;
+      }
+    } else {
+      $('#reason').css({'border-color': '#FF0000'});
+    }
     
   });
 
