@@ -4,7 +4,7 @@ from utils import getGraph, save_file
 from flask import jsonify, render_template
 import json, uuid
 from datetime import datetime,date
-
+from math import log
 
 # class Idea:
 #     def __init__(self, idea_dict):
@@ -108,89 +108,15 @@ def get_ideas_data_created_by_participant_aux(participant_email, user_email):
         ifallowed = True
         rels = list(getGraph().match(start_node=participant, rel_type="CREATED"))
         for rel in rels:
-            idea_data = get_idea_data_aux(rel.end_node)
+            idea_data = _get_idea_data(rel.end_node)
             ideas_data.append(idea_data)
     else:
         ifallowed = False
     return jsonify({'result': 'OK',"ifallowed": ifallowed,'ideas_data': ideas_data})
 
 
-# <Used by ideas_for_newsfeed_aux / ideas_for_home_aux / get_ideas_data_created_by_participant_aux
-#    /get_idea_data_DEBUG >
-# input   idea_node
-# Output: << return  idea_data>>
-# idea_data = {
-    # 'uuid' : unique_identifier_string,
-    # 'author_photo_url' : 'assets/profile/perfil-mediano.png', 'author_username' : 'Daniela', 'author_email' : 'a@',
-    # 'duration' : '2 days',
-    # 'supporters_goal_num' : 200, 'supporters_num' : 5, 'volunteers_goal_num' : 5, 'volunteers_num' : 2,
-    # 'image_url' : 'url-to-picture',
-    # 'concern': 'Some text for the concern',
-    # 'proposal': 'Some text for the proposal',
-    # 'support_rate' : 95,
-    # 'support_rate_MIN' : 90,
-    # 'supporters': [
-    # { 'email': 'b@', 'username': 'Maria' }, { 'email': 'c@', 'username': 'Pedro' }
-    #             ],
-    # 'rejectors':[
-    # { 'email': 'd@', 'username': 'Elisa' }
-    #               ]
-    # }
-def get_idea_data_aux(idea):
-    from app import SUPPORT_RATE_MIN
-    author_email = getGraph().match_one(end_node=idea, rel_type="CREATED").start_node['email']
-    author_photo_url = _get_participant_node(author_email)['profilepic_url']
-    author_username = _get_participant_node(author_email)['username']
-    idea_proposal = idea['proposal']
-    uuid = idea['uuid']
-    timestamp = datetime.strptime(getGraph().match_one(end_node=idea, rel_type="CREATED")["timestamp"], '%d.%m.%Y')
-    duration = str((datetime.now() - timestamp).days) + ' days'
-    #voters_num = len(list(getGraph().match(end_node=idea, rel_type="VOTED_ON")))
-    supporters_num = _get_vote_statistics_for_idea(idea_proposal)[0]
-    rejectors_num = _get_vote_statistics_for_idea(idea_proposal)[1]
-    active_voters_num = supporters_num + rejectors_num
-    volunteers_num=_get_vote_statistics_for_idea(idea_proposal)[3]
-    support_rate = (supporters_num / active_voters_num) * 100 if active_voters_num is not 0 else 100
-    #
-    vote_rels = list(getGraph().match(end_node=idea, rel_type="VOTED_ON"))
-    supporters_data = []
-    support_rels = [x for x in vote_rels if x["type"] == "supported"]
-    supporters = [x.start_node for x in support_rels]
-    for supporter in supporters:
-        supporters_data.append({'email': supporter['email'], 'username': supporter['username']})
-    rejectors_data = []
-    rejection_rels = [x for x in vote_rels if x["type"] == "rejected"]
-    rejectors = [x.start_node for x in rejection_rels]
-    for rejector in rejectors:
-        rejectors_data.append({'email': rejector['email'], 'username': rejector['username']})
-    #
-    idea_data=idea.get_properties()
-    idea_data.update({'author_photo_url': author_photo_url, 'author_username' : author_username,
-                      'duration': duration, 'uuid': uuid,
-                      'author_email' : author_email, 'supporters_num' : supporters_num,
-                      'volunteers_num': volunteers_num,
-                      'support_rate': support_rate, 'support_rate_MIN': SUPPORT_RATE_MIN,
-                      'supporters' : supporters_data, 'rejectors' : rejectors_data})
-    return idea_data
-
-
-# <used by get_idea_data_aux> [0]->supporters, [1]->rejectors, [2]->passives, [3]->volunteers
-def _get_vote_statistics_for_idea(idea_index):
-    idea=_getIdeaByIdeaIndex(idea_index)
-    rejectors_num=0
-    supporters_num=0
-    passives_num=0
-    volunteers_num=0
-    for vote_rel in (list(getGraph().match(end_node=idea, rel_type="VOTED_ON"))):
-        if vote_rel["type"] == "supported":
-            supporters_num += 1
-        elif vote_rel["type"] == "rejected":
-            rejectors_num += 1
-        elif vote_rel["type"] == "ignored":
-            passives_num += 1
-        if vote_rel["ifvolunteered"] is True:
-            volunteers_num += 1
-    return (supporters_num, rejectors_num, passives_num, volunteers_num)
+def get_vote_statistics_for_idea_aux(idea_index):
+    return _get_vote_statistics_for_idea(idea_index)
 
 
 def _get_supporters_emails_for_idea_aux(idea_index):
@@ -273,12 +199,18 @@ def redflag_idea_aux(user_email, idea_index, reason):
     return remove_idea_aux(idea_index)
 
 
+def get_idea_data_admin_aux(idea_proposal):
+    idea = _getIdeaByIdeaIndex(idea_proposal)
+    _get_idea_data(idea)
+
+
 def get_all_ideas_admin_aux():
     allnodes = _getIdeasIndex().query("proposal:*")
     ideas = []
     for node in allnodes:
         ideas.append(node.get_properties())
     return ideas
+
 
 
 
@@ -357,7 +289,7 @@ def _get_ideas_data_created_by_participant(participant_email):
     rels = list(getGraph().match(start_node=participant, rel_type="CREATED"))
     for rel in rels:
         # idea_data = rel.end_node.get_properties()
-        idea_data = get_idea_data_aux(rel.end_node)
+        idea_data = _get_idea_data(rel.end_node)
         ideas_data.append(idea_data)
     return {'result': 'OK', 'ideas_data': ideas_data}
 
@@ -375,6 +307,102 @@ def _if_ideaisinfirstphase(idea):
             return True
     # else False
     return True
+
+
+# <Used by ideas_for_newsfeed_aux / ideas_for_home_aux / get_ideas_data_created_by_participant_aux
+#    / get_idea_data_admin / get_topten_ideas >
+# input   idea_node
+# Output: << return  idea_data>>
+# idea_data = {
+    # 'uuid' : unique_identifier_string,
+    # 'author_photo_url' : 'assets/profile/perfil-mediano.png', 'author_username' : 'Daniela', 'author_email' : 'a@',
+    # 'duration' : '2 days',
+    # 'supporters_goal_num' : 200, 'supporters_num' : 5, 'volunteers_goal_num' : 5, 'volunteers_num' : 2,
+    # 'image_url' : 'url-to-picture',
+    # 'concern': 'Some text for the concern',
+    # 'proposal': 'Some text for the proposal',
+    # 'support_rate' : 95,
+    # 'support_rate_MIN' : 90,
+    # 'supporters': [
+    # { 'email': 'b@', 'username': 'Maria' }, { 'email': 'c@', 'username': 'Pedro' }
+    #             ],
+    # 'rejectors':[
+    # { 'email': 'd@', 'username': 'Elisa' }
+    #               ]
+    # }
+def _get_idea_data(idea):
+    from app import SUPPORT_RATE_MIN
+    author_email = getGraph().match_one(end_node=idea, rel_type="CREATED").start_node['email']
+    author_photo_url = _get_participant_node(author_email)['profilepic_url']
+    author_username = _get_participant_node(author_email)['username']
+    idea_proposal = idea['proposal']
+    uuid = idea['uuid']
+    timestamp = datetime.strptime(getGraph().match_one(end_node=idea, rel_type="CREATED")["timestamp"], '%d.%m.%Y')
+    duration = str((datetime.now() - timestamp).days) + ' days'
+    #voters_num = len(list(getGraph().match(end_node=idea, rel_type="VOTED_ON")))
+    supporters_num = _get_vote_statistics_for_idea(idea_proposal)[0]
+    rejectors_num = _get_vote_statistics_for_idea(idea_proposal)[1]
+    active_voters_num = supporters_num + rejectors_num
+    volunteers_num=_get_vote_statistics_for_idea(idea_proposal)[3]
+    support_rate = (supporters_num / active_voters_num) * 100 if active_voters_num is not 0 else 100
+    #
+    vote_rels = list(getGraph().match(end_node=idea, rel_type="VOTED_ON"))
+    supporters_data = []
+    support_rels = [x for x in vote_rels if x["type"] == "supported"]
+    supporters = [x.start_node for x in support_rels]
+    for supporter in supporters:
+        supporters_data.append({'email': supporter['email'], 'username': supporter['username']})
+    rejectors_data = []
+    rejection_rels = [x for x in vote_rels if x["type"] == "rejected"]
+    rejectors = [x.start_node for x in rejection_rels]
+    for rejector in rejectors:
+        rejectors_data.append({'email': rejector['email'], 'username': rejector['username']})
+    #
+    idea_data=idea.get_properties()
+    idea_data.update({'author_photo_url': author_photo_url, 'author_username' : author_username,
+                      'duration': duration, 'uuid': uuid,
+                      'author_email' : author_email, 'supporters_num' : supporters_num,
+                      'volunteers_num': volunteers_num,
+                      'support_rate': support_rate, 'support_rate_MIN': SUPPORT_RATE_MIN,
+                      'supporters' : supporters_data, 'rejectors' : rejectors_data})
+    return idea_data
+
+
+# <used by _get_idea_data> [0]->supporters, [1]->rejectors, [2]->passives, [3]->volunteers
+def _get_vote_statistics_for_idea(idea_index):
+    idea=_getIdeaByIdeaIndex(idea_index)
+    rejectors_num=0
+    supporters_num=0
+    passives_num=0
+    volunteers_num=0
+    for vote_rel in (list(getGraph().match(end_node=idea, rel_type="VOTED_ON"))):
+        if vote_rel["type"] == "supported":
+            supporters_num += 1
+        elif vote_rel["type"] == "rejected":
+            rejectors_num += 1
+        elif vote_rel["type"] == "ignored":
+            passives_num += 1
+        if vote_rel["ifvolunteered"] is True:
+            volunteers_num += 1
+    return (supporters_num, rejectors_num, passives_num, volunteers_num)
+
+
+def _get_idea_score(idea):
+    from app import SUPPORT_RATE_MIN
+    vote_statistics_for_idea = _get_vote_statistics_for_idea(idea['proposal'])
+    supporters_num = vote_statistics_for_idea[0]
+    rejectors_num = vote_statistics_for_idea[1]
+    if supporters_num == 0:
+        return 0
+    # volunteers ?
+    # supporters points in range [0, infinity]
+    supporters_points = log10(supporters_num)
+    support_rate = supporters_num / (rejectors_num + supporters_num) * 100
+    # support_rate_points in range [0,1]
+    support_rate_points = (10 ^ ((support_rate - SUPPORT_RATE_MIN) / (100 - SUPPORT_RATE_MIN)) - 1.) / 9.
+    # total number
+    points = support_rate_points + supporters_points
+    return points
 
 
 ####################

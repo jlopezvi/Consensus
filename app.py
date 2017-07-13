@@ -13,14 +13,13 @@ from participantManager import _get_participant_node, remove_user_aux, get_all_p
     add_following_contact_to_user_aux, remove_following_contact_to_user_aux
 from participantManager import get_participantnotifications_for_user_aux, remove_notification_from_participant1_to_participant2_aux
 from ideaManager import get_ideas_data_created_by_participant_aux, get_ideas_created_by_participant_aux,\
-     get_idea_data_aux, add_idea_to_user_aux, \
-    _getIdeaByIdeaIndex, vote_on_idea_aux, modify_idea_aux, remove_idea_aux, \
-    _get_supporters_emails_for_idea_aux, _get_volunteers_emails_for_idea_aux, \
-    _get_vote_statistics_for_idea, get_voting_rel_between_user_and_idea_aux, redflag_idea_aux, get_all_ideas_admin_aux
+    add_idea_to_user_aux, vote_on_idea_aux, modify_idea_aux, remove_idea_aux, _get_supporters_emails_for_idea_aux, \
+    _get_volunteers_emails_for_idea_aux, get_vote_statistics_for_idea_aux, get_voting_rel_between_user_and_idea_aux, \
+    redflag_idea_aux, get_all_ideas_admin_aux, get_idea_data_admin_aux
 from ideaManager import get_ideanotifications_for_user_aux, remove_notification_from_idea_to_participant_aux, \
     _do_tasks_for_idea_editedproposal
 from webManager import ideas_for_newsfeed_aux, ideas_for_home_aux, registration_receive_emailverification_aux, \
-    registration_from_invitation_aux, registration_send_invitation_aux, do_cron_tasks_aux, _verifyEmail
+    registration_from_invitation_aux, registration_send_invitation_aux, do_cron_tasks_aux, get_topten_ideas_aux
 
 import logging
 import flask_login
@@ -566,11 +565,11 @@ def get_supporters_emails_for_idea(idea_proposal):
     return jsonify({"result": "OK", "supporters_emails": supporters_emails})
 
 
-#input   idea_proposal
-#output  {"result": "OK", "vote_statistics" : [supporters_num, rejectors_num, passives_num, volunteers_num]}
+# input   idea_proposal
+# output  {"result": "OK", "vote_statistics" : [supporters_num, rejectors_num, passives_num, volunteers_num]}
 @app.route('/get_vote_statistics_for_idea/<idea_proposal>', methods=['GET'])
 def get_vote_statistics_for_idea(idea_proposal):
-    vote_statistics = _get_vote_statistics_for_idea(idea_proposal)
+    vote_statistics = get_vote_statistics_for_idea_aux(idea_proposal)
     return jsonify({"result": "OK", "vote_statistics" : vote_statistics})
 
 
@@ -629,8 +628,7 @@ def get_all_ideas_admin():
 # output   idea data as a json
 @app.route('/get_idea_data_admin/<idea_proposal>', methods=['GET'])
 def get_idea_data_admin(idea_proposal):
-    idea = _getIdeaByIdeaIndex(idea_proposal)
-    return get_idea_data_aux(idea)
+    return get_idea_data_admin_aux(idea_proposal)
 
 
 ##### IDEA NOTIFICATIONS
@@ -827,6 +825,40 @@ def ideas_for_home(user_email_DEBUG = None):
     #
     vote_type = request.get_json()['vote_type']
     return ideas_for_home_aux(user_email, vote_type)
+
+
+# Input:  None
+# Output: json with fields 'result' and 'data'. 'data' Array with at most 10 ideas ranked from 1st to 10st in order
+# {"result": "OK",
+#  "data": [
+#    {
+#      "author_email": "adavidsole@gmail.com",
+#      "author_username": "alexdsole",
+#      "concern": "Concern",
+#      "timestamp": "01.10.2016",
+#      "duration": "118 days",
+#      "idea_id": "(6)",
+#      "image_url": "http:myproposal.jpg",
+#      "moreinfo": "this and this...",
+#      "proposal": "New Proposal ",
+#      "rejectors": [
+#            { "email": "new1@hotmail.com", "username": "new1_mail" }
+#                   ],
+#      "support_rate": 0,
+#      "support_rate_MIN": 90,
+#      "supporters": [],
+#      "supporters_goal_num": "400",
+#      "supporters_num": 0,
+#      "volunteers_goal_num": "11",
+#      "volunteers_num": 0
+#    },
+#    {
+#    }
+#  ]
+# }
+@app.route('/get_topten_ideas',methods=['POST'])
+def get_topten_ideas():
+    return get_topten_ideas_aux()
 
 
 # input : None

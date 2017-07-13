@@ -1,5 +1,5 @@
 from participantManager import _get_participant_node, _get_fullname_for_participant
-from ideaManager import get_idea_data_aux, remove_idea_aux, _if_ideaisinfirstphase
+from ideaManager import _get_idea_data, remove_idea_aux, _if_ideaisinfirstphase
 from utils import getGraph, send_email #, send_email_new
 from flask import jsonify, render_template, url_for
 from uuid_token import generate_confirmation_token, confirm_token
@@ -90,7 +90,7 @@ def ideas_for_newsfeed_aux(user_email):
                     ideas.append(idea_voted)
     #
     for idea in ideas:
-        newfeed = get_idea_data_aux(idea)
+        newfeed = _get_idea_data(idea)
         ideas_data.append(newfeed)
     return jsonify({"result": "OK", "data": ideas_data})
 
@@ -103,9 +103,27 @@ def ideas_for_home_aux(participant_email, vote_type):
         if vote["type"] == vote_type:
             dic.append(vote.end_node)
     for dic_idea in dic:
-        current_idea = get_idea_data_aux(dic_idea)
+        current_idea = _get_idea_data(dic_idea)
         list_ideas.append(current_idea)
     return jsonify({"result": "OK", "data": list_ideas})
+
+
+def get_topten_ideas_aux():
+    from ideaManager import _getIdeasIndex, _getIdeaByIdeaIndex, _get_idea_score
+    allnodes = _getIdeasIndex().query("proposal:*")
+    ideas = []
+    for node in allnodes:
+        idea=[node["proposal"], _get_idea_score(node)]
+        ideas.append(idea)
+    # TODO : go from ideas to ranked_ten_ideas, a list
+    # ranked_10_ideas_proposals = [1proposal, 2proposal, 3proposal]
+    ranked_10_ideas_proposals = []
+    # END TODO
+    ranked_10_ideas_data= []
+    for ranked_idea_proposal in ranked_10_ideas_proposals:
+        ranked_idea = _getIdeaByIdeaIndex(ranked_idea_proposal)
+        ranked_10_ideas_proposals.append(_get_idea_data(ranked_idea))
+    return jsonify({"result": "OK", "data": ranked_10_ideas_proposals})
 
 
 def do_cron_tasks_aux():
