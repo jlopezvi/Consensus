@@ -6,7 +6,7 @@ from flask import request,render_template,redirect,url_for
 import ast
 import json
 from communityManager import saveCommunity,deleteCommunity,addCommunityToContact,getCommunities
-from participantManager import _get_participant_node, remove_user_aux, get_all_participants_aux, \
+from participantManager import _get_participant_node, remove_user_aux, get_all_participants_admin_aux, \
     get_participant_followers_info_aux,get_participant_followings_info_aux,\
     get_fullname_for_participant_aux, registration_aux, get_participant_data_aux, modify_user_data_aux, \
     get_participant_data_by_email_unrestricted_aux, get_all_public_participants_for_user_aux, if_participant_exists_by_email_aux, \
@@ -368,10 +368,9 @@ def remove_following_contact_to_user(followingcontact_email, user_email_DEBUG=No
     return remove_following_contact_to_user_aux(followingcontact_email, user_email)
 
 
-# TODO: DEBUG
-@app.route('/get_all_participants_DEBUG', methods=['GET','OPTIONS'])
-def get_all_participants_DEBUG():
-    return json.dumps(get_all_participants_aux())
+@app.route('/get_all_participants_admin', methods=['GET','OPTIONS'])
+def get_all_participants_admin():
+    return json.dumps(get_all_participants_admin_aux())
 
 
 # Output  json {"email": "new@gmail.com", "position": "Employee", "group": "IT",

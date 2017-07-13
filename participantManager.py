@@ -243,13 +243,14 @@ def remove_following_contact_to_user_aux(followingcontact_email, user_email):
     else:
         return jsonify({"result": "Wrong", "result_msg": "Following contact does not exist"})
 
-# NOT TESTED
-def get_all_participants_aux():
+
+def get_all_participants_admin_aux():
     allnodes = _getParticipantsIndex().query("email:*")
     participants = []
     for node in allnodes:
         participants.append(node.get_properties())
     return participants
+
 
 def get_all_public_participants_for_user_aux(user):
     participant = _get_participant_node(user)
