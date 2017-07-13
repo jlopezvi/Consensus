@@ -302,7 +302,7 @@ $(document).ready( function() {
 			url: url[0] + "//" + url[2] + '/get_voting_rel_between_user_and_idea/'+data_input.idea_proposal,
 			type: 'GET',
 			success: function(data){
-      			console.log(data);
+      			//console.log(data);
 				if(data.result == 'OK' && ((data.vote_ifvolunteered) && (data.vote_type == 'supported')))
 					current_vote = 'volunteer';
 				else if(data.result == 'OK' && ((!data.vote_ifvolunteered) && (data.vote_type == 'supported')))
@@ -336,7 +336,7 @@ $(document).ready( function() {
 		        				if(vote_ifvolunteered){
 		        					volunt++;
 		        					element.parent().parent().children('input.volunteers--input').val(volunt);
-		        					if(current_vote == 'rejected'){
+		        					if(current_vote == 'rejected' || current_vote == 'ignored' || data.result == 'Wrong'){
 		        						support++;
 			        					element.parent().parent().children('input.supporters--input').val(support);
 		        					}
