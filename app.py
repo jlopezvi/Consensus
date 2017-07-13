@@ -444,7 +444,7 @@ def add_idea_to_user(user_email_DEBUG=None) :
     if idea_dict['if_author_public'] == 'True': idea_dict['if_author_public'] = True
     if idea_dict['if_author_public'] == 'False': idea_dict['if_author_public'] = False
     print(idea_dict['first_receivers_emails'])
-    #idea_dict['first_receivers_emails'] = idea_dict['first_receivers_emails'].split()
+    # idea_dict['first_receivers_emails'] = idea_dict['first_receivers_emails'].split()
     #
     if 'fileUpload' in request.files:
         ideapic_file_body = request.files['fileUpload']
