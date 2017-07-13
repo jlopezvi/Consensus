@@ -165,7 +165,7 @@ $(document).ready( function() {
 	});
     
 	$.ajax({
-		url: url[0] + "//" + url[2] + '/get_all_public_participants',
+		url: url[0] + "//" + url[2] + '/get_all_public_participants_for_user',
 		type: 'GET',
 		headers: {
 		'Content-Type': 'application/json'

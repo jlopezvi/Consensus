@@ -9,7 +9,7 @@ from communityManager import saveCommunity,deleteCommunity,addCommunityToContact
 from participantManager import _get_participant_node, remove_user_aux, get_all_participants_aux, \
     get_participant_followers_info_aux,get_participant_followings_info_aux,\
     get_fullname_for_participant_aux, registration_aux, get_participant_data_aux, modify_user_data_aux, \
-    get_participant_data_by_email_unrestricted_aux, get_all_public_participants_aux, if_participant_exists_by_email_aux, \
+    get_participant_data_by_email_unrestricted_aux, get_all_public_participants_for_user_aux, if_participant_exists_by_email_aux, \
     add_following_contact_to_user_aux, remove_following_contact_to_user_aux
 from participantManager import get_participantnotifications_for_user_aux, remove_notification_from_participant1_to_participant2_aux
 from ideaManager import get_ideas_data_created_by_participant_aux, get_ideas_created_by_participant_aux,\
@@ -373,12 +373,13 @@ def remove_following_contact_to_user(followingcontact_email, user_email_DEBUG=No
 def get_all_participants_DEBUG():
     return json.dumps(get_all_participants_aux())
 
+
 # Output  json {"email": "new@gmail.com", "position": "Employee", "group": "IT",
 #               "fullname": "jlopezvi", "profilepic_url":'example.jpg', "if_following":True/False}
-@app.route('/get_all_public_participants', methods=['GET'])
-def get_all_public_participants():
+@app.route('/get_all_public_participants_for_user', methods=['GET'])
+def get_all_public_participants_for_user():
     user = flask_login.current_user.id
-    return json.dumps(get_all_public_participants_aux(user))
+    return json.dumps(get_all_public_participants_for_user_aux(user))
 
 
 ##### PARTICIPANT NOTIFICATIONS

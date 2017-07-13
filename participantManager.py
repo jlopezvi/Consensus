@@ -251,7 +251,7 @@ def get_all_participants_aux():
         participants.append(node.get_properties())
     return participants
 
-def get_all_public_participants_aux(user):
+def get_all_public_participants_for_user_aux(user):
     participant = _get_participant_node(user)
     allnodes = _getParticipantsIndex().query("email:*")
     participants = []
