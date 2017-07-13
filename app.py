@@ -13,12 +13,12 @@ from participantManager import _get_participant_node, remove_user_aux, get_all_p
     add_following_contact_to_user_aux, remove_following_contact_to_user_aux
 from participantManager import get_participantnotifications_for_user_aux, remove_notification_from_participant1_to_participant2_aux
 from ideaManager import get_ideas_data_created_by_participant_aux, get_ideas_created_by_participant_aux,\
-     get_idea_data_aux, add_idea_to_user_aux, deleteOneIdea,getAllIdeas, \
+     get_idea_data_aux, add_idea_to_user_aux, \
     _getIdeaByIdeaIndex, vote_on_idea_aux, modify_idea_aux, remove_idea_aux, \
     _get_supporters_emails_for_idea_aux, _get_volunteers_emails_for_idea_aux, \
-    _get_vote_statistics_for_idea, get_voting_rel_between_user_and_idea_aux
+    _get_vote_statistics_for_idea, get_voting_rel_between_user_and_idea_aux, redflag_idea_aux, get_all_ideas_admin_aux
 from ideaManager import get_ideanotifications_for_user_aux, remove_notification_from_idea_to_participant_aux, \
-    _do_tasks_for_idea_editedproposal, redflag_idea_aux
+    _do_tasks_for_idea_editedproposal
 from webManager import ideas_for_newsfeed_aux, ideas_for_home_aux, registration_receive_emailverification_aux, \
     registration_from_invitation_aux, registration_send_invitation_aux, do_cron_tasks_aux, _verifyEmail
 
@@ -550,14 +550,6 @@ def get_ideas_data_created_by_participant(participant_email,user_email_DEBUG=Non
     return get_ideas_data_created_by_participant_aux(participant_email,user_email)
 
 
-#input   idea_proposal
-#output   idea data as a json
-@app.route('/get_idea_data_DEBUG/<idea_proposal>', methods=['GET'])
-def get_idea_data_DEBUG(idea_proposal):
-    idea = _getIdeaByIdeaIndex(idea_proposal)
-    return get_idea_data_aux(idea)
-
-
 # input   idea_proposal
 # output  json {"result": "OK", "volunteers_emails": [email1, email2,...]}
 @app.route('/get_volunteers_emails_for_idea/<idea_proposal>', methods=['GET'])
@@ -611,11 +603,34 @@ def vote_on_idea(user_email_DEBUG = None):
         user_email = flask_login.current_user.id
     return vote_on_idea_aux(user_email, request.get_json())
 
-# TODO
-@app.route('/getConcerns/<string:current>', methods=['GET', 'OPTIONS'])
-def getConcerns(current):
-    print (current)
-    # return json.dumps(getAllConcerns(current))
+
+# input:   user's email (flask_login.current_user.id),
+#          json {"idea_index":"let's do this",
+#               "reason":"this and this"}
+# output: jsonify({"result":"OK", "result_msg":"Idea was removed"})
+@app.route('/redflag_idea',methods=['POST'])
+@app.route('/redflag_idea/<user_email_DEBUG>',methods=['POST'])
+def redflag_idea(user_email_DEBUG = None):
+    if DEBUG and user_email_DEBUG is not None:
+        user_email = user_email_DEBUG
+    else:
+        user_email = flask_login.current_user.id
+    reason = request.get_json()['reason']
+    idea_index = request.get_json()['idea_index']
+    return redflag_idea_aux(user_email, idea_index, reason)
+
+
+@app.route('/get_all_ideas_admin', methods=['GET','OPTIONS'])
+def get_all_ideas_admin():
+    return json.dumps(get_all_ideas_admin_aux())
+
+
+# input   idea_proposal
+# output   idea data as a json
+@app.route('/get_idea_data_admin/<idea_proposal>', methods=['GET'])
+def get_idea_data_admin(idea_proposal):
+    idea = _getIdeaByIdeaIndex(idea_proposal)
+    return get_idea_data_aux(idea)
 
 
 ##### IDEA NOTIFICATIONS
@@ -649,22 +664,6 @@ def remove_notification_from_idea_to_participant():
     idea_index = request.get_json()['proposal']
     notification_type = request.get_json()['notification_type']
     return remove_notification_from_idea_to_participant_aux(participant_email, idea_index, notification_type)
-
-
-# input:   user's email (flask_login.current_user.id),
-#          json {"idea_index":"let's do this",
-#               "reason":"this and this"}
-# output: jsonify({"result":"OK", "result_msg":"Idea was removed"})
-@app.route('/redflag_idea',methods=['POST'])
-@app.route('/redflag_idea/<user_email_DEBUG>',methods=['POST'])
-def redflag_idea(user_email_DEBUG = None):
-    if DEBUG and user_email_DEBUG is not None:
-        user_email = user_email_DEBUG
-    else:
-        user_email = flask_login.current_user.id
-    reason = request.get_json()['reason']
-    idea_index = request.get_json()['idea_index']
-    return redflag_idea_aux(user_email, idea_index, reason)
 
 
 

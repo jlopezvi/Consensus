@@ -142,7 +142,7 @@ def get_idea_data_aux(idea):
     author_photo_url = _get_participant_node(author_email)['profilepic_url']
     author_username = _get_participant_node(author_email)['username']
     idea_proposal = idea['proposal']
-    uuid=idea['uuid']
+    uuid = idea['uuid']
     timestamp = datetime.strptime(getGraph().match_one(end_node=idea, rel_type="CREATED")["timestamp"], '%d.%m.%Y')
     duration = str((datetime.now() - timestamp).days) + ' days'
     #voters_num = len(list(getGraph().match(end_node=idea, rel_type="VOTED_ON")))
@@ -183,13 +183,13 @@ def _get_vote_statistics_for_idea(idea_index):
     volunteers_num=0
     for vote_rel in (list(getGraph().match(end_node=idea, rel_type="VOTED_ON"))):
         if vote_rel["type"] == "supported":
-            supporters_num+=1
+            supporters_num += 1
         elif vote_rel["type"] == "rejected":
-            rejectors_num+=1
+            rejectors_num += 1
         elif vote_rel["type"] == "ignored":
-            passives_num+=1
-        if vote_rel["ifvolunteered"] == True:
-           volunteers_num+=1
+            passives_num += 1
+        if vote_rel["ifvolunteered"] is True:
+            volunteers_num += 1
     return (supporters_num, rejectors_num, passives_num, volunteers_num)
 
 
@@ -213,48 +213,6 @@ def _get_volunteers_emails_for_idea_aux(idea_index):
     for volunteer in volunteers:
         volunteers_emails.append(volunteer['email'])
     return volunteers_emails
-
-
-
-
-def _ideaIsNewForParticipant(idea,participant) :
-    getGraph().create((idea, "IS NEW FOR", participant))
-
-
-def _addIdeaToIndex(proposal, new_idea_node):
-    _getIdeasIndex().add("proposal", proposal, new_idea_node)
-
-
-def _removeFromIdeaIndex(proposal, idea_data):
-    _getIdeasIndex().remove("proposal", proposal, idea_data)
-
-
-def _getIdeaByIdeaIndex(idea_index) :
-    ideaFound = _getIdeasIndex().get("proposal", idea_index)
-    if ideaFound :
-        return ideaFound[0]
-    return None
-
-def _getIdeasIndex():
-    return getGraph().get_or_create_index(neo4j.Node, "Ideas")
-
-
-def deleteOneIdea(id):
-    idea = getGraph().node(id)
-    print(idea[0])
-    # getIdeasIndex().get("title", idea.get("title")).delete()
-
-
-def getAllIdeas(email):
-    print("getAllIdeas")
-    currentUser = _get_participant_node(email)
-    rels = list(getGraph().match(start_node=currentUser, rel_type="CREATED"))
-    ideas = []
-    for rel in rels:
-        currentIdea = rel.end_node.get_properties()
-        currentIdea["id"] = rel.end_node._id
-        ideas.append(currentIdea)
-    return ideas
 
 
 def get_voting_rel_between_user_and_idea_aux(user_email, idea_proposal):
@@ -314,9 +272,41 @@ def redflag_idea_aux(user_email, idea_index, reason):
     _send_notification_email_from_idea_to_author(idea_index, 'redflag', reason, user['fullname'])
     return remove_idea_aux(idea_index)
 
+
+def get_all_ideas_admin_aux():
+    allnodes = _getIdeasIndex().query("proposal:*")
+    ideas = []
+    for node in allnodes:
+        ideas.append(node.get_properties())
+    return ideas
+
+
+
 ####################
 #  PURE INTERNAL
 ###################
+
+
+def _ideaIsNewForParticipant(idea,participant) :
+    getGraph().create((idea, "IS NEW FOR", participant))
+
+
+def _addIdeaToIndex(proposal, new_idea_node):
+    _getIdeasIndex().add("proposal", proposal, new_idea_node)
+
+
+def _removeFromIdeaIndex(proposal, idea_data):
+    _getIdeasIndex().remove("proposal", proposal, idea_data)
+
+
+def _getIdeaByIdeaIndex(idea_index) :
+    ideaFound = _getIdeasIndex().get("proposal", idea_index)
+    if ideaFound :
+        return ideaFound[0]
+    return None
+
+def _getIdeasIndex():
+    return getGraph().get_or_create_index(neo4j.Node, "Ideas")
 
 
 def _if_voting_relationship_exists(participant, idea):
@@ -366,6 +356,7 @@ def _get_ideas_data_created_by_participant(participant_email):
     ideas_data = []
     rels = list(getGraph().match(start_node=participant, rel_type="CREATED"))
     for rel in rels:
+        # idea_data = rel.end_node.get_properties()
         idea_data = get_idea_data_aux(rel.end_node)
         ideas_data.append(idea_data)
     return {'result': 'OK', 'ideas_data': ideas_data}
