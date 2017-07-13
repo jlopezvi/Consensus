@@ -167,9 +167,11 @@ $(document).ready(function(){
     });
   });
   
+  var red_flag_idea;
   $(document).on('click', '.redflag', function(){
     $('#redflag-modal').modal('toggle');
-    var proposal = $(this).parent().parent().parent().parent().children().first().children('input.idea__id').val();
+    red_flag_idea = $(this).parent().parent().parent().parent();
+    var proposal = red_flag_idea.children().first().children('input.idea__id').val();
     $('#idea_index').val(proposal);
   });
   
@@ -192,6 +194,8 @@ $(document).ready(function(){
           dataType: 'json',
           success: function (json) {
             alert(json.result_msg);
+            $('#redflag-modal').modal('hide');
+            red_flag_idea.remove();
           },
           error: function(response){
             console.log('Error');
