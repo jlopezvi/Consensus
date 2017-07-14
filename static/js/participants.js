@@ -196,12 +196,14 @@ $(document).ready( function() {
 	$('body').removeClass('container').addClass('container-fluid');
 	
 	$(document).on('click', '#send_invitation-btn', function(){
-		var guest_email = $('#emails_input').val().split(",");
+		$('.span--error').remove();
+		var guest_email = $('#emails_input').val().split(", ");
 		var host_email = $('#host_email').val();
 		var msg = '';
 		var validation = false;
 		if(guest_email != ''){
 			for(var i=0; i<guest_email.length; i++){
+				console.log(guest_email[i]);
 				if( !isValidEmailAddress( guest_email[i] ) ) {
 					validation = true;
 					break;
@@ -209,12 +211,11 @@ $(document).ready( function() {
 			}
 		} else
 			validation = true;
-		if(validation)
+		if(validation){
 			$('#emails_input').css('border-color', '#FF0000').after('<span class="span--error"><br>All emails must be valid!</span>');
-		else{
+		}else{
 			$('#send_invitation-btn').prop('disabled', true);
 			$('#emails_input').css('border-color', 'rgb(169, 169, 169)');
-			$('.span--error').remove();
 			for(var i=0; i<guest_email.length; i++){
 				$.ajax({
 					url: url[0] + "//" + url[2] + '/registration_send_invitation/'+host_email+'/'+guest_email[i],
