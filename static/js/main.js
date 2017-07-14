@@ -44,7 +44,7 @@ $(document).ready(function(){
   /** end of check all  ***/
 
   $(document).on('click', '.add--proposal--provisional', function(){
-  /*
+  
     fData = new FormData();
     fData.append('concern', $('#concern').val());
     fData.append('proposal', $('#proposal').val());
@@ -52,11 +52,11 @@ $(document).ready(function(){
     fData.append('moreinfo_concern', $('#moreinfo_concern').val());
     fData.append('volunteers_goal_num', $('#volunteers_goal_num').val());
     fData.append('supporters_goal_num', 200);
-  */  
+    
     var opt = false;
     if ($('input[name=proposal-anon]').is(":checked"))
         opt = true;
-    //fData.append('if_author_public', opt);
+    fData.append('if_author_public', opt);
     
     var first_receivers_emails = '';
     var list_followers = $('#addpro').find('input[type=checkbox]');
@@ -64,37 +64,20 @@ $(document).ready(function(){
     	if(list_followers[i].checked)
     	  first_receivers_emails += list_followers[i].value + ' ';
     }
-    //fData.append('first_receivers_emails', first_receivers_emails);
-    
-    var data = {
-      'concern':  $('#concern').val(),
-      'proposal': $('#proposal').val(),
-      'moreinfo_proposal': $('#moreinfo_proposal').val(),
-      'moreinfo_concern':  $('#moreinfo_concern').val(),
-      'volunteers_goal_num': $('#volunteers_goal_num').val(),
-      'supporters_goal_num': 200,
-      'first_receivers_emails': first_receivers_emails,
-      'if_author_public': opt
-    };
+    fData.append('first_receivers_emails', first_receivers_emails);
     
     if($('#fileUpload').val() != '')
-      //fData.append('fileUpload', $('#fileUpload')[0].files[0]);
-      data['fileUpload'] = $('#fileUpload')[0].files[0];
+      fData.append('fileUpload', $('#fileUpload')[0].files[0]);
     //var img = $('#fileUpload').val();
   
-    for(var key in data) {
-      console.log(key, data[key]);
-    }
     
     if ($('#volunteers_goal_num').val() > 0 ) {
       $.ajax({
         url: url[0] + "//" + url[2] + '/add_idea_to_user',
         type: 'POST',
-        //data: fData,
-        data: data,
-        header: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
+        data: fData,
+        processData: false,
+        contentType: false,
         success: function (json) {
           alert(json.result_msg);
           window.location = '../home';
