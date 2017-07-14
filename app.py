@@ -856,7 +856,7 @@ def ideas_for_home(user_email_DEBUG = None):
 #    }
 #  ]
 # }
-@app.route('/get_topten_ideas',methods=['GET','OPTIONS'])
+@app.route('/get_topten_ideas',methods=['POST','OPTIONS'])
 def get_topten_ideas():
     return get_topten_ideas_aux()
 
