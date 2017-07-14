@@ -59,10 +59,13 @@ $(document).ready(function(){
       var id = $('#list__id').val();
       
       var data = {
-        'idea_proposal': $(document).find('#idea__id').val(),
+        'idea_proposal': $(document).find('.idea__id').val(),
         'vote_ifvolunteered': vote_ifvolunteered,
         'vote_type': type
       };
+      console.log(data.idea_proposal);
+      console.log(data.vote_ifvolunteered);
+      console.log(data.vote_type);
       
       removeElementFromList(id);
     	$.ajax({
