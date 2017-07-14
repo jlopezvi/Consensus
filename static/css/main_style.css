@@ -1464,4 +1464,10 @@ a.add--proposal--provisional {
     background-image: -webkit-gradient(linear,left top,left bottom,from(#bfff00),to(#9fcb1b))!important;
     background-image: linear-gradient(to bottom,#bfff00 0,#9fcb1b 100%)!important;
 }
+.span--error{
+	left: 35px;
+    position: relative;
+    color: #FF0000;
+    font-weight: bold;
+}
 /***** END NEW STILES ******************/
