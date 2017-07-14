@@ -115,15 +115,27 @@ def get_topten_ideas_aux():
     for node in allnodes:
         idea=[node["proposal"], _get_idea_score(node)]
         ideas.append(idea)
+    # Commit alexis
+    i= 0
+    while (i < len(ideas)):
+        j = i
+        while (j < len(ideas)):
+            if(ideas[i][1] < ideas[j][1]):
+                temp = ideas[i]
+                ideas[i] = ideas[j]
+                ideas[j] = temp
+            j= j+1
+        i=i+1
+    # End commit
     # TODO : go from ideas to ranked_ten_ideas, a list
     # ranked_10_ideas_proposals = [1proposal, 2proposal, 3proposal]
-    ranked_10_ideas_proposals = []
+    ranked_10_ideas_proposals = ideas[:10]
     # END TODO
     ranked_10_ideas_data= []
     for ranked_idea_proposal in ranked_10_ideas_proposals:
-        ranked_idea = _getIdeaByIdeaIndex(ranked_idea_proposal)
-        ranked_10_ideas_proposals.append(_get_idea_data(ranked_idea))
-    return jsonify({"result": "OK", "data": ranked_10_ideas_proposals})
+        ranked_idea = _getIdeaByIdeaIndex(ranked_idea_proposal[0])
+        ranked_10_ideas_data.append(_get_idea_data(ranked_idea))
+    return jsonify({"result": "OK", "data": ranked_10_ideas_data})
 
 
 def do_cron_tasks_aux():
@@ -178,4 +190,3 @@ def _verifyEmail(email):
         # TODO datestamp for registration
         # registered_on=datetime.datetime.now()
         return {'result': 'OK', 'result_msg': 'Email verified'}
-
