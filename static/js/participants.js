@@ -509,10 +509,13 @@ function seaarch_participant(search){
 }
 
 function follow_unfollow_participant(type, user){
-	if(type == 'Follow')
+	if(type == 'Follow'){
 		var finalUrl = '/add_following_contact_to_user/'+user;
-	else
+		$('#home ul li').remove();
+	}else{
 		var finalUrl = '/remove_following_contact_to_user/'+user;
+		$('#home ul li').remove();
+	}
 	$.ajax({
 		url: url[0] + "//" + url[2] + finalUrl,
 		type: 'GET',
@@ -523,6 +526,29 @@ function follow_unfollow_participant(type, user){
 			else
 				count--;
 			$('.participant__following').children().first().text(count);
+			current_email = $('#host_email').val();
+			$.ajax({
+				url: url[0] + "//" + url[2] + '/get_participant_followings_info/'+current_email,
+				type: 'GET',
+				success: function (json) {
+			//console.log(json);
+				followingList = '';	
+				for(var i = 0; i < json.followings_num; i++){
+					followingList += '<li><input value="'+json.followings_info[i].email+'" class="checkbox check--followers" type="checkbox" name="check[]">';
+					followingList += '<img class="new--user--icon--login" src="'+json.followings_info[i].profilepic_url+'">';
+					followingList += '<p><a href="#">'+json.followings_info[i].username+'</a>';					
+					followingList += '<br>'+json.followings_info[i].fullname+'</p></li>';
+				}
+				if ($('#participant_email').val() != 'None' && json.followings_num == 0){
+					$('#home ul').append('<center><h3 >this user has no followings</h3></center>');
+				}else if (json.followings_num != 0) {
+					$('#home ul').append(followingList);
+				}else{
+					$('#home ul').append('<center><h3 id="msg">You are following no one</h3></center>');
+				}
+			}					
+				
+		});
 		},
 		error: function (response) {
 			alert('Sorry, something went wrong. Try again later.');		
