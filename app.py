@@ -146,12 +146,11 @@ def logout():
     return jsonify({"result": "OK"})
 
 
-# input:  application/x-www-form-urlencoded
-#        (file) profilepic_file_body
-#   (data dictionary): fullname=Juan Lopez&email=jj@gmail.com&username=jlopezvi
-#                       &position=employee&group=IT&password=MD5password
-#                       &host_email=asdf@das/None&ifpublicprofile=True/False
-#                       &ifregistrationfromemail=True/False
+# input:  application/json
+#                      {"fullname":"Juan Lopez","email":"jj@gmail.com", "username": "jlopezvi",
+#                       "position":"employee", "group":"IT", "password":"MD5password",
+#                       "host_email":"asdf@das"/null, "ifpublicprofile":true/false,
+#                       "ifregistrationfromemail":true/false, "profilepic":"string_in_base64"/null}
 # output: json
 #          1. Wrong (participant registered already!)
 #                       {"result":"Wrong","ifemailexists":true,"ifemailexists_msg":"message"}
@@ -167,18 +166,8 @@ def logout():
 #             *Note: when "ifhost" is "true", the user starts following the host.
 @app.route('/registration', methods=['POST'])
 def registration():
-    profilepic_file_body = None
-    inputdict = request.form.to_dict()
-    # translation of data to a python dictionary, with True, False, and None
-    if inputdict['ifpublicprofile'] == 'True': inputdict['ifpublicprofile'] = True
-    if inputdict['ifpublicprofile'] == 'False': inputdict['ifpublicprofile'] = False
-    if inputdict['ifregistrationfromemail'] == 'True': inputdict['ifregistrationfromemail'] = True
-    if inputdict['ifregistrationfromemail'] == 'False': inputdict['ifregistrationfromemail'] = False
-    if inputdict['host_email'] == 'None': inputdict['host_email'] = None
-    # if profilepic :
-    if 'fileUpload' in request.files:
-        profilepic_file_body = request.files['fileUpload']
-    return registration_aux(inputdict,profilepic_file_body)
+    inputdict = request.get_json()
+    return registration_aux(inputdict)
 
 
 #TODO  multipart/form-data   or   application/x-www-form-urlencoded ?

@@ -13,7 +13,7 @@ import flask_login
 # input: python dict {'fullname':'Juan Lopez','email': 'jj@gmail.com', 'username': 'jlopezvi',
 #              'position': 'employee', 'group': 'IT', 'password': 'MD5password',
 #              'host_email': 'asdf@das' / None, 'ifpublicprofile': True/ False,
-#              'ifregistrationfromemail': True / False}
+#              'ifregistrationfromemail': True / False, 'profilepic': 'string_base64'/None}
 #        (file) profilepic_file_body
 # output: json
 #          1. Wrong  -->   {"result":"Wrong","ifemailexists":true,"ifemailexists_msg":ifemailexists_msg[true]}
@@ -23,7 +23,7 @@ import flask_login
 #          3. OK (4 different normal cases of registration)
 #                       {"result":"OK", "ifhost":true/false,"ifhost_msg":ifhost_msg[ifhost],
 #                       "ifemailverified":true/false,"ifemailverified_msg":ifemailverified_msg[email_verified]})
-def registration_aux(inputdict, profilepic_file_body):
+def registration_aux(inputdict):
     email = inputdict.get('email')
     ifemailverified_msg= ["E-mail not verified. E-mail verification sent. " \
                           "Close this window and check your e-mail within the next few minutes ", None]
@@ -46,7 +46,7 @@ def registration_aux(inputdict, profilepic_file_body):
     # (Normal cases of registration)
     # save data for new (verified / unverified) participant in database
     ifemailverified = inputdict.get('ifregistrationfromemail')
-    _newParticipant(inputdict, profilepic_file_body)
+    _newParticipant(inputdict)
     if ifemailverified is True:
         user = User(email)
         flask_login.login_user(user)
@@ -70,18 +70,17 @@ def registration_aux(inputdict, profilepic_file_body):
 #              'ifregistrationfromemail': True / False, 'ifpublicprofile': True / False,}
 #       profilepic_file_body: None/ (file)
 # output: python dict {'result':'OK'}
-def _newParticipant(participantdict,profilepic_file_body):
+def _newParticipant(participantdict):
     image_url = '/static/assets/profile/perfil-mediano.png'
     email = participantdict.get('email')
-    if profilepic_file_body is not None:
-        ruta_dest = '/static/assets/profile/'
-        filename=str(email)+'.png'
-        image_url = save_file(ruta_dest, profilepic_file_body, filename)
+    if participantdict['profilepic'] is None:
+        # TODO: default pic
+        participantdict['profilepic'] = 'default'
     newparticipant, = getGraph().create({"fullname" : participantdict.get('fullname'), "email" : email,
                                   "username" : participantdict.get('username'), "position" : participantdict.get('position'),
                                   "group" : participantdict.get('group'), "password" : participantdict.get('password'),
                                   "ifpublicprofile" : participantdict.get('ifpublicprofile'),
-                                  "profilepic_url" : image_url, "ifsupportingproposalsvisible" : True,
+                                  "profilepic" : participantdict['profilepic'], "ifsupportingproposalsvisible": True,
                                   "ifrejectingproposalsvisible": True
                                   })
     if participantdict.get('ifregistrationfromemail') is True:
