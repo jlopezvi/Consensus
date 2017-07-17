@@ -24,7 +24,6 @@
 }
 input[type=text], input[type=password], select {
 	font-size: 12px!important;
-	padding: 2% 5%!important;
 	background-color: #e5e6e8!important;
 }
 html {
