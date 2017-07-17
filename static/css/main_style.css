@@ -1470,3 +1470,30 @@ a.add--proposal--provisional {
     font-weight: bold;
 }
 /***** END NEW STILES ******************/
+
+/****************** CROPPER STYLES ******************/
+.cropme_profile{
+	width: 100px;
+    height: 100px;
+    float: left;
+    background-image: url(/static/assets/profile/perfil-mediano.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+.cropme_profile img{
+	border-radius: 50px;
+}
+.cropme_span{
+    position: relative;
+    right: 61px;
+    bottom: -98px;
+    font-size: 13px;
+}
+#preview{
+	z-index: 9999!important;
+}
+#preview .buttons .cancel,
+#preview .buttons .ok{
+	background-size: cover;
+}

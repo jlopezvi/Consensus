@@ -1,3 +1,5 @@
+//Demo.init(); //Starting Cropper Functionalities
+$('.cropme_profile').simpleCropper();
 function getCookie(cname) {
   var name = cname + "=";
   var ca = document.cookie.split(';');
@@ -221,9 +223,9 @@ $(document).ready( function() {
     $.ajax({
       url: url[0] + "//" + url[2] + '/registration',
       type: 'POST',
-      data: fData,
-      processData: false,
-      contentType: false,
+      data: fData,
+      processData: false,
+      contentType: false,
       success: function (json) {
         if(json.result != 'OK'){
           $('.register--message').removeClass('alert-danger').addClass('alert-success');
@@ -266,7 +268,11 @@ $(document).ready( function() {
       reader.readAsDataURL(f);
     }
   }
-  document.getElementById('profile_photo').addEventListener('change', archive, false);
+  //document.getElementById('profile_photo').addEventListener('change', archive, false);
+  
+  /**************************** CROPPIE FUNCTIONS ****************************/
+  
+  
 
 });
 
@@ -302,3 +308,4 @@ $( window ).load(function(){
     });
   }
 });
+
