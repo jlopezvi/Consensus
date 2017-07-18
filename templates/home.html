@@ -22,11 +22,11 @@
 		<div class="col-sm-3" style="padding-right:0;width: 320px;">
 			<h2>You Voted:</h2>	<br>
 			<div class="home--select">
-				<label class="selected--option" id="supported"><img style="width:25px;" src="{{ url_for('static',filename='images/checkmark.png') }}">Supported + Volunteers ideas </label>
+				<label class="selected--option" ><img id="supported" style="width:25px;" src="{{ url_for('static',filename='images/checkmark.png') }}">Supported + Volunteers ideas </label>
 				<span class="glyphicon glyphicon-triangle-bottom select--triangle"></span>
 				<div class="select--options">
-					<label class="unselected--option" id="ignored"><img src="{{ url_for('static',filename='images/ignore-icon.png') }}">See the ignored ideas</label>
-					<label class="unselected--option" id="rejected"><img src="{{ url_for('static',filename='images/x-icon.png') }}">See the rejected ideas </label>
+					<label class="unselected--option"><img id="ignored" src="{{ url_for('static',filename='images/ignore-icon.png') }}">See the ignored ideas</label>
+					<label class="unselected--option" ><img id="rejected" src="{{ url_for('static',filename='images/x-icon.png') }}">See the rejected ideas </label>
 				</div>
 			</div>
 		</div>
@@ -37,115 +37,8 @@
         <div class="dot2"></div>
     </div>
 	
-	<div class="container col-sm-12"  id="home--proposals" ></div>
-	{% for person_h in persons_home %}
-	<div class="col-sm-6 home--content--proposal">
-		<div class="row home--header">
-			<div class="col-sm-2" style="padding-left: 0px;">
-			{% if (person_h.picture == '') %}
-				<i class="fa fa-user user--icon"></i>
-			{% else %}
-				<div class="home--profile--picture">
-					<img src="{{ url_for('static',filename=person_h.picture) }}">
-				</div>
-			{% endif %}
-			</div>
-			<div class="col-sm-1 home--name">
-				<a href="#">{{ person_h.name }}</a>
-			</div>
-			<div class="col-sm-2 newsfeed--duration">
-				<p><img style="width: 19px;position: relative;top: -3px;" src="{{ url_for('static',filename='images/clock-icon.png') }}">&nbsp;
-				{{ person_h.duration }}</p>
-			</div>
-			<div class="col-sm-3 home--charge">
-				<div class="progress home--progress">
-					<input type="text" value="{{ (person_h.supporters_current * 100)/ person_h.supporters_goal }}" id="supporters--percent" hidden>
-					<div class="progress-bar newsfeed--bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style=""></div>
-				</div>
-
-				<div class="progress home--progress2">
-					<input type="text" value="{{ (person_h.volunters_current * 100)/ person_h.volunters_goal }}" id="volunters--percent" hidden>
-					<div class="progress-bar newsfeed--bar2" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style=""></div>
-				</div>
-			</div>
-			<div class="col-sm-4 newsfeed--goals">
-				<p>{{ person_h.supporters_current }}/{{ person_h.supporters_goal }} supporters goals<br>
-				{{ person_h.volunters_current }}/{{ person_h.volunters_goal }} volunteers goals</p>
-			</div>
-		</div>
-		<div class="row home--proposals--body">
-			<div class="col-sm-12">
-				<div class="col-sm-8 newsfeed--problem">
-					{{ person_h.problem }}<br>{{ person_h.problem }}<br>{{ person_h.problem }}
-				</div>
-			</div>
-			<div class="col-sm-12" style="margin-top: 180px;">
-				<div class="col-sm-8 col-sm-offset-4 newsfeed--proposal">
-					{{ person_h.proposal }}<br>{{ person_h.proposal }}<br>{{ person_h.proposal }}
-				</div>
-			</div>
-		</div>
-		<div class="row newsfeed--footer">
-			<div class="col-sm-12" style="padding-right: 0px; padding-left: 0px;">
-				<div class="col-sm-1 redflag--img">
-					<img src="{{ url_for('static',filename='images/redflag.png') }}">
-				</div>
-				<div class="col-sm-9 newsfeed--support" style="padding-right:0;padding-left:30px;">
-					<input type="text" value="{{ (person_h.liked|length * 100)/(person_h.liked|length + person_h.disliked|length) }}" id="percent" hidden>
-					<div class="input--percent">	
-						<label>	Support Rate: </label>
-					</div>
-				</div>
-				<div class="col-sm-2 neewsfeed--moreinfo" style="float:right;">
-					<input type="button" name="more-info" class="home--button">
-				</div>
-			</div>
-		</div>
-		<div class="row newsfeed--persons">
-			<div class="col-sm-12">
-				<div class="col-sm-1" style="padding:0;">
-					<img src="{{ url_for('static',filename='images/check-small.png') }}">
-				</div>
-				<div class="col-sm-11 newsfeed--likes">
-					<ul>
-					{% for likes in person_h.liked %}
-						{% if loop.index <= 3 %}
-							<a href="#"><li>{{ likes.name }}</li></a>
-						{% endif %}
-					{% endfor %}
-						<a href="#" class="last--liked"><li>+ {{ person_h.liked|length -3 }} people</li></a>
-					</ul>
-				</div>
-			</div>
-			<div class="col-sm-12">
-				<div class="col-sm-1" style="padding:0;">
-					<img src="{{ url_for('static',filename='images/x-small.png') }}">
-				</div>
-				<div class="col-sm-11 newsfeed--likes">
-					{% for dislikes in person_h.disliked %}
-					<ul>
-						<a href="#"><li>{{ dislikes.name }}</li></a>
-					</ul>
-					{% endfor %}
-				</div>
-			</div>
-		</div>
-		<div class="row home--share">
-			<div class="col-sm-12 home--share--icons">
-				<div class="col-sm-6" style="padding:0;">
-					<img src="{{ url_for('static',filename='images/x-icon.png') }}">
-					<img style="width: 50px;" src="{{ url_for('static',filename='images/check-icon.png') }}">
-					<img style="width: 48px;" src="{{ url_for('static',filename='images/checkmark.png') }}">
-					<img style="width: 50px;" src="{{ url_for('static',filename='images/ignore-icon.png') }}">
-				</div>
-				<div class="col-sm-6 home--followers">
-					<i class="fa fa-share-alt"></i>
-					<p>Share with: followers</p>
-				</div>
-			</div>
-		</div>
-	</div>
-{% endfor %}
+	<div class="container col-sm-12"  id="home--proposals" hidden ></div>
+	
 	
 </div>
 <script src="{{ url_for('static',filename='js/home.js') }}"></script>

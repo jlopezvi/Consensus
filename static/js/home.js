@@ -16,7 +16,7 @@ $(document).ready( function() {
   });
   $('.unselected--option').on('click',function(){
     var current_opt = $('.selected--option').html();
-    var type_vote = $(this).attr('id');
+    var type_vote = $(this).children().attr('id');
     $('.selected--option').html('').html($(this).html());
     $(this).html('').html(current_opt);
     $('.select--options').slideUp(100);
