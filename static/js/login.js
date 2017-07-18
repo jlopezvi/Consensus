@@ -180,9 +180,9 @@ $(document).ready( function() {
   $(document).on('click', '.register--modal', function(){
     $('.register--button').prop('disabled', 'true');
     if ($('#public_r').is(":checked"))
-        opt = 'True';
+        opt = true;
     else
-        opt = 'False';
+        opt = false;
 
     fData = new FormData();
     fData.append('fullname', $('#fullname_r').val());
@@ -193,7 +193,7 @@ $(document).ready( function() {
     fData.append('password', $('#password_r').val());
     fData.append('ifpublicprofile', opt);
     fData.append('host_email', 'none');
-    fData.append('ifregistrationfromemail', 'False');
+    fData.append('ifregistrationfromemail', 'false');
     
     var newData = {
       'fullname': $('#fullname_r').val(),
@@ -203,24 +203,25 @@ $(document).ready( function() {
       'group': $('#group_r').val(),
       'password': $('#password_r').val(),
       'ifpublicprofile': opt,
-      'ifregistrationfromemail': 'False',
+      'ifregistrationfromemail': false,
       'host_email': 'none'
     };
 
     hostEmail = $('#hostEmail').val();
     if(hostEmail != null){
       fData.set('host_email', hostEmail);
-      fData.set('ifemailverified', 'True');
-      fData.set('ifregistrationfromemail', 'True');
+      fData.set('ifemailverified', 'true');
+      fData.set('ifregistrationfromemail', 'true');
       newData['host_email'] = hostEmail;
-      newData['ifemailverified'] = 'True';
-      newData['ifregistrationfromemail'] = 'True';
+      newData['ifemailverified'] = true;
+      newData['ifregistrationfromemail'] = true;
     }
 
-    if($('.cropme_profile img').attr('src') != 'undefined')
+    if($('.cropme_profile img').attr('src') != 'undefined'){
       //fData.append('fileUpload', $('.cropme_profile img').attr('src'));
-      newData['fileUpload'] = $('.cropme_profile img').attr('src');
-
+      newData['profilepic'] = $('.cropme_profile img').attr('src');
+    }
+    console.log(newData);
     var redirect = false;
     $.ajax({
       url: url[0] + "//" + url[2] + '/get_ideas_created_by_participant/'+hostEmail,
@@ -236,6 +237,9 @@ $(document).ready( function() {
       url: url[0] + "//" + url[2] + '/registration',
       type: 'POST',
       data: JSON.stringify(newData),
+      headers: {
+          'Content-Type': 'application/json'
+      },
       dataType: 'json',
       success: function (json) {
         if(json.result != 'OK'){
