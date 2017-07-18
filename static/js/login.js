@@ -194,20 +194,32 @@ $(document).ready( function() {
     fData.append('ifpublicprofile', opt);
     fData.append('host_email', 'none');
     fData.append('ifregistrationfromemail', 'False');
+    
+    var newData = {
+      'fullname': $('#fullname_r').val(),
+      'email': $('#email_r').val(),
+      'username': $('#username_r').val(),
+      'position': $('#position_r').val(),
+      'group': $('#group_r').val(),
+      'password': $('#password_r').val(),
+      'ifpublicprofile': opt,
+      'ifregistrationfromemail': 'False',
+      'host_email': 'none'
+    };
 
     hostEmail = $('#hostEmail').val();
     if(hostEmail != null){
       fData.set('host_email', hostEmail);
       fData.set('ifemailverified', 'True');
       fData.set('ifregistrationfromemail', 'True');
+      newData['host_email'] = hostEmail;
+      newData['ifemailverified'] = 'True';
+      newData['ifregistrationfromemail'] = 'True';
     }
 
-    if($('#profile_photo').val() != '')
-      fData.append('fileUpload', $('#profile_photo')[0].files[0]);
-
-    for (var pair of fData.entries()) {
-      console.log(pair[0]+ ', ' + pair[1]);
-    }
+    if($('.cropme_profile img').attr('src') != 'undefined')
+      //fData.append('fileUpload', $('.cropme_profile img').attr('src'));
+      newData['fileUpload'] = $('.cropme_profile img').attr('src');
 
     var redirect = false;
     $.ajax({
@@ -223,9 +235,8 @@ $(document).ready( function() {
     $.ajax({
       url: url[0] + "//" + url[2] + '/registration',
       type: 'POST',
-      data: fData,
-      processData: false,
-      contentType: false,
+      data: JSON.stringify(newData),
+      dataType: 'json',
       success: function (json) {
         if(json.result != 'OK'){
           $('.register--message').removeClass('alert-danger').addClass('alert-success');
