@@ -102,7 +102,7 @@ $(document).ready(function(){
           followerproposal = '';  
           for(var i = 0; i < json.followers_num; i++){
             followerproposal += '<li><input class="checkbox check--followers" type="checkbox" name="check[]" value="'+json.followers_info[i].email+'" checked>';
-            followerproposal += '<img src="'+json.followers_info[i].profilepic_url+'">';
+            followerproposal += '<img class="new--user--icon--login" src="'+json.followers_info[i].profilepic+'">';
             followerproposal += '<p><a href="#">'+json.followers_info[i].username+'</a>';
             followerproposal += '<br>'+json.followers_info[i].fullname+'</p></li>';
             
