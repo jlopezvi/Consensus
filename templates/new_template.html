@@ -5,7 +5,6 @@
     <script src="{{ url_for('static',filename='js/jquery-3.1.0.min.js') }}"></script>
     <script src="{{ url_for('static',filename='js/bootstrap.min.js') }}"></script>
     <script src="{{ url_for('static',filename='js/angular.min.js') }}"></script>
-    <script src="{{ url_for('static',filename='js/main.js') }}"></script>
     <script src="{{ url_for('static',filename='js/search-plugin.js') }}"></script>
     
     <!-- new pluggin -->
@@ -16,6 +15,7 @@
     <script src="{{ url_for('static',filename='pluggin/SimpleCropper/js/jquery.SimpleCropper.js') }}"></script>   
     <!-- end new pluggin -->
     
+    <script src="{{ url_for('static',filename='js/main.js') }}"></script>
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/bootstrap.min.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/main_style.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/font-awesome.min.css') }}">
@@ -86,9 +86,14 @@
                         <input type="text" name="" id="proposal" class="form-control" required maxlength="140">
                     </div>
                 </div>
-                <div class="col-xs-12">
-                    <div class="col-xs-5" style="padding-left:0;">
-                    <p>Do you want to add a background photo?</p>
+                <div class="col-xs-12" style="margin-bottom:-25px;">
+                    <div class="col-xs-6" style="position: relative;top:90px;text-align: center;">
+                        <p>
+                            Do you want to add a background photo? <br>
+                            Click the image to change it!
+                        </p>
+                        <!--
+                        <p>Do you want to add a background photo?</p>
                         <div class="input-group">
                             <label class="input-group-btn">
                               <i class="fa fa-info" aria-hidden="true"></i>
@@ -98,11 +103,15 @@
                             </label>
                             <input type="text" value="" style="margin-left:10px;" id="file" class="form-control" placeholder=".../Home/" readonly>
                         </div>
+                        -->
                     </div>
-                    <div class="col-xs-6 col-xs-offset-1" style="padding-right:0;">
+                    <div class="col-xs-6">
+                        <div class="cropme2" id="cropme_bidea"></div>
+                        <!--
                         <div id="image-holder" class="addproposal--img">
                             <img src="{{ url_for('static',filename='images/fondo-c.png') }}" class="thumb-image" >
-                        </div>  
+                        </div>
+                        -->
                     </div>
                 </div>
                 <div class="col-xs-12">

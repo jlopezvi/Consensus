@@ -1,7 +1,7 @@
 var url = window.location.href;
 url = url.split("/");
 var current_vote = '';
-$('.cropme_profile_edit').simpleCropper();
+$('.cropme2').simpleCropper();
 
 $(document).ready( function() {
 	if($('#participant_email').val() == 'None')
