@@ -18,20 +18,19 @@ from math import log
 
 
 # Used By < add_idea_to_user >
-def add_idea_to_user_aux(user_email, idea_dict, ideapic_file_body):
+def add_idea_to_user_aux(user_email, idea_dict):
     user = _get_participant_node(user_email)
     newidea_index = idea_dict.get('proposal')
     code_uuid = str(uuid.uuid4())
-    image_url = '/static/images/concerns/social_coffee_break.jpg'
+    image = idea_dict.get('image')
     if _getIdeaByIdeaIndex(newidea_index):
         return jsonify({"result": "Wrong", "result_msg": "proposal already exists"})
-    if ideapic_file_body is not None:
-        ruta_dest = '/static/images/concerns/'
-        filename = code_uuid + '.png'
-        image_url = save_file(ruta_dest, ideapic_file_body, filename)
+    # TODO : add hardcoded default image
+    if image is None:
+        image = "stringbase64"
     timestamp = (datetime.now()).strftime("%d.%m.%Y")
     newidea, = getGraph().create({"concern": idea_dict.get('concern'), "proposal": idea_dict.get('proposal'),
-                                  "image_url": image_url, "uuid" : code_uuid,
+                                  "image": image, "uuid": code_uuid,
                                   "moreinfo_concern": idea_dict.get('moreinfo_concern'),
                                   "moreinfo_proposal": idea_dict.get('moreinfo_proposal'),
                                   "supporters_goal_num": idea_dict.get('supporters_goal_num'),
@@ -49,11 +48,11 @@ def add_idea_to_user_aux(user_email, idea_dict, ideapic_file_body):
 
 
 # Used By < modify_idea >
-def modify_idea_aux(idea_dict,ideapic_file_body):
+def modify_idea_aux(idea_dict):
     idea_index = idea_dict['current_proposal']
     idea = _getIdeaByIdeaIndex(idea_index)
     fields = ['concern','proposal','moreinfo_concern','moreinfo_proposal',
-              'supporters_goal_num','volunteers_goal_num']
+              'supporters_goal_num','volunteers_goal_num', 'image', 'if_author_public']
     data= {}
     if 'proposal' in idea_dict:
         idea_index = idea_dict['proposal']
@@ -67,11 +66,6 @@ def modify_idea_aux(idea_dict,ideapic_file_body):
             data[k]=v
     for k,v in data.items():
         idea[k]=v
-    if ideapic_file_body is not None:
-        ruta_dest = '/static/images/concerns/'
-        filename =  idea['uuid'] + '.png'
-        image_url = save_file(ruta_dest, ideapic_file_body, filename)
-        idea["image_url"] = image_url
     return jsonify({"result":"OK", "result_msg":"Idea was modified"})
 
 
