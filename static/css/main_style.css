@@ -1487,7 +1487,8 @@ a.add--proposal--provisional {
     margin-top: -20px;
     left: 50px;
 }
-.cropme_profile img{
+.cropme_profile img,
+.cropme_profile_edit img{
 	border-radius: 50px;
 }
 .cropme_span,
