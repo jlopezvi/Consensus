@@ -170,16 +170,17 @@ def registration():
     return registration_aux(inputdict)
 
 
-# input:  application/json
-#                      {"fullname":"Juan Lopez", "new_email": "new_email@gmail.com",
+# input:      user_email (user logged in)
+#             application/json
+#                      {"fullname": "Juan Lopez", "new_email": "new_email@gmail.com",
 #                       "username": "jlopezvi",
-#                       "position": "employee", "group": "IT", "password": "MD5password",
-#                       "ifpublicprofile": true/false,, "ifsupportingproposalsvisible" : true/false,,
-#                         "ifrejectingproposalsvisible" : "True"/"False", "profilepic":"string_in_base64"/null
+#                       "position":"employee", "group": "IT", "password": "MD5password",
+#                       "ifpublicprofile": true/false,, "ifsupportingproposalsvisible" : true/false,
+#                       "ifrejectingproposalsvisible" : true/false, "profilepic": "string_in_base64"
 #                       }
 # Output: json
 #           1. {'result': 'Wrong: New e-mail already exists'}
-#             2. {'result': 'OK'}
+#           2. {'result': 'OK'}
 @app.route('/modify_user_data', methods=['PUT'])
 @app.route('/modify_user_data/<user_email_DEBUG>', methods=['PUT'])
 def modify_user_data(user_email_DEBUG=None):
@@ -190,14 +191,16 @@ def modify_user_data(user_email_DEBUG=None):
    inputdict = request.get_json()
    return modify_user_data_aux(inputdict, user_email)
 
+
 # input:   user_email  (user logged in)
 # Output:  application/json
-#                      {"fullname":"Juan Lopez", "email": "new_email@gmail.com",
-#                       "username": "jlopezvi",
-#                       "position": "employee", "group": "IT", "password": "MD5password",
-#                       "ifpublicprofile": true/false,, "ifsupportingproposalsvisible" : true/false,,
-#                         "ifrejectingproposalsvisible" : "True"/"False", "profilepic":"string_in_base64"/null
-#                       }
+#    {"result": "OK", "data": data}
+#      data  =  {"fullname":"Juan Lopez", "email": "email@gmail.com",
+#                "username": "jlopezvi",
+#                "position": "employee", "group": "IT", "password": "MD5password",
+#                "ifpublicprofile": true/false, "ifsupportingproposalsvisible" : true/false,
+#                "ifrejectingproposalsvisible" : true/false, "profilepic":"string_in_base64"
+#                }
 @app.route('/get_user_data', methods=['GET'])
 @app.route('/get_user_data/<user_email_DEBUG>', methods=['GET'])
 def get_user_data(user_email_DEBUG=None):
@@ -206,6 +209,7 @@ def get_user_data(user_email_DEBUG=None):
    else:
        user_email = flask_login.current_user.id
    return get_user_data_aux(user_email)
+
 
 # input:   user_email  (user logged in)
 # output: json {"result": "OK"}
@@ -221,7 +225,7 @@ def remove_user(user_email_DEBUG=None) :
 
 # input: participant_email: new@gmail.com,  user_email (user logged in)
 # output: JSON      [2 possibilities, according to privacy restrictions]
-#       1.  return jsonify({"result":"OK", "ifallowed":true, "participant_data": participant_data })
+#       1.  {"result":"OK", "ifallowed":true, "participant_data": participant_data }
 #        participant_data:
 #        {
 #            'id': 'email',
@@ -232,7 +236,7 @@ def remove_user(user_email_DEBUG=None) :
 #            'followers_num': 5,
 #            'followings_num': 2
 #        }
-#       2.  return jsonify({"result":"OK", "ifallowed":false, "participant_data": {} })
+#       2.  {"result":"OK", "ifallowed":false, "participant_data": {} }
 @app.route('/get_participant_data/<participant_email>')
 @app.route('/get_participant_data/<participant_email>/<user_email_DEBUG>')
 def get_participant_data(participant_email, user_email_DEBUG=None):
