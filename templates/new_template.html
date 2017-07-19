@@ -2,16 +2,25 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/bootstrap.min.css') }}">
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/main_style.css') }}">
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/font-awesome.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/bootstrap-theme.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/adaptive.css') }}">
     <script src="{{ url_for('static',filename='js/jquery-3.1.0.min.js') }}"></script>
     <script src="{{ url_for('static',filename='js/bootstrap.min.js') }}"></script>
     <script src="{{ url_for('static',filename='js/angular.min.js') }}"></script>
     <script src="{{ url_for('static',filename='js/main.js') }}"></script>
     <script src="{{ url_for('static',filename='js/search-plugin.js') }}"></script>
+    
+    <!-- new pluggin -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='pluggin/SimpleCropper/css/jquery.Jcrop.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='pluggin/SimpleCropper/css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='pluggin/SimpleCropper/css/style-example.css') }}"> 
+    <script src="{{ url_for('static',filename='pluggin/SimpleCropper/js/jquery.Jcrop.js') }}"></script>   
+    <script src="{{ url_for('static',filename='pluggin/SimpleCropper/js/jquery.SimpleCropper.js') }}"></script>   
+    <!-- end new pluggin -->
+    
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/bootstrap.min.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/main_style.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/font-awesome.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/bootstrap-theme.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/adaptive.css') }}">
 	<title>Consensus</title>
 </head>
 <body class="container">

@@ -1472,7 +1472,8 @@ a.add--proposal--provisional {
 /***** END NEW STILES ******************/
 
 /****************** CROPPER STYLES ******************/
-.cropme_profile{
+.cropme_profile,
+.cropme_profile_edit{
 	width: 100px;
     height: 100px;
     float: left;
@@ -1481,14 +1482,24 @@ a.add--proposal--provisional {
     background-repeat: no-repeat;
     cursor: pointer;
 }
+.cropme_profile_edit{
+    position: relative;
+    margin-top: -20px;
+    left: 50px;
+}
 .cropme_profile img{
 	border-radius: 50px;
 }
-.cropme_span{
+.cropme_span,
+.cropme_span_edit{
     position: relative;
     right: 61px;
     bottom: -98px;
     font-size: 13px;
+}
+.cropme_span_edit{
+    right: -80px;
+    bottom: -12px;
 }
 #preview{
 	z-index: 9999!important;
