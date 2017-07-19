@@ -8,9 +8,9 @@ import json
 from communityManager import saveCommunity,deleteCommunity,addCommunityToContact,getCommunities
 from participantManager import _get_participant_node, remove_user_aux, get_all_participants_admin_aux, \
     get_participant_followers_info_aux,get_participant_followings_info_aux,\
-    get_fullname_for_participant_aux, registration_aux, get_participant_data_aux, modify_user_data_aux, \
+    get_fullname_for_participant_aux, registration_aux, get_participant_data_aux, modify_user_data_aux,  \
     get_participant_data_by_email_unrestricted_aux, get_all_public_participants_for_user_aux, if_participant_exists_by_email_aux, \
-    add_following_contact_to_user_aux, remove_following_contact_to_user_aux
+    add_following_contact_to_user_aux, remove_following_contact_to_user_aux, get_user_data_aux
 from participantManager import get_participantnotifications_for_user_aux, remove_notification_from_participant1_to_participant2_aux
 from ideaManager import get_ideas_data_created_by_participant_aux, get_ideas_created_by_participant_aux,\
     add_idea_to_user_aux, vote_on_idea_aux, modify_idea_aux, remove_idea_aux, _get_supporters_emails_for_idea_aux, \
@@ -170,47 +170,42 @@ def registration():
     return registration_aux(inputdict)
 
 
-#TODO  multipart/form-data   or   application/x-www-form-urlencoded ?
-# input:   user_email  (user logged in)
-#          multipart/form-data   or   application/x-www-form-urlencoded ?
-#        (file) profilepic_file_body
-#     (data dictionary): {"fullname":"Juan Lopez", "new_email": "new_email@gmail.com",
+# input:  application/json
+#                      {"fullname":"Juan Lopez", "new_email": "new_email@gmail.com",
 #                       "username": "jlopezvi",
 #                       "position": "employee", "group": "IT", "password": "MD5password",
-#                       "ifpublicprofile": "True"/ "False", "ifsupportingproposalsvisible" : "True"/"False",
-# 			            "ifrejectingproposalsvisible" : "True"/"False"
-#           		    }
+#                       "ifpublicprofile": true/false,, "ifsupportingproposalsvisible" : true/false,,
+#                         "ifrejectingproposalsvisible" : "True"/"False", "profilepic":"string_in_base64"/null
+#                       }
 # Output: json
 #           1. {'result': 'Wrong: New e-mail already exists'}
-# 	        2. {'result': 'OK'}
+#             2. {'result': 'OK'}
 @app.route('/modify_user_data', methods=['PUT'])
 @app.route('/modify_user_data/<user_email_DEBUG>', methods=['PUT'])
 def modify_user_data(user_email_DEBUG=None):
-    if DEBUG and user_email_DEBUG is not None:
-        user_email = user_email_DEBUG
-    else:
-        user_email = flask_login.current_user.id
+   if DEBUG and user_email_DEBUG is not None:
+       user_email = user_email_DEBUG
+   else:
+       user_email = flask_login.current_user.id
+   inputdict = request.get_json()
+   return modify_user_data_aux(inputdict, user_email)
 
-    profilepic_file_body = None
-    if 'fileUpload' in request.files:
-        profilepic_file_body = request.files['fileUpload']
-
-    inputdict = request.form.to_dict()
-    # translation of data to a python dictionnary, with True, False, and None
-    if 'ifpublicprofile' in inputdict:
-        if inputdict['ifpublicprofile'] == 'True': inputdict['ifpublicprofile'] = True
-        if inputdict['ifpublicprofile'] == 'False': inputdict['ifpublicprofile'] = False
-    if 'ifsupportingproposalsvisible' in inputdict:
-        if inputdict['ifsupportingproposalsvisible'] == 'True': inputdict['ifsupportingproposalsvisible'] = True
-        if inputdict['ifsupportingproposalsvisible'] == 'False': inputdict['ifsupportingproposalsvisible'] = False
-    if 'ifrejectingproposalsvisible' in inputdict:
-        if inputdict['ifrejectingproposalsvisible'] == 'True': inputdict['ifrejectingproposalsvisible'] = True
-        if inputdict['ifrejectingproposalsvisible'] == 'False': inputdict['ifrejectingproposalsvisible'] = False
-    if 'host_email' in inputdict:
-        if inputdict['host_email'] == 'None': inputdict['host_email'] = None
-    #
-    return modify_user_data_aux(inputdict, profilepic_file_body, user_email)
-
+# input:   user_email  (user logged in)
+# Output:  application/json
+#                      {"fullname":"Juan Lopez", "email": "new_email@gmail.com",
+#                       "username": "jlopezvi",
+#                       "position": "employee", "group": "IT", "password": "MD5password",
+#                       "ifpublicprofile": true/false,, "ifsupportingproposalsvisible" : true/false,,
+#                         "ifrejectingproposalsvisible" : "True"/"False", "profilepic":"string_in_base64"/null
+#                       }
+@app.route('/get_user_data', methods=['GET'])
+@app.route('/get_user_data/<user_email_DEBUG>', methods=['GET'])
+def get_user_data(user_email_DEBUG=None):
+   if DEBUG and user_email_DEBUG is not None:
+       user_email = user_email_DEBUG
+   else:
+       user_email = flask_login.current_user.id
+   return get_user_data_aux(user_email)
 
 # input:   user_email  (user logged in)
 # output: json {"result": "OK"}
@@ -408,14 +403,14 @@ def remove_notification_from_participant1_to_participant2():
 
 
 #   input:  user_email (user logged in)
-#           application/x-www-form-urlencoded :
-#           (file) ideapic_file_body
-#       (data dictionary):  concern=we are not social enough in the office&
-#                           proposal=social coffee pause at 4 p.m.&
-#       	                moreinfo_concern=I have to say as well this and this and this about the concern...&
-#                           moreinfo_proposal=I have to say as well this and this and this about the proposal...&
-#                           supporters_goal_num=500&volunteers_goal_num=5
-#                           &if_author_public=True/False&first_receivers_emails=asdf@asd.com bdsd@sds.com dssa@gmail.com
+#           application/json :
+#                          {"concern":"we are not social enough in the office",
+#                           "proposal":"social coffee pause at 4 p.m.",
+#       	                "moreinfo_concern":"I have to say as well this and this and this about the concern...",
+#                           "moreinfo_proposal":"I have to say as well this and this and this about the proposal...",
+#                           "supporters_goal_num":500, "volunteers_goal_num":5,
+#                           "image":"base64_string",
+#                           "if_author_public":true/false, "first_receivers_emails":["asdf@asd.com", "bdsd@sds.com"] }
 #    output: json {"result":"OK", "result_msg":"added idea to database"}
 #                 {"result":"Wrong", "result_msg":"proposal already exists"}
 @app.route('/add_idea_to_user', methods=['POST'])
@@ -425,41 +420,25 @@ def add_idea_to_user(user_email_DEBUG=None) :
         user_email = user_email_DEBUG
     else:
         user_email = flask_login.current_user.id
-    ideapic_file_body = None
-    idea_dict = request.form.to_dict()
-    # translation of data to a python dictionary, with integers
-    if 'supporters_goal_num' in idea_dict: idea_dict['supporters_goal_num'] = int(idea_dict.get('supporters_goal_num'))
-    if 'volunteers_goal_num' in idea_dict: idea_dict['volunteers_goal_num'] = int(idea_dict.get('volunteers_goal_num'))
-    if idea_dict['if_author_public'] == 'True': idea_dict['if_author_public'] = True
-    if idea_dict['if_author_public'] == 'False': idea_dict['if_author_public'] = False
-    idea_dict['first_receivers_emails'] = idea_dict['first_receivers_emails'].split()
-    #
-    if 'fileUpload' in request.files:
-        ideapic_file_body = request.files['fileUpload']
-    return add_idea_to_user_aux(user_email,idea_dict,ideapic_file_body)
+    idea_dict = request.get_json()
+    return add_idea_to_user_aux(user_email,idea_dict)
 
 
-#   input:  application/x-www-form-urlencoded :
-#           (file) ideapic_file_body
-#       (data dictionary):  {"concern" :"we are not social enough in the office",
-#                            "current_proposal": "this is the proposal to be modified",
-#                            "proposal": "this is the new proposal (if is required)",
-#                            "moreinfo_concern":"I have to say as well this and this and this...",
-#                            "moreinfo_proposal":"I have to say as well this and this and this...",
-#                            "supporters_goal_num": 500, "volunteers_goal_num": 5}
+#   input:  application/json :
+#                          {"concern":"we are not social enough in the office",
+#                           "current_proposal": "this is the proposal to be modified",
+#                           "proposal": "this is the new proposal (if is required)",
+#       	                "moreinfo_concern":"I have to say as well this and this and this about the concern...",
+#                           "moreinfo_proposal":"I have to say as well this and this and this about the proposal...",
+#                           "supporters_goal_num":500, "volunteers_goal_num":5,
+#                           "image":"base64_string",
+#                           "if_author_public":true/false }
 #   Output json :  1./ {"result":"OK", "result_msg":"Idea was modified"}
 #    	           2./ {"result":"Wrong", "result_msg": "Proposal already exists"}
 @app.route('/modify_idea', methods=['PUT'])
 def modify_idea():
-    ideapic_file_body = None
-    idea_dict = request.form.to_dict()
-    # translation of data to a python dictionary, with integers
-    if 'supporters_goal_num' in idea_dict: idea_dict['supporters_goal_num'] = int(idea_dict.get('supporters_goal_num'))
-    if 'volunteers_goal_num' in idea_dict: idea_dict['volunteers_goal_num'] = int(idea_dict.get('volunteers_goal_num'))
-    #
-    if 'fileUpload' in request.files:
-        ideapic_file_body = request.files['fileUpload']
-    return modify_idea_aux(idea_dict, ideapic_file_body)
+    idea_dict = request.get_json()
+    return modify_idea_aux(idea_dict)
 
 
 #   input:  json   {"proposal": "text of the proposal"}

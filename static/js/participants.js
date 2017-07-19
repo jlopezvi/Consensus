@@ -513,9 +513,11 @@ function follow_unfollow_participant(type, user){
 	if(type == 'Follow'){
 		var finalUrl = '/add_following_contact_to_user/'+user;
 		$('#home ul li').remove();
+		$('#home ul center h3').remove();
 	}else{
 		var finalUrl = '/remove_following_contact_to_user/'+user;
 		$('#home ul li').remove();
+		$('#home ul center h3').remove();
 	}
 	$.ajax({
 		url: url[0] + "//" + url[2] + finalUrl,
