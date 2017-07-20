@@ -491,7 +491,7 @@ def get_ideas_created_by_participant(participant_email,user_email_DEBUG=None):
 #      "datestamp": "01.10.2016",
 #      "duration": "118 days",
 #      "idea_id": "(13)",
-#      "image_url": "/home/alexis/Documentos/Consensus-master/static/images/concerns/new@hotmail.com2017-01-24_092326.767044.png",
+#      "image": "string_base64",
 #      "moreinfo": "this and this",
 #      "proposal": "this proposal is for test",
 #      "rejectors": [],
@@ -687,7 +687,7 @@ def registration_receive_emailverification(token):
 #      "timestamp": "01.10.2016",
 #      "duration": "118 days",
 #      "idea_id": "(13)",
-#      "image_url": "/home/alexis/Documentos/Consensus-master/static/images/concerns/new1hotmail.com2017-01-24_092326.767044.png",
+#      "image": "string_base64",
 #      "moreinfo": "this and this",
 #      "proposal": "this proposal is for test",
 #      "rejectors": [],
@@ -709,7 +709,7 @@ def registration_receive_emailverification(token):
 #      "timestamp": "01.10.2016",
 #      "duration": "118 days",
 #      "idea_id": "(9)",
-#      "image_url": "http:myproposal.jpg",
+#      "image": "string_base64",
 #      "moreinfo": "this and this...",
 #      "proposal": "IdeaM",
 #      "rejectors": [
@@ -735,6 +735,7 @@ def ideas_for_newsfeed(user_email_DEBUG = None):
     return ideas_for_newsfeed_aux(user_email)
 
 
+# TODO idea_id
 # Ideas For Home: See the Supported + Volunteered ideas/ See the ignored ideas / See the rejected ideas
 # Input: user_email (user logged in) and JSON {"vote_type": "rejected/supported/ignored"}
 # Output: json with fields 'result' and 'data'. 'data' Array with all ideas that the user has voted according to << vote_type >>
@@ -747,7 +748,7 @@ def ideas_for_newsfeed(user_email_DEBUG = None):
 #      "timestamp": "01.10.2016",
 #      "duration": "118 days",
 #      "idea_id": "(6)",
-#      "image_url": "http:myproposal.jpg",
+#      "image": "string_base64",
 #      "moreinfo": "this and this...",
 #      "proposal": "New Proposal ",
 #      "rejectors": [
@@ -769,7 +770,7 @@ def ideas_for_newsfeed(user_email_DEBUG = None):
 #      "timestamp": "01.10.2016",
 #      "duration": "118 days",
 #      "idea_id": "(5)",
-#      "image_url": "http:myproposal.jpg",
+#      "image": "string_base64",
 #      "moreinfo": "this and this...",
 #      "proposal": "This is my Proposal",
 #      "rejectors": [
@@ -810,7 +811,7 @@ def ideas_for_home(user_email_DEBUG = None):
 #      "timestamp": "01.10.2016",
 #      "duration": "118 days",
 #      "idea_id": "(6)",
-#      "image_url": "http:myproposal.jpg",
+#      "image": "string_base64",
 #      "moreinfo": "this and this...",
 #      "proposal": "New Proposal ",
 #      "rejectors": [

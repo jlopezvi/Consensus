@@ -312,7 +312,7 @@ def _if_ideaisinfirstphase(idea):
     # 'author_photo_url' : 'assets/profile/perfil-mediano.png', 'author_username' : 'Daniela', 'author_email' : 'a@',
     # 'duration' : '2 days',
     # 'supporters_goal_num' : 200, 'supporters_num' : 5, 'volunteers_goal_num' : 5, 'volunteers_num' : 2,
-    # 'image_url' : 'url-to-picture',
+    # 'image' : 'string_base64',
     # 'concern': 'Some text for the concern',
     # 'proposal': 'Some text for the proposal',
     # 'support_rate' : 95,
