@@ -111,10 +111,12 @@ def modify_user_data_aux(user_data, user_email):
         participant[k] = v
     return jsonify({'result': 'OK'})
 
+
 def get_user_data_aux(user_email):
     participant = _get_participant_node(user_email)
-    participant_data=participant.get_properties()
-    return jsonify({'result': participant_data})
+    participant_data = participant.get_properties()
+    return jsonify({"result": "OK", "data": participant_data})
+
 
 def remove_user_aux(user_email) :
     user = _get_participant_node(user_email, 'all')
