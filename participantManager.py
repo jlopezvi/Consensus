@@ -358,13 +358,14 @@ def _get_participant_followers(participant_email) :
 #   ->  False
 #   ->  [False,'Following contact exists already']
 def _if_added_following_contact_to_user(followingcontact_email, user_email) :
+    timestamp = (datetime.now()).strftime("%d.%m.%Y")
     user = _get_participant_node(user_email, 'all')  # current's email could be unverified
     followingcontact = _get_participant_node(followingcontact_email)
     if (followingcontact is None) or (followingcontact is user) :
         return False
     if _getIfContactRelationshipExists(user, followingcontact) is True:
         return [False,'Following contact exists already']
-    getGraph().create((user, "FOLLOWS", followingcontact))
+    getGraph().create((user, "FOLLOWS", followingcontact, {"timestamp": timestamp}))
     return True
 
 
