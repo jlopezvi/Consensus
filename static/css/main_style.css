@@ -302,28 +302,28 @@ body.modal-open {
 .newsfeed--header{
 	font-family: lato_bold;
 	font-size: 17px;
+	padding: 0 15px;
 }
 .newsfeed--goals {
 	text-align: right;
 	right: -12px;
 }
 .newsfeed--body {
-	height: 500px;
-	background-image: url('/static/images/fondo-c.png');
-	background-position-x: center;
-	background-position-y: bottom;
+	background-size: cover;
+	background-position: center center;
 	background-repeat: no-repeat;
+	margin: 0px;
+	padding-top: 47.75%;
 	margin-top: 2%;
 	box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
-.home--proposals--body {
+.home--proposals--body {    
 	background-repeat: no-repeat;
-	background-position-y: bottom;
-	background-position-x: center;
+    background-size: cover;
+    background-position: center center;
 	margin-top: 2%;
 	box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
-
 .newsfeed--problem, .newsfeed--proposal {
 	background-color: rgba(0, 0, 0, 0.6);
 	margin-top: 15px;
@@ -349,7 +349,7 @@ body.modal-open {
     background-image: -webkit-gradient(linear,left top,left bottom,from(#737373),to(#a6a6a6))!important;
     background-image: linear-gradient(to bottom,#737373 0,#a6a6a6 100%)!important;
 }
-.newsfeed--progres
+.newsfeed--progres{
     margin-bottom: 13px;
 }
 .newsfeed--bar, .newsfeed--bar2{
@@ -570,16 +570,6 @@ a.add--proposal--button:hover, a.add--proposal--button:active, a.add--proposal--
   	border-radius: 60px;
 	overflow: hidden;
 }
-.home--profile--picture img {
-	position: relative;
-  	left: 50%;
-	top: 50%;
-	height: 90%;
-	width: auto;
-	-webkit-transform: translate(-50%,-50%);
-    -ms-transform: translate(-50%,-50%);
-  	transform: translate(-50%,-50%);
-}
 .home--header .fa-clock-o{
 	font-size: 25px;
 }
@@ -590,14 +580,21 @@ a.add--proposal--button:hover, a.add--proposal--button:active, a.add--proposal--
 .home--name a{
 	color: #1067fc;
 	display: inline-block!important;
-  	text-decoration: none;
   	text-decoration: underline;
+  	margin-bottom: 5px;
+}
+.home--charge {
+    left: 20px;
+    padding: 0 5px;
+}
+.newsfeed--goals p{
+	padding: 0px;
+	margin: 0 0 5px;
 }
 .home--name{
-	margin-left: -6px;
-	margin-right: 6px;
-	font-size: 16px;
-	text-decoration: underline;
+    padding: 0px;
+    left: 20px;
+    font-size: 16px;
 }
 .home--content--logged {
 	margin-top: 6%;
@@ -1200,9 +1197,6 @@ ul.nav-tabs li.active a:before {
 .participant__body .newsfeed--goals {
 	line-height: 23px;
 }
-.participant__body .home--proposals--body {
-	background-position-x: -185px;
-}
 .participant__body .home--button {
 	margin-left: -30px;
 }
@@ -1516,4 +1510,13 @@ a.add--proposal--provisional {
 #preview .buttons .cancel,
 #preview .buttons .ok{
 	background-size: cover;
+}
+.concern__div {
+	width: 100%;
+	position:absolute;
+	top: 5.5vw;
+}
+.newsfeed__concern {
+	position: absolute;
+	top:11%;
 }

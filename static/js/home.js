@@ -1,6 +1,7 @@
 var url = window.location.href;
 url = url.split("/");
 var list;
+$('.cropme2').simpleCropper();
 
 $(document).ready( function() {
   $('.home--select div').slideUp();
@@ -110,21 +111,19 @@ function showIdeas(list, index){
   code += '<div class="row home--header">';
   code += '<input type="hidden" class="idea__id" value="'+list.proposal+'">';
 	code += '<div class="col-sm-2" style="padding-left: 0px;">';
-	code += '<div class="home--profile--picture"><img src="'+list.author_photo_url+'"></div></div>';
-	code += '<div class="col-sm-1 home--name"><a href="#">'+list.author_username+'</a></div>';
-	code += '<div class="col-sm-2 newsfeed--duration">';
-	code += '<p><img style="width: 19px;position: relative;top: -3px;" src="/static/images/clock-icon.png">&nbsp;';
-	code += list.duration+'</p></div>';
+	code += '<div class="home--profile--picture"><img src="'+list.author_profilepic+'"></div></div>';
+	code += '<div class="col-sm-2 home--name"><a href="#">'+list.author_username+'</a>';
+	code += '<p><img style="width:20px;position:relative;top:-3px;" src="/static/images/clock-icon.png">&nbsp;'+list.duration+'</p></div>';
 	code += '<div class="col-sm-3 home--charge"><div class="progress home--progress">';
 	var support_percent = (list.supporters_num*100)/list.supporters_goal_num;
 	code += '<div class="progress-bar newsfeed--bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:'+support_percent+'%"></div>';
 	code += '</div>	<div class="progress home--progress2">';
 	var volunter_percent = (list.volunteers_num*100)/list.volunteers_goal_num;
 	code += '<div class="progress-bar newsfeed--bar2" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:'+volunter_percent+'%"></div>';
-	code += '</div></div><div class="col-sm-4 newsfeed--goals">';
+	code += '</div></div><div class="col-sm-5 newsfeed--goals">';
 	code += '<p>'+list.supporters_num+'/'+list.supporters_goal_num+' supporters goals<br>';
 	code += '<p>'+list.volunteers_num+'/'+list.volunteers_goal_num+' volunteers goals<br>';
-	code += '</div></div><div class="row home--proposals--body" style="background-image: url('+list.image_url+');">';
+	code += '</div></div><div class="row home--proposals--body" style="background-image: url('+list.image+');">';
 	code += '<div class="col-sm-12"><div class="col-sm-8 newsfeed--problem">'+list.concern+'</div>';
 	code += '</div><div class="col-sm-12" style="margin-top: 180px;"><div class="col-sm-8 col-sm-offset-4 newsfeed--proposal">'+list.proposal+'</div></div>';
 	code += '</div><div class="row newsfeed--footer">';

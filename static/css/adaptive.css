@@ -1,12 +1,12 @@
 @media only screen and (max-width: 1200px) {
+	.concern__div {
+		top: 11vw;
+	}
 	.participant__name{
 		margin-left: -8%;
 	}
 	#modal_participant .modal-dialog {
 		left: 5%;
-	}
-	.participant__body .home--proposals--body {
-    	background-position-x: -283px;
 	}
 	div.participant__body div.newsfeed--goals {
 		top: 37px;
@@ -20,11 +20,6 @@
 	}
 	.participant__body .newsfeed--likes {
 		margin-left: 0;
-	}
-	.participant__profile--pic .profile--picture img {
-    	top: 61px;
-    	height: 90%;
-    	margin-left: -7px;
 	}
 	.login--actions .col-sm-6 {
 	    font-size: 10px;
@@ -88,9 +83,6 @@
 	    float: right;
 	    top: 25px;
 	    padding-right: 25px;
-	}
-	.profile--picture img {
-		top: 40px;
 	}
 	.home--charge {
 		position: absolute;
@@ -199,6 +191,9 @@
 	}
 }
 @media only screen and (max-width: 1024px) {
+	.concern__div {
+    	top: 12vw;
+	}
 	.tabs__follow .invite__button, .invite__body .invite__button {
     	width: 135px;
 	}
@@ -228,6 +223,9 @@
 	}
 }
 @media only screen and (max-width: 991px) {
+	.concern__div {
+    	top: 15vw;
+	}
 	.participant__newsfeed {
     	padding: 30px 10px;
 	}
@@ -341,9 +339,6 @@
 	.home--content--logged .input--percent, .home--content--logged .input--percent label{
 		font-size: 12px!important;
 	}
-	.home--proposals--body {
-		background-position-x: -292px;
-	}
 }
 @media only screen and (max-width: 950px) {
 	.modal-dialog {
@@ -360,6 +355,11 @@
 	}
 	#modal_sign .modal-body {
     	height: 390px;
+	}
+}
+@media only screen and (max-width: 900px){
+	.concern__div {
+	    top: 16vw;
 	}
 }
 @media only screen and (max-width: 870px) {
@@ -392,6 +392,9 @@
 	}
 }
 @media only screen and (max-width: 767px) {
+	.concern__div {
+	    top: 24vw;
+	}
 	.participant__newsfeed .newsfeed--footer .redflag--img img {
 	    width: auto;
 	    height: auto;
@@ -546,9 +549,6 @@
 	    top: 9px;
 	    padding-left: 0;
 	}
-	.profile--picture img {
-		top: 40px;
-	}
 	.newsfeed--charge {
 		position: absolute;
 		margin-top: 20px;
@@ -634,7 +634,6 @@
 	}
 	.home--proposals--body {
     	margin-top: 2%;
-    	background-position-x: 0px;
 	}
 	.home--voted h2 {
     	margin-top: 20px;
@@ -644,14 +643,21 @@
 	.newsfeed--body {
     	background-position-x: -305px;
 	}
-	 .home--proposals--body {
-	 	background-position-x: -65px;
-	 }
 	.modal-dialog {
 		left: 7%!important;
 	}
 	.private__prof {
 		margin-left: 50px!important;
+	}
+}
+@media only screen and (max-width: 700px){
+	.concern__div {
+	    top: 25vw;
+	}
+}
+@media only screen and (max-width: 670px){
+	.concern__div {
+	    top: 27vw;
 	}
 }
 @media only screen and (max-width: 650px) {
@@ -693,9 +699,6 @@
 	}
 }
 @media only screen and (max-width: 600px) {
-	.home--proposals--body {
-		background-position-x: -125px;
-	}
 	.nav--style .primary--header {
     	left: 30%;
 	}
@@ -734,9 +737,6 @@
 @media only screen and (max-width: 535px) {
 	.newsfeed--body {
     	background-position-x: -410px;
-	}
-	.home--proposals--body {
-    	background-position-x: -200px;
 	}
 	.newsfeed--button {
 		width: 110px;
@@ -784,9 +784,6 @@
 	}
 	.container__participants {
 		margin-top: 15%!important;
-	}
-	.participant__profile--pic .profile--picture img {
-	    height: 70%;
 	}
 	.participant__body .newsfeed--goals {
 	    line-height: 28px;
@@ -857,9 +854,6 @@
 @media only screen and (max-width: 470px) {
 	.newsfeed--body {
     	background-position-x: -468px;
-	}
-	.home--proposals--body {
-    	background-position-x: -245px;
 	}
 }
 @media only screen and (max-width: 440px) {

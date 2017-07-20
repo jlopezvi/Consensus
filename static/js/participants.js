@@ -21,14 +21,14 @@ $(document).ready( function() {
 		type: 'GET',
 		success: function (json) {	
 			
-			//console.log(json);
+			console.log(json);
 			var newIdea = '';
 			var url_new = url[0] +'//'+ url[2] +'/static/';
 			for (var i = 0; i < json.ideas_data.length; i++) {						
 				newIdea += '<div class="col-sm-12"><div class="row home--header">';
 				newIdea += '<input type="hidden" class="idea__id" value="'+json.ideas_data[i].proposal+'">';
 				newIdea += '<div class="col-sm-2" style="padding-left: 0px;margin-left: -15px;">';
-				newIdea += '<div class="home--profile--picture"><img class="img-circle new--user--icon--login" src="'+json.ideas_data[i].author_photo_url+'"></div></div><div class="col-sm-1 home--name">';
+				newIdea += '<div class="home--profile--picture"><img class="img-circle new--user--icon--login" src="'+json.ideas_data[i].author_profilepic+'"></div></div><div class="col-sm-1 home--name">';
 				newIdea += '<a href="#">'+json.ideas_data[i].author_username+'</a></div><div class="col-sm-2 newsfeed--duration">';
 				newIdea += '<p><img style="width: 15px;position: relative;top: -3px;" src="'+url_new+'images/clock-icon.png">&nbsp;'+json.ideas_data[i].duration+'</p>';
 				newIdea += '</div><div class="col-sm-3 home--charge"><div class="progress home--progress">';
@@ -39,8 +39,8 @@ $(document).ready( function() {
 				newIdea += '<div class="progress-bar newsfeed--bar2" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:'+volunteers_percent+'%;"></div></div></div>';
 				newIdea += '<div class="col-sm-4 newsfeed--goals"><p>'+json.ideas_data[i].supporters_num+'/'+json.ideas_data[i].supporters_goal_num+' supporters goals';
 				newIdea += '<br>'+json.ideas_data[i].volunteers_num+'/'+json.ideas_data[i].volunteers_goal_num+' volunteers goals</p></div></div>';
-				newIdea += '<div class="row home--proposals--body" style="background-image: url('+json.ideas_data[i].image_url+');"><div class="col-sm-12">';
-				newIdea += '<div class="col-sm-8 newsfeed--problem">'+json.ideas_data[i].concern+'</div></div><div class="col-sm-12" style="margin-top: 180px;">';
+				newIdea += '<div class="row home--proposals--body" style="background-image: url('+json.ideas_data[i].image+'); padding-top:47.40%;"><div class="col-sm-12 concern__div">';
+				newIdea += '<div class="col-sm-8 newsfeed--problem">'+json.ideas_data[i].concern+'</div></div><div class="col-sm-12" style="position:relative;">';
 				newIdea += '<div class="col-sm-8 col-sm-offset-4 newsfeed--proposal">'+json.ideas_data[i].proposal+'</div></div></div> <input type="hidden" value="'+json.ideas_data[i].idea_id+'" id="idea__id">';
 				newIdea += '<div class="row newsfeed--footer"><div class="col-sm-12" style="padding-right: 0px; padding-left: 0px;"><div class="col-sm-1 redflag--img"><input type="hidden" class="id" value="'+json.ideas_data[i].proposal+'">';
 				newIdea += '<img class="redflag" src="'+url_new+'images/redflag.png"></div><div class="col-sm-9 newsfeed--support" style="padding-right:0;padding-left:30px;">';
