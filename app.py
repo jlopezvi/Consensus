@@ -485,12 +485,12 @@ def get_ideas_created_by_participant(participant_email,user_email_DEBUG=None):
 #     "ideas_data": [
 #      {
 #      "author_email": "new@hotmail.com",
-#      "author_photo_url": "",
+#      "author_profilepic": "string_base64",
 #      "author_username": "newmail",
 #      "concern": "this is mi new concern for test",
 #      "datestamp": "01.10.2016",
 #      "duration": "118 days",
-#      "idea_id": "(13)",
+#      "uuid": "uuid_code",
 #      "image": "string_base64",
 #      "moreinfo": "this and this",
 #      "proposal": "this proposal is for test",
@@ -681,12 +681,12 @@ def registration_receive_emailverification(token):
 #  "data": [
 #    {
 #      "author_email": "new1@hotmail.com",
-#      "author_photo_url": "",
+#      "author_profilepic": "string_base64",
 #      "author_username": "new1",
 #      "concern": "this is mi new concern for test",
 #      "timestamp": "01.10.2016",
 #      "duration": "118 days",
-#      "idea_id": "(13)",
+#      "uuid": "uuid_code",
 #      "image": "string_base64",
 #      "moreinfo": "this and this",
 #      "proposal": "this proposal is for test",
@@ -703,12 +703,12 @@ def registration_receive_emailverification(token):
 #    },
 #    {
 #      "author_email": "new2@hotmail.com",
-#      "author_photo_url": "",
+#      "author_profilepic": "string_base64",
 #      "author_username": "new2",
 #      "concern": "Concern",
 #      "timestamp": "01.10.2016",
 #      "duration": "118 days",
-#      "idea_id": "(9)",
+#      "uuid": "uuid_code",
 #      "image": "string_base64",
 #      "moreinfo": "this and this...",
 #      "proposal": "IdeaM",
@@ -735,7 +735,6 @@ def ideas_for_newsfeed(user_email_DEBUG = None):
     return ideas_for_newsfeed_aux(user_email)
 
 
-# TODO idea_id
 # Ideas For Home: See the Supported + Volunteered ideas/ See the ignored ideas / See the rejected ideas
 # Input: user_email (user logged in) and JSON {"vote_type": "rejected/supported/ignored"}
 # Output: json with fields 'result' and 'data'. 'data' Array with all ideas that the user has voted according to << vote_type >>
@@ -747,7 +746,7 @@ def ideas_for_newsfeed(user_email_DEBUG = None):
 #      "concern": "Concern",
 #      "timestamp": "01.10.2016",
 #      "duration": "118 days",
-#      "idea_id": "(6)",
+#      "uuid": "uuid_code",
 #      "image": "string_base64",
 #      "moreinfo": "this and this...",
 #      "proposal": "New Proposal ",
@@ -764,12 +763,12 @@ def ideas_for_newsfeed(user_email_DEBUG = None):
 #    },
 #    {
 #      "author_email": "newemail@hotmail.com",
-#      "author_photo_url": "",
+#      "author_profilepic": "string_base64",
 #      "author_username": "newemail",
 #      "concern": "Concern",
 #      "timestamp": "01.10.2016",
 #      "duration": "118 days",
-#      "idea_id": "(5)",
+#      "uuid": "uuid_code",
 #      "image": "string_base64",
 #      "moreinfo": "this and this...",
 #      "proposal": "This is my Proposal",
@@ -810,7 +809,7 @@ def ideas_for_home(user_email_DEBUG = None):
 #      "concern": "Concern",
 #      "timestamp": "01.10.2016",
 #      "duration": "118 days",
-#      "idea_id": "(6)",
+#      "uuid": "uuid_code",
 #      "image": "string_base64",
 #      "moreinfo": "this and this...",
 #      "proposal": "New Proposal ",

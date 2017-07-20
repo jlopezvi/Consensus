@@ -309,7 +309,7 @@ def _if_ideaisinfirstphase(idea):
 # Output: << return  idea_data>>
 # idea_data = {
     # 'uuid' : unique_identifier_string,
-    # 'author_photo_url' : 'assets/profile/perfil-mediano.png', 'author_username' : 'Daniela', 'author_email' : 'a@',
+    # 'author_profilepic' : 'string_base64', 'author_username' : 'Daniela', 'author_email' : 'a@',
     # 'duration' : '2 days',
     # 'supporters_goal_num' : 200, 'supporters_num' : 5, 'volunteers_goal_num' : 5, 'volunteers_num' : 2,
     # 'image' : 'string_base64',
@@ -327,7 +327,7 @@ def _if_ideaisinfirstphase(idea):
 def _get_idea_data(idea):
     from app import SUPPORT_RATE_MIN
     author_email = getGraph().match_one(end_node=idea, rel_type="CREATED").start_node['email']
-    author_photo_url = _get_participant_node(author_email)['profilepic_url']
+    author_profilepic = _get_participant_node(author_email)['profilepic']
     author_username = _get_participant_node(author_email)['username']
     idea_proposal = idea['proposal']
     uuid = idea['uuid']
@@ -353,7 +353,7 @@ def _get_idea_data(idea):
         rejectors_data.append({'email': rejector['email'], 'username': rejector['username']})
     #
     idea_data=idea.get_properties()
-    idea_data.update({'author_photo_url': author_photo_url, 'author_username' : author_username,
+    idea_data.update({'author_profilepic': author_profilepic, 'author_username' : author_username,
                       'duration': duration, 'uuid': uuid,
                       'author_email' : author_email, 'supporters_num' : supporters_num,
                       'volunteers_num': volunteers_num,
