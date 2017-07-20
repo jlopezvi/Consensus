@@ -216,7 +216,7 @@ $(document).ready( function() {
       newData['ifemailverified'] = true;
       newData['ifregistrationfromemail'] = true;
     }
-
+    newData['profilepic'] = null;
     if($('.cropme_profile img').attr('src') != 'undefined'){
       //fData.append('fileUpload', $('.cropme_profile img').attr('src'));
       newData['profilepic'] = $('.cropme_profile img').attr('src');

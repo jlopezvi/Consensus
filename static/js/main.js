@@ -43,40 +43,44 @@ $(document).ready(function(){
   /** end of check all  ***/
 
   $(document).on('click', '.add--proposal--provisional', function(){
-  
-    fData = new FormData();
-    fData.append('concern', $('#concern').val());
-    fData.append('proposal', $('#proposal').val());
-    fData.append('moreinfo_proposal', $('#moreinfo_proposal').val());
-    fData.append('moreinfo_concern', $('#moreinfo_concern').val());
-    fData.append('volunteers_goal_num', $('#volunteers_goal_num').val());
-    fData.append('supporters_goal_num', 200);
+    
+    var newData = {
+      'concern': $('#concern').val(),
+      'proposal': $('#proposal').val(),
+      'moreinfo_proposal': $('#moreinfo_proposal').val(),
+      'moreinfo_concern': $('#moreinfo_concern').val(),
+      'volunteers_goal_num': $('#volunteers_goal_num').val(),
+      'supporters_goal_num': 200
+    };
     
     var opt = false;
     if ($('input[name=proposal-anon]').is(":checked"))
         opt = true;
-    fData.append('if_author_public', opt);
+    newData['if_author_public'] = opt;
     
-    var first_receivers_emails = '';
+    var first_receivers_emails = [];
     var list_followers = $('#addpro').find('input[type=checkbox]');
     for(var i=0; i< list_followers.length; i++){
     	if(list_followers[i].checked)
-    	  first_receivers_emails += list_followers[i].value + ' ';
+    	  first_receivers_emails.push(list_followers[i].value);
     }
-    fData.append('first_receivers_emails', first_receivers_emails);
+    newData['first_receivers_emails'] = first_receivers_emails;
     
+    newData['image'] = null;
     if($('#fileUpload').val() != '')
-      fData.append('fileUpload', $('#fileUpload')[0].files[0]);
-    //var img = $('#fileUpload').val();
-  
+      newData['image'] = $('#cropme_bidea img').attr('src');
+    
+    console.log(newData);
     
     if ($('#volunteers_goal_num').val() > 0 ) {
       $.ajax({
         url: url[0] + "//" + url[2] + '/add_idea_to_user',
         type: 'POST',
-        data: fData,
-        processData: false,
-        contentType: false,
+        data: JSON.stringify(newData),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        dataType: 'json',
         success: function (json) {
           alert(json.result_msg);
           window.location = '../home';
