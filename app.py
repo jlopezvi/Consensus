@@ -115,6 +115,14 @@ def participants(participant_email=None):
     return render_template('participants.html', message = message)
 
 
+@app.route('/topten')
+@flask_login.login_required
+def topten():
+    user_email = flask_login.current_user.id
+    message = {"user": user_email}
+    return render_template('topten.html', message = message)
+
+
 ##############
 # PARTICIPANT MANAGER
 ##############
