@@ -1,0 +1,16 @@
+{% extends 'new_template.html' %}
+
+{% block content %}
+<div class="row home--content--logged">
+	
+	
+	<div class="spinner" style="right:50%;top:25%;position:absolute;">
+        <div class="dot1"></div>
+        <div class="dot2"></div>
+    </div>
+	
+	<div class="container col-sm-12"  id="home--proposals" hidden ></div>
+	
+</div>
+<script src="{{ url_for('static',filename='js/topten.js') }}"></script>
+{% endblock %}
