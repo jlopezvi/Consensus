@@ -358,7 +358,7 @@ def _get_participant_followers(participant_email) :
 #   ->  False
 #   ->  [False,'Following contact exists already']
 def _if_added_following_contact_to_user(followingcontact_email, user_email) :
-    timestamp = (datetime.now()).strftime("%d.%m.%Y")
+    timestamp = (datetime.now()).strftime("%d.%m.%Y %H:%M:%S")
     user = _get_participant_node(user_email, 'all')  # current's email could be unverified
     followingcontact = _get_participant_node(followingcontact_email)
     if (followingcontact is None) or (followingcontact is user) :

@@ -28,7 +28,7 @@ def add_idea_to_user_aux(user_email, idea_dict):
     # TODO : add hardcoded default image
     if image is None:
         image = "stringbase64"
-    timestamp = (datetime.now()).strftime("%d.%m.%Y")
+    timestamp = (datetime.now()).strftime("%d.%m.%Y %H:%M:%S")
     newidea, = getGraph().create({"concern": idea_dict.get('concern'), "proposal": idea_dict.get('proposal'),
                                   "image": image, "uuid": code_uuid,
                                   "moreinfo_concern": idea_dict.get('moreinfo_concern'),
@@ -154,7 +154,7 @@ def vote_on_idea_aux(user_email, inputdict):
     idea = _getIdeaByIdeaIndex(idea_index)
     vote_type=inputdict['vote_type']
     vote_ifvolunteered=inputdict['vote_ifvolunteered']
-    vote_timestamp=(datetime.now()).strftime("%d.%m.%Y")
+    vote_timestamp=(datetime.now()).strftime("%d.%m.%Y %H:%M:%S")
     previous_supporters_num= _get_vote_statistics_for_idea(idea_index)[0]
     previous_rejectors_num = _get_vote_statistics_for_idea(idea_index)[1]
     previous_activevoters_num = previous_supporters_num + previous_rejectors_num
@@ -292,7 +292,7 @@ def _get_ideas_data_created_by_participant(participant_email):
 def _if_ideaisinfirstphase(idea):
     # if (one day has passed since creation of the idea) then False
     # datetime_now = ((datetime.now()).strftime("%d.%m.%Y"))
-    datetime_ideacreation = datetime.strptime(getGraph().match_one(rel_type="CREATED", end_node=idea)["timestamp"], '%d.%m.%Y')
+    datetime_ideacreation = datetime.strptime(getGraph().match_one(rel_type="CREATED", end_node=idea)["timestamp"], '%d.%m.%Y %H:%M:%S')
     if ((datetime.now()) - datetime_ideacreation).days >= 1:
         return False
     # if (any of the first receivers has not voted) then True
@@ -332,8 +332,7 @@ def _get_idea_data(idea):
     author_username = _get_participant_node(author_email)['username']
     idea_proposal = idea['proposal']
     uuid = idea['uuid']
-    timestamp = datetime.strptime(getGraph().match_one(end_node=idea, rel_type="CREATED")["timestamp"], '%d.%m.%Y')
-    duration = str((datetime.now() - timestamp).days) + ' days'
+    duration = _get_idea_duration(idea_proposal)
     #voters_num = len(list(getGraph().match(end_node=idea, rel_type="VOTED_ON")))
     supporters_num = _get_vote_statistics_for_idea(idea_proposal)[0]
     rejectors_num = _get_vote_statistics_for_idea(idea_proposal)[1]
@@ -361,6 +360,24 @@ def _get_idea_data(idea):
                       'support_rate': support_rate, 'support_rate_MIN': SUPPORT_RATE_MIN,
                       'supporters' : supporters_data, 'rejectors' : rejectors_data})
     return idea_data
+
+
+def _get_idea_duration(idea_index):
+    idea=_getIdeaByIdeaIndex(idea_index)
+    timestamp = datetime.strptime(getGraph().match_one(end_node=idea, rel_type="CREATED")["timestamp"], '%d.%m.%Y %H:%M:%S')
+    days = (datetime.now() - timestamp)
+    duration = str(days.days) + ' days'
+    if days.days < 1:
+        hours = int(days.total_seconds() / 3600)
+        duration = str(hours) + ' hours'
+        if hours == 0:
+            duration = '< 1 hour'
+    if days.days >= 7:
+        week = int(days.days / 7)
+        duration = str(week) + ' weeks'
+        if week == 1:
+            duration = str(week) + ' week'
+    return duration
 
 
 # <used by _get_idea_data> [0]->supporters, [1]->rejectors, [2]->passives, [3]->volunteers
@@ -474,7 +491,7 @@ def remove_notification_from_idea_to_participant_aux(participant_email, proposal
 def _do_tasks_for_idea_editedproposal(idea_index):
     idea=_getIdeaByIdeaIndex(idea_index)
     idea['if_editedproposal'] = True
-    idea['if_editedproposal_timestamp'] = ((datetime.now()).strftime("%d.%m.%Y"))
+    idea['if_editedproposal_timestamp'] = ((datetime.now()).strftime("%d.%m.%Y %H:%M:%S"))
     _add_notifications_from_idea_to_supporters(idea_index, 'edited')
     _send_notification_emails_from_idea_to_supporters(idea_index, 'edited')
     return
@@ -484,7 +501,7 @@ def _do_tasks_for_idea_editedproposal(idea_index):
 def _do_tasks_for_idea_failurewarning(idea_index):
     idea=_getIdeaByIdeaIndex(idea_index)
     idea['if_failurewarning'] = True
-    idea['if_failurewarning_timestamp'] = ((datetime.now()).strftime("%d.%m.%Y"))
+    idea['if_failurewarning_timestamp'] = ((datetime.now()).strftime("%d.%m.%Y %H:%M:%S"))
     _add_notification_relationship_from_idea_to_author(idea_index, 'failurewarning')
     _send_notification_email_from_idea_to_author(idea_index, 'failurewarning')
     return
@@ -494,7 +511,7 @@ def _do_tasks_for_idea_failurewarning(idea_index):
 def _do_tasks_for_idea_successful(idea_index):
     idea=_getIdeaByIdeaIndex(idea_index)
     idea['if_successful'] = True
-    idea['if_successful_timestamp'] = ((datetime.now()).strftime("%d.%m.%Y"))
+    idea['if_successful_timestamp'] = ((datetime.now()).strftime("%d.%m.%Y %H:%M:%S"))
     _add_notifications_from_idea_to_supporters(idea_index, 'successful')
     _add_notification_relationship_from_idea_to_author(idea_index, 'successful_to_author')
     _send_notification_emails_from_idea_to_supporters(idea_index, 'successful')

@@ -145,7 +145,7 @@ def do_cron_tasks_aux():
             ideas_failurewarning.append(rel.end_node)
     if len(ideas_failurewarning) > 0:
         for idea in ideas_failurewarning:
-            if_failurewarning_timestamp = datetime.strptime(idea['if_failurewarning_timestamp'], '%d.%m.%Y')
+            if_failurewarning_timestamp = datetime.strptime(idea['if_failurewarning_timestamp'], '%d.%m.%Y %H:%M:%S')
             days = (datetime.now() - if_failurewarning_timestamp).days
             if (days > 7):
                 ideas_failurewarning_removed.append(idea['proposal'])
