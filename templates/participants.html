@@ -232,7 +232,14 @@
                             <span class="p__span">Position:</span><input class="form-control" type="text" id="p_position" name="p_position" placeholder="Position">
                         </div>
                         <div class="p__div" style="padding-left: 35px;">
-                            <span class="p__span">Group:</span><select class="form-control" id="p_group" name="p_group" placeholder="Group">Group</select>
+                            <span class="p__span">Group:</span><select class="form-control" id="p_group" name="p_group" placeholder="Group">Group
+                            <option selected disabled value="0">Select...</option>
+                            <option value="Governing Board">Governing Board</option>
+                            <option value="Marketing">Marketing</option>
+                            <option value="Sales">Sales</option>
+                            <option value="Technical">Technical</option>
+                            <option value="Human Resources">Human Resources</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -240,13 +247,13 @@
                     <br><p class="p__titles--p"><i class="fa fa-sort-desc p_down-icon" aria-hidden="true"></i>Privacy options</p>
                 </div>
                 <div class="col-xs-12 register--check">
-                    <input type="checkbox" name="Public_p"> Go fully public
+                    <input type="checkbox" name="Public_p" class="public--all"> Go fully public
                     <input type="checkbox" class="private__prof" style="margin-left: 300px;" name="Private_p"> Go fully anonymous
                 </div>
                 <div class="col-xs-12" style="padding-left: 35px;">
-                    <input type="checkbox" name="Public_p"> Public profile: users will be able to look you up in a public list<br><br>
-                    <input type="checkbox" name="Public_p"> Supporting proposals visible: your followers will see your name<br><br>
-                    <input type="checkbox" name="Public_p"> Rejecting proposals visible: your followers will see your name in the list of proposal oponents
+                    <input type="checkbox" name="Public_p" id="Public--profile"> Public profile: users will be able to look you up in a public list<br><br>
+                    <input type="checkbox" name="Public_p" id="Supporting--proposals--visible"> Supporting proposals visible: your followers will see your name<br><br>
+                    <input type="checkbox" name="Public_p" id="Rejecting--proposals--visible"> Rejecting proposals visible: your followers will see your name in the list of proposal oponents
                 </div>
                 <div class="col-xs-12">
                 <br>
@@ -258,7 +265,7 @@
 
             </div>
             <div class="col-sm-12 modal-cancel" style="margin-top: 25px;">
-                <button type="button" class="register--modal" data-dismiss="modal">Update info</button>
+                <button type="button" class="register--modal" id="modify--user" data-dismiss="modal">Update info</button>
                 <!--<button type="button" class="cancel--modal" data-dismiss="modal">Close</button>-->
            </div>
           </div>

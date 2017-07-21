@@ -300,7 +300,70 @@ $(document).ready( function() {
     		window.location = '/participants/'+redirect;
 
     });
-    
+
+    $(document).on('click', '.public--all', function(){
+    	$('#Public--profile').prop("checked", true);
+    	$('#Supporting--proposals--visible').prop("checked", true);
+    	$('#Rejecting--proposals--visible').prop("checked", true);
+    });
+
+    $(document).on('click', '.private__prof', function(){
+    	$('#Public--profile').prop("checked", false);
+    	$('#Supporting--proposals--visible').prop("checked", false);
+    	$('#Rejecting--proposals--visible').prop("checked", false);
+    });
+
+    $(document).on('click', '#modify--user', function(){
+      	if($('#Public--profile').is(":checked")){
+      		optionpro = true
+      	}else{
+      		optionpro = false
+      	}
+
+      	if($('#Supporting--proposals--visible').is(":checked")){
+      		optionSup = true
+      	}else{
+      		optionSup = false
+      	}
+
+      	if($('#Rejecting--proposals--visible').is(":checked")){
+      		optionRej = true
+      	}else{
+      		optionRej = false
+      	}
+      	
+      	var newdata = {
+      		'fullname' : $('#p_fullname').val(),
+      		'username' : $('#p_username').val(),
+      		'new_email' : $('#p_email').val(),
+      		'position' : $('#p_position').val(),
+      		'group' : $('#p_group').val(),
+      		'ifpublicprofile' : optionpro,
+      		'ifsupportingproposalsvisible' : optionSup,
+      		'ifrejectingproposalsvisible' : optionRej,
+      	};
+       	newdata['profilepic'] = null;
+   		if($('#cropme_profile_edit img').attr('src') != 'undefined'){
+      	newdata['profilepic'] = $('#cropme_profile_edit img').attr('src');
+    	}
+
+		$.ajax({
+		      url: url[0] + "//" + url[2] + '/modify_user_data/'+current_email,
+		      type: 'PUT',
+		      data: JSON.stringify(newdata),
+		      headers: {
+		          'Content-Type': 'application/json'
+		      },
+		      dataType: 'json',
+		      success: function (json) {
+		        alert(json.result);
+		      },
+		      error: function(response){
+		        console.log(response);
+		      }
+		    });
+
+     });
     
     $(document).on('click', '.icons', function(){
     	var element = $(this);
