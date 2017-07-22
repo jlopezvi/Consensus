@@ -71,11 +71,7 @@ def registration_aux(inputdict):
 #       profilepic_file_body: None/ (file)
 # output: python dict {'result':'OK'}
 def _newParticipant(participantdict):
-    image_url = '/static/assets/profile/perfil-mediano.png'
     email = participantdict.get('email')
-    if participantdict['profilepic'] is None:
-        # TODO: default pic
-        participantdict['profilepic'] = 'default'
     newparticipant, = getGraph().create({"fullname" : participantdict.get('fullname'), "email" : email,
                                   "username" : participantdict.get('username'), "position" : participantdict.get('position'),
                                   "group" : participantdict.get('group'), "password" : participantdict.get('password'),

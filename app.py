@@ -158,7 +158,7 @@ def logout():
 #                      {"fullname":"Juan Lopez","email":"jj@gmail.com", "username": "jlopezvi",
 #                       "position":"employee", "group":"IT", "password":"MD5password",
 #                       "host_email":"asdf@das"/null, "ifpublicprofile":true/false,
-#                       "ifregistrationfromemail":true/false, "profilepic":"string_in_base64"/null}
+#                       "ifregistrationfromemail":true/false, "profilepic":"string_in_base64"}
 # output: json
 #          1. Wrong (participant registered already!)
 #                       {"result":"Wrong","ifemailexists":true,"ifemailexists_msg":"message"}
@@ -237,7 +237,7 @@ def remove_user(user_email_DEBUG=None) :
 #        participant_data:
 #        {
 #            'id': 'email',
-#            'profilepic_url': 'assets/profile/perfil-mediano.png',
+#            'profilepic': 'string_base64',
 #            'username': 'John',
 #            'fullname': 'Juan J. Lopez Villarejo',
 #            'ideas_num': 5,
@@ -260,7 +260,7 @@ def get_participant_data(participant_email, user_email_DEBUG=None):
 #        participant_data:
 #        {
 #            'id': 'email',
-#            'profilepic_url': 'assets/profile/perfil-mediano.png',
+#            'profilepic': 'string_base64',
 #            'username': 'John',
 #            'fullname': 'Juan J. Lopez Villarejo',
 #            'ideas_num': 5,
@@ -300,7 +300,7 @@ def get_fullname_for_participant(participant_email, user_email_DEBUG=None):
 # 		      "email": "ale@gmail.com",
 # 		      "fullname": "alejandro perez",
 # 		      "username": "ale",
-#             "profilepic_url": "http://path"
+#             "profilepic": "string_base64"
 # 		    }
 # 		   ]
 # 		  }
@@ -324,7 +324,7 @@ def get_participant_followers_info(participant_email, user_email_DEBUG=None):
 # 		      "email": "ale@gmail.com",
 # 		      "fullname": "alejandro perez",
 # 		      "username": "ale",
-#             "profilepic_url": "http://path"
+#             "profilepic": "string_base64"
 #  		    }
 # 		   ]
 # 		  }
@@ -369,7 +369,7 @@ def get_all_participants_admin():
 
 
 # Output  json {"email": "new@gmail.com", "position": "Employee", "group": "IT",
-#               "fullname": "jlopezvi", "profilepic_url":'example.jpg', "if_following":True/False}
+#               "fullname": "jlopezvi", "profilepic":'string_base64', "if_following":True/False}
 @app.route('/get_all_public_participants_for_user', methods=['GET'])
 def get_all_public_participants_for_user():
     user = flask_login.current_user.id

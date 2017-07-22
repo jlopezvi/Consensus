@@ -25,9 +25,6 @@ def add_idea_to_user_aux(user_email, idea_dict):
     image = idea_dict.get('image')
     if _getIdeaByIdeaIndex(newidea_index):
         return jsonify({"result": "Wrong", "result_msg": "proposal already exists"})
-    # TODO : add hardcoded default image
-    if image is None:
-        image = "stringbase64"
     timestamp = (datetime.now()).strftime("%d.%m.%Y %H:%M:%S")
     newidea, = getGraph().create({"concern": idea_dict.get('concern'), "proposal": idea_dict.get('proposal'),
                                   "image": image, "uuid": code_uuid,
