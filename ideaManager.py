@@ -308,7 +308,7 @@ def _if_ideaisinfirstphase(idea):
 # idea_data = {
     # 'uuid' : unique_identifier_string,
     # 'author_profilepic' : 'string_base64', 'author_username' : 'Daniela', 'author_email' : 'a@',
-    # 'duration' : '2 days',
+    # 'duration' : "4 hours/ days/ weeks",
     # 'supporters_goal_num' : 200, 'supporters_num' : 5, 'volunteers_goal_num' : 5, 'volunteers_num' : 2,
     # 'image' : 'string_base64',
     # 'concern': 'Some text for the concern',
