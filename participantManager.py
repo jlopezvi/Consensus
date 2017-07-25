@@ -5,7 +5,7 @@ import json
 import logging
 from utils import getGraph, save_file, send_email
 from uuid_token import generate_confirmation_token
-import datetime
+from datetime import datetime, date
 from user_authentification import User
 import flask_login
 
