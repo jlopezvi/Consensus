@@ -21,7 +21,7 @@ $(document).ready( function() {
 		type: 'GET',
 		success: function (json) {	
 			
-			console.log(json);
+			//console.log(json);
 			var newIdea = '';
 			var url_new = url[0] +'//'+ url[2] +'/static/';
 			for (var i = 0; i < json.ideas_data.length; i++) {						
@@ -305,13 +305,36 @@ $(document).ready( function() {
     	$('#Public--profile').prop("checked", true);
     	$('#Supporting--proposals--visible').prop("checked", true);
     	$('#Rejecting--proposals--visible').prop("checked", true);
+    	$('.private__prof').prop("checked", false);
     });
 
     $(document).on('click', '.private__prof', function(){
     	$('#Public--profile').prop("checked", false);
     	$('#Supporting--proposals--visible').prop("checked", false);
     	$('#Rejecting--proposals--visible').prop("checked", false);
+    	$('.public--all').prop("checked", false);
     });
+
+    $.ajax({
+		url: url[0] + "//" + url[2] + '/get_user_data',
+		type: 'GET',
+		headers: {
+		'Content-Type': 'application/json'
+		},
+		dataType: 'json',
+		success: function (json) {
+			console.log(json.data.fullname);
+			$('#p_fullname').val(''+json.data.fullname+'');
+			$('#p_username').val(''+json.data.username+'');
+			$('#p_email').val(''+json.data.email+'');
+			$('#p_confirm-e').val(''+json.data.email+'');
+			$('#p_position').val(''+json.data.position+'');
+			$('#p_group').val(''+json.data.group+'');
+			$('#cropme_profile_edit').append('<img src='+json.data.profilepic+'>');
+
+		}					
+				
+	});
 
     $(document).on('click', '#modify--user', function(){
       	if($('#Public--profile').is(":checked")){
