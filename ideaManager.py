@@ -175,7 +175,9 @@ def vote_on_idea_aux(user_email, inputdict):
     volunteers_num = _get_vote_statistics_for_idea(idea_index)[3]
     support_rate = (supporters_num / activevoters_num)*100 if activevoters_num is not 0 else 100
     #time condition for failure warning notification: it should not be re-fired before three days from the previous one.
-    if_time_condition_OK = ((datetime.now() - idea['if_failurewarning_timestamp']).days >= 3)
+    if_time_condition_OK = False
+    if 'if_failurewarning_timestamp' in idea:
+        if_time_condition_OK = ((datetime.now() - idea['if_failurewarning_timestamp']).days >= 3)
     if support_rate < SUPPORT_RATE_MIN and if_previous_support_rate_OK is True and if_time_condition_OK is True:
         _do_tasks_for_idea_failurewarning(idea_index)
     if supporters_num >= (idea['supporters_goal_num']) and volunteers_num >= (idea['supporters_goal_num']):
