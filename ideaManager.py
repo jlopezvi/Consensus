@@ -4,7 +4,7 @@ from utils import getGraph, save_file
 from flask import jsonify, render_template
 import json, uuid
 from datetime import datetime,date
-from math import log
+from math import log10
 
 # class Idea:
 #     def __init__(self, idea_dict):
@@ -410,7 +410,7 @@ def _get_idea_score(idea):
     supporters_points = log10(supporters_num)
     support_rate = supporters_num / (rejectors_num + supporters_num) * 100
     # support_rate_points in range [0,1]
-    support_rate_points = (10 ^ ((support_rate - SUPPORT_RATE_MIN) / (100 - SUPPORT_RATE_MIN)) - 1.) / 9.
+    support_rate_points = (10 ** ((support_rate - SUPPORT_RATE_MIN) / (100 - SUPPORT_RATE_MIN)) - 1.) / 9.
     # total number
     points = support_rate_points + supporters_points
     return points
