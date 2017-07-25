@@ -115,10 +115,7 @@ function showContent(id){
   $('.newsfeed--problem').empty().append(list[id].concern);
   $('.newsfeed--proposal').empty().append(list[id].proposal);
   $('#more--info--modal').empty().append('<p><h4>  More information about the problem: </h4> '+list[id].moreinfo_concern+'</br></br><h4> More information about the proposal: </h4>'+list[id].moreinfo_proposal+'</p>');
-  var total = ((list[id].supporters.length * 100) / (list[id].supporters.length + list[id].rejectors.length));
-  if((list[id].supporters.length + list[id].rejectors.length) == 0)
-    total = 0;
-  $('.input--percent label').empty().append('Support Rate: '+Math.floor(total)+'%');
+  $('.input--percent label').empty().append('Support Rate: '+list[id].support_rate+'%');
   /****************************************** Add Supporters to the Supporters List ****************************************/
   if(list[id].supporters.length > 0){
     cont = 1;

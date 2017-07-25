@@ -48,8 +48,8 @@ $(document).ready( function() {
 				if (json.ideas_data[i].supporters_num + json.ideas_data[i].rejectors.length == 0) {
 					rate = 0
 				}
-				newIdea += '<input type="text" value="'+Math.floor(rate)+'" id="percent" hidden><div class="input--percent">';
-				newIdea += '<label> Support Rate: '+Math.floor(rate)+'% </label></div></div><div class="col-sm-2 neewsfeed--moreinfo" style="float:right;">';
+				newIdea += '<input type="text" value="'+json.ideas_data[i].support_rate+'" id="percent" hidden><div class="input--percent">';
+				newIdea += '<label> Support Rate: '+json.ideas_data[i].support_rate+'% </label></div></div><div class="col-sm-2 neewsfeed--moreinfo" style="float:right;">';
 				newIdea += '<input type="button" name="more-info" class="home--button"></div><div id="more--info--modal" hidden><p><h4>  More information about the problem: </h4> '+json.ideas_data[i].moreinfo_concern+'</br></br><h4> More information about the proposal: </h4>'+json.ideas_data[i].moreinfo_proposal+'</p></div></div></div>';
 				newIdea += '<div class="row newsfeed--persons"><div class="col-sm-12"><div class="col-sm-1" style="padding:0;">';
 				newIdea += '<img src="'+url_new+'images/check-small.png"></div><div class="col-sm-11 newsfeed--likes">';

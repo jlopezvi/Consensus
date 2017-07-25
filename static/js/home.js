@@ -129,11 +129,7 @@ function showIdeas(list, index){
 	code += '</div><div class="row newsfeed--footer">';
 	code += '<div class="col-sm-12" style="padding-right: 0px; padding-left: 0px;"><div class="col-sm-1 redflag--img">';
 	code += '<img class="redflag" src="/static/images/redflag.png"></div><div class="col-sm-9 newsfeed--support" style="padding-right:0;padding-left:30px;">';
-  var percent = (list.supporters.length * 100)/(list.supporters.length + list.rejectors.length);
-  var total = 0;
-  if((list.supporters.length + list.rejectors.length) > 0)
-    total = Math.floor(percent);
-	code += '<div class="input--percent"><label>	Support Rate: '+total+'%</label></div>';
+	code += '<div class="input--percent"><label>	Support Rate: '+list.support_rate+'%</label></div>';
 	code += '</div>	<div class="col-sm-2 neewsfeed--moreinfo" style="float:right;"><input type="button" name="more-info" class="home--button">';
 	code += '</div><div id="more--info--modal" hidden><p><h4>  More information about the problem: </h4> '+list.moreinfo_concern+'</br></br><h4> More information about the proposal: </h4>'+list.moreinfo_proposal+'</p></div></div></div><div class="row newsfeed--persons"><div class="col-sm-12">';
 	code += '<div class="col-sm-1" style="padding:0;"><img src="/static/images/check-small.png"></div>';

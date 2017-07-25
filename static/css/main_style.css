@@ -564,11 +564,14 @@ a.add--proposal--button:hover, a.add--proposal--button:active, a.add--proposal--
 /* END OF HOME STYLE */
 /* HOME STYLE WHEN LOGGED */
 .home--profile--picture {
-	width: 100px;
-  	height: 100px;
-  	margin-top: -38px;
+	width: 70px;
+  	height: 70px;
+  	margin-top: -20px;
   	border-radius: 60px;
 	overflow: hidden;
+    left: 15px;
+    position: relative;
+
 }
 .home--header .fa-clock-o{
 	font-size: 25px;
@@ -1186,7 +1189,7 @@ ul.nav-tabs li.active a:before {
     max-height: 1600px;
 }
 .participant__body .home--profile--picture img {
-    height: 70%;
+    height: 100%;
 }
 .participant__body .home--header {
 	font-size: 12px;
