@@ -94,12 +94,13 @@ def modify_user_data_aux(user_data, user_email):
               'ifrejectingproposalsvisible',
               'username', 'ifpublicprofile', 'fullname', 'profilepic']
     data = {}
-    if 'new_email' in user_data:
-        new_email=user_data['new_email']
-        if _get_participant_node(new_email, 'all'):  # email exists?
-            return jsonify({'result': 'Wrong: New e-mail already exists'})
-        _removeFromParticipantsIndex(user_email, participant)
-        _addToParticipantsIndex(new_email, participant)
+    if 'email' in user_data:
+        if user_data['email'] != user_email:
+            new_email=user_data['email']
+            if _get_participant_node(new_email, 'all'):  # email exists?
+                return jsonify({'result': 'Wrong: New e-mail already exists'})
+            _removeFromParticipantsIndex(user_email, participant)
+            _addToParticipantsIndex(new_email, participant)
     for k, v in user_data.items():
         if k in fields:
             data[k] = v
