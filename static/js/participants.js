@@ -358,7 +358,7 @@ $(document).ready( function() {
       	var newdata = {
       		'fullname' : $('#p_fullname').val(),
       		'username' : $('#p_username').val(),
-      		'new_email' : $('#p_email').val(),
+      		'email' : $('#p_email').val(),
       		'position' : $('#p_position').val(),
       		'group' : $('#p_group').val(),
       		'ifpublicprofile' : optionpro,
