@@ -101,6 +101,8 @@ def modify_user_data_aux(user_data, user_email):
                 return jsonify({'result': 'Wrong: New e-mail already exists'})
             _removeFromParticipantsIndex(user_email, participant)
             _addToParticipantsIndex(new_email, participant)
+            user = User(new_email)
+            flask_login.login_user(user)
     for k, v in user_data.items():
         if k in fields:
             data[k] = v
