@@ -29,7 +29,7 @@ $(document).ready( function() {
 				newIdea += '<input type="hidden" class="idea__id" value="'+json.ideas_data[i].proposal+'">';
 				newIdea += '<div class="col-sm-2" style="padding-left: 0px;margin-left: -15px;">';
 				newIdea += '<div class="home--profile--picture"><img class="img-circle new--user--icon--login" src="'+json.ideas_data[i].author_profilepic+'"></div></div><div class="col-sm-1 home--name">';
-				newIdea += '<a href="#">'+json.ideas_data[i].author_username+'</a></div><div class="col-sm-2 newsfeed--duration">';
+				newIdea += '<a href="#" id="name--modify">'+json.ideas_data[i].author_username+'</a></div><div class="col-sm-2 newsfeed--duration">';
 				newIdea += '<p><img style="width: 15px;position: relative;top: -3px;" src="'+url_new+'images/clock-icon.png">&nbsp;'+json.ideas_data[i].duration+'</p>';
 				newIdea += '</div><div class="col-sm-3 home--charge"><div class="progress home--progress">';
 				var supporters_percent = json.ideas_data[i].supporters_num*100/json.ideas_data[i].supporters_goal_num;
@@ -379,7 +379,7 @@ $(document).ready( function() {
 		      },
 		      dataType: 'json',
 		      success: function (json) {
-		        alert(json.result);
+		        $('#modify-user').modal('toggle');
 		      },
 		      error: function(response){
 		        console.log(response);
@@ -387,6 +387,24 @@ $(document).ready( function() {
 		    });
 
      });
+
+    $(document).on('click', '#accept_modify', function(){
+    	$.ajax({
+			url: url[0] + "//" + url[2] + '/get_participant_data_by_email_unrestricted/'+current_email,
+			type: 'GET',
+			success: function (json) {
+				//console.log(json);
+				$('.profile--picture img').attr('src', '');
+				$('.participant__name a').empty();
+				$('.participant__name label').empty();
+				$('#name--modify').empty();
+				$('.profile--picture img').attr('src', json.participant_data.profilepic);
+				$('.participant__name a').append(json.participant_data.username);
+				$('.participant__name label').append(json.participant_data.fullname);
+				$('#name--modify').append(json.participant_data.username);
+			}	
+		});
+    });
     
     $(document).on('click', '.icons', function(){
     	var element = $(this);

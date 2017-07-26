@@ -1244,6 +1244,24 @@ ul.nav-tabs li.active a:before {
 }
 /***** END OF PARTICIPANTS STYLE *******/
 /***** NEW STILES **********************/
+#modify-user div.modal-header,
+#logout__modal div.modal-header{
+	background-color: #205817;
+	color: #fff;	
+}
+#modify-user div.modal-footer button:nth-child(1) {
+    color: #fff;
+    background-color: #205817;
+    border-color: #0a2d05;
+    width: 60px;
+    height: 25px;
+    top: -8px;
+    position: relative;
+}
+#modify-user div.modal-body{
+	width: 450px;
+	padding-right: 10px;
+}
 #redflag-modal div.modal-header,
 #logout__modal div.modal-header{
 	background-color: #205817;
