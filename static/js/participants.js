@@ -369,8 +369,8 @@ $(document).ready( function() {
    		if($('#cropme_profile_edit img').attr('src') != 'undefined'){
       	newdata['profilepic'] = $('#cropme_profile_edit img').attr('src');
     	}
-
-		$.ajax({
+    	if ($('#p_email').val() == $('#p_confirm-e').val()) {
+    		$.ajax({
 		      url: url[0] + "//" + url[2] + '/modify_user_data/'+current_email,
 		      type: 'PUT',
 		      data: JSON.stringify(newdata),
@@ -379,12 +379,17 @@ $(document).ready( function() {
 		      },
 		      dataType: 'json',
 		      success: function (json) {
+		      	$('.close').click();
 		        $('#modify-user').modal('toggle');
 		      },
 		      error: function(response){
 		        console.log(response);
 		      }
 		    });
+    	}else{
+    		$('#p_confirm-e').css('border-color', 'red');
+    	}
+		
 
      });
 
