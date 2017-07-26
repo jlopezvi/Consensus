@@ -180,7 +180,7 @@ def registration():
 
 # input:      user_email (user logged in)
 #             application/json
-#                      {"fullname": "Juan Lopez", "new_email": "new_email@gmail.com",
+#                      {"fullname": "Juan Lopez", "email": "new_email@gmail.com",
 #                       "username": "jlopezvi",
 #                       "position":"employee", "group": "IT", "password": "MD5password",
 #                       "ifpublicprofile": true/false,, "ifsupportingproposalsvisible" : true/false,
