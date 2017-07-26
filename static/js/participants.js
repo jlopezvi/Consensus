@@ -28,7 +28,7 @@ $(document).ready( function() {
 				newIdea += '<div class="col-sm-12"><div class="row home--header">';
 				newIdea += '<input type="hidden" class="idea__id" value="'+json.ideas_data[i].proposal+'">';
 				newIdea += '<div class="col-sm-2" style="padding-left: 0px;margin-left: -15px;">';
-				newIdea += '<div class="home--profile--picture"><img class="img-circle new--user--icon--login" src="'+json.ideas_data[i].author_profilepic+'"></div></div><div class="col-sm-1 home--name">';
+				newIdea += '<div class="home--profile--picture"><img class="img-circle new--user--icon--login" id="img-modify" src="'+json.ideas_data[i].author_profilepic+'"></div></div><div class="col-sm-1 home--name">';
 				newIdea += '<a href="#" id="name--modify">'+json.ideas_data[i].author_username+'</a></div><div class="col-sm-2 newsfeed--duration">';
 				newIdea += '<p><img style="width: 15px;position: relative;top: -3px;" src="'+url_new+'images/clock-icon.png">&nbsp;'+json.ideas_data[i].duration+'</p>';
 				newIdea += '</div><div class="col-sm-3 home--charge"><div class="progress home--progress">';
@@ -398,10 +398,12 @@ $(document).ready( function() {
 				$('.participant__name a').empty();
 				$('.participant__name label').empty();
 				$('#name--modify').empty();
+				$('#img-modify').attr('src', '');
 				$('.profile--picture img').attr('src', json.participant_data.profilepic);
 				$('.participant__name a').append(json.participant_data.username);
 				$('.participant__name label').append(json.participant_data.fullname);
 				$('#name--modify').append(json.participant_data.username);
+				$('#img-modify').attr('src', json.participant_data.profilepic);
 			}	
 		});
     });
