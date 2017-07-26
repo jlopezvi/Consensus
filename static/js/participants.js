@@ -323,7 +323,7 @@ $(document).ready( function() {
 		},
 		dataType: 'json',
 		success: function (json) {
-			console.log(json.data.fullname);
+			//console.log(json.data.fullname);
 			$('#p_fullname').val(''+json.data.fullname+'');
 			$('#p_username').val(''+json.data.username+'');
 			$('#p_email').val(''+json.data.email+'');
@@ -672,7 +672,7 @@ $(document).ready(function(){
 					type: 'GET',
 					success: function (json) {	
 						$('#following li input:checked').parent().fadeOut('slow');
-						$('#msg').fadeIn('slow');
+						$('#following center h3').show('slow');
 					},
 					error: function (response) {
 						alert('you have to select a participant that you want stop follow');		
