@@ -7,6 +7,7 @@ $(document).ready(function(){
 	$('#nav--home').css('display', 'none');
 	$('#nav--participants').css('display', 'none');
 	$('#nav--top_ten').css('display', 'none');
+	$('.menu--mobile--icon').css('display', 'none');
 	$('.add--proposal--button').css('display', 'none');
 	$('#middle--home--button').on('click', function(e){
       e.preventDefault();
