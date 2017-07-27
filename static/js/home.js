@@ -23,7 +23,10 @@ $(document).ready( function() {
     $('.select--options').slideUp(100);
     $('.select--triangle').removeClass('active-triangle');
     
-    $('#home--proposals').empty().hide();
+    $('#home--proposals').hide();
+    $('#today').empty();
+    $('#lastweek').empty();
+    $('#thismounth').empty();
     loadHomeIdeas(type_vote);
   });
   
@@ -172,7 +175,18 @@ function showIdeas(list, index){
 	code += '<img style="width: 48px;" src="/static/images/checkmark.png" class="home--share--button" id="supported-plus">';
 	code += '</div><div class="col-sm-6 home--followers hidden"><i class="fa fa-share-alt"></i><p>Share with: followers</p></div></div></div></div>';
 	
-	$('#home--proposals').append(code);
+	if (list.duration[6] == 'o' || list.duration[6] == 'u' || list.duration[4] == 'o' || list.duration[4] == 'u') {
+    $('#Today').show('fast');
+    $('#today').append(code);
+  }
+  if (list.duration[3] == 'a' ) {
+    $('#Lastweek').show('fast');
+    $('#lastweek').append(code);
+  }
+  if (list.duration[4] == 'e' || list.duration[4] == 'w') {
+    $('#Thismounth').show('fast');
+    $('#thismounth').append(code);
+  }
 }
 var left = 1;
     $(document).on('click', '.neewsfeed--moreinfo', function(){
