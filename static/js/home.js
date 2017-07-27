@@ -176,15 +176,12 @@ function showIdeas(list, index){
 	code += '</div><div class="col-sm-6 home--followers hidden"><i class="fa fa-share-alt"></i><p>Share with: followers</p></div></div></div></div>';
 	
 	if (list.duration[6] == 'o' || list.duration[6] == 'u' || list.duration[4] == 'o' || list.duration[4] == 'u') {
-    $('#Today').show('fast');
     $('#today').append(code);
   }
   if (list.duration[3] == 'a' ) {
-    $('#Lastweek').show('fast');
     $('#lastweek').append(code);
   }
   if (list.duration[4] == 'e' || list.duration[4] == 'w') {
-    $('#Thismounth').show('fast');
     $('#thismounth').append(code);
   }
 }
