@@ -110,7 +110,7 @@ function loadHomeIdeas(type_vote){
 
 function showIdeas(list, index){
   var code = '';
-  code += '<div class="col-sm-6 home--content--proposal">';
+  code += '<div class="col-xs-12 col-sm-6 home--content--proposal">';
   code += '<div class="row home--header">';
   code += '<input type="hidden" class="idea__id" value="'+list.proposal+'">';
 	code += '<div class="col-sm-2" style="padding-left: 0px;">';
@@ -141,12 +141,12 @@ function showIdeas(list, index){
     cont = 1;
     for(var i=0; i<list.supporters.length; i++){
       if(cont <= 3)
-        code += '<a href="#"><li>'+list.supporters[i].username+'</li></a>';
+        code += '<a href="#" style="margin-left: 5px;"><li>'+list.supporters[i].username+'</li></a>';
       cont++;
     }
   }
   if(list.supporters.length > 3){
-    code += '<a href="#" class="last--liked"><li>+ '+(list.supporters.length-3)+' people</li></a>';
+    code += '<a href="#" class="last--liked" style="margin-left: 5px;"><li>+ '+(list.supporters.length-3)+' people</li></a>';
   }
   else if(list.supporters.length == 0){
     code += '<a href="#" class="last--liked"><li>0 people</li></a>';
@@ -167,12 +167,12 @@ function showIdeas(list, index){
   else if(list.rejectors.length == 0){
     code += '<a href="#" class="last--liked"><li>0 people</li></a>';
   }
-  code += '</ul></div></div></div><div class="row home--share"><div class="col-sm-6 home--share--icons">';
+  code += '</ul></div></div></div><div class="row home--share"><div class="col-sm-8 home--share--icons">';
   code += '<input type="hidden" class="index--idea" value="'+index+'"';
 	code += '<div class="col-sm-6" style="padding:0;">';
 	code += '<img src="/static/images/x-icon.png" class="home--share--button" id="rejected">';
 	code += '<img style="width: 50px;" src="/static/images/check-icon.png" class="home--share--button" id="supported">';
-	code += '<img style="width: 48px;" src="/static/images/checkmark.png" class="home--share--button" id="supported-plus">';
+	code += '<img style="width: 50px;" src="/static/images/checkmark.png" class="home--share--button" id="supported-plus">';
 	code += '</div><div class="col-sm-6 home--followers hidden"><i class="fa fa-share-alt"></i><p>Share with: followers</p></div></div></div></div>';
 	
 	if (list.duration[6] == 'o' || list.duration[6] == 'u' || list.duration[4] == 'o' || list.duration[4] == 'u') {
@@ -182,7 +182,7 @@ function showIdeas(list, index){
     $('#lastweek').append(code);
   }
   if (list.duration[4] == 'e' || list.duration[4] == 'w') {
-    $('#thismounth').append(code);
+    $('#thismonth').append(code);
   }
 }
 var left = 1;

@@ -162,13 +162,13 @@
    		width: 50%;
    	}
    	.home--charge {
-   		margin-top: 64px;
+   		margin-top: 90px;
    	}
    	.home--progress {
    		margin-bottom: 5px;
    	}
    	.home--proposals--body {
-   		margin-top: 10%;
+   		margin-top: 15%;
    	}
    	.home--profile--picture img {
    		top: 45px;
@@ -192,7 +192,7 @@
 }
 @media only screen and (max-width: 1024px) {
 	.concern__div {
-    	top: 12vw;
+    	top: 20vw;
 	}
 	.tabs__follow .invite__button, .invite__body .invite__button {
     	width: 135px;
@@ -359,7 +359,7 @@
 }
 @media only screen and (max-width: 900px){
 	.concern__div {
-	    top: 16vw;
+	    top: 22vw;
 	}
 }
 @media only screen and (max-width: 870px) {
@@ -612,9 +612,6 @@
     	width: 33px;
     	height: 33px;
 	}
-	a.add--proposal--button {
-		margin-right: 0;
-	}
 	.home--header, .participant__body .home--header {
     	font-size: 16px;
     }
@@ -650,16 +647,27 @@
 		margin-left: 50px!important;
 	}
 }
-@media only screen and (max-width: 700px){
+@media only screen and (max-width: 325px){
 	.concern__div {
-	    top: 25vw;
+	    top: 45vw;
 	}
 }
-@media only screen and (max-width: 670px){
+@media only screen and (max-width: 370px){
 	.concern__div {
-	    top: 27vw;
+	    top: 40vw;
 	}
 }
+@media only screen and (max-width: 415px){
+	.concern__div {
+	    top: 35vw;
+	}
+}
+@media only screen and (max-width: 380px){
+	.concern__div {
+	    top: 42vw;
+	}
+}
+
 @media only screen and (max-width: 650px) {
 	.search__participant ul li input[type="button"] {
 	    padding: 5px 5px;
@@ -831,6 +839,10 @@
 	a.add--proposal--button {
 		padding: 2px 7px 5px 4px!important;
 	}
+	.logout__button{
+		margin-top: 10px;
+		margin-left: 20px;
+	}
 	.newsfeed--likes ul a li {
     	font-size: 16px;
 	}
@@ -932,7 +944,7 @@
     	background-position-x: -525px;
 	}
 	.home--proposals--body {
-    	background-position-x: -335px;
+    	background-position-x: -270px;
 	}
 	.addproposal--step2 li {
 	    margin-left: 6px;
