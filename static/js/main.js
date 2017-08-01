@@ -101,7 +101,8 @@ $(document).ready(function(){
   });
 
   var current_email = $('#host_email').val();
-  $.ajax({
+  if(url[3] != ''){
+    $.ajax({
       url: url[0] + "//" + url[2] + '/get_participant_followers_info/'+current_email,
       type: 'GET',
       success: function (json){
@@ -120,6 +121,7 @@ $(document).ready(function(){
         }
       } 
     });
+  }
 
   $("#fileUpload").on('change', function () {
 
