@@ -10,7 +10,7 @@ $(document).ready( function() {
             var newTop = '';
             var url_new = url[0] +'//'+ url[2] +'/static/';
             for (var i = 0; i < data.data.length; i++) {                      
-                newTop += '<div class="col-sm-12"><div class="row home--header">';
+                newTop += '<div class="col-sm-6 home--content--proposal" ><div class="row home--header">';
                 newTop += '<input type="hidden" class="idea__id" value="'+data.data[i].proposal+'">';
                 newTop += '<div class="col-sm-2" style="padding-left: 0px;margin-left: -15px;">';
                 newTop += '<div class="home--profile--picture"><img class="img-circle new--user--icon--login" src="'+data.data[i].author_profilepic+'"></div></div><div class="col-sm-1 home--name">';
