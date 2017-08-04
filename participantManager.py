@@ -14,7 +14,6 @@ import flask_login
 #              'position': 'employee', 'group': 'IT', 'password': 'MD5password',
 #              'host_email': 'asdf@das' / None, 'ifpublicprofile': True/ False,
 #              'ifregistrationfromemail': True / False, 'profilepic': 'string_base64'/None}
-#        (file) profilepic_file_body
 # output: json
 #          1. Wrong  -->   {"result":"Wrong","ifemailexists":true,"ifemailexists_msg":ifemailexists_msg[true]}
 #          2. OK (registered participant but e-mail not verified yet. Sends new e-mail for verification)  -->
@@ -65,19 +64,15 @@ def registration_aux(inputdict):
 
 
 # Used By <registration_aux>
-# input: python dict {'fullname':'Juan Lopez','email': 'jj@gmail.com', 'username': 'jlopezvi',
-#              'position': 'employee', 'group': 'Human Resources', 'password': 'MD5password',
-#              'ifregistrationfromemail': True / False, 'ifpublicprofile': True / False,}
-#       profilepic_file_body: None/ (file)
-# output: python dict {'result':'OK'}
 def _newParticipant(participantdict):
     email = participantdict.get('email')
+    timestamp = (datetime.now()).strftime("%d.%m.%Y %H:%M:%S")
     newparticipant, = getGraph().create({"fullname" : participantdict.get('fullname'), "email" : email,
                                   "username" : participantdict.get('username'), "position" : participantdict.get('position'),
                                   "group" : participantdict.get('group'), "password" : participantdict.get('password'),
                                   "ifpublicprofile" : participantdict.get('ifpublicprofile'),
                                   "profilepic" : participantdict['profilepic'], "ifsupportingproposalsvisible": True,
-                                  "ifrejectingproposalsvisible": True
+                                  "ifrejectingproposalsvisible": True, "timestamp": timestamp
                                   })
     if participantdict.get('ifregistrationfromemail') is True:
         newparticipant.add_labels("participant")

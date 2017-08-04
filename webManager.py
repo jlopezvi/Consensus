@@ -42,7 +42,7 @@ def registration_receive_emailverification_aux(token):
         return render_template('login/login.html', message=jsondata)
     if confirm_token(token, 3600):
         email = confirm_token(token)
-        result_dict = _verifyEmail(email)
+        result_dict = _verify_email(email)
         if result_dict['result'] == 'OK':
             jsondata = {
                 "type": "login", "result": "OK : With data", "result_msg": "Email verified",
@@ -109,8 +109,8 @@ def ideas_for_home_aux(participant_email, vote_type):
 
 
 def get_topten_ideas_aux():
-    from ideaManager import _getIdeasIndex, _getIdeaByIdeaIndex, _get_idea_score
-    allnodes = _getIdeasIndex().query("proposal:*")
+    from ideaManager import _get_ideas_index, _get_idea_by_ideaindex, _get_idea_score
+    allnodes = _get_ideas_index().query("proposal:*")
     ideas = []
     for node in allnodes:
         idea=[node["proposal"], _get_idea_score(node)]
@@ -130,7 +130,7 @@ def get_topten_ideas_aux():
     #
     ranked_10_ideas_data= []
     for ranked_idea_proposal in ranked_10_ideas_proposals:
-        ranked_idea = _getIdeaByIdeaIndex(ranked_idea_proposal[0])
+        ranked_idea = _get_idea_by_ideaindex(ranked_idea_proposal[0])
         ranked_10_ideas_data.append(_get_idea_data(ranked_idea))
     return jsonify({"result": "OK", "data": ranked_10_ideas_data})
 
@@ -171,7 +171,7 @@ def _if_isnewideaforparticipant(idea, participant):
 #  -> {'result': 'Wrong', 'result_msg': 'Email already verified'}
 #  -> {'result': 'Wrong', 'result_msg': 'Email not registered'}
 #  -> {'result': 'OK', 'result_msg': 'Email verified'}
-def _verifyEmail(email):
+def _verify_email(email):
     from participantManager import _removeFromUnverifiedParticipantsIndex, _addToParticipantsIndex
     unverifiedparticipant = _get_participant_node(email, False)
     if unverifiedparticipant is None:
@@ -184,6 +184,6 @@ def _verifyEmail(email):
         _addToParticipantsIndex(email, unverifiedparticipant)
         unverifiedparticipant.remove_labels("unverified_participant")
         unverifiedparticipant.add_labels("participant")
-        # TODO datestamp for registration
-        # registered_on=datetime.datetime.now()
+        timestamp = (datetime.now()).strftime("%d.%m.%Y %H:%M:%S")
+        unverifiedparticipant['timestamp'] = timestamp
         return {'result': 'OK', 'result_msg': 'Email verified'}
