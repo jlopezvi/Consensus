@@ -72,7 +72,8 @@ def remove_idea_aux(idea_index) :
     for rel in getGraph().match(start_node=idea, bidirectional=True):
         rel.delete()
     #
-    _remove_from_idea_index(idea_dict['current_proposal'], idea)
+    _send_notification_emails_from_idea_to_supporters(idea['current_proposal'], 'removed')
+    _remove_from_idea_index(idea['current_proposal'], idea)
     idea.delete()
     return jsonify({"result":"OK", "result_msg":"Idea was removed"})
 
@@ -508,7 +509,6 @@ def _do_tasks_for_idea_editedproposal(idea_index):
     idea['if_editedproposal'] = True
     idea['if_editedproposal_timestamp'] = ((datetime.now()).strftime("%d.%m.%Y %H:%M:%S"))
     _add_notifications_from_idea_to_supporters(idea_index, 'edited')
-    _send_notification_emails_from_idea_to_supporters(idea_index, 'edited')
     return
 
 
@@ -517,25 +517,31 @@ def _do_tasks_for_idea_failurewarning(idea_index):
     idea=_get_idea_by_ideaindex(idea_index)
     idea['if_failurewarning'] = True
     idea['if_failurewarning_timestamp'] = ((datetime.now()).strftime("%d.%m.%Y %H:%M:%S"))
-    _add_notification_relationship_from_idea_to_author(idea_index, 'failurewarning')
+    _add_notification_from_idea_to_author(idea_index, 'failurewarning')
+    _add_notifications_from_idea_to_supporters(idea_index, 'failurewarning')
     _send_notification_email_from_idea_to_author(idea_index, 'failurewarning')
     return
 
 
+#TODO ampliar la funciones
+# _add_notifications_from_idea_to_supporters(idea_index, 'successful')
+#    --> _add_notifications_from_idea_to_voters(idea_index, 'successful', ['supporters', 'rejectors'])
+# _send_notification_emails_from_idea_to_supporters(idea_index, 'successful')
+#    --> _send_notification_emails_from_idea_to_voters(idea_index, 'successful', ['supporters', 'rejectors'])
 # <used by vote_on_idea_aux>
 def _do_tasks_for_idea_successful(idea_index):
     idea=_get_idea_by_ideaindex(idea_index)
     idea['if_successful'] = True
     idea['if_successful_timestamp'] = ((datetime.now()).strftime("%d.%m.%Y %H:%M:%S"))
     _add_notifications_from_idea_to_supporters(idea_index, 'successful')
-    _add_notification_relationship_from_idea_to_author(idea_index, 'successful_to_author')
+    _add_notification_from_idea_to_author(idea_index, 'successful_to_author')
     _send_notification_emails_from_idea_to_supporters(idea_index, 'successful')
     _send_notification_email_from_idea_to_author(idea_index, 'successful_to_author')
     return
 
 
 # <used by _do_tasks_for_idea_editedproposal, _do_tasks_for_idea_failurewarning, _do_tasks_for_idea_successful>
-#  notification_type_possibilities = ['editedproposal', 'successful']
+#  notification_type_possibilities = ['editedproposal', 'successful', 'failurewarning']
 def _add_notifications_from_idea_to_supporters(idea_index, notification_type):
     notification_field_str = 'ifnotification_' + notification_type
     idea = _get_idea_by_ideaindex(idea_index)
@@ -546,6 +552,7 @@ def _add_notifications_from_idea_to_supporters(idea_index, notification_type):
     return
 
 
+# TODO add types 'failed', 'removed'
 # <used by _do_tasks_for_idea_editedproposal, _do_tasks_for_idea_failurewarning, _do_tasks_for_idea_successful>
 def _send_notification_emails_from_idea_to_supporters(idea_index, notification_type, reason = None, participant_fullname = None):
     idea = _get_idea_by_ideaindex(idea_index)
@@ -566,14 +573,14 @@ def _send_notification_emails_from_idea_to_supporters(idea_index, notification_t
 
 # <used by _do_tasks_for_idea_failurewarning, _do_tasks_for_idea_successful>
 #  notification_type_possibilities = ['successful', failurewarning]
-def _add_notification_relationship_from_idea_to_author(idea_index, notification_type):
+def _add_notification_from_idea_to_author(idea_index, notification_type):
     notification_field_str = 'ifnotification_' + notification_type
     idea = _get_idea_by_ideaindex(idea_index)
     author_rel = getGraph().match_one(rel_type="CREATED", end_node=idea)
     author_rel[notification_field_str] = True
     return
 
-
+# TODO add type 'failed'
 # <used by _do_tasks_for_idea_failurewarning, _do_tasks_for_idea_successful>
 def _send_notification_email_from_idea_to_author(idea_index, notification_type, reason = None, participant_fullname = None):
     idea=_get_idea_by_ideaindex(idea_index)

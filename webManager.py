@@ -136,6 +136,7 @@ def get_topten_ideas_aux():
 
 
 def do_cron_tasks_aux():
+
     # see the warningfailure_ideas to check whether we have to erase ideas.
     ideas_failurewarning = []
     ideas_failurewarning_removed = []
@@ -149,6 +150,7 @@ def do_cron_tasks_aux():
             days = (datetime.now() - if_failurewarning_timestamp).days
             if (days > 7):
                 ideas_failurewarning_removed.append(idea['proposal'])
+                # TODO: add notifications 'failed' type
                 remove_idea_aux(idea['proposal'])
     return jsonify({"result":"OK", "ideas_removed" : ideas_failurewarning_removed})
 
