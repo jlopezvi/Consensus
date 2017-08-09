@@ -534,8 +534,10 @@ def _do_tasks_for_idea_successful(idea_index):
     idea['if_successful'] = True
     idea['if_successful_timestamp'] = ((datetime.now()).strftime("%d.%m.%Y %H:%M:%S"))
     _add_notifications_from_idea_to_supporters(idea_index, 'successful')
+    _add_notifications_from_idea_to_rejectors(idea_index, 'successful')
     _add_notification_from_idea_to_author(idea_index, 'successful_to_author')
     _send_notification_emails_from_idea_to_supporters(idea_index, 'successful')
+    _send_notification_emails_from_idea_to_rejectors(idea_index, 'successful')
     _send_notification_email_from_idea_to_author(idea_index, 'successful_to_author')
     return
 
@@ -551,6 +553,30 @@ def _add_notifications_from_idea_to_supporters(idea_index, notification_type):
         support_rel[notification_field_str] = True
     return
 
+# <used by _do_tasks_for_idea_successful>
+#  notification_type_possibilities = ['successful']
+def _add_notifications_from_idea_to_rejectors(idea_index, notification_type):
+    notification_field_str = 'ifnotification_' + notification_type
+    idea = _get_idea_by_ideaindex(idea_index)
+    vote_rels = list(getGraph().match(end_node=idea, rel_type="VOTED_ON"))
+    reject_rels = [x for x in vote_rels if x["type"] == "rejected"]
+    for reject_rel in reject_rels:
+        reject_rels[notification_field_str] = True
+    return
+
+# <used by _do_tasks_for_idea_successful>
+#  notification_type_possibilities = ['successful']
+def _send_notification_emails_from_idea_to_rejectors(idea_index, notification_type):
+    idea = _get_idea_by_ideaindex(idea_index)
+    subject = "Consensus, New Notifications"
+    if notification_type == 'successful':
+        html = render_template('emails/idea_successful.html', msg_proposal=idea['proposal'])
+    vote_rels = list(getGraph().match(end_node=idea, rel_type="VOTED_ON"))
+    reject_rels = [x for x in vote_rels if x["type"] == "rejected"]
+    rejectors = [x.start_node for x in reject_rels]
+    for rejector in rejectors:
+        send_email(rejector['email'], subject, html)
+    return
 
 # TODO add types 'failed', 'removed'
 # <used by _do_tasks_for_idea_editedproposal, _do_tasks_for_idea_failurewarning, _do_tasks_for_idea_successful>
