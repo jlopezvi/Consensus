@@ -5,6 +5,7 @@ from flask import jsonify, render_template
 import json, uuid
 from datetime import datetime,date
 from math import log10
+from imageConverter import * 
 
 # class Idea:
 #     def __init__(self, idea_dict):
@@ -22,7 +23,13 @@ def add_idea_to_user_aux(user_email, idea_dict):
     user = _get_participant_node(user_email)
     newidea_index = idea_dict.get('proposal')
     code_uuid = str(uuid.uuid4())
-    image = idea_dict.get('image')
+    # ADDING FUNCTIONS FOR BASE64 TO JPG FILE
+    # Second param should be an unique name that represents the proposal 'test_new'
+    image = base64ToJGP(idea_dict.get('image'), 'test_new')
+    
+    # ORIGINAL CODE
+        #image = idea_dict.get('image')
+        
     if _get_idea_by_ideaindex(newidea_index):
         return jsonify({"result": "Wrong", "result_msg": "proposal already exists"})
     timestamp = (datetime.now()).strftime("%d.%m.%Y %H:%M:%S")

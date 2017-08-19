@@ -8,6 +8,7 @@ from uuid_token import generate_confirmation_token
 from datetime import datetime, date
 from user_authentification import User
 import flask_login
+from imageConverter import * 
 
 
 # input: python dict {'fullname':'Juan Lopez','email': 'jj@gmail.com', 'username': 'jlopezvi',
@@ -67,11 +68,17 @@ def registration_aux(inputdict):
 def _newParticipant(participantdict):
     email = participantdict.get('email')
     timestamp = (datetime.now()).strftime("%d.%m.%Y %H:%M:%S")
+    
+    # ADDING FUNCTIONS FOR BASE64 TO JPG FILE
+    # Second param should be an unique name that represents the proposal - name
+    name = email.replace(".", "")
+    image = base64ToJGP(participantdict['profilepic'], name)
+    
     newparticipant, = getGraph().create({"fullname" : participantdict.get('fullname'), "email" : email,
                                   "username" : participantdict.get('username'), "position" : participantdict.get('position'),
                                   "group" : participantdict.get('group'), "password" : participantdict.get('password'),
                                   "ifpublicprofile" : participantdict.get('ifpublicprofile'),
-                                  "profilepic" : participantdict['profilepic'], "ifsupportingproposalsvisible": True,
+                                  "profilepic" : image, "ifsupportingproposalsvisible": True,
                                   "ifrejectingproposalsvisible": True, "timestamp": timestamp
                                   })
     if participantdict.get('ifregistrationfromemail') is True:
