@@ -608,7 +608,7 @@ def get_all_ideas_admin():
 # output   idea data as a json
 @app.route('/get_idea_data_admin/<idea_proposal>', methods=['GET'])
 def get_idea_data_admin(idea_proposal):
-    return get_idea_data_admin_aux(idea_proposal)
+    return jsonify(get_idea_data_admin_aux(idea_proposal))
 
 
 ##### IDEA NOTIFICATIONS

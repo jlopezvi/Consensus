@@ -204,7 +204,7 @@ def redflag_idea_aux(user_email, idea_index, reason):
 
 def get_idea_data_admin_aux(idea_proposal):
     idea = _get_idea_by_ideaindex(idea_proposal)
-    _get_idea_data(idea)
+    return _get_idea_data(idea)
 
 
 def get_all_ideas_admin_aux():
