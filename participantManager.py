@@ -14,7 +14,7 @@ from imageConverter import *
 # input: python dict {'fullname':'Juan Lopez','email': 'jj@gmail.com', 'username': 'jlopezvi',
 #              'position': 'employee', 'group': 'IT', 'password': 'MD5password',
 #              'host_email': 'asdf@das' / None, 'ifpublicprofile': True/ False,
-#              'ifregistrationfromemail': True / False, 'profilepic': 'string_base64'/None}
+#              'ifregistrationfromemail': True / False, 'profilepic_url': 'static/.../sth.jpg'}
 # output: json
 #          1. Wrong  -->   {"result":"Wrong","ifemailexists":true,"ifemailexists_msg":ifemailexists_msg[true]}
 #          2. OK (registered participant but e-mail not verified yet. Sends new e-mail for verification)  -->
@@ -69,14 +69,14 @@ def _newParticipant(participantdict):
     email = participantdict.get('email')
     timestamp = (datetime.now()).strftime("%d.%m.%Y %H:%M:%S")
     # image goes from base64 to separate JPG file
-    image_filename = email.replace(".", "")
-    image_url = base64ToJGP(participantdict['profilepic'], image_filename)
+    profilepic_filename = email.replace(".", "")
+    profilepic_url = base64ToJGP(participantdict['profilepic'], profilepic_filename)
     
     newparticipant, = getGraph().create({"fullname" : participantdict.get('fullname'), "email" : email,
                                   "username" : participantdict.get('username'), "position" : participantdict.get('position'),
                                   "group" : participantdict.get('group'), "password" : participantdict.get('password'),
                                   "ifpublicprofile" : participantdict.get('ifpublicprofile'),
-                                  "profilepic" : image_url, "ifsupportingproposalsvisible": True,
+                                  "profilepic_url" : profilepic_url, "ifsupportingproposalsvisible": True,
                                   "ifrejectingproposalsvisible": True, "timestamp": timestamp
                                   })
     if participantdict.get('ifregistrationfromemail') is True:
@@ -92,7 +92,7 @@ def modify_user_data_aux(user_data, user_email):
     participant = _get_participant_node(user_email)
     fields = ['email', 'position', 'group', 'password', 'ifsupportingproposalsvisible',
               'ifrejectingproposalsvisible',
-              'username', 'ifpublicprofile', 'fullname', 'profilepic']
+              'username', 'ifpublicprofile', 'fullname']
     data = {}
     if 'email' in user_data:
         if user_data['email'] != user_email:
@@ -139,13 +139,13 @@ def get_participant_data_aux(currentuser_email, participant_email):
     if participant_email == currentuser_email or _getIfContactRelationshipExists(participant, currentuser) is True \
             or ifpublicprofile is True:
         ifallowed = True
-        profilepic = participant.get_properties()['profilepic']
+        profilepic_url = participant.get_properties()['profilepic_url']
         username = participant.get_properties()['username']
         fullname = participant.get_properties()['fullname']
         followers_num = len(_get_participant_followers(participant_email))
         followings_num = len(_get_participant_followings(participant_email))
         ideas_num = len(get_ideas_data_created_by_participant_aux(participant_email))
-        participant_data.update({'id': participant_email,'profilepic': profilepic,
+        participant_data.update({'id': participant_email,'profilepic_url': profilepic_url,
                                  'username' : username, 'fullname': fullname,
                                  'ideas_num' : ideas_num,
                                  'followers_num': followers_num,
@@ -193,8 +193,8 @@ def get_participant_followings_info_aux(participant_email, user_email):
             email = following['email']
             username = following['username']
             fullname = following['fullname']
-            profilepic = following['profilepic']
-            followings_info.append({'email': email, 'username': username, 'fullname': fullname, 'profilepic': profilepic})
+            profilepic_url = following['profilepic_url']
+            followings_info.append({'email': email, 'username': username, 'fullname': fullname, 'profilepic_url': profilepic_url})
     else:
         ifallowed = False
         followings = _get_participant_followings(participant_email)
@@ -216,8 +216,8 @@ def get_participant_followers_info_aux(participant_email, user_email):
             email = follower['email']
             username = follower['username']
             fullname = follower['fullname']
-            profilepic = follower['profilepic']
-            followers_info.append({'email' : email, 'username': username, 'fullname': fullname, 'profilepic': profilepic})
+            profilepic_url = follower['profilepic_url']
+            followers_info.append({'email' : email, 'username': username, 'fullname': fullname, 'profilepic_url': profilepic_url})
     else:
         ifallowed = False
         followers = _get_participant_followers(participant_email)
@@ -259,7 +259,7 @@ def get_all_public_participants_for_user_aux(user):
             participants.append(
                 {'email': node.get_properties()['email'], 'fullname': node.get_properties()['fullname'],
                  'position': node.get_properties()['position'], 'group': node.get_properties()['group'],
-                 'profilepic': node.get_properties()['profilepic'],
+                 'profilepic_url': node.get_properties()['profilepic_url'],
                  'if_following': _getIfContactRelationshipExists(participant, node)})
     return participants
 
@@ -389,13 +389,13 @@ def _get_participant_data_by_email(participant_email):
     from ideaManager import _get_ideas_created_by_participant
     participant = _get_participant_node(participant_email)
     participant_data= {}
-    profilepic = participant['profilepic']
+    profilepic_url = participant['profilepic_url']
     username = participant['username']
     fullname = participant['fullname']
     followers_num = len(_get_participant_followers(participant_email))
     followings_num = len(_get_participant_followings(participant_email))
     ideas_num = len(_get_ideas_created_by_participant(participant_email)['ideas_indices'])
-    participant_data.update({'id': participant_email,'profilepic': profilepic,
+    participant_data.update({'id': participant_email,'profilepic_url': profilepic_url,
                              'username': username, 'fullname': fullname,
                              'ideas_num': ideas_num,
                              'followers_num': followers_num,
