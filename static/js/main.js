@@ -71,7 +71,7 @@ $(document).ready(function(){
     newData['first_receivers_emails'] = first_receivers_emails;
     
     //newData['image'] = $('#defultimg__bimage').attr('src');
-    newData['image'] = '/static/images/fondo-c.png';
+    newData['image'] = null;
     if($('#cropme_bidea img').length)
       newData['image'] = $('#cropme_bidea img').attr('src');
     

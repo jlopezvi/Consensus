@@ -204,7 +204,7 @@ $(document).ready( function() {
     }
     
     //newData['profilepic'] = default_pimage;
-    newData['profilepic'] = '/static/assets/profile/perfil-mediano.png';
+    newData['profilepic'] = null;
     if($('.cropme_profile img').length){
       newData['profilepic'] = $('.cropme_profile img').attr('src');
     }
