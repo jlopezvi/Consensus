@@ -68,17 +68,15 @@ def registration_aux(inputdict):
 def _newParticipant(participantdict):
     email = participantdict.get('email')
     timestamp = (datetime.now()).strftime("%d.%m.%Y %H:%M:%S")
-    
-    # ADDING FUNCTIONS FOR BASE64 TO JPG FILE
-    # Second param should be an unique name that represents the proposal - name
-    name = email.replace(".", "")
-    image = base64ToJGP(participantdict['profilepic'], name)
+    # image goes from base64 to separate JPG file
+    image_filename = email.replace(".", "")
+    image_url = base64ToJGP(participantdict['profilepic'], image_filename)
     
     newparticipant, = getGraph().create({"fullname" : participantdict.get('fullname'), "email" : email,
                                   "username" : participantdict.get('username'), "position" : participantdict.get('position'),
                                   "group" : participantdict.get('group'), "password" : participantdict.get('password'),
                                   "ifpublicprofile" : participantdict.get('ifpublicprofile'),
-                                  "profilepic" : image, "ifsupportingproposalsvisible": True,
+                                  "profilepic" : image_url, "ifsupportingproposalsvisible": True,
                                   "ifrejectingproposalsvisible": True, "timestamp": timestamp
                                   })
     if participantdict.get('ifregistrationfromemail') is True:

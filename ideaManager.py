@@ -23,18 +23,14 @@ def add_idea_to_user_aux(user_email, idea_dict):
     user = _get_participant_node(user_email)
     newidea_index = idea_dict.get('proposal')
     code_uuid = str(uuid.uuid4())
-    # ADDING FUNCTIONS FOR BASE64 TO JPG FILE
-    # Second param should be an unique name that represents the proposal 'test_new'
-    image = base64ToJGP(idea_dict.get('image'), 'test_new')
-    
-    # ORIGINAL CODE
-        #image = idea_dict.get('image')
-        
+    # image goes from base64 to separate JPG file
+    image_url = base64ToJGP(idea_dict.get('image'), code_uuid)
+    #
     if _get_idea_by_ideaindex(newidea_index):
         return jsonify({"result": "Wrong", "result_msg": "proposal already exists"})
     timestamp = (datetime.now()).strftime("%d.%m.%Y %H:%M:%S")
     newidea, = getGraph().create({"concern": idea_dict.get('concern'), "proposal": idea_dict.get('proposal'),
-                                  "image": image, "uuid": code_uuid,
+                                  "image": image_url, "uuid": code_uuid,
                                   "moreinfo_concern": idea_dict.get('moreinfo_concern'),
                                   "moreinfo_proposal": idea_dict.get('moreinfo_proposal'),
                                   "supporters_goal_num": idea_dict.get('supporters_goal_num'),
