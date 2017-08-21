@@ -158,7 +158,7 @@ def logout():
 #                      {"fullname":"Juan Lopez","email":"jj@gmail.com", "username": "jlopezvi",
 #                       "position":"employee", "group":"IT", "password":"MD5password",
 #                       "host_email":"asdf@das"/null, "ifpublicprofile":true/false,
-#                       "ifregistrationfromemail":true/false, "profilepic":"string_in_base64"}
+#                       "ifregistrationfromemail":true/false, "profilepic": "base64_string"/null}
 # output: json
 #          1. Wrong (participant registered already!)
 #                       {"result":"Wrong","ifemailexists":true,"ifemailexists_msg":"message"}
@@ -184,7 +184,7 @@ def registration():
 #                       "username": "jlopezvi",
 #                       "position":"employee", "group": "IT", "password": "MD5password",
 #                       "ifpublicprofile": true/false,, "ifsupportingproposalsvisible" : true/false,
-#                       "ifrejectingproposalsvisible" : true/false, "profilepic": "string_in_base64"
+#                       "ifrejectingproposalsvisible" : true/false, "profilepic": "base64_string"/null
 #                       }
 # Output: json
 #           1. {'result': 'Wrong: New e-mail already exists'}
@@ -207,7 +207,7 @@ def modify_user_data(user_email_DEBUG=None):
 #                "username": "jlopezvi",
 #                "position": "employee", "group": "IT", "password": "MD5password",
 #                "ifpublicprofile": true/false, "ifsupportingproposalsvisible" : true/false,
-#                "ifrejectingproposalsvisible" : true/false, "profilepic":"string_in_base64"
+#                "ifrejectingproposalsvisible" : true/false, "profilepic_url": "static/.../pic.jpg"
 #                }
 @app.route('/get_user_data', methods=['GET'])
 @app.route('/get_user_data/<user_email_DEBUG>', methods=['GET'])
@@ -237,7 +237,7 @@ def remove_user(user_email_DEBUG=None) :
 #        participant_data:
 #        {
 #            'id': 'email',
-#            'profilepic': 'string_base64',
+#            'profilepic_url': 'static/.../pic.jpg',
 #            'username': 'John',
 #            'fullname': 'Juan J. Lopez Villarejo',
 #            'ideas_num': 5,
@@ -260,7 +260,7 @@ def get_participant_data(participant_email, user_email_DEBUG=None):
 #        participant_data:
 #        {
 #            'id': 'email',
-#            'profilepic': 'string_base64',
+#            'profilepic_url': 'static/.../pic.jpg',
 #            'username': 'John',
 #            'fullname': 'Juan J. Lopez Villarejo',
 #            'ideas_num': 5,
@@ -300,7 +300,7 @@ def get_fullname_for_participant(participant_email, user_email_DEBUG=None):
 # 		      "email": "ale@gmail.com",
 # 		      "fullname": "alejandro perez",
 # 		      "username": "ale",
-#             "profilepic": "string_base64"
+#             "profilepic_url": "static/.../pic.jpg"
 # 		    }
 # 		   ]
 # 		  }
@@ -324,7 +324,7 @@ def get_participant_followers_info(participant_email, user_email_DEBUG=None):
 # 		      "email": "ale@gmail.com",
 # 		      "fullname": "alejandro perez",
 # 		      "username": "ale",
-#             "profilepic": "string_base64"
+#             "profilepic_url": "static/.../pic.jpg"
 #  		    }
 # 		   ]
 # 		  }
@@ -369,7 +369,7 @@ def get_all_participants_admin():
 
 
 # Output  json {"email": "new@gmail.com", "position": "Employee", "group": "IT",
-#               "fullname": "jlopezvi", "profilepic":'string_base64', "if_following":True/False}
+#               "fullname": "jlopezvi", "profilepic_url": "static/.../pic.jpg", "if_following":True/False}
 @app.route('/get_all_public_participants_for_user', methods=['GET'])
 def get_all_public_participants_for_user():
     user = flask_login.current_user.id
@@ -421,7 +421,7 @@ def remove_notification_from_participant1_to_participant2():
 #       	                "moreinfo_concern":"I have to say as well this and this and this about the concern...",
 #                           "moreinfo_proposal":"I have to say as well this and this and this about the proposal...",
 #                           "supporters_goal_num":500, "volunteers_goal_num":5,
-#                           "image":"base64_string",
+#                           "image":"base64_string"/null,
 #                           "if_author_public":true/false, "first_receivers_emails":["asdf@asd.com", "bdsd@sds.com"] }
 #    output: json {"result":"OK", "result_msg":"added idea to database"}
 #                 {"result":"Wrong", "result_msg":"proposal already exists"}
@@ -443,7 +443,7 @@ def add_idea_to_user(user_email_DEBUG=None) :
 #       	                "moreinfo_concern":"I have to say as well this and this and this about the concern...",
 #                           "moreinfo_proposal":"I have to say as well this and this and this about the proposal...",
 #                           "supporters_goal_num":500, "volunteers_goal_num":5,
-#                           "image":"base64_string",
+#                           "image":"base64_string"/null,
 #                           "if_author_public":true/false }
 #   Output json :  1./ {"result":"OK", "result_msg":"Idea was modified"}
 #    	           2./ {"result":"Wrong", "result_msg": "Proposal already exists"}
@@ -493,13 +493,13 @@ def get_ideas_created_by_participant(participant_email,user_email_DEBUG=None):
 #     "ideas_data": [
 #      {
 #      "author_email": "new@hotmail.com",
-#      "author_profilepic": "string_base64",
+#      "author_profilepic_url": "static/.../pic.jpg",
 #      "author_username": "newmail",
 #      "concern": "this is mi new concern for test",
 #      "datestamp": "01.10.2016",
 #      "duration": "4 hours/ days/ weeks",
 #      "uuid": "uuid_code",
-#      "image": "string_base64",
+#      "image_url": "static/.../image.jpg",
 #      "moreinfo": "this and this",
 #      "proposal": "this proposal is for test",
 #      "rejectors": [],
@@ -689,13 +689,13 @@ def registration_receive_emailverification(token):
 #  "data": [
 #    {
 #      "author_email": "new1@hotmail.com",
-#      "author_profilepic": "string_base64",
+#      "author_profilepic_url": "static/.../pic.jpg",
 #      "author_username": "new1",
 #      "concern": "this is mi new concern for test",
 #      "timestamp": "01.10.2016 13:38:22",
 #      "duration": "4 hours/ days/ weeks",
 #      "uuid": "uuid_code",
-#      "image": "string_base64",
+#      "image_url": "static/.../image.jpg",
 #      "moreinfo": "this and this",
 #      "proposal": "this proposal is for test",
 #      "rejectors": [],
@@ -711,13 +711,13 @@ def registration_receive_emailverification(token):
 #    },
 #    {
 #      "author_email": "new2@hotmail.com",
-#      "author_profilepic": "string_base64",
+#      "author_profilepic_url": "static/.../pic.jpg",
 #      "author_username": "new2",
 #      "concern": "Concern",
 #      "timestamp": "01.10.2016 13:38:22",
 #      "duration": "4 hours/ days/ weeks",
 #      "uuid": "uuid_code",
-#      "image": "string_base64",
+#      "image_url": "static/.../image.jpg",
 #      "moreinfo": "this and this...",
 #      "proposal": "IdeaM",
 #      "rejectors": [
@@ -755,7 +755,7 @@ def ideas_for_newsfeed(user_email_DEBUG = None):
 #      "timestamp": "01.10.2016 13:38:22",
 #      "duration": "4 hours/ days/ weeks",
 #      "uuid": "uuid_code",
-#      "image": "string_base64",
+#      "image_url": "static/.../image.jpg",
 #      "moreinfo": "this and this...",
 #      "proposal": "New Proposal ",
 #      "rejectors": [
@@ -771,13 +771,13 @@ def ideas_for_newsfeed(user_email_DEBUG = None):
 #    },
 #    {
 #      "author_email": "newemail@hotmail.com",
-#      "author_profilepic": "string_base64",
+#      "author_profilepic_url": "static/.../pic.jpg",
 #      "author_username": "newemail",
 #      "concern": "Concern",
 #      "timestamp": "01.10.2016 13:38:22",
 #      "duration": "4 hours/ days/ weeks",
 #      "uuid": "uuid_code",
-#      "image": "string_base64",
+#      "image_url": "static/.../image.jpg",
 #      "moreinfo": "this and this...",
 #      "proposal": "This is my Proposal",
 #      "rejectors": [
@@ -818,7 +818,7 @@ def ideas_for_home(user_email_DEBUG = None):
 #      "timestamp": "01.10.2016 13:38:22",
 #      "duration": "4 hours/ days/ weeks",
 #      "uuid": "uuid_code",
-#      "image": "string_base64",
+#      "image_url": "static/.../image.jpg",
 #      "moreinfo": "this and this...",
 #      "proposal": "New Proposal ",
 #      "rejectors": [

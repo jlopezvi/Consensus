@@ -24,7 +24,10 @@ def add_idea_to_user_aux(user_email, idea_dict):
     newidea_index = idea_dict.get('proposal')
     code_uuid = str(uuid.uuid4())
     # image goes from base64 to separate JPG file
-    image_url = base64ToJGP(idea_dict.get('image'), code_uuid)
+    if idea_dict.get('image') is None:
+        image_url = 'static/images/fondo-c.png'
+    else:
+        image_url = base64ToJGP(idea_dict.get('image'), code_uuid)
     #
     if _get_idea_by_ideaindex(newidea_index):
         return jsonify({"result": "Wrong", "result_msg": "proposal already exists"})
@@ -330,7 +333,7 @@ def _if_ideaisinfirstphase(idea):
 # Output: << return  idea_data>>
 # idea_data = {
     # 'uuid' : unique_identifier_string,
-    # 'author_profilepic' : 'string_base64', 'author_username' : 'Daniela', 'author_email' : 'a@',
+    # 'author_profilepic_url' : 'static/.../pic.jpg', 'author_username' : 'Daniela', 'author_email' : 'a@',
     # 'duration' : "4 hours/ days/ weeks",
     # 'supporters_goal_num' : 200, 'supporters_num' : 5, 'volunteers_goal_num' : 5, 'volunteers_num' : 2,
     # 'image_url' : 'static/.../asdf.JPG',
@@ -348,7 +351,7 @@ def _if_ideaisinfirstphase(idea):
 def _get_idea_data(idea):
     from app import SUPPORT_RATE_MIN
     author_email = getGraph().match_one(end_node=idea, rel_type="CREATED").start_node['email']
-    author_profilepic = _get_participant_node(author_email)['profilepic']
+    author_profilepic_url = _get_participant_node(author_email)['profilepic']
     author_username = _get_participant_node(author_email)['username']
     idea_proposal = idea['proposal']
     uuid = idea['uuid']
@@ -373,7 +376,7 @@ def _get_idea_data(idea):
         rejectors_data.append({'email': rejector['email'], 'username': rejector['username']})
     #
     idea_data=idea.get_properties()
-    idea_data.update({'author_profilepic': author_profilepic, 'author_username' : author_username,
+    idea_data.update({'author_profilepic_url': author_profilepic_url, 'author_username' : author_username,
                       'duration': duration, 'uuid': uuid,
                       'author_email' : author_email, 'supporters_num' : supporters_num,
                       'volunteers_num': volunteers_num,
