@@ -30,7 +30,7 @@ def add_idea_to_user_aux(user_email, idea_dict):
         return jsonify({"result": "Wrong", "result_msg": "proposal already exists"})
     timestamp = (datetime.now()).strftime("%d.%m.%Y %H:%M:%S")
     newidea, = getGraph().create({"concern": idea_dict.get('concern'), "proposal": idea_dict.get('proposal'),
-                                  "image": image_url, "uuid": code_uuid,
+                                  "image_url": image_url, "uuid": code_uuid,
                                   "moreinfo_concern": idea_dict.get('moreinfo_concern'),
                                   "moreinfo_proposal": idea_dict.get('moreinfo_proposal'),
                                   "supporters_goal_num": idea_dict.get('supporters_goal_num'),
@@ -52,7 +52,7 @@ def modify_idea_aux(idea_dict):
     idea_index = idea_dict['current_proposal']
     idea = _get_idea_by_ideaindex(idea_index)
     fields = ['concern','proposal','moreinfo_concern','moreinfo_proposal',
-              'supporters_goal_num','volunteers_goal_num', 'image', 'if_author_public']
+              'supporters_goal_num','volunteers_goal_num', 'if_author_public']
     data= {}
     if 'proposal' in idea_dict:
         idea_index = idea_dict['proposal']
@@ -333,7 +333,7 @@ def _if_ideaisinfirstphase(idea):
     # 'author_profilepic' : 'string_base64', 'author_username' : 'Daniela', 'author_email' : 'a@',
     # 'duration' : "4 hours/ days/ weeks",
     # 'supporters_goal_num' : 200, 'supporters_num' : 5, 'volunteers_goal_num' : 5, 'volunteers_num' : 2,
-    # 'image' : 'string_base64',
+    # 'image_url' : 'static/.../asdf.JPG',
     # 'concern': 'Some text for the concern',
     # 'proposal': 'Some text for the proposal',
     # 'support_rate' : 95,
