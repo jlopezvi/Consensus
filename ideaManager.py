@@ -27,7 +27,7 @@ def add_idea_to_user_aux(user_email, idea_dict):
     if idea_dict.get('image') is None:
         image_url = 'static/images/fondo-c.png'
     else:
-        image_url = base64ToJGP(idea_dict.get('image'), code_uuid)
+        image_url = base64ToJGP(idea_dict.get('image'), 'ideas/'+code_uuid)
     #
     if _get_idea_by_ideaindex(newidea_index):
         return jsonify({"result": "Wrong", "result_msg": "proposal already exists"})
