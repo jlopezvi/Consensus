@@ -571,7 +571,10 @@ a.add--proposal--button:hover, a.add--proposal--button:active, a.add--proposal--
 	overflow: hidden;
     left: 15px;
     position: relative;
-
+}
+.home--profile--picture img{
+	width: 70px;
+  	height: 70px;	
 }
 .home--header .fa-clock-o{
 	font-size: 25px;
