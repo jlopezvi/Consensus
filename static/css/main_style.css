@@ -73,7 +73,7 @@ body {
     width: auto;
 }
 .home--content {
-	background-image: url("/static/images/concerns/meeting.jpg");
+	background-image: url("/static/images/meeting.jpg");
 	background-repeat: no-repeat;
 	background-size: cover;
 }
