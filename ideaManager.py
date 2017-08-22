@@ -351,7 +351,7 @@ def _if_ideaisinfirstphase(idea):
 def _get_idea_data(idea):
     from app import SUPPORT_RATE_MIN
     author_email = getGraph().match_one(end_node=idea, rel_type="CREATED").start_node['email']
-    author_profilepic_url = _get_participant_node(author_email)['profilepic']
+    author_profilepic_url = _get_participant_node(author_email)['profilepic_url']
     author_username = _get_participant_node(author_email)['username']
     idea_proposal = idea['proposal']
     uuid = idea['uuid']
