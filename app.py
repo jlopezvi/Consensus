@@ -73,6 +73,11 @@ def user_loader(email):
 ####    API, WORKING NOW    ####
 ################################
 
+@app.route('/test')
+def test():
+    return url_for('static', filename='images/ideas/a.jpg')
+
+
 @app.route('/do_tasks_for_idea_editedproposal_TEST/<idea_index>', methods=['POST'])
 def do_tasks_for_idea_editedproposal_TEST(idea_index):
     return _do_tasks_for_idea_editedproposal(idea_index)

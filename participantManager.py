@@ -73,7 +73,7 @@ def _newParticipant(participantdict):
     if participantdict['profilepic'] is None:
         profilepic_url = '/static/images/perfil-mediano.png'
     else:
-        profilepic_url = base64ToJGP(participantdict['profilepic'], 'profilepics/'+profilepic_filename)
+        profilepic_url = base64ToJGP(participantdict['profilepic'], '/profilepics/'+profilepic_filename)
     
     newparticipant, = getGraph().create({"fullname" : participantdict.get('fullname'), "email" : email,
                                   "username" : participantdict.get('username'), "position" : participantdict.get('position'),

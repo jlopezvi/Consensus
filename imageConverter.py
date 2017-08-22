@@ -1,13 +1,15 @@
 import base64
+import os
+basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 def base64ToJGP(base64Image, name):
     imageLen = len(base64Image)
     image = base64Image[22:imageLen]
     imgdata = base64.b64decode(image)
-    filename = '/static/images/'+name+'.jpg'
-    with open(filename, 'wb') as f:
+    path = '/static/images'+name+'.jpg'
+    fullpath = basedir + path
+    with open(fullpath, 'wb') as f:
         f.write(imgdata)
-        return filename
+        return path
     return 'failed the image convertion'
-    
