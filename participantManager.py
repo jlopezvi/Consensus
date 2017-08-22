@@ -182,6 +182,12 @@ def get_fullname_for_participant_aux(participant_email, user_email):
     return jsonify({"result": "OK", "ifallowed": ifallowed, "fullname": fullname})
 
 
+def get_fullname_for_participant_unrestricted_aux(participant_email):
+    participant = _get_participant_node(participant_email)
+    fullname=participant["fullname"]
+    return jsonify({"result": "OK", "fullname": fullname})
+
+
 def get_participant_followings_info_aux(participant_email, user_email):
     user = _get_participant_node(user_email)
     participant = _get_participant_node(participant_email)

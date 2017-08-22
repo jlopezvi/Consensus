@@ -7,7 +7,7 @@ import ast
 import json
 from communityManager import saveCommunity,deleteCommunity,addCommunityToContact,getCommunities
 from participantManager import _get_participant_node, remove_user_aux, get_all_participants_admin_aux, \
-    get_participant_followers_info_aux,get_participant_followings_info_aux,\
+    get_participant_followers_info_aux,get_participant_followings_info_aux, get_fullname_for_participant_unrestricted_aux,\
     get_fullname_for_participant_aux, registration_aux, get_participant_data_aux, modify_user_data_aux,  \
     get_participant_data_by_email_unrestricted_aux, get_all_public_participants_for_user_aux, if_participant_exists_by_email_aux, \
     add_following_contact_to_user_aux, remove_following_contact_to_user_aux, get_user_data_aux
@@ -294,6 +294,13 @@ def get_fullname_for_participant(participant_email, user_email_DEBUG=None):
     else:
         user_email = flask_login.current_user.id
     return get_fullname_for_participant_aux(participant_email, user_email)
+
+
+# input: participant_email
+# output: json {"result": "OK", "fullname": fullname}
+@app.route('/get_fullname_for_participant_unrestricted/<participant_email>', methods=['GET'])
+def get_fullname_for_participant_unrestricted(participant_email):
+    return get_fullname_for_participant_unrestricted_aux(participant_email)
 
 
 # Input: participant's email, user's email (user logged in)
