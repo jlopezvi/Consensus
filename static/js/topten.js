@@ -13,7 +13,7 @@ $(document).ready( function() {
                 newTop += '<div class="col-sm-6 home--content--proposal" ><div class="row home--header">';
                 newTop += '<input type="hidden" class="idea__id" value="'+data.data[i].proposal+'">';
                 newTop += '<div class="col-sm-2" style="padding-left: 0px;margin-left: -15px;">';
-                newTop += '<div class="home--profile--picture"><img class="img-circle new--user--icon--login" src="'+data.data[i].author_profilepic+'"></div></div><div class="col-sm-1 home--name">';
+                newTop += '<div class="home--profile--picture"><img class="img-circle new--user--icon--login" src="'+data.data[i].author_profilepic_url+'"></div></div><div class="col-sm-1 home--name">';
                 newTop += '<a href="#">'+data.data[i].author_username+'</a></div><div class="col-sm-2 newsfeed--duration">';
                 newTop += '<p><img style="width: 15px;position: relative;top: -3px;" src="'+url_new+'images/clock-icon.png">&nbsp;'+data.data[i].duration+'</p>';
                 newTop += '</div><div class="col-sm-3 home--charge"><div class="progress home--progress">';

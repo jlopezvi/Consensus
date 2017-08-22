@@ -28,7 +28,7 @@ $(document).ready( function() {
 				newIdea += '<div class="col-sm-12"><div class="row home--header">';
 				newIdea += '<input type="hidden" class="idea__id" value="'+json.ideas_data[i].proposal+'">';
 				newIdea += '<div class="col-sm-2" style="padding-left: 0px;margin-left: -15px;">';
-				newIdea += '<div class="home--profile--picture"><img class="img-circle new--user--icon--login" id="img-modify" src="'+json.ideas_data[i].author_profilepic+'"></div></div><div class="col-sm-1 home--name">';
+				newIdea += '<div class="home--profile--picture"><img class="img-circle new--user--icon--login" id="img-modify" src="'+json.ideas_data[i].author_profilepic_url+'"></div></div><div class="col-sm-1 home--name">';
 				newIdea += '<a href="#" id="name--modify">'+json.ideas_data[i].author_username+'</a></div><div class="col-sm-2 newsfeed--duration">';
 				newIdea += '<p><img style="width: 15px;position: relative;top: -3px;" src="'+url_new+'images/clock-icon.png">&nbsp;'+json.ideas_data[i].duration+'</p>';
 				newIdea += '</div><div class="col-sm-3 home--charge"><div class="progress home--progress">';
@@ -102,7 +102,7 @@ $(document).ready( function() {
 		type: 'GET',
 		success: function (json) {
 			//console.log(json);
-			$('.profile--picture img').attr('src', json.participant_data.profilepic);
+			$('.profile--picture img').attr('src', json.participant_data.profilepic_url);
 			$('.participant__name a').append(json.participant_data.username);
 			$('.participant__name label').append(json.participant_data.fullname);
 			$('.participant__active--p').children().first().append(json.participant_data.ideas_num);
@@ -123,7 +123,7 @@ $(document).ready( function() {
 				followerList = '';	
 				for(var i = 0; i < json.followers_num; i++){
 					followerList += '<li><input value="'+json.followers_info[i].email+'" class="checkbox check--followers" type="checkbox" name="check[]">';
-					followerList += '<img class="new--user--icon--login" src="'+json.followers_info[i].profilepic+'">'
+					followerList += '<img class="new--user--icon--login" src="'+json.followers_info[i].profilepic_url+'">'
 					followerList += '<p><a href="#">'+json.followers_info[i].username+'</a>';					
 					followerList += '<br>'+json.followers_info[i].fullname+'</p></li>';
 				}
@@ -152,7 +152,7 @@ $(document).ready( function() {
 				followingList = '';	
 				for(var i = 0; i < json.followings_num; i++){
 					followingList += '<li><input value="'+json.followings_info[i].email+'" class="checkbox check--followers" type="checkbox" name="check[]">';
-					followingList += '<img class="new--user--icon--login" src="'+json.followings_info[i].profilepic+'">';
+					followingList += '<img class="new--user--icon--login" src="'+json.followings_info[i].profilepic_url+'">';
 					followingList += '<p><a href="#">'+json.followings_info[i].username+'</a>';					
 					followingList += '<br>'+json.followings_info[i].fullname+'</p></li>';
 				}
@@ -183,7 +183,7 @@ $(document).ready( function() {
 	       		else
 	       			if_following = 'value="Follow"';
 	       		newParti = '';
-	       		newParti += '<li><img class="new--user--icon--login" src="'+json[i].profilepic+'"><p>'; 
+	       		newParti += '<li><img class="new--user--icon--login" src="'+json[i].profilepic_url+'"><p>'; 
 	       		newParti += '<a href="#">'+json[i].fullname+'</a>';
 	       		newParti += '<br><label>'+json[i].position+'</label> | <label>'+json[i].group+'</label></p>';
 	       		newParti += '<input type="hidden" value="'+json[i].email+'">';
@@ -330,7 +330,7 @@ $(document).ready( function() {
 			$('#p_confirm-e').val(''+json.data.email+'');
 			$('#p_position').val(''+json.data.position+'');
 			$('#p_group').val(''+json.data.group+'');
-			$('#cropme_profile_edit').append('<img style="margin-left: -10px; margin-top: -10px;" src='+json.data.profilepic+'>');
+			$('#cropme_profile_edit').append('<img style="margin-left: -10px; margin-top: -10px;" src='+json.data.profilepic_url+'>');
 
 		}					
 				
@@ -398,17 +398,17 @@ $(document).ready( function() {
 			url: url[0] + "//" + url[2] + '/get_participant_data_by_email_unrestricted/'+current_email,
 			type: 'GET',
 			success: function (json) {
-				//console.log(json);
+				console.log(json);
 				$('.profile--picture img').attr('src', '');
 				$('.participant__name a').empty();
 				$('.participant__name label').empty();
 				$('#name--modify').empty();
 				$('#img-modify').attr('src', '');
-				$('.profile--picture img').attr('src', json.participant_data.profilepic);
+				$('.profile--picture img').attr('src', json.participant_data.profilepic_url);
 				$('.participant__name a').append(json.participant_data.username);
 				$('.participant__name label').append(json.participant_data.fullname);
 				$('#name--modify').append(json.participant_data.username);
-				$('#img-modify').attr('src', json.participant_data.profilepic);
+				$('#img-modify').attr('src', json.participant_data.profilepic_url);
 			}	
 		});
     });
@@ -592,12 +592,12 @@ function seaarch_participant(search){
 		url: url[0] + "//" + url[2] + '/get_participant_data_by_email_unrestricted/'+search,
 		type: 'GET',
 		success: function (json) {
-			console.log(json);
+			//console.log(json);
 			if(json.result == 'OK'){
 				$('.spinner').show();
 				var newAppend = '';
             	newAppend += '<li class="participants__li__private">';
-            	newAppend += '<img class="new--user--icon--login" src="'+json.participant_data.profilepic+'"><p>';
+            	newAppend += '<img class="new--user--icon--login" src="'+json.participant_data.profilepic_url+'"><p>';
             	newAppend += '<a href="#">'+json.participant_data.username+'</a>'; 
             	newAppend += '<br>'+json.participant_data.fullname+'</p>';
             	newAppend += '<input type="hidden" value="'+json.participant_data.id+'">';
@@ -649,7 +649,7 @@ function follow_unfollow_participant(type, user){
 				followingList = '';	
 				for(var i = 0; i < json.followings_num; i++){
 					followingList += '<li><input value="'+json.followings_info[i].email+'" class="checkbox check--followers" type="checkbox" name="check[]">';
-					followingList += '<img class="new--user--icon--login" src="'+json.followings_info[i].profilepic+'">';
+					followingList += '<img class="new--user--icon--login" src="'+json.followings_info[i].profilepic_url+'">';
 					followingList += '<p><a href="#">'+json.followings_info[i].username+'</a>';					
 					followingList += '<br>'+json.followings_info[i].fullname+'</p></li>';
 				}
@@ -744,7 +744,7 @@ $(document).ready(function(){
 					success: function (json) {	
 						var folloNew = '';
 						folloNew += '<li><input value="'+json.participant_data.id+'" class="checkbox check--followers" type="checkbox" name="check[]">';
-						folloNew += '<img class="new--user--icon--login" src="'+json.participant_data.profilepic+'">';
+						folloNew += '<img class="new--user--icon--login" src="'+json.participant_data.profilepic_url+'">';
 						folloNew += '<p><a href="#">'+json.participant_data.username+'</a>';					
 						folloNew += '<br>'+json.participant_data.fullname+'</p></li>';			
 						$('#home ul').append(folloNew);

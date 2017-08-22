@@ -104,7 +104,7 @@ function showContent(id){
   $('#list__id').val(id);
   $('.idea__id').val(list[id].proposal);
   console.log(list[id]);
-  $('#picture__profile').attr('src', list[id].author_profilepic).show();
+  $('#picture__profile').attr('src', list[id].author_profilepic_url).show();
   $('.newsfeed--body').css('background-image', 'url('+list[id].image_url+')');
   $('.newsfeed--name a').empty().append(list[id].author_username);
   $('.duration--info').empty().append(list[id].duration);

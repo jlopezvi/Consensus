@@ -114,7 +114,7 @@ function showIdeas(list, index){
   code += '<div class="row home--header">';
   code += '<input type="hidden" class="idea__id" value="'+list.proposal+'">';
 	code += '<div class="col-sm-2" style="padding-left: 0px;">';
-	code += '<div class="home--profile--picture pic--home"><img src="'+list.author_profilepic+'"></div></div>';
+	code += '<div class="home--profile--picture pic--home"><img src="'+list.author_profilepic_url+'"></div></div>';
 	code += '<div class="col-sm-3 home--name"><a href="#">'+list.author_username+'</a>';
 	code += '<p><img style="width:20px;position:relative;top:-3px;" src="/static/images/clock-icon.png">&nbsp;'+list.duration+'</p></div>';
 	code += '<div class="col-sm-3 home--charge"><div class="progress home--progress">';
