@@ -1492,7 +1492,7 @@ a.add--proposal--provisional {
 	width: 100px;
     height: 100px;
     float: left;
-    background-image: url(/static/assets/profile/perfil-mediano.png);
+    background-image: url(/static/images/perfil-mediano.png);
     background-size: contain;
     background-repeat: no-repeat;
     cursor: pointer;
