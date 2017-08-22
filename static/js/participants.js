@@ -614,7 +614,7 @@ function seaarch_participant(search){
 			$('#legend__board').hide();
 			setTimeout(function(){
 				$('.spinner').hide();
-				div.append('<legend id="legend__results">No results for: '+search+'</legend>');
+				div.prepend('<legend id="legend__results">No results for: '+search+'</legend>');
 			}, 2000);
 		}
 	});
@@ -676,9 +676,11 @@ function change_view(view){
 		$('.participant__general').fadeOut(500);
 		setTimeout(function(){
 			$('.search__participant').fadeIn(500);
+			$('.back__button').fadeIn(500);
 		}, 500);
 	} else {
 		$('.search__participant').fadeOut(500);
+		$('.back__button').fadeOut(500);
 		setTimeout(function(){
 			$('.participant__general').fadeIn(500);
 		}, 500);

@@ -19,7 +19,7 @@
     
 </div>
 
-<div class="container__participants" style="margin-top: 8%; margin-bottom: 8%;">
+<div class="container__participants" style="margin-top: 4%; margin-bottom: 8%;">
  <h3 style="font-family: lato_bold; margin-bottom: 0;">Participants</h3>
     <div class="col-md-6 col-md-offset-3">
         <form role="form">
@@ -28,7 +28,11 @@
                     <div class="input-group search__div--participants">
                         <span class="span__search"><span class="glyphicon glyphicon-search search__icon--participants"></span><input class="form-control" type="text" oninput="w3.filterHTML('#id01', 'ul#id01 li', this.value)" name="search" placeholder="Search..." required id="search-input-participant"/></span>
                         <span class="input-group-btn" style="padding-right: 10px;">
-                            <button class="btn btn__search" type="submit"><span>Go!</button>
+                        <div class="back__button" hidden>
+                        <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
+                        <span>Go Back</span>
+                        </div>
+                            
                         </span>
                         </span>
                     </div>
@@ -40,11 +44,7 @@
         <!-- End of Search Form -->            
     </div>
 
-    <div class="col-sm-10 col-sm-push-1 search__participant" hidden> 
-        <div class="back__button">
-            <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
-            <span>Go Back</span>
-        </div>  
+    <div class="col-sm-10 col-sm-push-1 search__participant" hidden>   
         <p>Type name to search for public participants and full e-mail + search button for others. </p>
         <div class="addproposal--step__div"> 
             <ul id="id01" class="addproposal--step2">
@@ -192,7 +192,7 @@
         </div>
    
     </div>
-    </div>
+</div>
     <div id="modal_participant" class="modal fade" role="dialog">
       <div class="modal-dialog">
         <!-- Modal content-->
@@ -260,27 +260,18 @@
                     </div>
                 </div>
                 <div class="col-xs-12">
+                </br></br>
                     <br><p class="p__titles--p"><i class="fa fa-sort-desc p_down-icon" aria-hidden="true"></i>Privacy options</p>
-                </div>
-                <div class="col-xs-12 register--check">
-                    <input type="checkbox" name="Public_p" class="public--all"> Go fully public
-                    <input type="checkbox" class="private__prof" style="margin-left: 300px;" name="Private_p"> Go fully anonymous
                 </div>
                 <div class="col-xs-12" style="padding-left: 35px;">
                     <input type="checkbox" name="Public_p" id="Public--profile"> Public profile: users will be able to look you up in a public list<br><br>
                     <input type="checkbox" name="Public_p" id="Supporting--proposals--visible"> Supporting proposals visible: your followers will see your name<br><br>
                     <input type="checkbox" name="Public_p" id="Rejecting--proposals--visible"> Rejecting proposals visible: your followers will see your name in the list of proposal oponents
                 </div>
-                <div class="col-xs-12">
-                <br>
-                    <p class="p__titles--p"><i class="fa fa-sort-desc p_down-icon" aria-hidden="true"></i>E-mail options</p>
-                </div>
-               <div class="col-xs-12 register--check" style="padding-left: 35px;">
-                    <input type="checkbox" name="Public_p"> Send notifications of new follower by e-mail
-                </div>
-
+                
             </div>
             <div class="col-sm-12 modal-cancel" style="margin-top: 25px;">
+            </br></br></br></br>
                 <button type="button" class="register--modal" id="modify--user" >Update info</button>
                 <!--<button type="button" class="cancel--modal" data-dismiss="modal">Close</button>-->
            </div>
