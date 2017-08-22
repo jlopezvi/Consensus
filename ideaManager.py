@@ -25,7 +25,7 @@ def add_idea_to_user_aux(user_email, idea_dict):
     code_uuid = str(uuid.uuid4())
     # image goes from base64 to separate JPG file
     if idea_dict.get('image') is None:
-        image_url = 'static/images/fondo-c.png'
+        image_url = '/static/images/fondo-c.png'
     else:
         image_url = base64ToJGP(idea_dict.get('image'), 'ideas/'+code_uuid)
     #
