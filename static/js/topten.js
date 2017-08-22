@@ -24,7 +24,7 @@ $(document).ready( function() {
                 newTop += '<div class="progress-bar newsfeed--bar2" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:'+volunteers_percent+'%;"></div></div></div>';
                 newTop += '<div class="col-sm-4 newsfeed--goals"><p>'+data.data[i].supporters_num+'/'+data.data[i].supporters_goal_num+' supporters';
                 newTop += '<br>'+data.data[i].volunteers_num+'/'+data.data[i].volunteers_goal_num+' volunteers</p></div></div>';
-                newTop += '<div class="row home--proposals--body" style="background-image: url('+data.data[i].image+'); padding-top:47.40%;"><div class="col-sm-12 concern__div">';
+                newTop += '<div class="row home--proposals--body" style="background-image: url('+data.data[i].image_url+'); padding-top:47.40%;"><div class="col-sm-12 concern__div">';
                 newTop += '<div class="col-sm-8 newsfeed--problem">'+data.data[i].concern+'</div></div><div class="col-sm-12" style="position:relative;">';
                 newTop += '<div class="col-sm-8 col-sm-offset-4 newsfeed--proposal">'+data.data[i].proposal+'</div></div></div> <input type="hidden" value="'+data.data[i].idea_id+'" id="idea__id">';
                 newTop += '<div class="row newsfeed--footer"><div class="col-sm-12" style="padding-right: 0px; padding-left: 0px;"><div class="col-sm-1 redflag--img"><input type="hidden" class="id" value="'+data.data[i].proposal+'">';

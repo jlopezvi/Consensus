@@ -126,7 +126,7 @@ function showIdeas(list, index){
 	code += '</div></div><div class="col-sm-4 newsfeed--goals">';
 	code += '<p>'+list.supporters_num+'/'+list.supporters_goal_num+' supporters<br>';
 	code += '<p>'+list.volunteers_num+'/'+list.volunteers_goal_num+' volunteers<br>';
-	code += '</div></div><div class="row home--proposals--body" style="background-image: url('+list.image+');">';
+	code += '</div></div><div class="row home--proposals--body" style="background-image: url('+list.image_url+');">';
 	code += '<div class="col-sm-12"><div class="col-sm-8 newsfeed--problem">'+list.concern+'</div>';
 	code += '</div><div class="col-sm-12" style="margin-top: 180px;"><div class="col-sm-8 col-sm-offset-4 newsfeed--proposal">'+list.proposal+'</div></div>';
 	code += '</div><div class="row newsfeed--footer">';

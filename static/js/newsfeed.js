@@ -105,7 +105,7 @@ function showContent(id){
   $('.idea__id').val(list[id].proposal);
   console.log(list[id]);
   $('#picture__profile').attr('src', list[id].author_profilepic).show();
-  $('.newsfeed--body').css('background-image', 'url('+list[id].image+')');
+  $('.newsfeed--body').css('background-image', 'url('+list[id].image_url+')');
   $('.newsfeed--name a').empty().append(list[id].author_username);
   $('.duration--info').empty().append(list[id].duration);
   var support_percent = (list[id].supporters_num * 100)/ list[id].supporters_goal_num;
