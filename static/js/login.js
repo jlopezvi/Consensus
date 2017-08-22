@@ -292,7 +292,7 @@ $( window ).load(function(){
   if(hostEmail != null){
     $('#email_r').val(guestEmail).prop('disabled', true);
     $.ajax({
-      url: url[0] + "//" + url[2] + '/get_fullname_for_participant/'+hostEmail,
+      url: url[0] + "//" + url[2] + '/get_fullname_for_participant_unrestricted/'+hostEmail,
       type: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -300,8 +300,7 @@ $( window ).load(function(){
       dataType: 'json',
       success: function (json) {
         //console.log(json);
-        if(json.ifallowed)
-          $('.home--content--left h1').empty().append(json.fullname + ' Welcomes You!')
+        $('.home--content--left h1').html(json.fullname + ' Welcomes You!')
       },
       error: function(response){
         //console.log(response.responseText);
