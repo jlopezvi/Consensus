@@ -365,7 +365,7 @@ $(document).ready( function() {
       	var newdata = {
       		'fullname' : $('#p_fullname').val(),
       		'username' : $('#p_username').val(),
-      		'email' : $('#p_email').val(),
+      		'new_email' : $('#p_email').val(),
       		'position' : $('#p_position').val(),
       		'group' : $('#p_group').val(),
       		'ifpublicprofile' : optionpro,
@@ -374,7 +374,7 @@ $(document).ready( function() {
       	};
        	newdata['profilepic'] = null;
    		if($('#cropme_profile_edit img').attr('src') != 'undefined'){
-      	newdata['profilepic'] = $('#cropme_profile_edit img').attr('src');
+      		newdata['profilepic'] = $('#cropme_profile_edit img').attr('src');
     	}
     	if ($('#p_email').val() == $('#p_confirm-e').val()) {
     		$.ajax({
@@ -449,7 +449,7 @@ $(document).ready( function() {
     	$('.controlss').append('<input type="hidden" id="propoid" value="'+propid+'">')
     });
 
-     $(document).on('click', '.edit--proposal--provisional', function(){
+    $(document).on('click', '.edit--proposal--provisional', function(){
      	var propuestaid = $('#propoid').val(); 
      	var dataedit = {
      			'current_proposal': propuestaid,
@@ -491,8 +491,41 @@ $(document).ready( function() {
 	    	}else{
 	      		$('#volunteers_goal_num').css("border-color", "red");
 	    	}
-    	});
+    });
     
+    $(document).on('click', '#accept_modify_password', function(){
+    	var newPass = {
+    		'old_password': $('#oldpass').val(),
+    		'new_password': $('#newpass').val()
+    	}
+    	
+    	if ($('#newpass').val() == $('#con--newpass').val()) {
+    		$.ajax({
+	     	   url: url[0] + "//" + url[2] + '/modify_user_password',
+	     	   type: 'PUT',
+	     	   data: JSON.stringify(newPass),
+	     	   headers: {
+	     	     'Content-Type': 'application/json'
+	     	   },
+	     	   dataType: 'json',
+	     	   success: function (json) {
+	     	   	if (json.result == 'OK') {
+	     	   		alert('your password has been changed');
+	     	   		$('.close').click();
+	     	   	}else{
+	     	   		$('#oldpass').css("border-color", "red");
+	     	   	}
+	     	    	 
+	     	   },
+	     	   error: function(response){
+	     	     console.log('Error');
+	     	     console.log(response);
+	     	   }
+	     	});
+	    	}else{
+	      		$('#con--newpass').css("border-color", "red");
+	    	}
+    });
 
     $(document).on('click', '.icons', function(){
     	var element = $(this);
