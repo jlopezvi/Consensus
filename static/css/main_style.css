@@ -1309,7 +1309,7 @@ ul.nav-tabs li.active a:before {
 #logout__modal div.modal-footer button:nth-child(1){
 	color: #fff;
     background-color: #3faf2e;
-    border-color: #0a2d05;
+    border-color: #3faf2e;
     width: 60px;
     height: 25px;
     top: -8px;
