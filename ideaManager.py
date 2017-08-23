@@ -75,7 +75,6 @@ def modify_idea_aux(idea_dict):
             return jsonify({"result":"Wrong", "result_msg": "Proposal already exists"})
         _remove_from_idea_index(idea_dict['current_proposal'], idea)
         _add_idea_to_index(idea_dict['proposal'], idea)
-        # TODO: add proposal to the node properties...
         _do_tasks_for_idea_editedproposal(idea_index)
     return jsonify({"result":"OK", "result_msg":"Idea was modified"})
 
@@ -221,6 +220,11 @@ def redflag_idea_aux(user_email, idea_index, reason):
 def get_idea_data_admin_aux(idea_proposal):
     idea = _get_idea_by_ideaindex(idea_proposal)
     return _get_idea_data(idea)
+
+
+def get_idea_node_data_aux(idea_proposal):
+    idea = _get_idea_by_ideaindex(idea_proposal)
+    return _get_idea_node_data(idea)
 
 
 def get_all_ideas_admin_aux():
@@ -393,6 +397,31 @@ def _get_idea_data(idea):
                       'support_rate': support_rate, 'support_rate_MIN': SUPPORT_RATE_MIN,
                       'supporters' : supporters_data, 'rejectors' : rejectors_data})
     return idea_data
+
+
+# <Used by ideas_for_newsfeed_aux / ideas_for_home_aux / get_ideas_data_created_by_participant_aux
+#    / get_idea_data_admin / get_topten_ideas >
+# input   idea_node
+# Output: << return  idea_data>>
+# idea_data = {
+    # 'uuid' : unique_identifier_string,
+    # 'author_profilepic_url' : 'static/.../pic.jpg', 'author_username' : 'Daniela', 'author_email' : 'a@',
+    # 'duration' : "4 hours/ days/ weeks",
+    # 'supporters_goal_num' : 200, 'supporters_num' : 5, 'volunteers_goal_num' : 5, 'volunteers_num' : 2,
+    # 'image_url' : 'static/.../asdf.JPG',
+    # 'concern': 'Some text for the concern',
+    # 'proposal': 'Some text for the proposal',
+    # 'support_rate' : 95,
+    # 'support_rate_MIN' : 90,
+    # 'supporters': [
+    # { 'email': 'b@', 'username': 'Maria' }, { 'email': 'c@', 'username': 'Pedro' }
+    #             ],
+    # 'rejectors':[
+    # { 'email': 'd@', 'username': 'Elisa' }
+    #               ]
+    # }
+def _get_idea_node_data(idea):
+    return idea.get_properties()
 
 
 def _get_idea_duration(idea_index):

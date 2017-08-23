@@ -15,7 +15,7 @@ from participantManager import get_participantnotifications_for_user_aux, remove
 from ideaManager import get_ideas_data_created_by_participant_aux, get_ideas_created_by_participant_aux,\
     add_idea_to_user_aux, vote_on_idea_aux, modify_idea_aux, remove_idea_aux, _get_supporters_emails_for_idea_aux, \
     _get_volunteers_emails_for_idea_aux, get_vote_statistics_for_idea_aux, get_voting_rel_between_user_and_idea_aux, \
-    redflag_idea_aux, get_all_ideas_admin_aux, get_idea_data_admin_aux
+    redflag_idea_aux, get_all_ideas_admin_aux, get_idea_data_admin_aux, get_idea_node_data_aux
 from ideaManager import get_ideanotifications_for_user_aux, remove_notification_from_idea_to_participant_aux, \
     _do_tasks_for_idea_editedproposal
 from webManager import ideas_for_newsfeed_aux, ideas_for_home_aux, registration_receive_emailverification_aux, \
@@ -184,8 +184,8 @@ def registration():
 
 
 # input:      user_email (user logged in)
-#             application/json
-#                      {"fullname": "Juan Lopez", "email": "new_email@gmail.com",
+#             application/json   ALL FIELDS ARE OPTIONAL !
+#                      {"fullname": "Juan Lopez", "new_email": "new_email@gmail.com",
 #                       "username": "jlopezvi",
 #                       "position":"employee", "group": "IT", "password": "MD5password",
 #                       "ifpublicprofile": true/false,, "ifsupportingproposalsvisible" : true/false,
@@ -448,7 +448,7 @@ def add_idea_to_user(user_email_DEBUG=None) :
     return add_idea_to_user_aux(user_email,idea_dict)
 
 
-#   input:  application/json :
+#   input:  application/json :  ALL FIELDS ARE OPTIONAL SAVE FOR  'current_proposal'!
 #                          {"concern":"we are not social enough in the office",
 #                           "current_proposal": "this is the proposal to be modified",
 #                           "proposal": "this is the new proposal (if is required)",
@@ -621,6 +621,13 @@ def get_all_ideas_admin():
 @app.route('/get_idea_data_admin/<idea_proposal>', methods=['GET'])
 def get_idea_data_admin(idea_proposal):
     return jsonify(get_idea_data_admin_aux(idea_proposal))
+
+
+# input   idea_proposal
+# output   idea_node's data as a json
+@app.route('/get_idea_node_data/<idea_proposal>', methods=['GET'])
+def get_idea_node_data(idea_proposal):
+    return jsonify(get_idea_node_data_aux(idea_proposal))
 
 
 ##### IDEA NOTIFICATIONS

@@ -93,7 +93,7 @@ def _newParticipant(participantdict):
 
 def modify_user_data_aux(user_data, user_email):
     participant = _get_participant_node(user_email)
-    fields = ['email', 'position', 'group', 'password', 'ifsupportingproposalsvisible',
+    fields = ['new_email', 'position', 'group', 'password', 'ifsupportingproposalsvisible',
               'ifrejectingproposalsvisible',
               'username', 'ifpublicprofile', 'fullname']
     data = {}
@@ -110,14 +110,13 @@ def modify_user_data_aux(user_data, user_email):
         else:
             profilepic_url = base64ToJGP(user_data['profilepic'], '/profilepics/' + profilepic_filename)
         participant["profilepic_url"] = profilepic_url
-    if 'email' in user_data:
-        if user_data['email'] != user_email:
-            new_email=user_data['email']
+    if 'new_email' in user_data:
+        if user_data['new_email'] != user_email:
+            new_email=user_data['new_email']
             if _get_participant_node(new_email, 'all'):  # email exists?
                 return jsonify({'result': 'Wrong: New e-mail already exists'})
             _removeFromParticipantsIndex(user_email, participant)
             _addToParticipantsIndex(new_email, participant)
-            # TODO: add the new email to the node ?
             user = User(new_email)
             flask_login.login_user(user)
             # TODO: change profilepic_url in database and profilepic filename, provided there is a picture
