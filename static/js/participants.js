@@ -54,11 +54,6 @@ $(document).ready( function() {
 				newIdea += '<div class="row newsfeed--persons"><div class="col-sm-10"><div class="col-sm-1" style="padding:0;">';
 				newIdea += '<img src="'+url_new+'images/check-small.png"></div><div class="col-sm-11 newsfeed--likes">';
 				newIdea += '<ul class="ul--liked"><a href="#" class="last--liked"><li>'+json.ideas_data[i].supporters_num+' people</li></a></ul></div></div>';
-				//MODIFY / DELETE IDEA, ONLY FOR CURRENT LOGGED USER
-				if(url.length == 4){
-					newIdea += '<div class="col-sm-2 idea--action--buttons"><div class="col-sm-6"><span class="glyphicon glyphicon-edit"></span></div>';
-	    			newIdea += '<div class="col-sm-6"><span class="glyphicon glyphicon-trash"></span></div></div>';
-				}
 				newIdea += '<div class="col-sm-12"><div class="col-sm-1" style="padding:0;"><img src="'+url_new+'images/x-small.png">';
 				newIdea += '</div><div class="col-sm-11 newsfeed--likes"><ul class="ul--disliked"><a href="#" class="last--liked"><li>'+json.ideas_data[i].rejectors.length+' people</li></a></ul></div></div></div>';
 				newIdea += '<div class="row home--share"><div class="col-sm-12 home--share--icons">';
@@ -68,6 +63,11 @@ $(document).ready( function() {
 				newIdea += '<input type="hidden" class="supporters--goal--input" value="'+json.ideas_data[i].supporters_goal_num+'">';
 				newIdea += '<input type="hidden" class="volunteers--goal--input" value="'+json.ideas_data[i].volunteers_goal_num+'">';
 				newIdea += '<div class="col-sm-6" style="padding:0;width: 100%;"><input type="hidden" class="id" value="'+json.ideas_data[i].proposal+'">';
+				//MODIFY / DELETE IDEA, ONLY FOR CURRENT LOGGED USER
+				if(url.length == 4){
+					newIdea += '<div class="col-sm-12 idea--action--buttons"><div class="col-xs-2"><span class="glyphicon glyphicon-edit edit"></span></div>';
+	    			newIdea += '<div class="col-xs-2"><span class="glyphicon glyphicon-trash trash"></span></div></div>';
+				}
 				newIdea += '<img class="icons" src="'+url_new+'images/x-icon.png" id="rejected" hidden><img class="icons" style="width: 50px;" src="'+url_new+'images/check-icon.png" id="supported" hidden><img class="icons" style="width: 48px;" src="'+url_new+'images/checkmark.png" id="support__plus--button" hidden>';
 			    newIdea += '</div><div class="col-sm-6 home--followers hidden" style="width: 100%;">';
 			    newIdea += '</div></div></div></div>';
@@ -405,7 +405,7 @@ $(document).ready( function() {
 			url: url[0] + "//" + url[2] + '/get_participant_data_by_email_unrestricted/'+current_email,
 			type: 'GET',
 			success: function (json) {
-				console.log(json);
+				//console.log(json);
 				$('.profile--picture img').attr('src', '');
 				$('.participant__name a').empty();
 				$('.participant__name label').empty();
@@ -420,6 +420,80 @@ $(document).ready( function() {
 		});
     });
     
+    $(document).on('click', '.edit', function(){
+    	var propid = $(this).parent().parent().parent().children().val();
+    	$.ajax({
+		url: url[0] + "//" + url[2] + '/get_idea_node_data/'+propid,
+		type: 'GET',
+		headers: {
+		'Content-Type': 'application/json'
+		},
+		dataType: 'json',
+		success: function (json) {
+			//console.log(json);
+			$('#concern').val(''+json.concern+'');
+			$('#proposal').val(''+json.proposal+'');
+			$('#moreinfo_concern').val(''+json.moreinfo_concern+'');
+			$('#moreinfo_proposal').val(''+json.moreinfo_proposal+'');
+			$('#volunteers_goal_num').val(''+json.volunteers_goal_num+'');
+			$('#cropme_bidea').empty();
+			$('#cropme_bidea').append('<img style="width: 300px; height: 169px;" src='+json.image_url+'>');
+			}							
+		});
+
+    	$('#modal_proposal1').modal('toggle');
+
+    	$('.add--proposal--provisional').hide();
+    	$('.edit--proposal--provisional').hide();
+    	$('.controlss').append('<a class="edit--proposal--provisional">Edit Proposal</a>');
+    	$('.controlss').append('<input type="hidden" id="propoid" value="'+propid+'">')
+    });
+
+     $(document).on('click', '.edit--proposal--provisional', function(){
+     	var propuestaid = $('#propoid').val(); 
+     	var dataedit = {
+     			'current_proposal': propuestaid,
+      			'concern': $('#concern').val(),
+      			'proposal': $('#proposal').val(),
+      			'moreinfo_proposal': $('#moreinfo_proposal').val(),
+      			'moreinfo_concern': $('#moreinfo_concern').val(),
+      			'volunteers_goal_num': $('#volunteers_goal_num').val(),
+      			'supporters_goal_num': 200
+    		};    
+
+    		var opt = false;
+    		if ($('input[name=proposal-anon]').is(":checked"))
+        		opt = true;
+   		 	dataedit['if_author_public'] = opt;
+	    	
+	    	dataedit['image'] = null;
+	    	if($('#cropme_bidea img').length)
+	      		dataedit['image'] = $('#cropme_bidea img').attr('src');
+
+	      	if ($('#volunteers_goal_num').val() >= 0 ) {
+	     	$.ajax({
+	     	   url: url[0] + "//" + url[2] + '/modify_idea',
+	     	   type: 'PUT',
+	     	   data: JSON.stringify(dataedit),
+	     	   headers: {
+	     	     'Content-Type': 'application/json'
+	     	   },
+	     	   dataType: 'json',
+	     	   success: function (json) {
+	     	     alert(json.result_msg);
+	     	     
+	     	   },
+	     	   error: function(response){
+	     	     console.log('Error');
+	     	     console.log(response);
+	     	   }
+	     	});
+	    	}else{
+	      		$('#volunteers_goal_num').css("border-color", "red");
+	    	}
+    	});
+    
+
     $(document).on('click', '.icons', function(){
     	var element = $(this);
     	var vote_ifvolunteered = false;
