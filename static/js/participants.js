@@ -296,6 +296,8 @@ $(document).ready( function() {
     	var redirect = $(this).parent().parent().children('input').val();
     	if($(this).parent().parent().hasClass('participants__li__private'))
     		console.log('Not Allowed');
+    	else if($('#host_email').val() == redirect)
+    		window.location = '/participants';
     	else
     		window.location = '/participants/'+redirect;
 
