@@ -1,6 +1,6 @@
 from py2neo import neo4j
 from participantManager import _get_participant_node, _getIfContactRelationshipExists
-from utils import getGraph, save_file
+from utils import getGraph, save_file, _remove_file
 from flask import jsonify, render_template
 import json, uuid
 from datetime import datetime,date
@@ -57,18 +57,26 @@ def modify_idea_aux(idea_dict):
     fields = ['concern','proposal','moreinfo_concern','moreinfo_proposal',
               'supporters_goal_num','volunteers_goal_num', 'if_author_public']
     data= {}
+    for k,v in idea_dict.items():
+        if k in fields:
+            data[k]=v
+    for k,v in data.items():
+        idea[k]=v
+    if 'image' in idea_dict:
+        # image goes from base64 to separate JPG file
+        if idea_dict.get('image') is None:
+            image_url = '/static/images/fondo-c.png'
+        else:
+            image_url = base64ToJGP(idea_dict['image'], '/ideas/' + idea['uuid'])
+        idea['image_url'] = image_url
     if 'proposal' in idea_dict:
         idea_index = idea_dict['proposal']
         if _get_idea_by_ideaindex(idea_index):
             return jsonify({"result":"Wrong", "result_msg": "Proposal already exists"})
         _remove_from_idea_index(idea_dict['current_proposal'], idea)
         _add_idea_to_index(idea_dict['proposal'], idea)
+        # TODO: add proposal to the node properties...
         _do_tasks_for_idea_editedproposal(idea_index)
-    for k,v in idea_dict.items():
-        if k in fields:
-            data[k]=v
-    for k,v in data.items():
-        idea[k]=v
     return jsonify({"result":"OK", "result_msg":"Idea was modified"})
 
 
@@ -80,6 +88,8 @@ def remove_idea_aux(idea_index) :
     #
     _send_notification_emails_from_idea_to_supporters(idea['current_proposal'], 'removed')
     _remove_from_idea_index(idea['current_proposal'], idea)
+    if idea['image_url'].startswith('/static/images/ideas/'):
+        _remove_file(idea['image_url'])
     idea.delete()
     return jsonify({"result":"OK", "result_msg":"Idea was removed"})
 
@@ -594,6 +604,9 @@ def _send_notification_emails_from_idea_to_supporters(idea_index, notification_t
         html = render_template('emails/idea_edited.html', msg_proposal=idea['proposal'])
     elif notification_type == 'successful':
         html = render_template('emails/idea_successful.html', msg_proposal=idea['proposal'])
+    elif notification_type == 'removed':
+        # TODO
+        return
     elif notification_type == 'redflag':
         html = render_template('emails/idea_redflag.html', msg_proposal=idea['proposal'], msg_reason= reason, msg_participant= participant_fullname)
     vote_rels = list(getGraph().match(end_node=idea, rel_type="VOTED_ON"))
