@@ -21,7 +21,7 @@ $(document).ready( function() {
 		type: 'GET',
 		success: function (json) {	
 			
-			console.log(json);
+			//console.log(json);
 			var newIdea = '';
 			var url_new = url[0] +'//'+ url[2] +'/static/';
 			for (var i = 0; i < json.ideas_data.length; i++) {						
@@ -51,9 +51,14 @@ $(document).ready( function() {
 				newIdea += '<input type="text" value="'+json.ideas_data[i].support_rate+'" id="percent" hidden><div class="input--percent">';
 				newIdea += '<label> Support Rate: '+json.ideas_data[i].support_rate+'% </label></div></div><div class="col-sm-2 neewsfeed--moreinfo" style="float:right;">';
 				newIdea += '<input type="button" name="more-info" class="home--button"></div><div id="more--info--modal" hidden><p><h4>  More information about the problem: </h4> '+json.ideas_data[i].moreinfo_concern+'</br></br><h4> More information about the proposal: </h4>'+json.ideas_data[i].moreinfo_proposal+'</p></div></div></div>';
-				newIdea += '<div class="row newsfeed--persons"><div class="col-sm-12"><div class="col-sm-1" style="padding:0;">';
+				newIdea += '<div class="row newsfeed--persons"><div class="col-sm-10"><div class="col-sm-1" style="padding:0;">';
 				newIdea += '<img src="'+url_new+'images/check-small.png"></div><div class="col-sm-11 newsfeed--likes">';
 				newIdea += '<ul class="ul--liked"><a href="#" class="last--liked"><li>'+json.ideas_data[i].supporters_num+' people</li></a></ul></div></div>';
+				//MODIFY / DELETE IDEA, ONLY FOR CURRENT LOGGED USER
+				if(url.length == 4){
+					newIdea += '<div class="col-sm-2 idea--action--buttons"><div class="col-sm-6"><span class="glyphicon glyphicon-edit"></span></div>';
+	    			newIdea += '<div class="col-sm-6"><span class="glyphicon glyphicon-trash"></span></div></div>';
+				}
 				newIdea += '<div class="col-sm-12"><div class="col-sm-1" style="padding:0;"><img src="'+url_new+'images/x-small.png">';
 				newIdea += '</div><div class="col-sm-11 newsfeed--likes"><ul class="ul--disliked"><a href="#" class="last--liked"><li>'+json.ideas_data[i].rejectors.length+' people</li></a></ul></div></div></div>';
 				newIdea += '<div class="row home--share"><div class="col-sm-12 home--share--icons">';

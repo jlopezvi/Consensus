@@ -1544,3 +1544,12 @@ a.add--proposal--provisional {
 	position: absolute;
 	top:11%;
 }
+.idea--action--buttons div span{
+    cursor: pointer;
+    font-size: 18px;
+    color: #3faf2e;
+    margin: 0px 0px 0px -18px;
+}
+.idea--action--buttons div span.glyphicon-trash {
+    color: #af2e3f;
+}
