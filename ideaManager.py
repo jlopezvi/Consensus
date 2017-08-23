@@ -82,6 +82,10 @@ def modify_idea_aux(idea_dict):
 # <Used by do_cron_tasks_aux>, <redflag_idea_aux>
 def remove_idea_aux(idea_index) :
     idea = _get_idea_by_ideaindex(idea_index)
+    return jsonify(_remove_idea(idea))
+
+# <used by remove_idea_aux, remove_user_aux>
+def _remove_idea(idea):
     for rel in getGraph().match(start_node=idea, bidirectional=True):
         rel.delete()
     #
@@ -90,7 +94,7 @@ def remove_idea_aux(idea_index) :
     if idea['image_url'].startswith('/static/images/ideas/'):
         _remove_file(idea['image_url'])
     idea.delete()
-    return jsonify({"result":"OK", "result_msg":"Idea was removed"})
+    return {"result":"OK", "result_msg":"Idea was removed"}
 
 
 def get_ideas_created_by_participant_aux(participant_email, user_email):

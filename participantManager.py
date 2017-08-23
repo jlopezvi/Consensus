@@ -3,7 +3,7 @@ from flask import jsonify, abort, redirect,url_for, render_template
 import ast
 import json
 import logging
-from utils import getGraph, save_file, send_email
+from utils import getGraph, save_file, send_email, _remove_file
 from uuid_token import generate_confirmation_token
 from datetime import datetime, date
 from user_authentification import User
@@ -139,14 +139,18 @@ def get_user_data_aux(user_email):
 
 
 def remove_user_aux(user_email) :
+    from ideaManager import _remove_idea
     user = _get_participant_node(user_email, 'all')
     created_ideas = [x.end_node for x in list(getGraph().match(start_node=user, rel_type="CREATED"))]
     for created_idea in created_ideas:
-        for rel in getGraph().match(start_node=created_idea, bidirectional=True):
-            rel.delete()
-        created_idea.delete()
+        _remove_idea(created_idea)
+        # for rel in getGraph().match(start_node=created_idea, bidirectional=True):
+        #     rel.delete()
+        # created_idea.delete()
     for rel2 in getGraph().match(start_node=user, bidirectional=True):
         rel2.delete()
+    if user['profilepic_url'].startswith('/static/images/profilepics/'):
+        _remove_file(user['profilepic_url'])
     user.delete()
     return jsonify({'result': 'OK'})
 
