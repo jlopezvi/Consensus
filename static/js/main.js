@@ -76,7 +76,7 @@ $(document).ready(function(){
       newData['image'] = $('#cropme_bidea img').attr('src');
     
     console.log(newData);
-    if ($('#volunteers_goal_num').val() > 0 ) {
+    if ($('#volunteers_goal_num').val() >= 0 ) {
       $.ajax({
         url: url[0] + "//" + url[2] + '/add_idea_to_user',
         type: 'POST',
@@ -101,7 +101,7 @@ $(document).ready(function(){
   });
 
   var current_email = $('#host_email').val();
-  if(url[3] == 'newsfeed' || url[3] == 'participant' || url[3] == 'home' || url[3] == 'topten'){
+  //if(url[3] == 'newsfeed' || url[3] == 'participant' || url[3] == 'home' || url[3] == 'topten'){
     $.ajax({
       url: url[0] + "//" + url[2] + '/get_participant_followers_info/'+current_email,
       type: 'GET',
@@ -111,7 +111,7 @@ $(document).ready(function(){
           followerproposal = '';  
           for(var i = 0; i < json.followers_num; i++){
             followerproposal += '<li><input class="checkbox check--followers" type="checkbox" name="check[]" value="'+json.followers_info[i].email+'" checked>';
-            followerproposal += '<img class="new--user--icon--login" src="'+json.followers_info[i].profilepic+'">';
+            followerproposal += '<img class="new--user--icon--login" src="'+json.followers_info[i].profilepic_url+'">';
             followerproposal += '<p><a href="#">'+json.followers_info[i].username+'</a>';
             followerproposal += '<br>'+json.followers_info[i].fullname+'</p></li>';
             
@@ -121,7 +121,7 @@ $(document).ready(function(){
         }
       } 
     });
-  }
+  //}
 
   $("#fileUpload").on('change', function () {
 

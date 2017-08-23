@@ -195,7 +195,7 @@ body.modal-open {
 	padding-right: 0px!important;
 }
 #modal_sign .modal-header, #modal_sign .modal-footer, #modal_participant .modal-header, #modal_participant .modal-footer{
-	background-color: rgba(63, 175, 46, 0.9);
+	background-color: #3faf2a;
 	padding: 7px;
 }
 .modal-footer {
@@ -656,7 +656,7 @@ a.add--proposal--button:hover, a.add--proposal--button:active, a.add--proposal--
 	padding-right: 0px!important;
 }
 #modal_proposal1 .modal-header, #modal_proposal1 .modal-footer {
-	background-color: rgba(63, 175, 46, 0.9);
+	background-color: #3faf2a;
 	padding: 7px;
 }
 .modal-footer {
@@ -1012,7 +1012,7 @@ input.form-control.invite__button:focus {
 	font-family: lato_bold!important;
 }
 .participant__info {
-	margin-top: 150px;
+	margin-top: 100px;
 	font-size: 17px;
 	margin-left: 30px;
 }
@@ -1049,14 +1049,13 @@ input.form-control.invite__button:focus {
 }
 .participant__content textarea {
 	width: 90%;
-    height: 150px;
-    margin: 0 20px;
+    height: 50px;
+    margin: 10px 20px;
 }
 .invite__button {
 	width: 150px;
     height: 35px;
     margin: 0 auto;
-    margin-top: 20px;
 }
 .invite__header {
 	background: #c0ff00;
@@ -1068,10 +1067,10 @@ input.form-control.invite__button:focus {
     font-size: 15px;
 }
 .invite__body {
-	padding: 10px 22px 35px 22px;
+	padding: 10px 22px 15px 22px;
 }
 .participant__body {
-    margin-top: 60px;
+    margin-top: 30px;
 }
 .participant__follow {
     margin-top: 50px;
@@ -1132,6 +1131,7 @@ input.form-control.invite__button:focus {
 .tabs__follow {
     display: inline-flex;
     width: 100%;
+    margin-top: 10px;
 }
 ul.nav-tabs li a:before {
 	content: '';
@@ -1249,12 +1249,12 @@ ul.nav-tabs li.active a:before {
 /***** NEW STILES **********************/
 #modify-user div.modal-header,
 #logout__modal div.modal-header{
-	background-color: #205817;
+	background-color: #3faf2e;
 	color: #fff;	
 }
 #modify-user div.modal-footer button:nth-child(1) {
     color: #fff;
-    background-color: #205817;
+    background-color: #3faf2e;
     border-color: #0a2d05;
     width: 60px;
     height: 25px;
@@ -1267,12 +1267,12 @@ ul.nav-tabs li.active a:before {
 }
 #redflag-modal div.modal-header,
 #logout__modal div.modal-header{
-	background-color: #205817;
+	background-color: #3faf2e;
 	color: #fff;	
 }
 #redflag-modal div.modal-footer button:nth-child(1){
 	color: #fff;
-    background-color: #205817;
+    background-color: #3faf2e;
     border-color: #0a2d05;
     width: 60px;
     height: 25px;
@@ -1281,7 +1281,7 @@ ul.nav-tabs li.active a:before {
 }
 #redflag-modal div.modal-footer button:nth-child(2) {
     color: #fff;
-    border-color: #b70a0a;
+    border-color: #af2e3f;
     background-color: #b30707;
     top: -8px;
     position: relative;
@@ -1299,7 +1299,7 @@ ul.nav-tabs li.active a:before {
 
 #invitation-modal-info div.modal-header,
 #logout__modal div.modal-header{
-	background-color: #205817;
+	background-color: #3faf2e;
 	color: #fff;
 }
 #invitation-modal-info button.close,
@@ -1308,7 +1308,7 @@ ul.nav-tabs li.active a:before {
 }
 #logout__modal div.modal-footer button:nth-child(1){
 	color: #fff;
-    background-color: #205817;
+    background-color: #3faf2e;
     border-color: #0a2d05;
     width: 60px;
     height: 25px;
@@ -1317,7 +1317,7 @@ ul.nav-tabs li.active a:before {
 }
 #logout__modal div.modal-footer button:nth-child(2){
 	color: #fff;
-    border-color: #b70a0a;
+    border-color: #af2e3f;
     background-color: #b30707;
     top: -8px;
     position: relative;

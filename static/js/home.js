@@ -25,8 +25,11 @@ $(document).ready( function() {
     
     $('#home--proposals').hide();
     $('#today').empty();
+    $('#uno').hide();
     $('#lastweek').empty();
+    $('#dos').hide();
     $('#thismounth').empty();
+    $('#tres').hide();
     loadHomeIdeas(type_vote);
   });
   
@@ -176,13 +179,22 @@ function showIdeas(list, index){
 	code += '</div><div class="col-sm-6 home--followers hidden"><i class="fa fa-share-alt"></i><p>Share with: followers</p></div></div></div></div>';
 	
 	if (list.duration[6] == 'o' || list.duration[6] == 'u' || list.duration[4] == 'o' || list.duration[4] == 'u') {
+    $('#uno').show();
     $('#today').append(code);
+  }else{
+    $('#uno').hide();
   }
   if (list.duration[3] == 'a' ) {
+    $('#dos').show();
     $('#lastweek').append(code);
+  }else{
+    $('#dos').hide();
   }
   if (list.duration[4] == 'e' || list.duration[4] == 'w') {
+    $('#tres').show();
     $('#thismonth').append(code);
+  }else{
+    $('#tres').hide();   
   }
 }
 var left = 1;

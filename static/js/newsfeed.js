@@ -154,7 +154,6 @@ function moveFeed(element, id){
   if((element == 'left__feed') && (id > 0)){
     $('#newsfeed__body').hide();
     $('.spinner').show();
-    $('#right__feed').show();
     showContent(intID-1);
     setTimeout(function(){
       $('#newsfeed__body').show();
@@ -164,7 +163,7 @@ function moveFeed(element, id){
       $('#'+element).hide();
     else
       $('#'+element).show();
-  } else if((element == 'right__feed') && (id < (list.length-1))){
+  } else if((id < (list.length-1))){
     $('#newsfeed__body').hide();
     $('.spinner').show();
     
