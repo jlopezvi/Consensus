@@ -97,6 +97,19 @@ def modify_user_data_aux(user_data, user_email):
               'ifrejectingproposalsvisible',
               'username', 'ifpublicprofile', 'fullname']
     data = {}
+    for k, v in user_data.items():
+        if k in fields:
+            data[k] = v
+    for k, v in data.items():
+        participant[k] = v
+    if 'profilepic' in user_data:
+        # image goes from base64 to separate JPG file
+        profilepic_filename = user_email.replace(".", "")
+        if user_data['profilepic'] is None:
+            profilepic_url = '/static/images/perfil-mediano.png'
+        else:
+            profilepic_url = base64ToJGP(user_data['profilepic'], '/profilepics/' + profilepic_filename)
+        participant["profilepic_url"] = profilepic_url
     if 'email' in user_data:
         if user_data['email'] != user_email:
             new_email=user_data['email']
@@ -104,13 +117,10 @@ def modify_user_data_aux(user_data, user_email):
                 return jsonify({'result': 'Wrong: New e-mail already exists'})
             _removeFromParticipantsIndex(user_email, participant)
             _addToParticipantsIndex(new_email, participant)
+            # TODO: add the new email to the node ?
             user = User(new_email)
             flask_login.login_user(user)
-    for k, v in user_data.items():
-        if k in fields:
-            data[k] = v
-    for k, v in data.items():
-        participant[k] = v
+            # TODO: change profilepic_url in database and profilepic filename, provided there is a picture
     return jsonify({'result': 'OK'})
 
 

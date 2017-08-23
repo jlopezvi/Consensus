@@ -29,6 +29,10 @@ def save_file(ruta_dest,file_upload,filename):
     url = str(ruta_dest + secure_filename(filename))
     return url
 
+# <Used by /remove_idea>
+def _remove_file(relative_path):
+    os.remove(basedir+relative_path)
+    return
 
 # FLASK EMAIL
 from flask.ext.mail import Message
