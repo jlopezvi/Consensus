@@ -330,7 +330,7 @@ $(document).ready( function() {
 			$('#p_confirm-e').val(''+json.data.email+'');
 			$('#p_position').val(''+json.data.position+'');
 			$('#p_group').val(''+json.data.group+'');
-			$('#cropme_profile_edit').append('<img style="margin-left: -10px; margin-top: -10px;" src='+json.data.profilepic_url+'>');
+			$('#cropme_profile_edit').append('<img src='+json.data.profilepic_url+'>');
 
 		}					
 				
