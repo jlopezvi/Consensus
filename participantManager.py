@@ -123,6 +123,15 @@ def modify_user_data_aux(user_data, user_email):
     return jsonify({'result': 'OK'})
 
 
+def modify_user_password_aux(user_password_data, user_email):
+    user = _get_participant_node(user_email)
+    if user['password'] == user_password_data['old_password']:
+        user['password'] = user_password_data['new_password']
+        return jsonify({"result": "OK"})
+    else:
+        return jsonify({"result": "Wrong: Wrong current password"})
+
+
 def get_user_data_aux(user_email):
     participant = _get_participant_node(user_email)
     participant_data = participant.get_properties()

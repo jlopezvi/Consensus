@@ -10,7 +10,7 @@ from participantManager import _get_participant_node, remove_user_aux, get_all_p
     get_participant_followers_info_aux,get_participant_followings_info_aux, get_fullname_for_participant_unrestricted_aux,\
     get_fullname_for_participant_aux, registration_aux, get_participant_data_aux, modify_user_data_aux,  \
     get_participant_data_by_email_unrestricted_aux, get_all_public_participants_for_user_aux, if_participant_exists_by_email_aux, \
-    add_following_contact_to_user_aux, remove_following_contact_to_user_aux, get_user_data_aux
+    add_following_contact_to_user_aux, remove_following_contact_to_user_aux, get_user_data_aux, modify_user_password_aux
 from participantManager import get_participantnotifications_for_user_aux, remove_notification_from_participant1_to_participant2_aux
 from ideaManager import get_ideas_data_created_by_participant_aux, get_ideas_created_by_participant_aux,\
     add_idea_to_user_aux, vote_on_idea_aux, modify_idea_aux, remove_idea_aux, _get_supporters_emails_for_idea_aux, \
@@ -203,6 +203,23 @@ def modify_user_data(user_email_DEBUG=None):
        user_email = flask_login.current_user.id
    inputdict = request.get_json()
    return modify_user_data_aux(inputdict, user_email)
+
+
+# input:      user_email (user logged in)
+#             application/json
+#                      {"old_password": "asdf", "new_password": "ndls" }
+# Output: json
+#           1. {'result': 'Wrong: Wrong current password'}
+#           2. {'result': 'OK'}
+@app.route('/modify_user_password', methods=['PUT'])
+@app.route('/modify_user_password/<user_email_DEBUG>', methods=['PUT'])
+def modify_user_password(user_email_DEBUG=None):
+   if DEBUG and user_email_DEBUG is not None:
+       user_email = user_email_DEBUG
+   else:
+       user_email = flask_login.current_user.id
+   inputdict = request.get_json()
+   return modify_user_password_aux(inputdict, user_email)
 
 
 # input:   user_email  (user logged in)
