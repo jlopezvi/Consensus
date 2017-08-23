@@ -399,27 +399,9 @@ def _get_idea_data(idea):
     return idea_data
 
 
-# <Used by ideas_for_newsfeed_aux / ideas_for_home_aux / get_ideas_data_created_by_participant_aux
-#    / get_idea_data_admin / get_topten_ideas >
+# <Used by get_idea_node_data_aux >
 # input   idea_node
-# Output: << return  idea_data>>
-# idea_data = {
-    # 'uuid' : unique_identifier_string,
-    # 'author_profilepic_url' : 'static/.../pic.jpg', 'author_username' : 'Daniela', 'author_email' : 'a@',
-    # 'duration' : "4 hours/ days/ weeks",
-    # 'supporters_goal_num' : 200, 'supporters_num' : 5, 'volunteers_goal_num' : 5, 'volunteers_num' : 2,
-    # 'image_url' : 'static/.../asdf.JPG',
-    # 'concern': 'Some text for the concern',
-    # 'proposal': 'Some text for the proposal',
-    # 'support_rate' : 95,
-    # 'support_rate_MIN' : 90,
-    # 'supporters': [
-    # { 'email': 'b@', 'username': 'Maria' }, { 'email': 'c@', 'username': 'Pedro' }
-    #             ],
-    # 'rejectors':[
-    # { 'email': 'd@', 'username': 'Elisa' }
-    #               ]
-    # }
+# Output: << return  idea_node's data >>  as a python dictionary
 def _get_idea_node_data(idea):
     return idea.get_properties()
 
