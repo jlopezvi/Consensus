@@ -1247,6 +1247,34 @@ ul.nav-tabs li.active a:before {
 }
 /***** END OF PARTICIPANTS STYLE *******/
 /***** NEW STILES **********************/
+#delete-idea div.modal-header,
+#logout__modal div.modal-header{
+	background-color: #3faf2e;
+	color: #fff;	
+}
+#delete-idea div.modal-footer button:nth-child(1) {
+    color: #fff;
+    background-color: #3faf2e;
+    border-color: #3faf2e;
+    width: 60px;
+    height: 25px;
+    top: -8px;
+    position: relative;
+}
+#delete-idea div.modal-footer button:nth-child(2){
+	color: #fff;
+    border-color: #af2e3f;
+    background-color: #b30707;
+    top: -8px;
+    position: relative;
+    width: 60px;
+    height: 25px;
+}
+#delete-idea div.modal-body{
+	width: 450px;
+	padding-right: 10px;
+}
+
 #modify-user div.modal-header,
 #logout__modal div.modal-header{
 	background-color: #3faf2e;
