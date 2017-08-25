@@ -2,6 +2,7 @@ var url = window.location.href;
 url = url.split("/");
 var current_vote = '';
 $('.cropme2').simpleCropper();
+var img_validator;
 
 $(document).ready( function() {
 	if($('#participant_email').val() == 'None')
@@ -338,7 +339,7 @@ $(document).ready( function() {
 			$('#p_position').val(''+json.data.position+'');
 			$('#p_group').val(''+json.data.group+'');
 			$('#cropme_profile_edit').append('<img src='+json.data.profilepic_url+'>');
-
+			img_validator = json.data.profilepic_url;
 		}					
 				
 	});
@@ -367,13 +368,13 @@ $(document).ready( function() {
       		'username' : $('#p_username').val(),
       		'new_email' : $('#p_email').val(),
       		'position' : $('#p_position').val(),
-      		'group' : $('#p_group').val(),
+      		'group' : $('#p_group option:selected').val(),
       		'ifpublicprofile' : optionpro,
       		'ifsupportingproposalsvisible' : optionSup,
       		'ifrejectingproposalsvisible' : optionRej,
       	};
-       	newdata['profilepic'] = null;
-   		if($('#cropme_profile_edit img').attr('src') != 'undefined'){
+      	
+   		if($('#cropme_profile_edit img').attr('src') != img_validator){
       		newdata['profilepic'] = $('#cropme_profile_edit img').attr('src');
     	}
     	if ($('#p_email').val() == $('#p_confirm-e').val()) {
