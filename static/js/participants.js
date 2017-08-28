@@ -389,6 +389,12 @@ $(document).ready( function() {
 		      success: function (json) {
 		      	$('.close').click();
 		        $('#modify-user').modal('toggle');
+		        /*
+		        if($('#cropme_profile_edit img').attr('src') != img_validator){
+		        	$('.participant__profile--pic div img').prop('src',newdata['profilepic']);
+		        	img_validator = newdata['profilepic'];
+		        }
+		        */
 		      },
 		      error: function(response){
 		        console.log(response);
@@ -402,23 +408,26 @@ $(document).ready( function() {
      });
 
     $(document).on('click', '#accept_modify', function(){
-    	$.ajax({
-			url: url[0] + "//" + url[2] + '/get_participant_data_by_email_unrestricted/'+current_email,
-			type: 'GET',
-			success: function (json) {
-				//console.log(json);
-				$('.profile--picture img').attr('src', '');
-				$('.participant__name a').empty();
-				$('.participant__name label').empty();
-				$('#name--modify').empty();
-				$('#img-modify').attr('src', '');
-				$('.profile--picture img').attr('src', json.participant_data.profilepic_url);
-				$('.participant__name a').append(json.participant_data.username);
-				$('.participant__name label').append(json.participant_data.fullname);
-				$('#name--modify').append(json.participant_data.username);
-				$('#img-modify').attr('src', json.participant_data.profilepic_url);
-			}	
-		});
+    	setTimeout(function(){
+	    	$.ajax({
+				url: url[0] + "//" + url[2] + '/get_participant_data_by_email_unrestricted/'+current_email,
+				type: 'GET',
+				success: function (json) {
+					//console.log(json);
+					$('.profile--picture img').attr('src', '');
+					$('.participant__name a').empty();
+					$('.participant__name label').empty();
+					$('#name--modify').empty();
+					$('#img-modify').attr('src', '');
+					$('.profile--picture img').attr('src', json.participant_data.profilepic_url);
+					$('.participant__name a').append(json.participant_data.username);
+					$('.participant__name label').append(json.participant_data.fullname);
+					$('#name--modify').append(json.participant_data.username);
+					$('#img-modify').attr('src', json.participant_data.profilepic_url);
+					img_validator = json.participant_data.profilepic_url;
+				}	
+			});
+    	}, 3000);
     });
     
     $(document).on('click', '.edit', function(){
