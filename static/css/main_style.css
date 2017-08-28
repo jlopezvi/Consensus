@@ -301,7 +301,7 @@ body.modal-open {
 }
 .newsfeed--header{
 	font-family: lato_bold;
-	font-size: 17px;
+	font-size: 16px;
 	padding: 0 15px;
 }
 .newsfeed--goals {
@@ -313,8 +313,8 @@ body.modal-open {
 	background-position: center center;
 	background-repeat: no-repeat;
 	margin: 0px;
-	padding-top: 47.75%;
-	margin-top: 2%;
+	padding-top: 35.75%;
+	margin-top: -2%;
 	box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 .home--proposals--body {    
@@ -408,8 +408,8 @@ body.modal-open {
 }
 .newsfeed--likes {
 	padding-left: 0;
-	padding-top: 11px;
-	margin-left: -15px;
+	margin-left: -20px;
+    margin-top: 10px;
 }
 .newsfeed--likes ul{
 	display: inline-block!important;
@@ -421,6 +421,7 @@ body.modal-open {
 	color: #1067fc;
 	display: inline-block!important;
   	text-decoration: none;
+  	margin-left: 15px;
 }
 .newsfeed--likes ul a li {
 	margin-right: 5px;
@@ -1247,6 +1248,34 @@ ul.nav-tabs li.active a:before {
 }
 /***** END OF PARTICIPANTS STYLE *******/
 /***** NEW STILES **********************/
+#delete-idea div.modal-header,
+#logout__modal div.modal-header{
+	background-color: #3faf2e;
+	color: #fff;	
+}
+#delete-idea div.modal-footer button:nth-child(1) {
+    color: #fff;
+    background-color: #3faf2e;
+    border-color: #3faf2e;
+    width: 60px;
+    height: 25px;
+    top: -8px;
+    position: relative;
+}
+#delete-idea div.modal-footer button:nth-child(2){
+	color: #fff;
+    border-color: #af2e3f;
+    background-color: #b30707;
+    top: -8px;
+    position: relative;
+    width: 60px;
+    height: 25px;
+}
+#delete-idea div.modal-body{
+	width: 450px;
+	padding-right: 10px;
+}
+
 #modify-user div.modal-header,
 #logout__modal div.modal-header{
 	background-color: #3faf2e;

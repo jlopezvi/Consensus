@@ -101,7 +101,7 @@ $(document).ready(function(){
   });
 
   var current_email = $('#host_email').val();
-  //if(url[3] == 'newsfeed' || url[3] == 'participant' || url[3] == 'home' || url[3] == 'topten'){
+  if(url[3] == 'newsfeed' || url[3] == 'participants' || url[3] == 'home' || url[3] == 'topten'){
     $.ajax({
       url: url[0] + "//" + url[2] + '/get_participant_followers_info/'+current_email,
       type: 'GET',
@@ -121,7 +121,7 @@ $(document).ready(function(){
         }
       } 
     });
-  //}
+  }
 
   $("#fileUpload").on('change', function () {
 

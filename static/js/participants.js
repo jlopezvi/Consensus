@@ -26,7 +26,7 @@ $(document).ready( function() {
 			var newIdea = '';
 			var url_new = url[0] +'//'+ url[2] +'/static/';
 			for (var i = 0; i < json.ideas_data.length; i++) {						
-				newIdea += '<div class="col-sm-12"><div class="row home--header">';
+				newIdea += '<div class="col-sm-12 "><div class="row home--header">';
 				newIdea += '<input type="hidden" class="idea__id" value="'+json.ideas_data[i].proposal+'">';
 				newIdea += '<div class="col-sm-2" style="padding-left: 0px;margin-left: -15px;">';
 				newIdea += '<div class="home--profile--picture"><img class="img-circle new--user--icon--login" id="img-modify" src="'+json.ideas_data[i].author_profilepic_url+'"></div></div><div class="col-sm-1 home--name">';
@@ -35,7 +35,11 @@ $(document).ready( function() {
 				newIdea += '</div><div class="col-sm-3 home--charge"><div class="progress home--progress">';
 				var supporters_percent = json.ideas_data[i].supporters_num*100/json.ideas_data[i].supporters_goal_num;
 				newIdea += '<div class="progress-bar newsfeed--bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:'+supporters_percent+'%;"></div></div>';
-				newIdea += '<div class="progress home--progress2">';
+				if (json.ideas_data[i].volunteers_goal_num > 0) {
+					newIdea += '<div class="progress home--progress2">';
+				}else{
+					newIdea += '<div>';
+				}
 				var volunteers_percent = json.ideas_data[i].volunteers_num*100/json.ideas_data[i].volunteers_goal_num;
 				newIdea += '<div class="progress-bar newsfeed--bar2" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:'+volunteers_percent+'%;"></div></div></div>';
 				newIdea += '<div class="col-sm-4 newsfeed--goals"><p>'+json.ideas_data[i].supporters_num+'/'+json.ideas_data[i].supporters_goal_num+' supporters';
@@ -406,6 +410,43 @@ $(document).ready( function() {
 		
 
      });
+
+    $(document).on('click', '.trash', function(){
+    	$('#delete-idea').modal('toggle');
+    	var propuestaid = $(this).parent().parent().parent().children().val();
+    	$('#delete_idea').append('<input value='+propuestaid+' hidden>');
+    	$(this).parent().parent().parent().parent().parent().parent().addClass('this-idea');
+    });
+
+    $(document).on('click', '#delete_idea', function(){
+    	var proposal = {
+    		'proposal' : $(this).children().val()
+    	}
+    	var activepub = parseInt($('.activess').text());
+    	$.ajax({
+			url: url[0] + "//" + url[2] + '/remove_idea',
+			type: 'DELETE',
+		    data: JSON.stringify(proposal),
+		    headers: {
+		        'Content-Type': 'application/json'
+		    },
+		    dataType: 'json',
+			success: function (json) {
+				alert(json.result_msg);
+				$('.close').click();
+				$('.this-idea').remove();
+				$('.activess').empty();	
+				$('.activess').append(activepub-1);
+				var vali = parseInt($('.activess').text());
+				if (vali <= 0) {
+					$('#newIdea').append('<center><h3>You have no active publications</h3></center>');
+				}
+
+			}	
+		});
+
+    });
+
 
     $(document).on('click', '#accept_modify', function(){
     	setTimeout(function(){
