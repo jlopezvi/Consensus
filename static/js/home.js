@@ -122,8 +122,12 @@ function showIdeas(list, index){
 	code += '<p><img style="width:20px;position:relative;top:-3px;" src="/static/images/clock-icon.png">&nbsp;'+list.duration+'</p></div>';
 	code += '<div class="col-sm-3 home--charge"><div class="progress home--progress">';
 	var support_percent = (list.supporters_num*100)/list.supporters_goal_num;
-	code += '<div class="progress-bar newsfeed--bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:'+support_percent+'%"></div>';
-	code += '</div>	<div class="progress home--progress2">';
+	code += '<div class="progress-bar newsfeed--bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:'+support_percent+'%"></div></div>';
+  if (list.volunteers_goal_num > 0) {
+    code += '<div class="progress home--progress2">';
+  }else{
+    code += '<div>';
+  }
 	var volunter_percent = (list.volunteers_num*100)/list.volunteers_goal_num;
 	code += '<div class="progress-bar newsfeed--bar2" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:'+volunter_percent+'%"></div>';
 	code += '</div></div><div class="col-sm-4 newsfeed--goals">';

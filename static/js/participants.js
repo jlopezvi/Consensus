@@ -35,7 +35,11 @@ $(document).ready( function() {
 				newIdea += '</div><div class="col-sm-3 home--charge"><div class="progress home--progress">';
 				var supporters_percent = json.ideas_data[i].supporters_num*100/json.ideas_data[i].supporters_goal_num;
 				newIdea += '<div class="progress-bar newsfeed--bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:'+supporters_percent+'%;"></div></div>';
-				newIdea += '<div class="progress home--progress2">';
+				if (json.ideas_data[i].volunteers_goal_num > 0) {
+					newIdea += '<div class="progress home--progress2">';
+				}else{
+					newIdea += '<div>';
+				}
 				var volunteers_percent = json.ideas_data[i].volunteers_num*100/json.ideas_data[i].volunteers_goal_num;
 				newIdea += '<div class="progress-bar newsfeed--bar2" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:'+volunteers_percent+'%;"></div></div></div>';
 				newIdea += '<div class="col-sm-4 newsfeed--goals"><p>'+json.ideas_data[i].supporters_num+'/'+json.ideas_data[i].supporters_goal_num+' supporters';
@@ -429,7 +433,7 @@ $(document).ready( function() {
 				$('.activess').append(activepub-1);
 				var vali = parseInt($('.activess').text());
 				if (vali <= 0) {
-					$('#newIdea').append('<center><h3>You have no active publications</h3></center> ');
+					$('#newIdea').append('<center><h3>You have no active publications</h3></center>');
 				}
 
 			}	

@@ -111,6 +111,9 @@ function showContent(id){
   var support_percent = (list[id].supporters_num * 100)/ list[id].supporters_goal_num;
   $('.newsfeed--bar').css('width',support_percent+'%');
   var volunter_percent = (list[id].volunteers_num * 100)/ list[id].volunteers_goal_num;
+  if (list[id].volunteers_goal_num == "") {
+    $('.newsfeed--progress2').hide();
+  }
   $('.newsfeed--bar2').css('width',volunter_percent+'%');
   $('.newsfeed--goals p').empty().append(list[id].supporters_num+"/"+list[id].supporters_goal_num+" supporters goals<br>"+list[id].volunteers_num+"/"+list[id].volunteers_goal_num+" volunteers goals");
   $('.newsfeed--problem').empty().append(list[id].concern);
