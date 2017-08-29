@@ -1262,7 +1262,7 @@ ul.nav-tabs li.active a:before {
     top: -8px;
     position: relative;
 }
-#delete-idea div.modal-footer button:nth-child(2){
+#delete-idea div.modal-footer button:nth-child(3){
 	color: #fff;
     border-color: #af2e3f;
     background-color: #b30707;

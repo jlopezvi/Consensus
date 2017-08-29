@@ -416,13 +416,13 @@ $(document).ready( function() {
     $(document).on('click', '.trash', function(){
     	$('#delete-idea').modal('toggle');
     	var propuestaid = $(this).parent().parent().parent().children().val();
-    	$('#delete_idea').append('<input value="'+propuestaid+'" hidden>');
+    	$('#delete_idea').next('input').val(propuestaid);
     	$(this).parent().parent().parent().parent().parent().parent().addClass('this-idea');
     });
 
     $(document).on('click', '#delete_idea', function(){
     	var proposal = {
-    		'proposal' : $(this).children().val()
+    		'proposal' : $(this).next('input').val()
     	}
     	var activepub = parseInt($('.activess').text());
     	$.ajax({
@@ -505,23 +505,26 @@ $(document).ready( function() {
     $(document).on('click', '.edit--proposal--provisional', function(){
      	var propuestaid = $('#propoid').val(); 
      	var dataedit = {
-     			'current_proposal': propuestaid,
       			'concern': $('#concern').val(),
-      			'proposal': $('#proposal').val(),
       			'moreinfo_proposal': $('#moreinfo_proposal').val(),
       			'moreinfo_concern': $('#moreinfo_concern').val(),
       			'volunteers_goal_num': $('#volunteers_goal_num').val(),
       			'supporters_goal_num': 200
     		};    
-
+    		dataedit['current_proposal'] = propuestaid;
+			if ($('#proposal').val() != propuestaid) {
+    			dataedit['proposal'] = $('#proposal').val();
+			}		
     		var opt = false;
-    		if ($('input[name=proposal-anon]').is(":checked"))
+    		if ($('input[name=proposal-anon]').is(":checked") == true){
         		opt = true;
+    		}
    		 	dataedit['if_author_public'] = opt;
 	    	
 	    	dataedit['image'] = null;
-	    	if($('#cropme_bidea img').length)
+	    	if($('#cropme_bidea img').attr('src') != "/static/images/fondo-c.png"){
 	      		dataedit['image'] = $('#cropme_bidea img').attr('src');
+	    	}
 
 	      	if ($('#volunteers_goal_num').val() >= 0 ) {
 	     	$.ajax({
@@ -534,7 +537,7 @@ $(document).ready( function() {
 	     	   dataType: 'json',
 	     	   success: function (json) {
 	     	     alert(json.result_msg);
-	     	     
+	     	     $('.close').click();
 	     	   },
 	     	   error: function(response){
 	     	     console.log('Error');
