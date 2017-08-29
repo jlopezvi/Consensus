@@ -414,7 +414,7 @@ $(document).ready( function() {
     $(document).on('click', '.trash', function(){
     	$('#delete-idea').modal('toggle');
     	var propuestaid = $(this).parent().parent().parent().children().val();
-    	$('#delete_idea').append('<input value='+propuestaid+' hidden>');
+    	$('#delete_idea').append('<input value="'+propuestaid+'" hidden>');
     	$(this).parent().parent().parent().parent().parent().parent().addClass('this-idea');
     });
 
