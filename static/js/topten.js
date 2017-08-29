@@ -14,17 +14,24 @@ $(document).ready( function() {
                 newTop += '<input type="hidden" class="idea__id" value="'+data.data[i].proposal+'">';
                 newTop += '<div class="col-sm-2" style="padding-left: 0px;margin-left: -15px;">';
                 newTop += '<div class="home--profile--picture"><img class="img-circle new--user--icon--login" src="'+data.data[i].author_profilepic_url+'"></div></div><div class="col-sm-1 home--name">';
-                newTop += '<a href="#">'+data.data[i].author_username+'</a></div><div class="col-sm-2 newsfeed--duration">';
+                if($('#host_email').val() == data.data[i].author_email)
+                    newTop += '<a href="/participants">'+data.data[i].author_username+'</a></div><div class="col-sm-2 newsfeed--duration">';
+                else
+                    newTop += '<a href="/participants/'+data.data[i].author_email+'">'+data.data[i].author_username+'</a></div><div class="col-sm-2 newsfeed--duration">';
                 newTop += '<p><img style="width: 15px;position: relative;top: -3px;" src="'+url_new+'images/clock-icon.png">&nbsp;'+data.data[i].duration+'</p>';
                 newTop += '</div><div class="col-sm-3 home--charge"><div class="progress home--progress">';
                 var supporters_percent = data.data[i].supporters_num*100/data.data[i].supporters_goal_num;
                 newTop += '<div class="progress-bar newsfeed--bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:'+supporters_percent+'%;"></div></div>';
-                newTop += '<div class="progress home--progress2">';
+                if(data.data[i].volunteers_goal_num >0)
+                    newTop += '<div class="progress home--progress2">';
+                else
+                    newTop += '<div>';
                 var volunteers_percent = data.data[i].volunteers_num*100/data.data[i].volunteers_goal_num;
                 newTop += '<div class="progress-bar newsfeed--bar2" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:'+volunteers_percent+'%;"></div></div></div>';
                 newTop += '<div class="col-sm-4 newsfeed--goals"><p>'+data.data[i].supporters_num+'/'+data.data[i].supporters_goal_num+' supporters';
-                newTop += '<br>'+data.data[i].volunteers_num+'/'+data.data[i].volunteers_goal_num+' volunteers</p></div></div>';
-                newTop += '<div class="row home--proposals--body" style="background-image: url('+data.data[i].image_url+'); padding-top:47.40%;"><div class="col-sm-12 concern__div">';
+                if(data.data[i].volunteers_goal_num >0)
+                    newTop += '<br>'+data.data[i].volunteers_num+'/'+data.data[i].volunteers_goal_num+' volunteers';
+                newTop += '</p></div></div><div class="row home--proposals--body" style="background-image: url('+data.data[i].image_url+'); padding-top:47.40%;"><div class="col-sm-12 concern__div">';
                 newTop += '<div class="col-sm-8 newsfeed--problem">'+data.data[i].concern+'</div></div><div class="col-sm-12" style="position:relative;">';
                 newTop += '<div class="col-sm-8 col-sm-offset-4 newsfeed--proposal">'+data.data[i].proposal+'</div></div></div> <input type="hidden" value="'+data.data[i].idea_id+'" id="idea__id">';
                 newTop += '<div class="row newsfeed--footer"><div class="col-sm-12" style="padding-right: 0px; padding-left: 0px;"><div class="col-sm-1 redflag--img"><input type="hidden" class="id" value="'+data.data[i].proposal+'">';
