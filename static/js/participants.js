@@ -43,8 +43,10 @@ $(document).ready( function() {
 				var volunteers_percent = json.ideas_data[i].volunteers_num*100/json.ideas_data[i].volunteers_goal_num;
 				newIdea += '<div class="progress-bar newsfeed--bar2" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:'+volunteers_percent+'%;"></div></div></div>';
 				newIdea += '<div class="col-sm-4 newsfeed--goals"><p>'+json.ideas_data[i].supporters_num+'/'+json.ideas_data[i].supporters_goal_num+' supporters';
-				newIdea += '<br>'+json.ideas_data[i].volunteers_num+'/'+json.ideas_data[i].volunteers_goal_num+' volunteers</p></div></div>';
-				newIdea += '<div class="row home--proposals--body" style="background-image: url('+json.ideas_data[i].image_url+'); padding-top:47.40%;"><div class="col-sm-12 concern__div">';
+				if (json.ideas_data[i].volunteers_goal_num > 0) {
+					newIdea += '<br>'+json.ideas_data[i].volunteers_num+'/'+json.ideas_data[i].volunteers_goal_num+' volunteers';
+				}
+				newIdea += '</p></div></div><div class="row home--proposals--body" style="background-image: url('+json.ideas_data[i].image_url+'); padding-top:47.40%;"><div class="col-sm-12 concern__div">';
 				newIdea += '<div class="col-sm-8 newsfeed--problem">'+json.ideas_data[i].concern+'</div></div><div class="col-sm-12" style="position:relative;">';
 				newIdea += '<div class="col-sm-8 col-sm-offset-4 newsfeed--proposal">'+json.ideas_data[i].proposal+'</div></div></div> <input type="hidden" value="'+json.ideas_data[i].idea_id+'" id="idea__id">';
 				newIdea += '<div class="row newsfeed--footer"><div class="col-sm-12" style="padding-right: 0px; padding-left: 0px;"><div class="col-sm-1 redflag--img"><input type="hidden" class="id" value="'+json.ideas_data[i].proposal+'">';
@@ -668,6 +670,9 @@ $(document).ready( function() {
 			        		div_header.children('.home--charge').children('.home--progress2').children('div').attr('style', '').css('width', volunt_percent);
 			        		div_header.children('.home--charge').children('.home--progress').children('div').attr('style', '').css('width', support_percent);
 			        		div_header.children('.newsfeed--goals').children('p').empty().append(support+'/'+support_goal+' supporters<br>'+volunt+'/'+volunt_goal+' volunteers');
+			        		if(volunt == '' || volunt == 0){
+			        			div_header.children('.newsfeed--goals').children('p').empty().append(support+'/'+support_goal+' supporters');
+			        		}
 			        		div_persons.find('.newsfeed--likes ul.ul--liked a.last--liked li').empty().append(support+' people');
 			        		div_persons.find('.newsfeed--likes ul.ul--disliked a.last--liked li').empty().append(rejector+' people');
 			        		var rate = ((support * 100) / (support + rejector));
