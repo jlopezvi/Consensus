@@ -3,6 +3,8 @@ url = url.split("/");
 var list;
 
 $(document).ready(function(){
+  $('html').css('overflow-y','hidden');
+  
 	$('.home--content').css('background-image','url("")');
 	$('#nav--home').css('display', 'none');
 	$('#nav--participants').css('display', 'none');
