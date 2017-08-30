@@ -112,7 +112,7 @@ function loadHomeIdeas(type_vote){
 }
 
 function showIdeas(list, index){
-  console.log(list);
+  //console.log(list);
   var code = '';
   code += '<div class="col-xs-12 col-sm-6 home--content--proposal">';
   code += '<div class="row home--header">';
@@ -212,13 +212,7 @@ function showIdeas(list, index){
     $('#tres').hide();   
   }
 }
-var left = 1;
-    $(document).on('click', '.neewsfeed--moreinfo', function(){
-    if(left == 1){
-      $(this).next('div').show('slow'); 
-      left = 0;
-    } else{
-      left = 1;
-        $(this).next('div').hide('slow');
-    } 
+
+$(document).on('click', '.neewsfeed--moreinfo', function(){
+  $(this).next('div').slideToggle('slow');
 }); 
