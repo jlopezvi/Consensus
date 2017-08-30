@@ -293,7 +293,7 @@ body.modal-open {
 	padding: 2px;
 	font-size: 13px;
 	text-align: center;
-	margin-left: -25px;
+	margin-left: 5px;
 }
 .newsfeed--name{
 	padding: 10px;
@@ -330,6 +330,7 @@ body.modal-open {
     background-position: center center;
 	margin-top: 2%;
 	box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	height: 353px;
 }
 .newsfeed--problem, .newsfeed--proposal {
 	background-color: rgba(0, 0, 0, 0.6);
@@ -339,6 +340,7 @@ body.modal-open {
 	letter-spacing: 1px;
 	padding:5px;
 	height: auto;
+
 }
 .newsfeed--proposal {
 	background-color: rgba(255, 255, 255, 0.82);
@@ -397,6 +399,7 @@ body.modal-open {
 }
 .neewsfeed--moreinfo{
 	margin-left: 0px;
+	
 }
 .newsfeed--footer {
 	margin-top: 15px;
@@ -413,11 +416,12 @@ body.modal-open {
     font-family: lato_bold;
     text-align: center;
     padding: 3px;
-    width: 44%;
+    width: 52%;
     top: -32px;
     margin-left: 210px;
     position: relative;
     height: 35px;
+    margin-left: 100px;
 }
 .newsfeed--likes {
 	padding-left: 0;
@@ -462,6 +466,11 @@ body.modal-open {
 	font-family: lato_bold;
 	font-size: 15px;
 	border-bottom: none;
+	margin-left: 40px;
+}
+.idea--action--buttons{
+	margin-top: -20px;
+	margin-left: -5px;
 }
 .newsfeed--persons {   
 	padding-left: 0;
@@ -561,6 +570,12 @@ body.modal-open {
 	width: 95px;
 	border: none;
 	background-color: transparent;
+	margin-left: 20px;
+}
+.redflag{
+	margin-top: -15px;
+	margin-left: 5px;
+	cursor: pointer;
 }
 .home--progress{
     margin-bottom: 13px;
@@ -658,6 +673,7 @@ a.add--proposal--button:hover, a.add--proposal--button:active, a.add--proposal--
 .home--charge {
     left: 20px;
     padding: 0 5px;
+        margin-left: -30px;
 }
 .newsfeed--goals p{
 	padding: 0px;
@@ -1272,6 +1288,8 @@ ul.nav-tabs li.active a:before {
 }
 .participant__body .home--button {
 	margin-left: -30px;
+
+
 }
 #modal_participant div.modal-header h4 {
 	text-align: left;
@@ -1682,3 +1700,5 @@ a.edit--proposal--provisional {
 .idea--action--buttons div span.glyphicon-trash {
     color: black;
 }
+
+

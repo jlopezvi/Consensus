@@ -30,7 +30,7 @@ $(document).ready( function() {
 				newIdea += '<input type="hidden" class="idea__id" value="'+json.ideas_data[i].proposal+'">';
 				newIdea += '<div class="col-sm-2" style="padding-left: 0px;margin-left: -15px;">';
 				newIdea += '<div class="home--profile--picture"><img class="img-circle new--user--icon--login" id="img-modify" src="'+json.ideas_data[i].author_profilepic_url+'"></div></div><div class="col-sm-1 home--name">';
-				newIdea += '<a href="#" id="name--modify">'+json.ideas_data[i].author_username+'</a></div><div class="col-sm-2 newsfeed--duration">';
+				newIdea += '<a href="#" id="name--modify">'+json.ideas_data[i].author_username+'</a></div><div class="col-sm-3 newsfeed--duration">';
 				newIdea += '<p><img style="width: 15px;position: relative;top: -3px;" src="'+url_new+'images/clock-icon.png">&nbsp;'+json.ideas_data[i].duration+'</p>';
 				newIdea += '</div><div class="col-sm-3 home--charge"><div class="progress home--progress">';
 				var supporters_percent = json.ideas_data[i].supporters_num*100/json.ideas_data[i].supporters_goal_num;
@@ -42,7 +42,7 @@ $(document).ready( function() {
 				}
 				var volunteers_percent = json.ideas_data[i].volunteers_num*100/json.ideas_data[i].volunteers_goal_num;
 				newIdea += '<div class="progress-bar newsfeed--bar2" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:'+volunteers_percent+'%;"></div></div></div>';
-				newIdea += '<div class="col-sm-4 newsfeed--goals"><p>'+json.ideas_data[i].supporters_num+'/'+json.ideas_data[i].supporters_goal_num+' supporters';
+				newIdea += '<div class="col-sm-3 newsfeed--goals"><p>'+json.ideas_data[i].supporters_num+'/'+json.ideas_data[i].supporters_goal_num+' supporters';
 				if (json.ideas_data[i].volunteers_goal_num > 0) {
 					newIdea += '<br>'+json.ideas_data[i].volunteers_num+'/'+json.ideas_data[i].volunteers_goal_num+' volunteers';
 				}
@@ -58,7 +58,7 @@ $(document).ready( function() {
 				newIdea += '<input type="text" value="'+json.ideas_data[i].support_rate+'" id="percent" hidden><div class="input--percent">';
 				newIdea += '<label> Support Rate: '+json.ideas_data[i].support_rate+'% </label></div></div><div class="col-sm-2 neewsfeed--moreinfo" style="float:right;">';
 				newIdea += '<input type="button" name="more-info" class="home--button"></div><div id="more--info--modal" hidden><p><h4>  More information about the problem: </h4> '+json.ideas_data[i].moreinfo_concern+'</br></br><h4> More information about the proposal: </h4>'+json.ideas_data[i].moreinfo_proposal+'</p></div></div></div>';
-				newIdea += '<div class="row newsfeed--persons"><div class="col-sm-10"><div class="col-sm-1" style="padding:0;">';
+				newIdea += '<div class="row newsfeed--persons"><div class="col-sm-12"><div class="col-sm-1" style="padding:0;">';
 				newIdea += '<img src="'+url_new+'images/check-small.png"></div><div class="col-sm-11 newsfeed--likes">';
 				newIdea += '<ul class="ul--liked"><a href="#" class="last--liked"><li>'+json.ideas_data[i].supporters_num+' people</li></a></ul></div></div>';
 				newIdea += '<div class="col-sm-12"><div class="col-sm-1" style="padding:0;"><img src="'+url_new+'images/x-small.png">';
