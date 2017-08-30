@@ -215,12 +215,10 @@ function removeElementFromList(id){
 }
 $(document).ready(function(){
   $('input[name=more-info]').on('click', function(){
-    var modal = $('#more--info--modal');
-    console.log(modal.css('display'));
-    if(modal.css('display') == 'none')
-      modal.show('slow');
-    else
-      modal.hide('slow');
+    $('#more--info--modal').slideToggle('slow');
+    //if(modal.css('display') == 'none')
+    //  modal.slideDown('slow');
+    //else
   }); 
   $('.vote--on').on('click',function(){
     $('.vote--on span').toggleClass('rotated');
