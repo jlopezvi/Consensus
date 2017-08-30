@@ -290,24 +290,29 @@ body.modal-open {
 	font-size: 35px;
 }
 .newsfeed--duration {
-	padding-right: 0;
-	text-align: right;
+	padding: 2px;
+	font-size: 13px;
+	text-align: center;
+	margin-left: -25px;
 }
 .newsfeed--name{
-	margin-left: -30px;
-	margin-right: 30px;
-	font-size: 25px;
+	padding: 10px;
+	font-size: 20px;
 	text-decoration: underline;
 }
 .newsfeed--header{
 	font-family: lato_bold;
 	font-size: 16px;
 	padding: 0 15px;
-    margin-top: -15px;
+    margin-top: -58px;
+}
+#newsfeed__body{
+    left: 80px;
 }
 .newsfeed--goals {
 	text-align: right;
-	right: -12px;
+	right: -45px;
+	padding: 4px 0px;
 }
 .newsfeed--body {
 	background-size: cover;
@@ -316,6 +321,8 @@ body.modal-open {
 	margin: 0px;
 	padding-top: 35.75%;
 	box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	width: 600px;
+	height: 386px;
 }
 .home--proposals--body {    
 	background-repeat: no-repeat;
@@ -340,10 +347,11 @@ body.modal-open {
 	overflow: hidden;
 }
 .newsfeed--progress, .newsfeed--progress2{
-	margin-top: 6px;
+	margin-top: 10px;
     margin-right: -69px;
     margin-left: 10px;
     height: 12px;	
+    margin-bottom: 8px;
     background-image: -webkit-linear-gradient(top,#737373 0,#a6a6a6 100%)!important;
     background-image: -o-linear-gradient(top,#737373 0,#a6a6a6 100%)!important;
     background-image: -webkit-gradient(linear,left top,left bottom,from(#737373),to(#a6a6a6))!important;
@@ -359,9 +367,9 @@ body.modal-open {
     background-image: linear-gradient(to bottom,#c0ff00 0,#cfec1d 100%)!important;
 }
 .profile--picture {
-	width: 100px;
-  height: 100px;
-  margin-top: -46px;
+	width: 75px;
+  height: 75px;
+  margin-top: -14px;
   border-radius: 60px;
 	overflow: hidden;
 }
@@ -384,6 +392,11 @@ body.modal-open {
 	padding: 0;
 	width: 35px;
 	text-align: center;
+    margin-left: -50px;
+    margin-top: 5px;
+}
+.neewsfeed--moreinfo{
+	margin-left: -5px;
 }
 .newsfeed--footer {
 	margin-top: 15px;
@@ -394,17 +407,15 @@ body.modal-open {
 }
 .input--percent {
   font-size: 17px!important;
-  background-color: #d9d9d9!important;
-  text-align: center;
-  border: none!important;
-  font-family: lato_bold;
-  color: #3faf2e;
-  text-align: center;
-  padding: 9px;
-  width: 50%;
-  margin-right: auto;
-  border-radius: 20px;
-  margin-left: auto;
+    background-color: #d9d9d9!important;
+    text-align: center;
+    font-family: lato_bold;
+    text-align: center;
+    padding: 9px;
+    width: 50%;
+    top: -37px;
+    margin-left: 90px;
+    position: relative;
 }
 .newsfeed--likes {
 	padding-left: 0;
@@ -423,6 +434,20 @@ body.modal-open {
   	text-decoration: none;
   	margin-left: 15px;
 }
+.vote--on{
+    padding: 0px;
+    position: relative;
+    top: 2px;
+    left: 20px;
+    cursor: pointer;
+    z-index: 2;
+}
+.vote--on span{
+    position: absolute;
+    left: 80%;
+    top: 3px;
+    font-size: 12px;
+}
 .newsfeed--likes ul a li {
 	margin-right: 5px;
     border-bottom: 1px solid;
@@ -436,9 +461,10 @@ body.modal-open {
 	font-size: 15px;
 	border-bottom: none;
 }
-.newsfeed--persons {
+.newsfeed--persons {   
 	padding-left: 0;
-	margin-top: 15px;
+    position: relative;
+    top: -10px;
 }
 .newsfeed--name a {
 	text-decoration: underline;
@@ -457,20 +483,57 @@ body.modal-open {
 	font-size: 17px;
 	margin-left: 10px;
 }
+
 .newsfeed--share {
 	margin-top: 20px;
 	margin-bottom: 50px;
 }
+.displayShare {
+	display: block;
+}
+.displayVote {
+    visibility: visible!important;
+    opacity: 1!important;
+}
+.displayVote:nth-child(1){
+	 transition: opacity 0.125s;
+	 transition-delay: 0s;
+	 -webkit-transition-delay: 0s;
+}
+.displayVote:nth-child(2){
+	 transition: opacity 0.125s;
+	 transition-delay: 0.125s;
+	 -webkit-transition-delay: 0.125s;
+}
+.displayVote:nth-child(3){
+	 transition: opacity 0.125s;
+	 transition-delay: 0.25s;
+	 -webkit-transition-delay: 0.25s;
+}
+.displayVote:nth-child(4){
+	 transition: opacity 0.125s;
+	 transition-delay: 0.375s;
+	 -webkit-transition-delay: 0.375s;
+}
+.rotated{
+	transform: rotate(180deg);
+}
+
 .newsfeed--share i.fa-share-alt {
 	font-size: 30px;
 	position: relative;
     top: 4px;
 }
 .newsfeed--share--icons {
-	padding-left: 0;
+	position: absolute;
+    margin-top: -260px;
+    margin-left: 0px;
 }
 .newsfeed--share--icons img{
 	width: 75px;
+	visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.5s linear;
 }
 .newsfeed--share--icons img:nth-child(4){
 	width: 62px;
@@ -596,7 +659,8 @@ a.add--proposal--button:hover, a.add--proposal--button:active, a.add--proposal--
 }
 .newsfeed--goals p{
 	padding: 0px;
-	margin: 0 0 5px;
+	margin: 4px 0px 5px;
+	font-size: 13px;
 }
 .home--name{
     padding: 0px;

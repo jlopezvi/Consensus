@@ -27,22 +27,22 @@
         <div class="row newsfeed--header">
         	<input type="hidden" id="list__id">
         	<input type="hidden" class="idea__id">
-			<div class="col-sm-2" style="padding-left: 0px;">
+			<div class="col-sm-1" style="padding-left: 0px;">
 				<div class="profile--picture">
                     <img src="" id="picture__profile" hidden>
 					<img src="{{ url_for('static',filename='assets/profile/perfil-mediano.png') }}">
 				</div>
 			</div>
-			<div class="col-sm-1 newsfeed--name">
+			<div class="col-sm-3 newsfeed--name">
 				<a href="#"></a>
 			</div>
-			<div class="col-sm-2 newsfeed--duration">
+			<div class="col-sm-1 newsfeed--duration">
 				<p>
 					<img src="{{ url_for('static',filename='images/clock-icon.png') }}">&nbsp;
 					<p class="duration--info"></p>
 				</p>
 			</div>
-			<div class="col-sm-3 newsfeed--charge">
+			<div class="col-sm-2 newsfeed--charge">
 				<div class="progress newsfeed--progress">
 					<input type="text" value="" id="supporters--percent" hidden>
 					<div class="progress-bar newsfeed--bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style=""></div>
@@ -53,7 +53,7 @@
 					<div class="progress-bar newsfeed--bar2" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style=""></div>
 				</div>
 			</div>
-			<div class="col-sm-4 newsfeed--goals">
+			<div class="col-sm-2 newsfeed--goals">
 				<p></p>
 			</div>
 		</div>
@@ -75,16 +75,19 @@
 		
 		
         <div class="row newsfeed--footer" style="padding: 0 15px;">
-			<div class="col-sm-12 modal--info" style="padding-right: 0px; padding-left: 0px;">
-				<div class="col-sm-1 redflag--img">
-					<img class="redflag" src="{{ url_for('static',filename='images/redflag.png') }}">
+			<div class="col-sm-10 modal--info" style="padding-right: 0px; padding-left: 0px;z-index:1;">
+				<div class="col-sm-1 vote--on">
+					<b>VOTE <span class="glyphicon glyphicon-triangle-bottom"></span></b>
 				</div>
-				<div class="col-sm-9 newsfeed--support" style="padding-right:0;padding-left:30px;">
+				<div class="col-sm-8 newsfeed--support" style="padding-right:0;padding-left:30px;">
 					<div class="input--percent">
 						<label></label>
 					</div>
 				</div>
-				<div class="col-sm-2 neewsfeed--moreinfo" style="float:right;">
+				<div class="col-sm-1 redflag--img">
+					<img class="redflag" src="{{ url_for('static',filename='images/redflag.png') }}">
+				</div>
+				<div class="col-sm-2 neewsfeed--moreinfo">
 					<input type="button" name="more-info" class="newsfeed--button">
 				</div>
 				<div id="more--info--modal" hidden></div>

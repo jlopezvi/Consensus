@@ -115,9 +115,9 @@ function showContent(id){
     $('.newsfeed--progress2').hide();
   }
   $('.newsfeed--bar2').css('width',volunter_percent+'%');
-  $('.newsfeed--goals p').empty().append(list[id].supporters_num+"/"+list[id].supporters_goal_num+" supporters goals<br>"+list[id].volunteers_num+"/"+list[id].volunteers_goal_num+" volunteers goals");
+  $('.newsfeed--goals p').empty().append(list[id].supporters_num+"/"+list[id].supporters_goal_num+" supporters<br>"+list[id].volunteers_num+"/"+list[id].volunteers_goal_num+" volunteers");
   if (list[id].volunteers_goal_num == "" || list[id].volunteers_goal_num == 0) {
-    $('.newsfeed--goals p').empty().append(list[id].supporters_num+"/"+list[id].supporters_goal_num+" supporters goals");
+    $('.newsfeed--goals p').empty().append(list[id].supporters_num+"/"+list[id].supporters_goal_num+" supporters");
   }
   $('.newsfeed--problem').empty().append(list[id].concern);
   $('.newsfeed--proposal').empty().append(list[id].proposal);
@@ -220,5 +220,10 @@ $(document).ready(function(){
     else
       modal.hide('slow');
   }); 
+  $('.vote--on').on('click',function(){
+    $('.vote--on span').toggleClass('rotated');
+	  $('.newsfeed--share').toggleClass('displayShare');
+	  $('.newsfeed--share--icons img').toggleClass('displayVote');
+  });
 });
 
