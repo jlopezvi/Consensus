@@ -341,7 +341,7 @@ body.modal-open {
 	height: auto;
 }
 .newsfeed--proposal {
-	background-color: rgba(255, 255, 255, 0.68);
+	background-color: rgba(255, 255, 255, 0.82);
 	color: #000;
 	margin-bottom: 15px;
 	overflow: hidden;
@@ -392,11 +392,11 @@ body.modal-open {
 	padding: 0;
 	width: 35px;
 	text-align: center;
-    margin-left: -50px;
+    margin-left: 10px;
     margin-top: 5px;
 }
 .neewsfeed--moreinfo{
-	margin-left: -5px;
+	margin-left: 0px;
 }
 .newsfeed--footer {
 	margin-top: 15px;
@@ -406,21 +406,23 @@ body.modal-open {
 	margin-bottom: 0px;
 }
 .input--percent {
-  font-size: 17px!important;
-    background-color: #d9d9d9!important;
+  	font-size: 17px!important;
+    background-color: rgb(231, 231, 231)!important;
+    border: 2px solid #a4a4a4;
     text-align: center;
     font-family: lato_bold;
     text-align: center;
-    padding: 9px;
-    width: 50%;
-    top: -37px;
-    margin-left: 90px;
+    padding: 3px;
+    width: 44%;
+    top: -32px;
+    margin-left: 210px;
     position: relative;
+    height: 35px;
 }
 .newsfeed--likes {
 	padding-left: 0;
-	margin-left: -20px;
-    margin-top: 10px;
+	margin-left: -50px;
+    margin-top: 12px;
 }
 .newsfeed--likes ul{
 	display: inline-block!important;
@@ -464,7 +466,6 @@ body.modal-open {
 .newsfeed--persons {   
 	padding-left: 0;
     position: relative;
-    top: -10px;
 }
 .newsfeed--name a {
 	text-decoration: underline;
@@ -486,7 +487,6 @@ body.modal-open {
 
 .newsfeed--share {
 	margin-top: 20px;
-	margin-bottom: 50px;
 }
 .displayShare {
 	display: block;
@@ -525,15 +525,17 @@ body.modal-open {
     top: 4px;
 }
 .newsfeed--share--icons {
-	position: absolute;
-    margin-top: -260px;
-    margin-left: 0px;
+    margin-top: -50px;
+    margin-left: -10px;
+    z-index: 2;
 }
 .newsfeed--share--icons img{
 	width: 75px;
+	/*
 	visibility: hidden;
     opacity: 0;
     transition: visibility 0s, opacity 0.5s linear;
+    */
 }
 .newsfeed--share--icons img:nth-child(4){
 	width: 62px;
@@ -1385,7 +1387,7 @@ ul.nav-tabs li.active a:before {
 #redflag-modal div.modal-footer button:nth-child(1){
 	color: #fff;
     background-color: #3faf2e;
-    border-color: #0a2d05;
+    border-color: ##3faf2e;
     width: 60px;
     height: 25px;
     top: -8px;
@@ -1668,7 +1670,7 @@ a.edit--proposal--provisional {
 }
 .newsfeed__concern {
 	position: absolute;
-	top:11%;
+	top:2%;
 }
 .idea--action--buttons div span{
     cursor: pointer;

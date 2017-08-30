@@ -65,8 +65,8 @@
 				<div class="col-sm-8 newsfeed--problem">
 				</div>
 			</div>
-			<div class="col-sm-12" style="position:relative;">
-				<div class="col-sm-8 col-sm-offset-4 newsfeed--proposal">
+			<div class="col-sm-12" style="position:relative;top: -15px;">
+				<div class="col-sm-11 col-sm-offset-1 newsfeed--proposal">
 					<br><br>
 				</div>
 			</div>
@@ -76,10 +76,10 @@
 		
         <div class="row newsfeed--footer" style="padding: 0 15px;">
 			<div class="col-sm-10 modal--info" style="padding-right: 0px; padding-left: 0px;z-index:1;">
-				<div class="col-sm-1 vote--on">
+				<div class="col-sm-1 vote--on" style="display:none;">
 					<b>VOTE <span class="glyphicon glyphicon-triangle-bottom"></span></b>
 				</div>
-				<div class="col-sm-8 newsfeed--support" style="padding-right:0;padding-left:30px;">
+				<div class="col-sm-8 newsfeed--support" style="padding-right:0;">
 					<div class="input--percent">
 						<label></label>
 					</div>
@@ -93,6 +93,21 @@
 				<div id="more--info--modal" hidden></div>
 			</div>
 
+		<div class="row newsfeed--share">
+            <div class="col-sm-6 newsfeed--share--icons">
+                <div class="col-sm-12" style="padding:0;">
+                    <img style="width:50px;"src="{{ url_for('static',filename='images/x-icon.png') }}" id="rejected" class="vote__idea--button">
+                    <img style="width:45px;height:45px;" src="{{ url_for('static',filename='images/check-icon.png') }}" id="supported" class="vote__idea--button">
+                    <img style="width:45px;height:47px;" src="{{ url_for('static',filename='images/checkmark.png') }}" id="support__plus--button" class="vote__idea--button">
+                    <img style="width:50px;"src="{{ url_for('static',filename='images/ignore-icon.png') }}" id="ignored" class="vote__idea--button">
+                </div>
+                <div class="col-sm-6 newsfeed--followers hidden" >
+                    <i class="fa fa-share-alt"></i>
+                    <p >Share with: followers</p>
+                </div>
+            </div>
+        </div>
+
         <div class="row newsfeed--persons">
 			<div class="col-sm-12">
 				<div class="col-sm-1" style="padding:0;">
@@ -103,7 +118,7 @@
 					</ul>
 				</div>
 			</div>
-			<div class="col-sm-12" style="margin-top: -10px;">
+			<div class="col-sm-12" style="margin-top: -12px;">
 				<div class="col-sm-1" style="padding:0;">
 					<img src="{{ url_for('static',filename='images/x-small.png') }}">
 				</div>
@@ -113,21 +128,6 @@
 				</div>
 			</div>
 		</div>
-
-        <div class="row newsfeed--share">
-            <div class="col-sm-12 newsfeed--share--icons">
-                <div class="col-sm-6" style="padding:0;">
-                    <img src="{{ url_for('static',filename='images/x-icon.png') }}" id="rejected" class="vote__idea--button">
-                    <img style="width: 65px;" src="{{ url_for('static',filename='images/check-icon.png') }}" id="supported" class="vote__idea--button">
-                    <img style="width: 62px;" src="{{ url_for('static',filename='images/checkmark.png') }}" id="support__plus--button" class="vote__idea--button">
-                    <img src="{{ url_for('static',filename='images/ignore-icon.png') }}" id="ignored" class="vote__idea--button">
-                </div>
-                <div class="col-sm-6 newsfeed--followers hidden" >
-                    <i class="fa fa-share-alt"></i>
-                    <p >Share with: followers</p>
-                </div>
-            </div>
-        </div>
 
 	</div>
 

@@ -115,6 +115,7 @@ function showContent(id){
   var volunter_percent = (list[id].volunteers_num * 100)/ list[id].volunteers_goal_num;
   if (list[id].volunteers_goal_num == "" || list[id].volunteers_goal_num == 0) {
     $('.newsfeed--progress2').hide();
+    $('#support__plus--button').hide();
   }
   $('.newsfeed--bar2').css('width',volunter_percent+'%');
   $('.newsfeed--goals p').empty().append(list[id].supporters_num+"/"+list[id].supporters_goal_num+" supporters<br>"+list[id].volunteers_num+"/"+list[id].volunteers_goal_num+" volunteers");
