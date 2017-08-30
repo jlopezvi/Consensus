@@ -182,7 +182,9 @@ function showIdeas(list, index){
 	code += '<div class="col-sm-6" style="padding:0;">';
 	code += '<img src="/static/images/x-icon.png" class="home--share--button" id="rejected">';
 	code += '<img style="width: 50px;" src="/static/images/check-icon.png" class="home--share--button" id="supported">';
-	code += '<img style="width: 50px;" src="/static/images/checkmark.png" class="home--share--button" id="supported-plus">';
+  if (list.volunteers_goal_num > 0) {
+    code += '<img style="width: 50px;" src="/static/images/checkmark.png" class="home--share--button" id="supported-plus">';
+  }
 	code += '</div><div class="col-sm-6 home--followers hidden"><i class="fa fa-share-alt"></i><p>Share with: followers</p></div></div></div></div>';
 	
 	if (list.duration[6] == 'o' || list.duration[6] == 'u' || list.duration[4] == 'o' || list.duration[4] == 'u') {

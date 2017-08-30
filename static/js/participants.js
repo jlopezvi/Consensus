@@ -75,7 +75,10 @@ $(document).ready( function() {
 					newIdea += '<div class="col-sm-12 idea--action--buttons"><div class="col-xs-2"><span class="glyphicon glyphicon-edit edit"></span></div>';
 	    			newIdea += '<div class="col-xs-2"><span class="glyphicon glyphicon-trash trash"></span></div></div>';
 				}
-				newIdea += '<img class="icons" src="'+url_new+'images/x-icon.png" id="rejected" hidden><img class="icons" style="width: 50px;" src="'+url_new+'images/check-icon.png" id="supported" hidden><img class="icons" style="width: 48px;" src="'+url_new+'images/checkmark.png" id="support__plus--button" hidden>';
+				newIdea += '<img class="icons" src="'+url_new+'images/x-icon.png" id="rejected" hidden><img class="icons" style="width: 50px;" src="'+url_new+'images/check-icon.png" id="supported" hidden>';
+				if (json.ideas_data[i].volunteers_goal_num > 0) {
+					newIdea += '<img class="icons" style="width: 48px;" src="'+url_new+'images/checkmark.png" id="support__plus--button" hidden>';
+				}
 			    newIdea += '</div><div class="col-sm-6 home--followers hidden" style="width: 100%;">';
 			    newIdea += '</div></div></div></div>';
 		    }
