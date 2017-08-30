@@ -190,7 +190,7 @@ $(document).ready( function() {
 		},
 		dataType: 'json',
 		success: function(json) {
-			//console.log(json);
+			console.log(json);
 	       	for (var i = 0; i < json.length; i++) {
 	       		if_following = '';
 	       		if(json[i].if_following)
@@ -203,7 +203,28 @@ $(document).ready( function() {
 	       		newParti += '<br><label>'+json[i].position+'</label> | <label>'+json[i].group+'</label></p>';
 	       		newParti += '<input type="hidden" value="'+json[i].email+'">';
 	       		newParti += '<input class="form-control invite__button" type="button" '+if_following+' id="btn-follow"></li>';
-	       		$('#id01').append(newParti);	
+
+	       		if (json[i].group == 'Governing Board') {
+	       			$('.governing').show();
+	       			$('.governing').append(newParti);
+	       		}	
+	       		if (json[i].group == 'Marketing') {
+	       			$('.marketing').show();
+	       			$('.marketing').append(newParti);
+	       		}	
+	       		if (json[i].group == 'Sales') {
+	       			$('.sales').show();
+	       			$('.sales').append(newParti);
+	       		}	
+	       		if (json[i].group == 'Technical') {
+	       			$('.technical').show();
+	       			$('.technical').append(newParti);
+	       		}	
+	       		if (json[i].group == 'Human Resources') {
+	       			$('.human').show();
+	       			$('.human').append(newParti);
+	       		}	
+
 	       	}
 	       	//console.log(newParti);
 		}
