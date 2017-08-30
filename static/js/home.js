@@ -137,8 +137,8 @@ function showIdeas(list, index){
 	  code += '<p>'+list.volunteers_num+'/'+list.volunteers_goal_num+' volunteers<br>';
 	}
 	code += '</div></div><div class="row home--proposals--body" style="background-image: url('+list.image_url+');">';
-	code += '<div class="col-sm-12"><div class="col-sm-8 newsfeed--problem">'+list.concern+'</div>';
-	code += '</div><div class="col-sm-12" style="margin-top: 180px;"><div class="col-sm-8 col-sm-offset-4 newsfeed--proposal">'+list.proposal+'</div></div>';
+	code += '<div class="col-sm-12"><div class="col-sm-11 newsfeed--problem">'+list.concern+'</div>';
+	code += '</div><div class="col-sm-12" style="margin-top: 120px;"><div class="col-sm-11 col-sm-offset-1 newsfeed--proposal">'+list.proposal+'</div></div>';
 	code += '</div><div class="row newsfeed--footer">';
 	code += '<div class="col-sm-12" style="padding-right: 0px; padding-left: 0px;">';
 	code += '<div class="col-sm-9 newsfeed--support" style="padding-right:0;padding-left:30px;">';
