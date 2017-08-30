@@ -117,11 +117,11 @@ function showIdeas(list, index){
   code += '<div class="col-xs-12 col-sm-6 home--content--proposal">';
   code += '<div class="row home--header">';
   code += '<input type="hidden" class="idea__id" value="'+list.proposal+'">';
-	code += '<div class="col-sm-2" style="padding-left: 0px;">';
+	code += '<div class="col-sm-1" style="padding-left: 0px;">';
 	code += '<div class="home--profile--picture pic--home"><img src="'+list.author_profilepic_url+'"></div></div>';
 	code += '<div class="col-sm-3 home--name"><a href="/participants/'+list.author_email+'">'+list.author_username+'</a>';
 	code += '<p><img style="width:20px;position:relative;top:-3px;" src="/static/images/clock-icon.png">&nbsp;'+list.duration+'</p></div>';
-	code += '<div class="col-sm-3 home--charge"><div class="progress home--progress">';
+	code += '<div class="col-sm-4 home--charge"><div class="progress home--progress">';
 	var support_percent = (list.supporters_num*100)/list.supporters_goal_num;
 	code += '<div class="progress-bar newsfeed--bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:'+support_percent+'%"></div></div>';
   if (list.volunteers_goal_num > 0) {
@@ -140,11 +140,24 @@ function showIdeas(list, index){
 	code += '<div class="col-sm-12"><div class="col-sm-8 newsfeed--problem">'+list.concern+'</div>';
 	code += '</div><div class="col-sm-12" style="margin-top: 180px;"><div class="col-sm-8 col-sm-offset-4 newsfeed--proposal">'+list.proposal+'</div></div>';
 	code += '</div><div class="row newsfeed--footer">';
-	code += '<div class="col-sm-12" style="padding-right: 0px; padding-left: 0px;"><div class="col-sm-1 redflag--img">';
-	code += '<img class="redflag" src="/static/images/redflag.png"></div><div class="col-sm-9 newsfeed--support" style="padding-right:0;padding-left:30px;">';
-	code += '<div class="input--percent"><label>	Support Rate: '+list.support_rate+'%</label></div>';
-	code += '</div>	<div class="col-sm-2 neewsfeed--moreinfo" style="float:right;"><input type="button" name="more-info" class="home--button">';
-	code += '</div><div id="more--info--modal" hidden><p><h4>  More information about the problem: </h4> '+list.moreinfo_concern+'</br></br><h4> More information about the proposal: </h4>'+list.moreinfo_proposal+'</p></div></div></div><div class="row newsfeed--persons"><div class="col-sm-12">';
+	code += '<div class="col-sm-12" style="padding-right: 0px; padding-left: 0px;">';
+	code += '<div class="col-sm-9 newsfeed--support" style="padding-right:0;padding-left:30px;">';
+	code += '<div class="input--percent"><label>	Support Rate: '+list.support_rate+'%</label></div></div>';
+	code += '<div class="col-sm-1 redflag--img"><img class="redflag" src="/static/images/redflag.png"></div>';
+	code += '<div class="col-sm-2 neewsfeed--moreinfo" style="float:right;"><input type="button" name="more-info" class="home--button">';
+	code += '</div><div id="more--info--modal" hidden><p><h4>  More information about the problem: </h4> '+list.moreinfo_concern+'</br></br><h4> More information about the proposal: </h4>'+list.moreinfo_proposal+'</p></div></div></div>';
+	
+  code += '<div class="row home--share"><div class="col-sm-8 home--share--icons">';
+  code += '<input type="hidden" class="index--idea" value="'+index+'">';
+	code += '<div class="col-sm-6" style="padding:0;">';
+	code += '<img src="/static/images/x-icon.png" class="home--share--button" id="rejected">';
+	code += '<img style="width: 50px;" src="/static/images/check-icon.png" class="home--share--button" id="supported">';
+  if (list.volunteers_goal_num > 0) {
+    code += '<img style="width: 50px;" src="/static/images/checkmark.png" class="home--share--button" id="supported-plus">';
+  }
+	code += '</div><div class="col-sm-6 home--followers hidden"><i class="fa fa-share-alt"></i><p>Share with: followers</p></div></div></div>';
+	
+	code += '<div class="row newsfeed--persons"><div class="col-sm-12">';
 	code += '<div class="col-sm-1" style="padding:0;"><img src="/static/images/check-small.png"></div>';
 	code += '<div class="col-sm-11 newsfeed--likes"><ul>';
 	if(list.supporters.length > 0){
@@ -177,15 +190,8 @@ function showIdeas(list, index){
   else if(list.rejectors.length == 0){
     code += '<a href="#" class="last--liked"><li>0 people</li></a>';
   }
-  code += '</ul></div></div></div><div class="row home--share"><div class="col-sm-8 home--share--icons">';
-  code += '<input type="hidden" class="index--idea" value="'+index+'"';
-	code += '<div class="col-sm-6" style="padding:0;">';
-	code += '<img src="/static/images/x-icon.png" class="home--share--button" id="rejected">';
-	code += '<img style="width: 50px;" src="/static/images/check-icon.png" class="home--share--button" id="supported">';
-  if (list.volunteers_goal_num > 0) {
-    code += '<img style="width: 50px;" src="/static/images/checkmark.png" class="home--share--button" id="supported-plus">';
-  }
-	code += '</div><div class="col-sm-6 home--followers hidden"><i class="fa fa-share-alt"></i><p>Share with: followers</p></div></div></div></div>';
+  code += '</ul></div></div></div>';
+	code += '</div>';
 	
 	if (list.duration[6] == 'o' || list.duration[6] == 'u' || list.duration[4] == 'o' || list.duration[4] == 'u') {
     $('#uno').show();

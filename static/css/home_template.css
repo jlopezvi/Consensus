@@ -1,0 +1,63 @@
+.home--name {
+    left: 40px;
+}
+.newsfeed--goals {
+    right: 0px;
+}
+.home--charge {
+    top: 8px;    
+}
+.home--proposals--body {
+    margin-top: 0%; 
+}
+.home--profile--picture {
+    margin-top: -15px;
+    left: 0px;
+}
+.home--proposals--body {
+    height: 353px;
+}
+.input--percent {
+    margin-left: 180px;
+}
+#more--info--modal {
+    width: 98%;
+}
+.newsfeed--footer .redflag--img img {
+    width: 12px;
+}
+.newsfeed--footer .redflag--img {
+    width: 30px;
+    margin-left: 0px;
+    z-index: 1;
+}
+.home--share {
+    top: -45px;
+    margin-top: 0px;
+    left: -10px;
+    margin-bottom: 0px;
+    position: relative;
+}
+.neewsfeed--moreinfo{
+    z-index: 1;
+}
+.newsfeed--persons div{
+    padding: 0px;
+}
+.newsfeed--persons > div:nth-child(2){
+    margin-top: -10px;
+}
+.newsfeed--persons {
+    top: -50px;
+}
+.newsfeed--likes ul {
+    padding-left: 20px;
+}
+.home--share--icons img {
+    width: 50px;
+}
+.home--share--icons img:nth-child(2),
+.home--share--icons img:nth-child(3){
+    width: 45px!important;
+    height: 45px;
+}
