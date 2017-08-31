@@ -135,8 +135,10 @@ function showIdeas(list, index){
 	code += '<p>'+list.supporters_num+'/'+list.supporters_goal_num+' supporters<br>';
 	if (list.volunteers_goal_num > 0) {
 	  code += '<p>'+list.volunteers_num+'/'+list.volunteers_goal_num+' volunteers<br>';
+	  code += '</div></div><div class="row home--proposals--body" style="background-image: url('+list.image_url+');">';
+	} else {
+	  code += '</div></div><div class="row home--proposals--body" style="margin-top: 5px;background-image: url('+list.image_url+');">';
 	}
-	code += '</div></div><div class="row home--proposals--body" style="background-image: url('+list.image_url+');">';
 	code += '<div class="col-sm-12"><div class="col-sm-11 newsfeed--problem">'+list.concern+'</div>';
 	code += '</div><div class="col-sm-12" style="margin-top: 120px;"><div class="col-sm-11 col-sm-offset-1 newsfeed--proposal">'+list.proposal+'</div></div>';
 	code += '</div><div class="row newsfeed--footer">';

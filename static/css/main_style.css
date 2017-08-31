@@ -293,12 +293,18 @@ body.modal-open {
 	padding: 2px;
 	font-size: 13px;
 	text-align: center;
-	margin-left: 5px;
+	margin-left: 10px;
 }
-.newsfeed--name{
-	padding: 10px;
-	font-size: 20px;
-	text-decoration: underline;
+.newsfeed--name {
+    padding: 0px;
+    font-size: 20px;
+    text-decoration: underline;
+    margin-left: 20px;
+    width: 18%;
+    top: 10px;
+}
+.newsfeed--name a{
+    margin: 0px;
 }
 .newsfeed--header{
 	font-family: lato_bold;
@@ -395,7 +401,7 @@ body.modal-open {
 	width: 35px;
 	text-align: center;
     margin-left: 10px;
-    margin-top: 5px;
+    margin-top: 18px;
 }
 .neewsfeed--moreinfo{
 	margin-left: 0px;
@@ -418,10 +424,9 @@ body.modal-open {
     padding: 3px;
     width: 52%;
     top: -32px;
-    margin-left: 210px;
+    margin-left: 200px;
     position: relative;
     height: 35px;
-    margin-left: 100px;
 }
 .newsfeed--likes {
 	padding-left: 0;
@@ -1110,7 +1115,6 @@ input.form-control.invite__button:focus {
 }
 .participant__name {
 	margin-left: -38px;
-	margin-top: -20px;
     line-height: 35px;
 }
 .participant__active--p, .participant__followers, .participant__following {

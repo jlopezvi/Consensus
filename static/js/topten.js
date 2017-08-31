@@ -12,14 +12,14 @@ $(document).ready( function() {
             for (var i = 0; i < data.data.length; i++) {                      
                 newTop += '<div class="col-sm-6 home--content--proposal" ><div class="row home--header">';
                 newTop += '<input type="hidden" class="idea__id" value="'+data.data[i].proposal+'">';
-                newTop += '<div class="col-sm-2" style="padding-left: 0px;margin-left: -15px;">';
-                newTop += '<div class="home--profile--picture"><img class="img-circle new--user--icon--login" src="'+data.data[i].author_profilepic_url+'"></div></div><div class="col-sm-1 home--name">';
+                newTop += '<div class="col-sm-1" style="padding-left: 0px;">';
+                newTop += '<div class="home--profile--picture"><img class="img-circle new--user--icon--login" src="'+data.data[i].author_profilepic_url+'"></div></div><div class="col-sm-3 home--name">';
                 if($('#host_email').val() == data.data[i].author_email)
-                    newTop += '<a href="/participants">'+data.data[i].author_username+'</a></div><div class="col-sm-3 newsfeed--duration">';
+                    newTop += '<a href="/participants">'+data.data[i].author_username+'</a>';
                 else
-                    newTop += '<a href="/participants/'+data.data[i].author_email+'">'+data.data[i].author_username+'</a></div><div class="col-sm-3 newsfeed--duration">';
+                newTop += '<a href="/participants/'+data.data[i].author_email+'">'+data.data[i].author_username+'</a>';
                 newTop += '<p><img style="width: 15px;position: relative;top: -3px;" src="'+url_new+'images/clock-icon.png">&nbsp;'+data.data[i].duration+'</p>';
-                newTop += '</div><div class="col-sm-3 home--charge"><div class="progress home--progress">';
+                newTop += '</div><div class="col-sm-4 home--charge"><div class="progress home--progress">';
                 var supporters_percent = data.data[i].supporters_num*100/data.data[i].supporters_goal_num;
                 newTop += '<div class="progress-bar newsfeed--bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:'+supporters_percent+'%;"></div></div>';
                 if(data.data[i].volunteers_goal_num >0)
@@ -28,22 +28,25 @@ $(document).ready( function() {
                     newTop += '<div>';
                 var volunteers_percent = data.data[i].volunteers_num*100/data.data[i].volunteers_goal_num;
                 newTop += '<div class="progress-bar newsfeed--bar2" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:'+volunteers_percent+'%;"></div></div></div>';
-                newTop += '<div class="col-sm-3 newsfeed--goals"><p>'+data.data[i].supporters_num+'/'+data.data[i].supporters_goal_num+' supporters';
-                if(data.data[i].volunteers_goal_num >0)
-                    newTop += '<br>'+data.data[i].volunteers_num+'/'+data.data[i].volunteers_goal_num+' volunteers';
-                newTop += '</p></div></div><div class="row home--proposals--body" style="background-image: url('+data.data[i].image_url+'); padding-top:47.40%;"><div class="col-sm-12 concern__div">';
-                newTop += '<div class="col-sm-8 newsfeed--problem">'+data.data[i].concern+'</div></div><div class="col-sm-12" style="position:relative;">';
-                newTop += '<div class="col-sm-8 col-sm-offset-4 newsfeed--proposal">'+data.data[i].proposal+'</div></div></div> <input type="hidden" value="'+data.data[i].idea_id+'" id="idea__id">';
+                newTop += '<div class="col-sm-3 newsfeed--goals newsfeed--goals3"><p>'+data.data[i].supporters_num+'/'+data.data[i].supporters_goal_num+' supporters<br>';
+                if(data.data[i].volunteers_goal_num >0){
+                    newTop += data.data[i].volunteers_num+'/'+data.data[i].volunteers_goal_num+' volunteers<br>';
+                    newTop += '</p></div></div><div class="row home--proposals--body" style="background-image: url('+data.data[i].image_url+'); padding-top:47.40%;"><div class="col-sm-12 concern__div">';
+                } else {
+                    newTop += '</p></div></div><div class="row home--proposals--body" style="margin-top: 8px;background-image: url('+data.data[i].image_url+'); padding-top:47.40%;"><div class="col-sm-12 concern__div">';
+                }
+                newTop += '<div class="col-sm-11 newsfeed--problem">'+data.data[i].concern+'</div></div><div class="col-sm-12" style="position:relative;">';
+                newTop += '<div class="col-sm-11 col-sm-offset-1 newsfeed--proposal">'+data.data[i].proposal+'</div></div></div> <input type="hidden" value="'+data.data[i].idea_id+'" id="idea__id">';
                 newTop += '<div class="row newsfeed--footer"><div class="col-sm-12" style="padding-right: 0px; padding-left: 0px;">';
-                newTop += '<div class="col-sm-9 newsfeed--support" style="padding-right:0;padding-left:30px;">';
+                newTop += '<div class="col-sm-8 newsfeed--support" style="padding-right:0;padding-left:30px;">';
                 var rate = ((data.data[i].supporters_num) * 100 / (data.data[i].supporters_num + data.data[i].rejectors.length));
                 if (data.data[i].supporters_num + data.data[i].rejectors.length == 0) {
                     rate = 0
                 }
                 newTop += '<input type="text" value="'+data.data[i].support_rate+'" id="percent" hidden><div class="input--percent">';
-                newTop += '<label> Support Rate: '+data.data[i].support_rate+'% </label></div></div><div class="col-sm-4 neewsfeed--moreinfo" style="float:right;">';
-                newTop += '<input type="hidden" class="id" value="'+data.data[i].proposal+'"><img class="redflag" src="'+url_new+'images/redflag.png"><input type="button" name="more-info" class="home--button"></div><div id="more--info--modal" hidden><p><h4>  More information about the problem: </h4> '+data.data[i].moreinfo_concern+'</br></br><h4> More information about the proposal: </h4>'+data.data[i].moreinfo_proposal+'</p></div></div></div>';
-                newTop += '<div class="row newsfeed--persons"><div class="col-sm-12"><div class="col-sm-1" style="padding:0;">';
+                newTop += '<label> Support Rate: '+data.data[i].support_rate+'% </label></div></div><div class="col-sm-4 neewsfeed--moreinfo" style="float:right;padding: 0px;">';
+                newTop += '<input type="hidden" class="id" value="'+data.data[i].proposal+'"><img class="redflag redflag2" src="'+url_new+'images/redflag.png"><input type="button" name="more-info" class="home--button" style="float: right;"></div><div id="more--info--modal" hidden><p><h4>  More information about the problem: </h4> '+data.data[i].moreinfo_concern+'</br></br><h4> More information about the proposal: </h4>'+data.data[i].moreinfo_proposal+'</p></div></div></div>';
+                newTop += '<div class="row newsfeed--persons newsfeed--persons2"><div class="col-sm-12"><div class="col-sm-1" style="padding:0;">';
                 newTop += '<img src="'+url_new+'images/check-small.png"></div><div class="col-sm-11 newsfeed--likes">';
                 newTop += '<ul class="ul--liked"><a href="#" class="last--liked"><li>'+data.data[i].supporters_num+' people</li></a></ul></div></div>';
                 newTop += '<div class="col-sm-12"><div class="col-sm-1" style="padding:0;"><img src="'+url_new+'images/x-small.png">';

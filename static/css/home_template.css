@@ -1,11 +1,15 @@
 .home--name {
     left: 40px;
 }
+.home--name p{
+    font-size: 13px;
+}
 .newsfeed--goals {
     right: 0px;
 }
 .home--charge {
-    top: 8px;    
+    top: 8px; 
+    margin-left: -5px;
 }
 .home--proposals--body {
     margin-top: 0%; 
@@ -18,13 +22,14 @@
     height: 353px;
 }
 .input--percent {
-    margin-left: 180px;
+    margin-left: 160px;
 }
 #more--info--modal {
     width: 98%;
 }
 .newsfeed--footer .redflag--img img {
     width: 12px;
+    margin-top: -22px;
 }
 .newsfeed--footer .redflag--img {
     width: 30px;
@@ -51,7 +56,7 @@
     top: -50px;
 }
 .newsfeed--likes ul {
-    padding-left: 20px;
+    padding-left: 0px;
 }
 .home--share--icons img {
     width: 50px;
@@ -63,4 +68,49 @@
 }
 .home--voted {
     margin-bottom: 0%;
+}
+.home--button {
+    margin-left: -20px!important;
+}
+
+.home--charge2{
+    top: 0px;
+}
+.newsfeed--goals2,
+.newsfeed--goals3{
+    margin-top: -7px;
+    right: -45px;
+}
+.newsfeed--goals3{
+    margin-top: 0px; 
+}
+.home--proposals--body2 {
+    height: 360px;
+}
+.home--share2 {
+    top: -100px;
+}
+.newsfeed--persons2 {
+    top: 0px;
+}
+.newsfeed--problem, .newsfeed--proposal {
+    margin-top: 0px;
+}
+.icons2 {
+    width: 45px!important;
+    height: 45px!important;
+    top: -25px;
+    position: relative;
+}
+#rejected {
+    width: 50px!important;
+    height: 50px!important;
+}
+.redflag2{
+    top: 20px;
+    margin-left: 50px;
+    position: relative;    
+}
+.neewsfeed--moreinfo2{
+    padding: 0px;
 }
