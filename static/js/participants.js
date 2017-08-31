@@ -804,16 +804,19 @@ function seaarch_participant(search){
 		url: url[0] + "//" + url[2] + '/get_participant_data_by_email_unrestricted/'+search,
 		type: 'GET',
 		success: function (json) {
-			//console.log(json);
+			console.log(json);
 			if(json.result == 'OK'){
 				$('.spinner').show();
 				var newAppend = '';
             	newAppend += '<li class="participants__li__private">';
             	newAppend += '<img class="new--user--icon--login" src="'+json.participant_data.profilepic_url+'"><p>';
-            	newAppend += '<a href="#">'+json.participant_data.username+'</a>'; 
+            	newAppend += '<a href="#">'+json.participant_data.fullname+'</a>'; 
             	newAppend += '<br>'+json.participant_data.fullname+'</p>';
             	newAppend += '<input type="hidden" value="'+json.participant_data.id+'">';
-                newAppend += '<input class="form-control invite__button" type="button" value="Follow" id="btn-follow"></li>';
+            	if($('#host_email').val() != search)
+                	newAppend += '<input class="form-control invite__button" type="button" value="Follow" id="btn-follow"></li>';
+                else
+                	newAppend += '<input class="form-control invite__button" type="button" value="It´s you" disabled></li>';
                 setTimeout(function(){
                 	$('.spinner').hide();
 					$('.addproposal--step__div ul').find('li.participants__li__private').remove();
