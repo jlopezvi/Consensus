@@ -150,3 +150,24 @@
 .idea--action--buttons div span{
     font-size: 25px;
 }
+
+#loader--general{
+    position: fixed;
+    z-index: 999;
+    overflow: show;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    display: none;
+    right: 0;
+    background-color: rgba(204, 204, 204, 0.46);
+}
+#loader--general .spinner{
+    margin: 20% auto;
+    width: 40px;
+    height: 40px;
+    position: relative;
+    text-align: center;
+    -webkit-animation: sk-rotate 2.0s infinite linear;
+    animation: sk-rotate 2.0s infinite linear;
+}

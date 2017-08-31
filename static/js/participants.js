@@ -17,112 +17,117 @@ $(document).ready( function() {
 	}
 	
 	//GET ALL INFORMATION OF ALL IDEAS CREATED BY PARTICIPANT
-	$.ajax({
-		url: url[0] + "//" + url[2] + '/get_ideas_data_created_by_participant/'+current_email,
-		type: 'GET',
-		success: function (json) {	
-			
-			//console.log(json);
-			var newIdea = '';
-			var url_new = url[0] +'//'+ url[2] +'/static/';
-			for (var i = 0; i < json.ideas_data.length; i++) {
-				newIdea += '<div class="col-sm-12 "><div class="row home--header">';
-				newIdea += '<input type="hidden" class="idea__id" value="'+json.ideas_data[i].proposal+'">';
-				newIdea += '<div class="col-sm-1" style="padding-left: 0px;">';
-				newIdea += '<div class="home--profile--picture"><img class="img-circle new--user--icon--login" id="img-modify" src="'+json.ideas_data[i].author_profilepic_url+'"></div></div><div class="col-sm-3 home--name">';
-				newIdea += '<a href="#" id="name--modify">'+json.ideas_data[i].author_username+'</a>';
-				newIdea += '</div><div class="col-sm-3 newsfeed--duration"><p><img style="width: 15px;position: relative;top: -3px;" src="'+url_new+'images/clock-icon.png">&nbsp;';
-				newIdea += '<p class="duration--info">&nbsp;'+json.ideas_data[i].duration+'</p></p></div>';
-				newIdea += '<div class="col-sm-3 home--charge"><div class="progress home--progress">';
-				var supporters_percent = json.ideas_data[i].supporters_num*100/json.ideas_data[i].supporters_goal_num;
-				newIdea += '<div class="progress-bar newsfeed--bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:'+supporters_percent+'%;"></div></div>';
-				if (json.ideas_data[i].volunteers_goal_num > 0) {
-					newIdea += '<div class="progress home--progress2">';
-				}else{
-					newIdea += '<div>';
-				}
-				var volunteers_percent = json.ideas_data[i].volunteers_num*100/json.ideas_data[i].volunteers_goal_num;
-				newIdea += '<div class="progress-bar newsfeed--bar2" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:'+volunteers_percent+'%;"></div></div></div>';
-				newIdea += '<div class="col-sm-3 newsfeed--goals newsfeed--goals2"><p>'+json.ideas_data[i].supporters_num+'/'+json.ideas_data[i].supporters_goal_num+' supporters';
-				if (json.ideas_data[i].volunteers_goal_num > 0) {
-					newIdea += '<br>'+json.ideas_data[i].volunteers_num+'/'+json.ideas_data[i].volunteers_goal_num+' volunteers';
-				}
-				newIdea += '</p></div></div><div class="row home--proposals--body home--proposals--body2" style="background-image: url('+json.ideas_data[i].image_url+'); padding-top:47.40%;"><div class="col-sm-12 concern__div">';
-				newIdea += '<div class="col-sm-11 newsfeed--problem">'+json.ideas_data[i].concern+'</div></div><div class="col-sm-12">';
-				newIdea += '<div class="col-sm-11 col-sm-offset-1 newsfeed--proposal">'+json.ideas_data[i].proposal+'</div></div></div> <input type="hidden" value="'+json.ideas_data[i].idea_id+'" id="idea__id">';
-				newIdea += '<div class="row newsfeed--footer"><div class="col-sm-12" style="padding-right: 0px; padding-left: 0px;">';
-				newIdea += '<div class="col-sm-9 newsfeed--support" style="padding-right:0;padding-left:30px;">';
-				var rate = ((json.ideas_data[i].supporters_num) * 100 / (json.ideas_data[i].supporters_num + json.ideas_data[i].rejectors.length));
-				if (json.ideas_data[i].supporters_num + json.ideas_data[i].rejectors.length == 0) {
-					rate = 0
-				}
-				newIdea += '<input type="text" value="'+json.ideas_data[i].support_rate+'" id="percent" hidden><div class="input--percent">';
-				newIdea += '<label> Support Rate: '+json.ideas_data[i].support_rate+'% </label></div></div>';
-				newIdea += '<div class="col-sm-1 redflag--img"><input type="hidden" class="id" value="'+json.ideas_data[i].proposal+'"><img class="redflag" src="'+url_new+'images/redflag.png"></div>';
-				newIdea += '<div class="col-sm-2 neewsfeed--moreinfo" style="float:right;">';
-				newIdea += '<input type="button" name="more-info" class="home--button"></div><div id="more--info--modal" hidden><p><h4>  More information about the problem: </h4> '+json.ideas_data[i].moreinfo_concern+'</br></br><h4> More information about the proposal: </h4>'+json.ideas_data[i].moreinfo_proposal+'</p></div></div></div>';
-				newIdea += '<div class="row newsfeed--persons newsfeed--persons2"><div class="col-sm-12"><div class="col-sm-1" style="padding:0;">';
-				newIdea += '<img src="'+url_new+'images/check-small.png"></div><div class="col-sm-11 newsfeed--likes">';
-				newIdea += '<ul class="ul--liked"><a href="#" class="last--liked"><li>'+json.ideas_data[i].supporters_num+' people</li></a></ul></div></div>';
-				newIdea += '<div class="col-sm-12"><div class="col-sm-1" style="padding:0;"><img src="'+url_new+'images/x-small.png">';
-				newIdea += '</div><div class="col-sm-11 newsfeed--likes"><ul class="ul--disliked"><a href="#" class="last--liked"><li>'+json.ideas_data[i].rejectors.length+' people</li></a></ul></div></div></div>';
-				newIdea += '<div class="row home--share home--share2"><div class="col-sm-12 home--share--icons">';
-				newIdea += '<input type="hidden" class="supporters--input" value="'+json.ideas_data[i].supporters_num+'">';
-				newIdea += '<input type="hidden" class="volunteers--input" value="'+json.ideas_data[i].volunteers_num+'">';
-				newIdea += '<input type="hidden" class="rejectors--input" value="'+json.ideas_data[i].rejectors.length+'">';
-				newIdea += '<input type="hidden" class="supporters--goal--input" value="'+json.ideas_data[i].supporters_goal_num+'">';
-				newIdea += '<input type="hidden" class="volunteers--goal--input" value="'+json.ideas_data[i].volunteers_goal_num+'">';
-				newIdea += '<div class="col-sm-6" style="padding:0;width: 100%;"><input type="hidden" class="id" value="'+json.ideas_data[i].proposal+'">';
-				//MODIFY / DELETE IDEA, ONLY FOR CURRENT LOGGED USER
-				if(url.length == 4){
-					newIdea += '<div class="col-sm-12 idea--action--buttons"><div class="col-xs-1"><span class="glyphicon glyphicon-edit edit"></span></div>';
-	    			newIdea += '<div class="col-xs-1"><span class="glyphicon glyphicon-trash trash"></span></div></div>';
-				}
-				newIdea += '<img class="icons icons2" src="'+url_new+'images/x-icon.png" id="rejected" hidden><img class="icons icons2" style="width: 50px;" src="'+url_new+'images/check-icon.png" id="supported" hidden>';
-				if (json.ideas_data[i].volunteers_goal_num > 0) {
-					newIdea += '<img class="icons icons2" style="width: 48px;" src="'+url_new+'images/checkmark.png" id="support__plus--button" hidden>';
-				}
-			    newIdea += '</div><div class="col-sm-6 home--followers hidden" style="width: 100%;">';
-			    newIdea += '</div></div></div></div>';
-		    }
-		    if (json.ifallowed == false) {
-		    	$('#newIdea').append('<center><h3>User private</h3></center> ');  	
-		    }else if($('#participant_email').val() != 'None' && json.ideas_data.length == 0){
-		    	$('#newIdea').append('<center><h3>this user has no active publications</h3></center> ');
-		    }else if (json.ideas_data.length != 0) {
-		    	$('#newIdea').append(newIdea);
-		    }else{
-		    	$('#newIdea').append('<center><h3>You have no active publications</h3></center> ');
-		    }
-		    if($('#participant_email').val() != 'None' ){
-		    	$('.icons').show();
-		    	$('.home--followers').append('<i class="fa fa-share-alt"></i><p>Share with: followers</p>');
-		    }
-			
-			var left = 1;
-  			$(document).on('click', '.neewsfeed--moreinfo', function(){
-          		$(this).next('div').slideToggle('slow');
-   			});	
-   			
-		}	
-	});
-	
+	function getIdeasCreatedByParticipant(){
+		$.ajax({
+			url: url[0] + "//" + url[2] + '/get_ideas_data_created_by_participant/'+current_email,
+			type: 'GET',
+			success: function (json) {	
+				
+				//console.log(json);
+				var newIdea = '';
+				var url_new = url[0] +'//'+ url[2] +'/static/';
+				for (var i = 0; i < json.ideas_data.length; i++) {
+					newIdea += '<div class="col-sm-12 "><div class="row home--header">';
+					newIdea += '<input type="hidden" class="idea__id" value="'+json.ideas_data[i].proposal+'">';
+					newIdea += '<div class="col-sm-1" style="padding-left: 0px;">';
+					newIdea += '<div class="home--profile--picture"><img class="img-circle new--user--icon--login" id="img-modify" src="'+json.ideas_data[i].author_profilepic_url+'"></div></div><div class="col-sm-3 home--name">';
+					newIdea += '<a href="#" id="name--modify">'+json.ideas_data[i].author_username+'</a>';
+					newIdea += '</div><div class="col-sm-3 newsfeed--duration"><p><img style="width: 15px;position: relative;top: -3px;" src="'+url_new+'images/clock-icon.png">&nbsp;';
+					newIdea += '<p class="duration--info">&nbsp;'+json.ideas_data[i].duration+'</p></p></div>';
+					newIdea += '<div class="col-sm-3 home--charge"><div class="progress home--progress">';
+					var supporters_percent = json.ideas_data[i].supporters_num*100/json.ideas_data[i].supporters_goal_num;
+					newIdea += '<div class="progress-bar newsfeed--bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:'+supporters_percent+'%;"></div></div>';
+					if (json.ideas_data[i].volunteers_goal_num > 0) {
+						newIdea += '<div class="progress home--progress2">';
+					}else{
+						newIdea += '<div>';
+					}
+					var volunteers_percent = json.ideas_data[i].volunteers_num*100/json.ideas_data[i].volunteers_goal_num;
+					newIdea += '<div class="progress-bar newsfeed--bar2" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:'+volunteers_percent+'%;"></div></div></div>';
+					newIdea += '<div class="col-sm-3 newsfeed--goals newsfeed--goals2"><p>'+json.ideas_data[i].supporters_num+'/'+json.ideas_data[i].supporters_goal_num+' supporters';
+					if (json.ideas_data[i].volunteers_goal_num > 0) {
+						newIdea += '<br>'+json.ideas_data[i].volunteers_num+'/'+json.ideas_data[i].volunteers_goal_num+' volunteers';
+					}
+					newIdea += '</p></div></div><div class="row home--proposals--body home--proposals--body2" style="background-image: url('+json.ideas_data[i].image_url+'); padding-top:47.40%;"><div class="col-sm-12 concern__div">';
+					newIdea += '<div class="col-sm-11 newsfeed--problem">'+json.ideas_data[i].concern+'</div></div><div class="col-sm-12">';
+					newIdea += '<div class="col-sm-11 col-sm-offset-1 newsfeed--proposal">'+json.ideas_data[i].proposal+'</div></div></div> <input type="hidden" value="'+json.ideas_data[i].idea_id+'" id="idea__id">';
+					newIdea += '<div class="row newsfeed--footer"><div class="col-sm-12" style="padding-right: 0px; padding-left: 0px;">';
+					newIdea += '<div class="col-sm-9 newsfeed--support" style="padding-right:0;padding-left:30px;">';
+					var rate = ((json.ideas_data[i].supporters_num) * 100 / (json.ideas_data[i].supporters_num + json.ideas_data[i].rejectors.length));
+					if (json.ideas_data[i].supporters_num + json.ideas_data[i].rejectors.length == 0) {
+						rate = 0
+					}
+					newIdea += '<input type="text" value="'+json.ideas_data[i].support_rate+'" id="percent" hidden><div class="input--percent">';
+					newIdea += '<label> Support Rate: '+json.ideas_data[i].support_rate+'% </label></div></div>';
+					newIdea += '<div class="col-sm-1 redflag--img"><input type="hidden" class="id" value="'+json.ideas_data[i].proposal+'"><img class="redflag" src="'+url_new+'images/redflag.png"></div>';
+					newIdea += '<div class="col-sm-2 neewsfeed--moreinfo" style="float:right;">';
+					newIdea += '<input type="button" name="more-info" class="home--button"></div><div id="more--info--modal" hidden><p><h4>  More information about the problem: </h4> '+json.ideas_data[i].moreinfo_concern+'</br></br><h4> More information about the proposal: </h4>'+json.ideas_data[i].moreinfo_proposal+'</p></div></div></div>';
+					newIdea += '<div class="row newsfeed--persons newsfeed--persons2"><div class="col-sm-12"><div class="col-sm-1" style="padding:0;">';
+					newIdea += '<img src="'+url_new+'images/check-small.png"></div><div class="col-sm-11 newsfeed--likes">';
+					newIdea += '<ul class="ul--liked"><a href="#" class="last--liked"><li>'+json.ideas_data[i].supporters_num+' people</li></a></ul></div></div>';
+					newIdea += '<div class="col-sm-12"><div class="col-sm-1" style="padding:0;"><img src="'+url_new+'images/x-small.png">';
+					newIdea += '</div><div class="col-sm-11 newsfeed--likes"><ul class="ul--disliked"><a href="#" class="last--liked"><li>'+json.ideas_data[i].rejectors.length+' people</li></a></ul></div></div></div>';
+					newIdea += '<div class="row home--share home--share2"><div class="col-sm-12 home--share--icons">';
+					newIdea += '<input type="hidden" class="supporters--input" value="'+json.ideas_data[i].supporters_num+'">';
+					newIdea += '<input type="hidden" class="volunteers--input" value="'+json.ideas_data[i].volunteers_num+'">';
+					newIdea += '<input type="hidden" class="rejectors--input" value="'+json.ideas_data[i].rejectors.length+'">';
+					newIdea += '<input type="hidden" class="supporters--goal--input" value="'+json.ideas_data[i].supporters_goal_num+'">';
+					newIdea += '<input type="hidden" class="volunteers--goal--input" value="'+json.ideas_data[i].volunteers_goal_num+'">';
+					newIdea += '<div class="col-sm-6" style="padding:0;width: 100%;"><input type="hidden" class="id" value="'+json.ideas_data[i].proposal+'">';
+					//MODIFY / DELETE IDEA, ONLY FOR CURRENT LOGGED USER
+					if(url.length == 4){
+						newIdea += '<div class="col-sm-12 idea--action--buttons"><div class="col-xs-1"><span class="glyphicon glyphicon-edit edit"></span></div>';
+		    			newIdea += '<div class="col-xs-1"><span class="glyphicon glyphicon-trash trash"></span></div></div>';
+					}
+					newIdea += '<img class="icons icons2" src="'+url_new+'images/x-icon.png" id="rejected" hidden><img class="icons icons2" style="width: 50px;" src="'+url_new+'images/check-icon.png" id="supported" hidden>';
+					if (json.ideas_data[i].volunteers_goal_num > 0) {
+						newIdea += '<img class="icons icons2" style="width: 48px;" src="'+url_new+'images/checkmark.png" id="support__plus--button" hidden>';
+					}
+				    newIdea += '</div><div class="col-sm-6 home--followers hidden" style="width: 100%;">';
+				    newIdea += '</div></div></div></div>';
+			    }
+			    if (json.ifallowed == false) {
+			    	$('#newIdea').append('<center><h3>User private</h3></center> ');  	
+			    }else if($('#participant_email').val() != 'None' && json.ideas_data.length == 0){
+			    	$('#newIdea').append('<center><h3>this user has no active publications</h3></center> ');
+			    }else if (json.ideas_data.length != 0) {
+			    	$('#newIdea').append(newIdea);
+			    }else{
+			    	$('#newIdea').append('<center><h3>You have no active publications</h3></center> ');
+			    }
+			    if($('#participant_email').val() != 'None' ){
+			    	$('.icons').show();
+			    	$('.home--followers').append('<i class="fa fa-share-alt"></i><p>Share with: followers</p>');
+			    }
+				
+				var left = 1;
+	  			$(document).on('click', '.neewsfeed--moreinfo', function(){
+	          		$(this).next('div').slideToggle('slow');
+	   			});	
+	   			
+			}	
+		});
+	}
+	getIdeasCreatedByParticipant();
 
 	//GET ALL INFORMATION OF CURRENT LOGGED USER OR SEARCHED
-	$.ajax({
-		url: url[0] + "//" + url[2] + '/get_participant_data_by_email_unrestricted/'+current_email,
-		type: 'GET',
-		success: function (json) {
-			//console.log(json);
-			$('.profile--picture img').attr('src', json.participant_data.profilepic_url);
-			$('.participant__name a').append(json.participant_data.username);
-			$('.participant__name label').append(json.participant_data.fullname);
-			$('.participant__active--p').children().first().append(json.participant_data.ideas_num);
-			$('.participant__following').children().first().append(json.participant_data.followings_num);
-			$('.participant__followers').children().first().append(json.participant_data.followers_num);
-		}	
-	});
-
+	function getCurrentUserInfo(){
+		$.ajax({
+			url: url[0] + "//" + url[2] + '/get_participant_data_by_email_unrestricted/'+current_email,
+			type: 'GET',
+			success: function (json) {
+				//console.log(json);
+				$('.profile--picture img').attr('src', json.participant_data.profilepic_url);
+				$('.participant__name a').empty().append(json.participant_data.username);
+				$('.participant__name label').empty().append(json.participant_data.fullname);
+				$('.participant__active--p').children().first().empty().append(json.participant_data.ideas_num);
+				$('.participant__following').children().first().empty().append(json.participant_data.followings_num);
+				$('.participant__followers').children().first().empty().append(json.participant_data.followers_num);
+			}	
+		});
+	}
+	getCurrentUserInfo();
+	
 	//GET ALL FOLLOWERS OF CURRENT LOGGED USER OR SEARCHED
 	$.ajax({
 		url: url[0] + "//" + url[2] + '/get_participant_followers_info/'+current_email,
@@ -358,7 +363,7 @@ $(document).ready( function() {
 		},
 		dataType: 'json',
 		success: function (json) {
-			//console.log(json.data.fullname);
+			console.log(json.data);
 			$('#p_fullname').val(''+json.data.fullname+'');
 			$('#p_username').val(''+json.data.username+'');
 			$('#p_email').val(''+json.data.email+'');
@@ -367,28 +372,29 @@ $(document).ready( function() {
 			$('#p_group').val(''+json.data.group+'');
 			$('#cropme_profile_edit').append('<img src='+json.data.profilepic_url+'>');
 			img_validator = json.data.profilepic_url;
+			if(json.data.ifpublicprofile)
+				$('#Public--profile').prop('checked', true);
+			if(json.data.ifrejectingproposalsvisible)
+				$('#Rejecting--proposals--visible').prop('checked', true);
+			if(json.data.ifsupportingproposalsvisible)
+				$('#Supporting--proposals--visible').prop('checked', true);
 		}					
 				
 	});
 
     $(document).on('click', '#modify--user', function(){
-      	if($('#Public--profile').is(":checked")){
-      		optionpro = true
-      	}else{
-      		optionpro = false
-      	}
-
-      	if($('#Supporting--proposals--visible').is(":checked")){
-      		optionSup = true
-      	}else{
-      		optionSup = false
-      	}
-
-      	if($('#Rejecting--proposals--visible').is(":checked")){
-      		optionRej = true
-      	}else{
-      		optionRej = false
-      	}
+    	
+      	optionpro = false;
+      	if($('#Public--profile').is(":checked"))
+      		optionpro = true;
+      		
+		optionSup = false;
+      	if($('#Supporting--proposals--visible').is(":checked"))
+      		optionSup = true;
+      		
+		optionRej = false;
+      	if($('#Rejecting--proposals--visible').is(":checked"))
+      		optionRej = true;
       	
       	var newdata = {
       		'fullname' : $('#p_fullname').val(),
@@ -405,6 +411,7 @@ $(document).ready( function() {
       		newdata['profilepic'] = $('#cropme_profile_edit img').attr('src');
     	}
     	if ($('#p_email').val() == $('#p_confirm-e').val()) {
+	      	$('#loader--general').show();
     		$.ajax({
 		      url: url[0] + "//" + url[2] + '/modify_user_data/'+current_email,
 		      type: 'PUT',
@@ -415,7 +422,13 @@ $(document).ready( function() {
 		      dataType: 'json',
 		      success: function (json) {
 		      	$('.close').click();
-		        $('#modify-user').modal('toggle');
+		      	setTimeout(function(){
+			        getCurrentUserInfo();
+			        $('.participant__newsfeed').empty();
+			        getIdeasCreatedByParticipant();
+			        $('#loader--general').hide();
+			        $('#modify-user').modal('toggle');
+		      	}, 10000);
 		        /*
 		        if($('#cropme_profile_edit img').attr('src') != img_validator){
 		        	$('.participant__profile--pic div img').prop('src',newdata['profilepic']);
@@ -470,8 +483,7 @@ $(document).ready( function() {
 
     });
 
-
-    $(document).on('click', '#accept_modify', function(){
+    $(document).on('click', '#accept_modify_', function(){
     	setTimeout(function(){
 	    	$.ajax({
 				url: url[0] + "//" + url[2] + '/get_participant_data_by_email_unrestricted/'+current_email,
