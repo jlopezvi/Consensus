@@ -1,15 +1,42 @@
+.home--proposals--body{
+    position: relative;
+}
+.home--proposals--body > div:nth-child(1){
+    margin-top: 12px;
+}
+.home--proposals--body > div:nth-child(2){
+    position: absolute;
+    top: 220px;
+}
+.select--options img#rejected{
+    width: 30px!important;
+    height: 30px!important;
+}
 .home--name {
     left: 40px;
+    top: 15px;
+}
+.newsfeed--duration{
+    top: 15px;
+    left: 15px;
+    padding: 0;
+    margin: 0px;
+    width: 10%;
+}
+.newsfeed--duration p{
+    margin: 0 0 0px;
 }
 .home--name p{
     font-size: 13px;
 }
 .newsfeed--goals {
     right: 0px;
+    top: 2px;
 }
 .home--charge {
     top: 8px; 
-    margin-left: -5px;
+    left: 30px;
+    margin-left: -10px;
 }
 .home--proposals--body {
     margin-top: 0%; 
@@ -58,6 +85,9 @@
 .newsfeed--likes ul {
     padding-left: 0px;
 }
+.newsfeed--likes ul a li{
+    margin-left: 40px;
+}
 .home--share--icons img {
     width: 50px;
 }
@@ -91,7 +121,7 @@
     top: -100px;
 }
 .newsfeed--persons2 {
-    top: 0px;
+    top: -10px;
 }
 .newsfeed--problem, .newsfeed--proposal {
     margin-top: 0px;
@@ -113,4 +143,10 @@
 }
 .neewsfeed--moreinfo2{
     padding: 0px;
+}
+.concern__div {
+    top: 0px; 
+}
+.idea--action--buttons div span{
+    font-size: 25px;
 }
