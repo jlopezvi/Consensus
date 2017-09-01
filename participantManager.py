@@ -414,20 +414,17 @@ def _if_removed_following_contact_to_user(followingcontact_email, user_email) :
     return False
 
 
-
 # <Used by /get_participant_data_by_email_unrestricted>
 def _get_participant_data_by_email(participant_email):
     from ideaManager import _get_ideas_created_by_participant
     participant = _get_participant_node(participant_email)
     participant_data= {}
-    profilepic_url = participant['profilepic_url']
-    username = participant['username']
-    fullname = participant['fullname']
     followers_num = len(_get_participant_followers(participant_email))
     followings_num = len(_get_participant_followings(participant_email))
     ideas_num = len(_get_ideas_created_by_participant(participant_email)['ideas_indices'])
-    participant_data.update({'id': participant_email,'profilepic_url': profilepic_url,
-                             'username': username, 'fullname': fullname,
+    participant_data.update({'id': participant_email,'profilepic_url': participant['profilepic_url'],
+                             'username': participant['username'], 'fullname': participant['fullname'],
+                             'position': participant['position'], 'group': participant['group'],
                              'ideas_num': ideas_num,
                              'followers_num': followers_num,
                              'followings_num': followings_num})

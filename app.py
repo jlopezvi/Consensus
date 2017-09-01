@@ -285,6 +285,8 @@ def get_participant_data(participant_email, user_email_DEBUG=None):
 #            'profilepic_url': 'static/.../pic.jpg',
 #            'username': 'John',
 #            'fullname': 'Juan J. Lopez Villarejo',
+#            'position': 'assistant'
+#            'group': 'Marketing'
 #            'ideas_num': 5,
 #            'followers_num': 5,
 #            'followings_num': 2
