@@ -4,6 +4,24 @@
 <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/home_template.css') }}">
 <div class="row home--content--logged">
 	
+	<div class="modal fade" id="delete-idea" role="dialog">
+            <div class="modal-dialog modal-sm" style="margin-top:100px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <center><h4 class="modal-title">Delete Idea</h4></center>
+                </div>
+                <div class="modal-body">
+                    <h4>Sure You want to delete this idea?</h4>
+                </div>
+                <div class="modal-footer" style="height:40px;">
+                <button type="button" id="delete_idea">Accept</button>
+                <input hidden>
+                <button type="button" class="cancel--modal" data-dismiss="modal">Close</button>
+            </div>
+            </div>
+        </div>
+    </div>
 	
 	<div class="spinner" style="right:50%;top:25%;position:absolute;">
         <div class="dot1"></div>

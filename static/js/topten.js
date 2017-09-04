@@ -7,7 +7,7 @@ $(document).ready( function() {
         url: url[0] + "//" + url[2] + '/get_topten_ideas',
         method: 'GET',
         success: function(data){
-            console.log(data);
+            //console.log(data);
             var newTop = '';
             var url_new = url[0] +'//'+ url[2] +'/static/';
             for (var i = 0; i < data.data.length; i++) {                      
@@ -123,4 +123,111 @@ $(document).ready( function() {
             console.log(response);
         }
     });
+    
+    $(document).on('click', '.trash', function(){
+    	$('#delete-idea').modal('toggle');
+    	var propuestaid = $(this).parent().parent().parent().children('input').val();
+    	$('#delete_idea').next('input').val(propuestaid);
+    	$(this).parent().parent().parent().parent().parent().parent().addClass('this-idea');
+    });
+    
+    $(document).on('click', '#delete_idea', function(){
+    	var proposal = {
+    		'proposal' : $(this).next('input').val()
+    	}
+    	var activepub = parseInt($('.activess').text());
+    	$.ajax({
+			url: url[0] + "//" + url[2] + '/remove_idea',
+			type: 'DELETE',
+		    data: JSON.stringify(proposal),
+		    headers: {
+		        'Content-Type': 'application/json'
+		    },
+		    dataType: 'json',
+			success: function (json) {
+				alert(json.result_msg);
+				$('.close').click();
+				$('.this-idea').remove();
+			}	
+		});
+
+    });
+    
+    $(document).on('click', '.edit', function(){
+    	var propid = $(this).parent().parent().parent().children('input').val();
+    	console.log(propid);
+    	$.ajax({
+    		url: url[0] + "//" + url[2] + '/get_idea_node_data/'+propid,
+    		type: 'GET',
+    		headers: {
+    		'Content-Type': 'application/json'
+    		},
+    		dataType: 'json',
+    		success: function (json) {
+    			//console.log(json);
+    			$('#concern').val(''+json.concern+'');
+    			$('#proposal').val(''+json.proposal+'');
+    			$('#moreinfo_concern').val(''+json.moreinfo_concern+'');
+    			$('#moreinfo_proposal').val(''+json.moreinfo_proposal+'');
+    			$('#volunteers_goal_num').val(''+json.volunteers_goal_num+'');
+    			$('#cropme_bidea').empty();
+    			$('#cropme_bidea').append('<img style="width: 300px; height: 169px;" src='+json.image_url+'>');
+			}							
+		});
+
+    	$('#modal_proposal1').modal('toggle');
+
+    	$('.add--proposal--provisional').hide();
+    	$('.edit--proposal--provisional').hide();
+    	$('.controlss').append('<a class="edit--proposal--provisional">Edit Proposal</a>');
+    	$('.controlss').append('<input type="hidden" id="propoid" value="'+propid+'">');
+    });
+    
+    $(document).on('click', '.edit--proposal--provisional', function(){
+     	var propuestaid = $('#propoid').val(); 
+     	var dataedit = {
+  			'concern': $('#concern').val(),
+  			'moreinfo_proposal': $('#moreinfo_proposal').val(),
+  			'moreinfo_concern': $('#moreinfo_concern').val(),
+  			'volunteers_goal_num': $('#volunteers_goal_num').val(),
+  			'supporters_goal_num': 200
+		};    
+		dataedit['current_proposal'] = propuestaid;
+		if ($('#proposal').val() != propuestaid) {
+			dataedit['proposal'] = $('#proposal').val();
+		}		
+		var opt = false;
+		if ($('input[name=proposal-anon]').is(":checked") == true){
+    		opt = true;
+		}
+   	 	dataedit['if_author_public'] = opt;
+    	
+    	dataedit['image'] = null;
+    	if($('#cropme_bidea img').attr('src') != "/static/images/fondo-c.png"){
+      		dataedit['image'] = $('#cropme_bidea img').attr('src');
+    	}
+
+      	if ($('#volunteers_goal_num').val() >= 0 ) {
+         	$.ajax({
+                url: url[0] + "//" + url[2] + '/modify_idea',
+                type: 'PUT',
+                data: JSON.stringify(dataedit),
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                dataType: 'json',
+                success: function (json) {
+                    alert(json.result_msg);
+                    location.reload();
+                },
+                error: function(response){
+                    console.log('Error');
+                    console.log(response);
+                }
+         	});
+    	}else{
+      		$('#volunteers_goal_num').css("border-color", "red");
+    	}
+    });
+    
 });
