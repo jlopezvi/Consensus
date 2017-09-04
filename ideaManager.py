@@ -458,7 +458,7 @@ def _get_idea_data_for_user(idea, user_email):
                         (x in followers or x in followings and x['ifsupportingproposalsvisible'] is True)]
     for known_supporter in known_supporters:
         if known_supporter == user:
-            known_supporters_data.append({'email': 'user', 'username': 'me'})
+            known_supporters_data.insert(0, {'email': 'user', 'username': 'me'})
         else:
             known_supporters_data.append({'email': known_supporter['email'], 'username': known_supporter['username']})
     known_rejectors_data = []
@@ -468,7 +468,7 @@ def _get_idea_data_for_user(idea, user_email):
                         (x in followers or x in followings and x['ifrejectingproposalsvisible'] is True)]
     for known_rejector in known_rejectors:
         if known_rejector == user:
-            known_rejectors_data.append({'email': 'user', 'username': 'me'})
+            known_rejectors_data.insert(0, {'email': 'user', 'username': 'me'})
         known_rejectors_data.append({'email': known_rejector['email'], 'username': known_rejector['username']})
     #
     idea_data=idea.get_properties()
