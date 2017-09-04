@@ -164,6 +164,24 @@ function showIdeas(list, index){
 	code += '<div class="row newsfeed--persons"><div class="col-sm-12">';
 	code += '<div class="col-sm-1" style="padding:0;"><img src="/static/images/check-small.png"></div>';
 	code += '<div class="col-sm-11 newsfeed--likes"><ul>';
+	
+	if(list.supporters_num > 0){
+		for(var f=0; f<list.supporters_num; f++){
+			if(f<=3){
+				if(list.known_supporters[f].email != 'user')
+					code += '<a href="/participants/'+list.known_supporters[f].email+'"><li>'+list.known_supporters[f].username+'</li></a>';
+				else
+					code += '<a href="/participants"><li>'+list.known_supporters[f].username+'</li></a>';
+			} else {
+				if((list.supporters_num-4) > 0)
+					code += '<a href="#" class="last--liked"><li>'+(list.supporters_num-4)+' people</li></a>';
+				break;
+			}
+		}
+	} else {
+		code += '<a href="#" class="last--liked"><li>'+list.supporters_num+' people</li></a>';
+	}
+	/*
 	if(list.supporters.length > 0){
     cont = 1;
     for(var i=0; i<list.supporters.length; i++){
@@ -178,8 +196,28 @@ function showIdeas(list, index){
   else if(list.supporters.length == 0){
     code += '<a href="#" class="last--liked"><li>0 people</li></a>';
   }
+  */
 	code += '</ul></div></div><div class="col-sm-12"><div class="col-sm-1" style="padding:0;"><img src="/static/images/x-small.png"></div>';
 	code += '<div class="col-sm-11 newsfeed--likes"><ul>';
+	
+	if(list.rejectors_num > 0){
+		for(var f=0; f<list.rejectors_num; f++){
+			if(f<=3){
+				if(list.known_rejectors[f].email != 'user')
+					code += '<a href="/participants/'+list.known_rejectors[f].email+'"><li>'+list.known_rejectors[f].username+'</li></a>';
+				else
+					code += '<a href="/participants"><li>'+list.known_rejectors[f].username+'</li></a>';
+			} else {
+				if((list.rejectors_num-4) > 0)
+					code += '<a href="#" class="last--liked"><li>'+(list.rejectors_num-4)+' people</li></a>';
+				break;
+			}
+		}
+	} else {
+		code += '<a href="#" class="last--liked"><li>'+list.rejectors_num+' people</li></a>';
+	}
+	
+	/*
 	if(list.rejectors.length > 0){
     cont = 1;
     for(var i=0; i<list.rejectors.length; i++){
@@ -194,6 +232,7 @@ function showIdeas(list, index){
   else if(list.rejectors.length == 0){
     code += '<a href="#" class="last--liked"><li>0 people</li></a>';
   }
+  */
   code += '</ul></div></div></div>';
 	code += '</div>';
 	
