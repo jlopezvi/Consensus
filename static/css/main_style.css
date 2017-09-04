@@ -1704,5 +1704,9 @@ a.edit--proposal--provisional {
 .idea--action--buttons div span.glyphicon-trash {
     color: black;
 }
-
+.action--buttons--topten{
+    margin-top: -75px;
+    margin-left: -10px;
+    position: absolute;
+}
 

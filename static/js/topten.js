@@ -7,6 +7,7 @@ $(document).ready( function() {
         url: url[0] + "//" + url[2] + '/get_topten_ideas',
         method: 'GET',
         success: function(data){
+            console.log(data);
             var newTop = '';
             var url_new = url[0] +'//'+ url[2] +'/static/';
             for (var i = 0; i < data.data.length; i++) {                      
@@ -60,6 +61,10 @@ $(document).ready( function() {
                 newTop += '<input type="hidden" class="supporters--goal--input" value="'+data.data[i].supporters_goal_num+'">';
                 newTop += '<input type="hidden" class="volunteers--goal--input" value="'+data.data[i].volunteers_goal_num+'">';
                 newTop += '<div class="col-sm-6" style="padding:0;width: 100%;"><input type="hidden" class="id" value="'+data.data[i].proposal+'">';
+                if($('#host_email').val() == data.data[i].author_email){
+					newTop += '<div class="col-sm-12 idea--action--buttons action--buttons--topten"><div class="col-xs-1"><span class="glyphicon glyphicon-edit edit"></span></div>';
+	    			newTop += '<div class="col-xs-1"><span class="glyphicon glyphicon-trash trash"></span></div></div>';
+				}
                 newTop += '<img class="icons" src="'+url_new+'images/x-icon.png" id="rejected" hidden><img class="icons" style="width: 50px;" src="'+url_new+'images/check-icon.png" id="supported" hidden><img class="icons" style="width: 48px;" src="'+url_new+'images/checkmark.png" id="support__plus--button" hidden>';
                 newTop += '</div><div class="col-sm-6 home--followers hidden" style="width: 100%;">';
                 newTop += '</div></div></div></div>';
