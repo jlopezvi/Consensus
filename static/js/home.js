@@ -37,13 +37,13 @@ $(document).ready( function() {
   
   $(document).on('click', '.home--share--button', function(){
     var vote_type = $(this).attr('id');
-    var index_idea = $(this).parent().children('input').val();
+    var index_idea = $(this).parent().parent().children('input').val();
     var vote_ifvolunteered = false;
     if(vote_type == 'supported-plus'){
       vote_ifvolunteered = true;
       vote_type = 'supported';
     }
-    var element = $(this).parent().parent().parent();
+    var element = $(this).parent().parent().parent().parent();
       
     var data = {
       'idea_proposal': list[index_idea]['proposal'],
