@@ -23,7 +23,7 @@ $(document).ready( function() {
 			type: 'GET',
 			success: function (json) {	
 				
-				//console.log(json);
+				console.log(json);
 				var newIdea = '';
 				var url_new = url[0] +'//'+ url[2] +'/static/';
 				for (var i = 0; i < json.ideas_data.length; i++) {
@@ -53,8 +53,8 @@ $(document).ready( function() {
 					newIdea += '<div class="col-sm-11 col-sm-offset-1 newsfeed--proposal">'+json.ideas_data[i].proposal+'</div></div></div> <input type="hidden" value="'+json.ideas_data[i].idea_id+'" id="idea__id">';
 					newIdea += '<div class="row newsfeed--footer"><div class="col-sm-12" style="padding-right: 0px; padding-left: 0px;">';
 					newIdea += '<div class="col-sm-9 newsfeed--support" style="padding-right:0;padding-left:30px;">';
-					var rate = ((json.ideas_data[i].supporters_num) * 100 / (json.ideas_data[i].supporters_num + json.ideas_data[i].rejectors.length));
-					if (json.ideas_data[i].supporters_num + json.ideas_data[i].rejectors.length == 0) {
+					var rate = ((json.ideas_data[i].supporters_num) * 100 / (json.ideas_data[i].supporters_num + json.ideas_data[i].known_rejectors.length));
+					if (json.ideas_data[i].supporters_num + json.ideas_data[i].known_rejectors.length == 0) {
 						rate = 0
 					}
 					newIdea += '<input type="text" value="'+json.ideas_data[i].support_rate+'" id="percent" hidden><div class="input--percent">';
@@ -64,13 +64,49 @@ $(document).ready( function() {
 					newIdea += '<input type="button" name="more-info" class="home--button"></div><div id="more--info--modal" hidden><p><h4>  More information about the problem: </h4> '+json.ideas_data[i].moreinfo_concern+'</br></br><h4> More information about the proposal: </h4>'+json.ideas_data[i].moreinfo_proposal+'</p></div></div></div>';
 					newIdea += '<div class="row newsfeed--persons newsfeed--persons2"><div class="col-sm-12"><div class="col-sm-1" style="padding:0;">';
 					newIdea += '<img src="'+url_new+'images/check-small.png"></div><div class="col-sm-11 newsfeed--likes">';
-					newIdea += '<ul class="ul--liked"><a href="#" class="last--liked"><li>'+json.ideas_data[i].supporters_num+' people</li></a></ul></div></div>';
+					newIdea += '<ul class="ul--liked">';
+					if(json.ideas_data[i].supporters_num > 0){
+						for(var f=0; f<json.ideas_data[i].supporters_num; f++){
+							if(f<=3){
+								if(json.ideas_data[i].known_supporters[f].email != 'user')
+									newIdea += '<a href="/participants/'+json.ideas_data[i].known_supporters[f].email+'"><li>'+json.ideas_data[i].known_supporters[f].username+'</li></a>';
+								else
+									newIdea += '<a href="/participants"><li>'+json.ideas_data[i].known_supporters[f].username+'</li></a>';
+							} else {
+								if((json.ideas_data[i].supporters_num-4) > 0)
+									newIdea += '<a href="#" class="last--liked"><li>'+(json.ideas_data[i].supporters_num-4)+' people</li></a>';
+								break;
+							}
+						}
+					} else {
+						newIdea += '<a href="#" class="last--liked"><li>'+json.ideas_data[i].supporters_num+' people</li></a>';
+					}
+					//
+					newIdea += '</ul></div></div>';
 					newIdea += '<div class="col-sm-12"><div class="col-sm-1" style="padding:0;"><img src="'+url_new+'images/x-small.png">';
-					newIdea += '</div><div class="col-sm-11 newsfeed--likes"><ul class="ul--disliked"><a href="#" class="last--liked"><li>'+json.ideas_data[i].rejectors.length+' people</li></a></ul></div></div></div>';
+					newIdea += '</div><div class="col-sm-11 newsfeed--likes"><ul class="ul--disliked">';
+					if(json.ideas_data[i].rejectors_num > 0){
+						for(var f=0; f<json.ideas_data[i].rejectors_num; f++){
+							if(f<=3){
+								if(json.ideas_data[i].known_rejectors[f].email != 'user')
+									newIdea += '<a href="/participants/'+json.ideas_data[i].known_rejectors[f].email+'"><li>'+json.ideas_data[i].known_rejectors[f].username+'</li></a>';
+								else
+									newIdea += '<a href="/participants"><li>'+json.ideas_data[i].known_rejectors[f].username+'</li></a>';
+							} else {
+								if((json.ideas_data[i].rejectors_num-4) > 0)
+									newIdea += '<a href="#" class="last--liked"><li>'+(json.ideas_data[i].rejectors_num-4)+' people</li></a>';
+								break;
+							}
+						}
+					} else {
+						newIdea += '<a href="#" class="last--liked"><li>'+json.ideas_data[i].rejectors_num+' people</li></a>';
+					}
+					
+					newIdea += '</ul></div></div></div>';
 					newIdea += '<div class="row home--share home--share2"><div class="col-sm-12 home--share--icons">';
 					newIdea += '<input type="hidden" class="supporters--input" value="'+json.ideas_data[i].supporters_num+'">';
 					newIdea += '<input type="hidden" class="volunteers--input" value="'+json.ideas_data[i].volunteers_num+'">';
-					newIdea += '<input type="hidden" class="rejectors--input" value="'+json.ideas_data[i].rejectors.length+'">';
+					newIdea += '<input type="hidden" class="rejectors--input" value="'+json.ideas_data[i].known_rejectors.length+'">';
 					newIdea += '<input type="hidden" class="supporters--goal--input" value="'+json.ideas_data[i].supporters_goal_num+'">';
 					newIdea += '<input type="hidden" class="volunteers--goal--input" value="'+json.ideas_data[i].volunteers_goal_num+'">';
 					newIdea += '<div class="col-sm-6" style="padding:0;width: 100%;"><input type="hidden" class="id" value="'+json.ideas_data[i].proposal+'">';
