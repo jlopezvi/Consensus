@@ -105,7 +105,7 @@ $(document).ready(function(){
 function showContent(id){
   $('#list__id').val(id);
   $('.idea__id').val(list[id].proposal);
-  console.log(list[id]);
+  //console.log(list[id]);
   $('#picture__profile').attr('src', list[id].author_profilepic_url).show();
   $('.newsfeed--body').css('background-image', 'url('+list[id].image_url+')');
   $('.newsfeed--name a').empty().append(list[id].author_username);
@@ -127,6 +127,25 @@ function showContent(id){
   $('#more--info--modal').empty().append('<p><h4>  More information about the problem: </h4> '+list[id].moreinfo_concern+'</br></br><h4> More information about the proposal: </h4>'+list[id].moreinfo_proposal+'</p>');
   $('.input--percent label').empty().append('Support Rate: '+list[id].support_rate+'%');
   /****************************************** Add Supporters to the Supporters List ****************************************/
+  var support_html = '';
+  if(list[id].supporters_num > 0){
+		for(var f=0; f<list[id].supporters_num; f++){
+			if(f<=3){
+				if(list[id].known_supporters[f].email != 'user')
+					support_html += '<a href="/participants/'+list[id].known_supporters[f].email+'"><li>'+list[id].known_supporters[f].username+'</li></a>';
+				else
+					support_html += '<a href="/participants"><li>'+list[id].known_supporters[f].username+'</li></a>';
+			} else {
+				if((list[id].supporters_num-4) > 0)
+					support_html += '<a href="#" class="last--liked"><li>'+(list[id].supporters_num-4)+' people</li></a>';
+				break;
+			}
+		}
+	} else {
+		support_html += '<a href="#" class="last--liked"><li>'+list[id].supporters_num+' people</li></a>';
+	}
+  $('#newsfeed--supporters ul').empty().append(support_html);
+  /*
   if(list[id].supporters.length > 0){
     cont = 1;
     for(var i =0; i<list[id].supporters.length; i++){
@@ -141,7 +160,27 @@ function showContent(id){
   else if(list[id].supporters.length == 0){
     $('#newsfeed--supporters ul').empty().append("<a href='#' class='last--liked'><li>0 people</li></a>");
   }
+  */
   /****************************************** Add Supporters to the Supporters List ****************************************/
+  var reject_html = '';
+  if(list[id].rejectors_num > 0){
+		for(var f=0; f<list[id].rejectors_num; f++){
+			if(f<=3){
+				if(list[id].known_rejectors[f].email != 'user')
+					reject_html += '<a href="/participants/'+list[id].known_rejectors[f].email+'"><li>'+list[id].known_rejectors[f].username+'</li></a>';
+				else
+					reject_html += '<a href="/participants"><li>'+list[id].known_rejectors[f].username+'</li></a>';
+			} else {
+				if((list[id].rejectors_num-4) > 0)
+					reject_html += '<a href="#" class="last--liked"><li>'+(list[id].rejectors_num-4)+' people</li></a>';
+				break;
+			}
+		}
+	} else {
+		reject_html += '<a href="#" class="last--liked"><li>'+list[id].rejectors_num+' people</li></a>';
+	}
+  $('#newsfeed--rejectors ul').empty().append(reject_html);
+  /*
   if(list[id].rejectors.length > 0){
     cont = 1;
     for(var i=0; i<list[id].rejectors.length; i++){
@@ -156,6 +195,7 @@ function showContent(id){
   else if(list[id].rejectors.length == 0){
     $('#newsfeed--rejectors ul').empty().append("<a href='#' class='last--liked'><li>0 people</li></a>");
   }
+  */
 }
 
 function moveFeed(element, id){

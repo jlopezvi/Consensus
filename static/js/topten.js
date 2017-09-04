@@ -36,14 +36,14 @@ $(document).ready( function() {
                     newTop += data.data[i].volunteers_num+'/'+data.data[i].volunteers_goal_num+' volunteers<br>';
                     newTop += '</p></div></div><div class="row home--proposals--body" style="background-image: url('+data.data[i].image_url+');"><div class="col-sm-12 concern__div">';
                 } else {
-                    newTop += '</p></div></div><div class="row home--proposals--body" style="margin-top: 8px;background-image: url('+data.data[i].image_url+');"><div class="col-sm-12 concern__div">';
+                    newTop += '</p></div></div><div class="row home--proposals--body" style="margin-top: 9px;background-image: url('+data.data[i].image_url+');"><div class="col-sm-12 concern__div">';
                 }
                 newTop += '<div class="col-sm-11 newsfeed--problem">'+data.data[i].concern+'</div></div><div class="col-sm-12">';
                 newTop += '<div class="col-sm-11 col-sm-offset-1 newsfeed--proposal">'+data.data[i].proposal+'</div></div></div> <input type="hidden" value="'+data.data[i].idea_id+'" id="idea__id">';
                 newTop += '<div class="row newsfeed--footer"><div class="col-sm-12" style="padding-right: 0px; padding-left: 0px;">';
                 newTop += '<div class="col-sm-8 newsfeed--support" style="padding-right:0;padding-left:30px;">';
-                var rate = ((data.data[i].supporters_num) * 100 / (data.data[i].supporters_num + data.data[i].rejectors.length));
-                if (data.data[i].supporters_num + data.data[i].rejectors.length == 0) {
+                var rate = ((data.data[i].supporters_num) * 100 / (data.data[i].supporters_num + data.data[i].rejectors_num));
+                if (data.data[i].supporters_num + data.data[i].rejectors_num == 0) {
                     rate = 0
                 }
                 newTop += '<input type="text" value="'+data.data[i].support_rate+'" id="percent" hidden><div class="input--percent">';
@@ -51,13 +51,49 @@ $(document).ready( function() {
                 newTop += '<input type="hidden" class="id" value="'+data.data[i].proposal+'"><img class="redflag redflag2" src="'+url_new+'images/redflag.png"><input type="button" name="more-info" class="home--button" style="float: right;"></div><div id="more--info--modal" hidden><p><h4>  More information about the problem: </h4> '+data.data[i].moreinfo_concern+'</br></br><h4> More information about the proposal: </h4>'+data.data[i].moreinfo_proposal+'</p></div></div></div>';
                 newTop += '<div class="row newsfeed--persons newsfeed--persons2"><div class="col-sm-12"><div class="col-sm-1" style="padding:0;">';
                 newTop += '<img src="'+url_new+'images/check-small.png"></div><div class="col-sm-11 newsfeed--likes">';
-                newTop += '<ul class="ul--liked"><a href="#" class="last--liked"><li>'+data.data[i].supporters_num+' people</li></a></ul></div></div>';
+                newTop += '<ul class="ul--liked"><a href="#" class="last--liked">';
+                if(data.data[i].supporters_num > 0){
+    				for(var f=0; f<data.data[i].supporters_num; f++){
+    					if(f<=3){
+    						if(data.data[i].known_supporters[f].email != 'user')
+    							newTop += '<a href="/participants/'+data.data[i].known_supporters[f].email+'"><li>'+data.data[i].known_supporters[f].username+'</li></a>';
+    						else
+    							newTop += '<a href="/participants"><li>'+data.data[i].known_supporters[f].username+'</li></a>';
+    					} else {
+    						if((data.data[i].supporters_num-4) > 0)
+    							newTop += '<a href="#" class="last--liked"><li>'+(data.data[i].supporters_num-4)+' people</li></a>';
+    						break;
+    					}
+    				}
+    			} else {
+    				newTop += '<a href="#" class="last--liked"><li>'+data.data[i].supporters_num+' people</li></a>';
+    			}
+    			//
+                newTop +='</ul></div></div>';
                 newTop += '<div class="col-sm-12"><div class="col-sm-1" style="padding:0;"><img src="'+url_new+'images/x-small.png">';
-                newTop += '</div><div class="col-sm-11 newsfeed--likes"><ul class="ul--disliked"><a href="#" class="last--liked"><li>'+data.data[i].rejectors.length+' people</li></a></ul></div></div></div>';
+                newTop += '</div><div class="col-sm-11 newsfeed--likes"><ul class="ul--disliked">';
+                if(data.data[i].rejectors_num > 0){
+					for(var f=0; f<data.data[i].rejectors_num; f++){
+						if(f<=3){
+							if(data.data[i].known_rejectors[f].email != 'user')
+								newTop += '<a href="/participants/'+data.data[i].known_rejectors[f].email+'"><li>'+data.data[i].known_rejectors[f].username+'</li></a>';
+							else
+								newTop += '<a href="/participants"><li>'+data.data[i].known_rejectors[f].username+'</li></a>';
+						} else {
+							if((data.data[i].rejectors_num-4) > 0)
+								newTop += '<a href="#" class="last--liked"><li>'+(data.data[i].rejectors_num-4)+' people</li></a>';
+							break;
+						}
+					}
+				} else {
+					newTop += '<a href="#" class="last--liked"><li>'+data.data[i].rejectors_num+' people</li></a>';
+				}
+					
+                newTop += '</ul></div></div></div>';
                 newTop += '<div class="row home--share"><div class="col-sm-12 home--share--icons">';
                 newTop += '<input type="hidden" class="supporters--input" value="'+data.data[i].supporters_num+'">';
                 newTop += '<input type="hidden" class="volunteers--input" value="'+data.data[i].volunteers_num+'">';
-                newTop += '<input type="hidden" class="rejectors--input" value="'+data.data[i].rejectors.length+'">';
+                newTop += '<input type="hidden" class="rejectors--input" value="'+data.data[i].rejectors_num+'">';
                 newTop += '<input type="hidden" class="supporters--goal--input" value="'+data.data[i].supporters_goal_num+'">';
                 newTop += '<input type="hidden" class="volunteers--goal--input" value="'+data.data[i].volunteers_goal_num+'">';
                 newTop += '<div class="col-sm-6" style="padding:0;width: 100%;"><input type="hidden" class="id" value="'+data.data[i].proposal+'">';

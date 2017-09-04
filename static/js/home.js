@@ -181,22 +181,6 @@ function showIdeas(list, index){
 	} else {
 		code += '<a href="#" class="last--liked"><li>'+list.supporters_num+' people</li></a>';
 	}
-	/*
-	if(list.supporters.length > 0){
-    cont = 1;
-    for(var i=0; i<list.supporters.length; i++){
-      if(cont <= 3)
-        code += '<a href="#" style="margin-left: 5px;"><li>'+list.supporters[i].username+'</li></a>';
-      cont++;
-    }
-  }
-  if(list.supporters.length > 3){
-    code += '<a href="#" class="last--liked" style="margin-left: 5px;"><li>+ '+(list.supporters.length-3)+' people</li></a>';
-  }
-  else if(list.supporters.length == 0){
-    code += '<a href="#" class="last--liked"><li>0 people</li></a>';
-  }
-  */
 	code += '</ul></div></div><div class="col-sm-12"><div class="col-sm-1" style="padding:0;"><img src="/static/images/x-small.png"></div>';
 	code += '<div class="col-sm-11 newsfeed--likes"><ul>';
 	
@@ -216,23 +200,6 @@ function showIdeas(list, index){
 	} else {
 		code += '<a href="#" class="last--liked"><li>'+list.rejectors_num+' people</li></a>';
 	}
-	
-	/*
-	if(list.rejectors.length > 0){
-    cont = 1;
-    for(var i=0; i<list.rejectors.length; i++){
-      if(cont <= 3)
-        code += '<a href="#"><li>'+list.rejectors[i].username+'</li></a>';
-      cont++;
-    }
-  }
-  if(list.rejectors.length > 3){
-    code += '<a href="#" class="last--liked"><li>+ '+(list.rejectors.length-3)+' people</li></a>';
-  }
-  else if(list.rejectors.length == 0){
-    code += '<a href="#" class="last--liked"><li>0 people</li></a>';
-  }
-  */
   code += '</ul></div></div></div>';
 	code += '</div>';
 	

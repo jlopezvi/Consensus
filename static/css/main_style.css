@@ -471,7 +471,7 @@ body.modal-open {
 	font-family: lato_bold;
 	font-size: 15px;
 	border-bottom: none;
-	margin-left: 40px;
+	/*margin-left: 40px;*/
 }
 .idea--action--buttons{
 	margin-top: -20px;
@@ -1709,4 +1709,5 @@ a.edit--proposal--provisional {
     margin-left: -10px;
     position: absolute;
 }
+#loader--general{display:none;}
 
