@@ -1,5 +1,6 @@
 from py2neo import neo4j
-from participantManager import _get_participant_node, _getIfContactRelationshipExists
+from participantManager import _get_participant_node, _getIfContactRelationshipExists, _get_participant_followers, \
+    _get_participant_followings
 from utils import getGraph, save_file, _remove_file
 from flask import jsonify, render_template
 import json, uuid
@@ -84,13 +85,14 @@ def remove_idea_aux(idea_index) :
     idea = _get_idea_by_ideaindex(idea_index)
     return jsonify(_remove_idea(idea))
 
+
 # <used by remove_idea_aux, remove_user_aux>
 def _remove_idea(idea):
     for rel in getGraph().match(start_node=idea, bidirectional=True):
         rel.delete()
     #
-    _send_notification_emails_from_idea_to_supporters(idea['current_proposal'], 'removed')
-    _remove_from_idea_index(idea['current_proposal'], idea)
+    _send_notification_emails_from_idea_to_supporters(idea['proposal'], 'removed')
+    _remove_from_idea_index(idea['proposal'], idea)
     if idea['image_url'].startswith('/static/images/ideas/'):
         _remove_file(idea['image_url'])
     idea.delete()
@@ -122,7 +124,7 @@ def get_ideas_data_created_by_participant_aux(participant_email, user_email):
         ifallowed = True
         rels = list(getGraph().match(start_node=participant, rel_type="CREATED"))
         for rel in rels:
-            idea_data = _get_idea_data(rel.end_node)
+            idea_data = _get_idea_data_for_user(rel.end_node, user_email)
             ideas_data.append(idea_data)
     else:
         ifallowed = False
@@ -345,27 +347,30 @@ def _if_ideaisinfirstphase(idea):
     return True
 
 
-# <Used by ideas_for_newsfeed_aux / ideas_for_home_aux / get_ideas_data_created_by_participant_aux
-#    / get_idea_data_admin / get_topten_ideas >
+# <Used by  get_idea_data_admin  >
 # input   idea_node
 # Output: << return  idea_data>>
 # idea_data = {
-    # 'uuid' : unique_identifier_string,
-    # 'author_profilepic_url' : 'static/.../pic.jpg', 'author_username' : 'Daniela', 'author_email' : 'a@',
-    # 'duration' : "4 hours/ days/ weeks",
-    # 'supporters_goal_num' : 200, 'supporters_num' : 5, 'volunteers_goal_num' : 5, 'volunteers_num' : 2,
-    # 'image_url' : 'static/.../asdf.JPG',
-    # 'concern': 'Some text for the concern',
-    # 'proposal': 'Some text for the proposal',
-    # 'support_rate' : 95,
-    # 'support_rate_MIN' : 90,
-    # 'supporters': [
-    # { 'email': 'b@', 'username': 'Maria' }, { 'email': 'c@', 'username': 'Pedro' }
-    #             ],
-    # 'rejectors':[
-    # { 'email': 'd@', 'username': 'Elisa' }
-    #               ]
-    # }
+#             'concern': 'Some text for the concern',
+#             'proposal': 'Some text for the proposal',
+#             'image_url': 'static/.../asdf.JPG'/None,
+#             'uuid': 'unique_identifier_string',
+#             'moreinfo_concern': 'blah blah blah more info',
+#             'moreinfo_proposal': 'blah blah blah more info',
+#             'supporters_goal_num': 200,
+#             'volunteers_goal_num': 5,
+#             'if_author_public': True / False
+#             'author_profilepic_url': 'static/.../pic.jpg'/None, 'author_username': 'daniela', 'author_email': 'a@gmail.com',
+#             'duration' : "4 hours/ days/ weeks",
+#             'supporters_num' : 5, 'volunteers_num' : 2, 'rejectors_num': 3,
+#             'support_rate' : 95, 'support_rate_MIN' : 90,
+#             'supporters': [
+#                { 'email': 'b@', 'username': 'Juan' }, { 'email': 'c@gmail.com', 'username': 'Pedro' }
+#              ],
+#             'rejectors':[
+#                { 'email': 'd@', 'username': 'Elisa' }
+#              ]
+#            }
 def _get_idea_data(idea):
     from app import SUPPORT_RATE_MIN
     author_email = getGraph().match_one(end_node=idea, rel_type="CREATED").start_node['email']
@@ -400,6 +405,79 @@ def _get_idea_data(idea):
                       'volunteers_num': volunteers_num,
                       'support_rate': support_rate, 'support_rate_MIN': SUPPORT_RATE_MIN,
                       'supporters' : supporters_data, 'rejectors' : rejectors_data})
+    return idea_data
+
+
+# <Used by ideas_for_newsfeed_aux / ideas_for_home_aux / get_ideas_data_created_by_participant_aux / get_topten_ideas >
+# input   idea_node
+# Output: << return  idea_data>>
+# idea_data = {
+#             'concern': 'Some text for the concern',
+#             'proposal': 'Some text for the proposal',
+#             'image_url': 'static/.../asdf.JPG'/None,
+#             'uuid': 'unique_identifier_string',
+#             'moreinfo_concern': 'blah blah blah more info',
+#             'moreinfo_proposal': 'blah blah blah more info',
+#             'supporters_goal_num': 200,
+#             'volunteers_goal_num': 5,
+#             'if_author_public': True / False
+#             'author_profilepic_url': 'static/.../pic.jpg'/None, 'author_username': 'daniela', 'author_email': 'a@gmail.com',
+#             'duration' : "4 hours/ days/ weeks",
+#             'supporters_num' : 5, 'volunteers_num' : 2, 'rejectors_num': 3,
+#             'support_rate' : 95, 'support_rate_MIN' : 90,
+#             'known_supporters': [
+#                { 'email': 'user', 'username': 'me' }, { 'email': 'c@gmail.com', 'username': 'Pedro' }
+#              ],
+#             'known_rejectors':[
+#                { 'email': 'd@', 'username': 'Elisa' }
+#              ]
+#            }
+def _get_idea_data_for_user(idea, user_email):
+    from app import SUPPORT_RATE_MIN
+    user = _get_participant_node(user_email)
+    author_email = getGraph().match_one(end_node=idea, rel_type="CREATED").start_node['email']
+    author_profilepic_url = _get_participant_node(author_email)['profilepic_url']
+    author_username = _get_participant_node(author_email)['username']
+    idea_proposal = idea['proposal']
+    uuid = idea['uuid']
+    duration = _get_idea_duration(idea_proposal)
+    # voters_num = len(list(getGraph().match(end_node=idea, rel_type="VOTED_ON")))
+    supporters_num = _get_vote_statistics_for_idea(idea_proposal)[0]
+    rejectors_num = _get_vote_statistics_for_idea(idea_proposal)[1]
+    active_voters_num = supporters_num + rejectors_num
+    volunteers_num=_get_vote_statistics_for_idea(idea_proposal)[3]
+    support_rate = (supporters_num / active_voters_num) * 100 if active_voters_num is not 0 else 100
+    #
+    vote_rels = list(getGraph().match(end_node=idea, rel_type="VOTED_ON"))
+    followers = _get_participant_followers(user_email)
+    followings = _get_participant_followings(user_email)
+    known_supporters_data = []
+    supporters = [x.start_node for x in vote_rels if x["type"] == "supported"]
+    # known supporters are either the user or (followers or followings with the right public permissions)
+    known_supporters = [x for x in supporters if x == user or
+                        (x in followers or x in followings and x['ifsupportingproposalsvisible'] is True)]
+    for known_supporter in known_supporters:
+        if known_supporter == user:
+            known_supporters_data.append({'email': 'user', 'username': 'me'})
+        else:
+            known_supporters_data.append({'email': known_supporter['email'], 'username': known_supporter['username']})
+    known_rejectors_data = []
+    rejectors = [x.start_node for x in vote_rels if x["type"] == "rejected"]
+    # known rejectors are either the user or (followers or followings with the right public permissions)
+    known_rejectors = [x for x in rejectors if x == user or
+                        (x in followers or x in followings and x['ifrejectingproposalsvisible'] is True)]
+    for known_rejector in known_rejectors:
+        if known_rejector == user:
+            known_rejectors_data.append({'email': 'user', 'username': 'me'})
+        known_rejectors_data.append({'email': known_rejector['email'], 'username': known_rejector['username']})
+    #
+    idea_data=idea.get_properties()
+    idea_data.update({'author_profilepic_url': author_profilepic_url, 'author_username': author_username,
+                      'duration': duration, 'uuid': uuid,
+                      'author_email': author_email, 'supporters_num': supporters_num,
+                      'rejectors_num': rejectors_num, 'volunteers_num': volunteers_num,
+                      'support_rate': support_rate, 'support_rate_MIN': SUPPORT_RATE_MIN,
+                      'known_supporters': known_supporters_data, 'known_rejectors': known_rejectors_data})
     return idea_data
 
 

@@ -1,5 +1,5 @@
 from participantManager import _get_participant_node, _get_fullname_for_participant
-from ideaManager import _get_idea_data, remove_idea_aux, _if_ideaisinfirstphase
+from ideaManager import _get_idea_data_for_user, remove_idea_aux, _if_ideaisinfirstphase
 from utils import getGraph, send_email #, send_email_new
 from flask import jsonify, render_template, url_for
 from uuid_token import generate_confirmation_token, confirm_token
@@ -90,25 +90,25 @@ def ideas_for_newsfeed_aux(user_email):
                     ideas.append(idea_voted)
     #
     for idea in ideas:
-        newfeed = _get_idea_data(idea)
+        newfeed = _get_idea_data_for_user(idea, user_email)
         ideas_data.append(newfeed)
     return jsonify({"result": "OK", "data": ideas_data})
 
 
-def ideas_for_home_aux(participant_email, vote_type):
-    participant = _get_participant_node(participant_email)
+def ideas_for_home_aux(user_email, vote_type):
+    user = _get_participant_node(user_email)
     dic = []
     list_ideas = []
-    for vote in (list(getGraph().match(start_node=participant, rel_type="VOTED_ON"))):
+    for vote in (list(getGraph().match(start_node=user, rel_type="VOTED_ON"))):
         if vote["type"] == vote_type:
             dic.append(vote.end_node)
     for dic_idea in dic:
-        current_idea = _get_idea_data(dic_idea)
+        current_idea = _get_idea_data_for_user(dic_idea, user_email)
         list_ideas.append(current_idea)
     return jsonify({"result": "OK", "data": list_ideas})
 
 
-def get_topten_ideas_aux():
+def get_topten_ideas_aux(user_email):
     from ideaManager import _get_ideas_index, _get_idea_by_ideaindex, _get_idea_score
     allnodes = _get_ideas_index().query("proposal:*")
     ideas = []
@@ -131,7 +131,7 @@ def get_topten_ideas_aux():
     ranked_10_ideas_data= []
     for ranked_idea_proposal in ranked_10_ideas_proposals:
         ranked_idea = _get_idea_by_ideaindex(ranked_idea_proposal[0])
-        ranked_10_ideas_data.append(_get_idea_data(ranked_idea))
+        ranked_10_ideas_data.append(_get_idea_data_for_user(ranked_idea, user_email))
     return jsonify({"result": "OK", "data": ranked_10_ideas_data})
 
 

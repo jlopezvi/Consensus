@@ -521,29 +521,33 @@ def get_ideas_created_by_participant(participant_email,user_email_DEBUG=None):
 #  There are two possibilities according to privacy restrictions
 # 1. {"result": "OK",
 #     "ifallowed": true,
-#     "ideas_data": [
-#      {
-#      "author_email": "new@hotmail.com",
-#      "author_profilepic_url": "static/.../pic.jpg",
-#      "author_username": "newmail",
-#      "concern": "this is mi new concern for test",
-#      "datestamp": "01.10.2016",
-#      "duration": "4 hours/ days/ weeks",
-#      "uuid": "uuid_code",
-#      "image_url": "static/.../image.jpg",
-#      "moreinfo": "this and this",
-#      "proposal": "this proposal is for test",
-#      "rejectors": [],
-#      "support_rate": 100,
-#      "support_rate_MIN": 90,
-#      "supporters": [],
-#      "supporters_goal_num": "500",
-#      "supporters_num": 0,
-#      "volunteers_goal_num": "5",
-#      "volunteers_num": 0
-#      },
-#      { ... }
-#      ]
+#     "ideas_data":
+#          [
+#            {
+#             'concern': 'Some text for the concern',
+#             'proposal': 'Some text for the proposal',
+#             'image_url': 'static/.../asdf.JPG'/null,
+#             'uuid': 'unique_identifier_string',
+#             'moreinfo_concern': 'blah blah blah more info',
+#             'moreinfo_proposal': 'blah blah blah more info',
+#             'supporters_goal_num': 200,
+#             'volunteers_goal_num': 5,
+#             'if_author_public': true / false
+#             'author_profilepic_url': 'static/.../pic.jpg'/null, 'author_username': 'daniela', 'author_email': 'a@gmail.com',
+#             'duration' : "4 hours/ days/ weeks",
+#             'supporters_num' : 5, 'volunteers_num' : 2, 'rejectors_num': 3,
+#             'support_rate' : 95, 'support_rate_MIN' : 90,
+#             'known_supporters': [
+#                { 'email': 'user', 'username': 'me' }, { 'email': 'c@gmail.com', 'username': 'Pedro' }
+#              ],
+#             'known_rejectors':[
+#                { 'email': 'd@', 'username': 'Elisa' }
+#              ]
+#            },
+#            {
+#              ...
+#            }
+#          ]
 #    }
 # 2. {
 #    "result": "OK",
@@ -725,51 +729,31 @@ def registration_receive_emailverification(token):
 # Output: json with fields 'result' and 'data'. 'data' contains array with all ideas that the user has not << VOTED_ON >>
 # {"result": "OK",
 #  "data": [
-#    {
-#      "author_email": "new1@hotmail.com",
-#      "author_profilepic_url": "static/.../pic.jpg",
-#      "author_username": "new1",
-#      "concern": "this is mi new concern for test",
-#      "timestamp": "01.10.2016 13:38:22",
-#      "duration": "4 hours/ days/ weeks",
-#      "uuid": "uuid_code",
-#      "image_url": "static/.../image.jpg",
-#      "moreinfo": "this and this",
-#      "proposal": "this proposal is for test",
-#      "rejectors": [],
-#      "support_rate": 100,
-#      "support_rate_MIN": 90,
-#      "supporters": [
-#             { "email": "new2@hotmail.com", "username": "new2_mail" }
-#                   ],
-#      "supporters_goal_num": "500",
-#      "supporters_num": 0,
-#      "volunteers_goal_num": "5",
-#      "volunteers_num": 0
-#    },
-#    {
-#      "author_email": "new2@hotmail.com",
-#      "author_profilepic_url": "static/.../pic.jpg",
-#      "author_username": "new2",
-#      "concern": "Concern",
-#      "timestamp": "01.10.2016 13:38:22",
-#      "duration": "4 hours/ days/ weeks",
-#      "uuid": "uuid_code",
-#      "image_url": "static/.../image.jpg",
-#      "moreinfo": "this and this...",
-#      "proposal": "IdeaM",
-#      "rejectors": [
-#           { "email": "new1@hotmail.com", "username": "new1_mail" }
-#                   ],
-#      "support_rate": 100,
-#      "support_rate_MIN": 90,
-#      "supporters": [],
-#      "supporters_goal_num": "400",
-#      "supporters_num": 0,
-#      "volunteers_goal_num": "11",
-#      "volunteers_num": 0
-#    }
-#  ]
+#            {
+#             'concern': 'Some text for the concern',
+#             'proposal': 'Some text for the proposal',
+#             'image_url': 'static/.../asdf.JPG'/null,
+#             'uuid': 'unique_identifier_string',
+#             'moreinfo_concern': 'blah blah blah more info',
+#             'moreinfo_proposal': 'blah blah blah more info',
+#             'supporters_goal_num': 200,
+#             'volunteers_goal_num': 5,
+#             'if_author_public': true / false
+#             'author_profilepic_url': 'static/.../pic.jpg'/null, 'author_username': 'daniela', 'author_email': 'a@gmail.com',
+#             'duration' : "4 hours/ days/ weeks",
+#             'supporters_num' : 5, 'volunteers_num' : 2, 'rejectors_num': 3,
+#             'support_rate' : 95, 'support_rate_MIN' : 90,
+#             'known_supporters': [
+#                { 'email': 'user', 'username': 'me' }, { 'email': 'c@gmail.com', 'username': 'Pedro' }
+#              ],
+#             'known_rejectors':[
+#                { 'email': 'd@', 'username': 'Elisa' }
+#              ]
+#            },
+#            {
+#              ...
+#            }
+#          ]
 # }
 @app.route('/ideas_for_newsfeed',methods=['GET'])
 @app.route('/ideas_for_newsfeed/<user_email_DEBUG>',methods=['GET'])
@@ -786,52 +770,31 @@ def ideas_for_newsfeed(user_email_DEBUG = None):
 # Output: json with fields 'result' and 'data'. 'data' Array with all ideas that the user has voted according to << vote_type >>
 # {"result": "OK",
 #  "data": [
-#    {
-#      "author_email": "adavidsole@gmail.com",
-#      "author_username": "alexdsole",
-#      "concern": "Concern",
-#      "timestamp": "01.10.2016 13:38:22",
-#      "duration": "4 hours/ days/ weeks",
-#      "uuid": "uuid_code",
-#      "image_url": "static/.../image.jpg",
-#      "moreinfo": "this and this...",
-#      "proposal": "New Proposal ",
-#      "rejectors": [
-#            { "email": "new1@hotmail.com", "username": "new1_mail" }
-#                   ],
-#      "support_rate": 0,
-#      "support_rate_MIN": 90,
-#      "supporters": [],
-#      "supporters_goal_num": "400",
-#      "supporters_num": 0,
-#      "volunteers_goal_num": "11",
-#      "volunteers_num": 0
-#    },
-#    {
-#      "author_email": "newemail@hotmail.com",
-#      "author_profilepic_url": "static/.../pic.jpg",
-#      "author_username": "newemail",
-#      "concern": "Concern",
-#      "timestamp": "01.10.2016 13:38:22",
-#      "duration": "4 hours/ days/ weeks",
-#      "uuid": "uuid_code",
-#      "image_url": "static/.../image.jpg",
-#      "moreinfo": "this and this...",
-#      "proposal": "This is my Proposal",
-#      "rejectors": [
-#           { "email": "new1@hotmail.com", "username": "new1_mail" }
-#                   ],
-#      "support_rate": 50,
-#      "support_rate_MIN": 90,
-#      "supporters": [
-#           { "email": "new2@gmail.com", "username": "new2_mail"  }
-#                    ],
-#      "supporters_goal_num": "400",
-#      "supporters_num": 1,
-#      "volunteers_goal_num": "11",
-#      "volunteers_num": 1
-#    }
-#  ]
+#            {
+#             'concern': 'Some text for the concern',
+#             'proposal': 'Some text for the proposal',
+#             'image_url': 'static/.../asdf.JPG'/null,
+#             'uuid': 'unique_identifier_string',
+#             'moreinfo_concern': 'blah blah blah more info',
+#             'moreinfo_proposal': 'blah blah blah more info',
+#             'supporters_goal_num': 200,
+#             'volunteers_goal_num': 5,
+#             'if_author_public': true / false
+#             'author_profilepic_url': 'static/.../pic.jpg'/null, 'author_username': 'daniela', 'author_email': 'a@gmail.com',
+#             'duration' : "4 hours/ days/ weeks",
+#             'supporters_num' : 5, 'volunteers_num' : 2, 'rejectors_num': 3,
+#             'support_rate' : 95, 'support_rate_MIN' : 90,
+#             'known_supporters': [
+#                { 'email': 'user', 'username': 'me' }, { 'email': 'c@gmail.com', 'username': 'Pedro' }
+#              ],
+#             'known_rejectors':[
+#                { 'email': 'd@', 'username': 'Elisa' }
+#              ]
+#            },
+#            {
+#              ...
+#            }
+#          ]
 # }
 @app.route('/ideas_for_home',methods=['POST'])
 @app.route('/ideas_for_home/<user_email_DEBUG>',methods=['POST'])
@@ -849,34 +812,40 @@ def ideas_for_home(user_email_DEBUG = None):
 # Output: json with fields 'result' and 'data'. 'data' Array with at most 10 ideas ranked from 1st to 10st in order
 # {"result": "OK",
 #  "data": [
-#    {
-#      "author_email": "adavidsole@gmail.com",
-#      "author_username": "alexdsole",
-#      "concern": "Concern",
-#      "timestamp": "01.10.2016 13:38:22",
-#      "duration": "4 hours/ days/ weeks",
-#      "uuid": "uuid_code",
-#      "image_url": "static/.../image.jpg",
-#      "moreinfo": "this and this...",
-#      "proposal": "New Proposal ",
-#      "rejectors": [
-#            { "email": "new1@hotmail.com", "username": "new1_mail" }
-#                   ],
-#      "support_rate": 0,
-#      "support_rate_MIN": 90,
-#      "supporters": [],
-#      "supporters_goal_num": "400",
-#      "supporters_num": 0,
-#      "volunteers_goal_num": "11",
-#      "volunteers_num": 0
-#    },
-#    {
-#    }
-#  ]
+#            {
+#             'concern': 'Some text for the concern',
+#             'proposal': 'Some text for the proposal',
+#             'image_url': 'static/.../asdf.JPG'/null,
+#             'uuid': 'unique_identifier_string',
+#             'moreinfo_concern': 'blah blah blah more info',
+#             'moreinfo_proposal': 'blah blah blah more info',
+#             'supporters_goal_num': 200,
+#             'volunteers_goal_num': 5,
+#             'if_author_public': true / false
+#             'author_profilepic_url': 'static/.../pic.jpg'/null, 'author_username': 'daniela', 'author_email': 'a@gmail.com',
+#             'duration' : "4 hours/ days/ weeks",
+#             'supporters_num' : 5, 'volunteers_num' : 2, 'rejectors_num': 3,
+#             'support_rate' : 95, 'support_rate_MIN' : 90,
+#             'known_supporters': [
+#                { 'email': 'user', 'username': 'me' }, { 'email': 'c@gmail.com', 'username': 'Pedro' }
+#              ],
+#             'known_rejectors':[
+#                { 'email': 'd@', 'username': 'Elisa' }
+#              ]
+#            },
+#            {
+#              ...
+#            }
+#          ]
 # }
-@app.route('/get_topten_ideas', methods=['GET'])
-def get_topten_ideas():
-    return get_topten_ideas_aux()
+@app.route('/get_topten_ideas',methods=['GET'])
+@app.route('/get_topten_ideas/<user_email_DEBUG>',methods=['GET'])
+def get_topten_ideas(user_email_DEBUG = None):
+    if DEBUG and user_email_DEBUG is not None:
+        user_email = user_email_DEBUG
+    else:
+        user_email = flask_login.current_user.id
+    return get_topten_ideas_aux(user_email)
 
 
 # input : None
