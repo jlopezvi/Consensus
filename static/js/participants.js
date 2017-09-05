@@ -260,7 +260,7 @@ $(document).ready( function() {
 	       		newParti = '';
 	       		newParti += '<li><img class="new--user--icon--login" src="'+json[i].profilepic_url+'"><p>'; 
 	       		newParti += '<a href="#">'+json[i].fullname+'</a>';
-	       		newParti += '<br><label>'+json[i].position+'</label> | <label>'+json[i].group+'</label></p>';
+	       		newParti += '<br><label>'+json[i].position+'</label></p>';
 	       		newParti += '<input type="hidden" value="'+json[i].email+'">';
 	       		newParti += '<input class="form-control invite__button" type="button" '+if_following+' id="btn-follow"></li>';
 
@@ -336,9 +336,9 @@ $(document).ready( function() {
 			e.preventDefault();
 			seaarch_participant(search);
 		} else if(code == 8){
+			showHideGroups();
 			$('.addproposal--step__div ul').find('li.participants__li__private').remove();
 			$('#legend__results').remove();
-			$('#legend__board').show();
 		}
 	});
 
@@ -856,29 +856,54 @@ $(document).ready( function() {
 function seaarch_participant(search){
 	var div = $('.addproposal--step__div ul');
 	$('#legend__results').remove();
-	$('#legend__board').show();
 	$('.addproposal--step__div ul').find('li.participants__li__private').remove();
 	$.ajax({
 		url: url[0] + "//" + url[2] + '/get_participant_data_by_email_unrestricted/'+search,
 		type: 'GET',
 		success: function (json) {
-			console.log(json);
+			//console.log(json);
 			if(json.result == 'OK'){
 				$('.spinner').show();
 				var newAppend = '';
             	newAppend += '<li class="participants__li__private">';
             	newAppend += '<img class="new--user--icon--login" src="'+json.participant_data.profilepic_url+'"><p>';
             	newAppend += '<a href="#">'+json.participant_data.fullname+'</a>'; 
-            	newAppend += '<br>'+json.participant_data.fullname+'</p>';
+            	newAppend += '<br>'+json.participant_data.position+'</p>';
             	newAppend += '<input type="hidden" value="'+json.participant_data.id+'">';
             	if($('#host_email').val() != search)
                 	newAppend += '<input class="form-control invite__button" type="button" value="Follow" id="btn-follow"></li>';
                 else
                 	newAppend += '<input class="form-control invite__button" type="button" value="It´s you" disabled></li>';
+                
                 setTimeout(function(){
                 	$('.spinner').hide();
-					$('.addproposal--step__div ul').find('li.participants__li__private').remove();
-					div.append(newAppend);
+					$('.addproposal--step__div ul').find('li.participants__li__private').remove();	
+	            	if (json.participant_data.group == 'Governing Board') {
+		       			$('.marketing, .sales, .governing, .technical, .human').hide();
+		       			$('.governing').show();
+		       			$('.governing').append(newAppend);
+		       		}	
+		       		if (json.participant_data.group == 'Marketing') {
+		       			$('.marketing, .sales, .governing, .technical, .human').hide();
+		       			$('.marketing').show();
+		       			$('.marketing').append(newAppend);
+		       		}	
+		       		if (json.participant_data.group == 'Sales') {
+		       			$('.marketing, .sales, .governing, .technical, .human').hide();
+		       			$('.sales').show();
+		       			$('.sales').append(newAppend);
+		       		}	
+		       		if (json.participant_data.group == 'Technical') {
+		       			$('.marketing, .sales, .governing, .technical, .human').hide();
+		       			$('.technical').show();
+		       			$('.technical').append(newAppend);
+		       		}	
+		       		if (json.participant_data.group == 'Human Resources') {
+		       			$('.marketing, .sales, .governing, .technical, .human').hide();
+		       			$('.human').show();
+		       			$('.human').append(newAppend);
+		       		}	
+					//div.append(newAppend);
 				}, 2000);
 			}
 		},
@@ -887,6 +912,7 @@ function seaarch_participant(search){
 			$('#legend__board').hide();
 			setTimeout(function(){
 				$('.spinner').hide();
+				$('.marketing, .sales, .governing, .technical, .human').hide();
 				div.prepend('<legend id="legend__results">No results for: '+search+'</legend>');
 			}, 2000);
 		}
@@ -1039,4 +1065,15 @@ function isValidEmailAddress(emailAddress) {
 	return pattern.test(emailAddress);
 };
 
-
+function showHideGroups(){
+	if($('.sales li').length > 0)
+		$('.sales').show();
+	if($('.governing li').length > 0)
+		$('.governing').show();
+	if($('.marketing li').length > 0)
+		$('.marketing').show();
+	if($('.technical li').length > 0)
+		$('.technical').show();
+	if($('.human li').length > 0)
+		$('.human').show();
+}
