@@ -1710,4 +1710,10 @@ a.edit--proposal--provisional {
     position: absolute;
 }
 #loader--general{display:none;}
-
+.uknown__user--duration{
+    position: relative;
+    left: -20px;
+}
+.one--progress__bar{
+	top:15px!important;
+}

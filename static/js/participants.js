@@ -23,32 +23,51 @@ $(document).ready( function() {
 			type: 'GET',
 			success: function (json) {	
 				
-				console.log(json);
+				//console.log(json);
 				var newIdea = '';
 				var url_new = url[0] +'//'+ url[2] +'/static/';
 				for (var i = 0; i < json.ideas_data.length; i++) {
 					newIdea += '<div class="col-sm-12 "><div class="row home--header">';
 					newIdea += '<input type="hidden" class="idea__id" value="'+json.ideas_data[i].proposal+'">';
-					newIdea += '<div class="col-sm-1" style="padding-left: 0px;">';
-					newIdea += '<div class="home--profile--picture"><img class="img-circle new--user--icon--login" id="img-modify" src="'+json.ideas_data[i].author_profilepic_url+'"></div></div><div class="col-sm-3 home--name">';
-					newIdea += '<a href="#" id="name--modify">'+json.ideas_data[i].author_username+'</a>';
-					newIdea += '</div><div class="col-sm-3 newsfeed--duration"><p><img style="width: 15px;position: relative;top: -3px;" src="'+url_new+'images/clock-icon.png">&nbsp;';
-					newIdea += '<p class="duration--info">&nbsp;'+json.ideas_data[i].duration+'</p></p></div>';
-					newIdea += '<div class="col-sm-3 home--charge"><div class="progress home--progress">';
+					// IF IDEA DOESNT HAVE ANONYMOUS AUTHOR 
+					//if(json.ideas_data[i].if_author_public){
+						newIdea += '<div class="col-sm-1" style="padding-left: 0px;">';
+						newIdea += '<div class="home--profile--picture"><img class="img-circle new--user--icon--login" id="img-modify" src="'+json.ideas_data[i].author_profilepic_url+'"></div></div><div class="col-sm-3 home--name">';
+						newIdea += '<a href="#" id="name--modify">'+json.ideas_data[i].author_username+'</a>';
+						newIdea += '</div><div class="col-sm-3 newsfeed--duration"><p><img style="width: 15px;position: relative;top: -3px;" src="'+url_new+'images/clock-icon.png">&nbsp;';
+						newIdea += '<p class="duration--info">&nbsp;'+json.ideas_data[i].duration+'</p></p></div>';
+					/*
+					} else {
+						newIdea += '<div class="col-sm-3 newsfeed--duration"><p><img style="width: 15px;position: relative;top: -3px;" src="'+url_new+'images/clock-icon.png">&nbsp;';
+						newIdea += '<p class="duration--info">&nbsp;'+json.ideas_data[i].duration+'</p></p></div>';
+						newIdea += '<div class="col-sm-1" style="padding-left: 0px;"></div>';
+						newIdea += '<div class="col-sm-3 home--name"></div>';
+					}
+					*/
+					
 					var supporters_percent = json.ideas_data[i].supporters_num*100/json.ideas_data[i].supporters_goal_num;
-					newIdea += '<div class="progress-bar newsfeed--bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:'+supporters_percent+'%;"></div></div>';
 					if (json.ideas_data[i].volunteers_goal_num > 0) {
+						newIdea += '<div class="col-sm-3 home--charge"><div class="progress home--progress">';
+						newIdea += '<div class="progress-bar newsfeed--bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:'+supporters_percent+'%;"></div></div>';
 						newIdea += '<div class="progress home--progress2">';
 					}else{
+						newIdea += '<div class="col-sm-3 home--charge" style="top: 13px!important;"><div class="progress home--progress">';
+						newIdea += '<div class="progress-bar newsfeed--bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:'+supporters_percent+'%;"></div></div>';
 						newIdea += '<div>';
 					}
 					var volunteers_percent = json.ideas_data[i].volunteers_num*100/json.ideas_data[i].volunteers_goal_num;
 					newIdea += '<div class="progress-bar newsfeed--bar2" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:'+volunteers_percent+'%;"></div></div></div>';
-					newIdea += '<div class="col-sm-3 newsfeed--goals newsfeed--goals2"><p>'+json.ideas_data[i].supporters_num+'/'+json.ideas_data[i].supporters_goal_num+' supporters';
+					
 					if (json.ideas_data[i].volunteers_goal_num > 0) {
+						newIdea += '<div class="col-sm-3 newsfeed--goals newsfeed--goals2"><p>'+json.ideas_data[i].supporters_num+'/'+json.ideas_data[i].supporters_goal_num+' supporters';
 						newIdea += '<br>'+json.ideas_data[i].volunteers_num+'/'+json.ideas_data[i].volunteers_goal_num+' volunteers';
+						newIdea += '</p></div></div><div class="row home--proposals--body home--proposals--body2" style="background-image: url('+json.ideas_data[i].image_url+'); padding-top:47.40%;"><div class="col-sm-12 concern__div">';
+					} else {
+						newIdea += '<div class="col-sm-3 newsfeed--goals newsfeed--goals2" style="top: 12px!important;"><p>'+json.ideas_data[i].supporters_num+'/'+json.ideas_data[i].supporters_goal_num+' supporters';
+						newIdea += '</p></div></div><div class="row home--proposals--body home--proposals--body2" style="margin-top: 10px;background-image: url('+json.ideas_data[i].image_url+'); padding-top:47.40%;"><div class="col-sm-12 concern__div">';
+						
 					}
-					newIdea += '</p></div></div><div class="row home--proposals--body home--proposals--body2" style="background-image: url('+json.ideas_data[i].image_url+'); padding-top:47.40%;"><div class="col-sm-12 concern__div">';
+					
 					newIdea += '<div class="col-sm-11 newsfeed--problem">'+json.ideas_data[i].concern+'</div></div><div class="col-sm-12">';
 					newIdea += '<div class="col-sm-11 col-sm-offset-1 newsfeed--proposal">'+json.ideas_data[i].proposal+'</div></div></div> <input type="hidden" value="'+json.ideas_data[i].idea_id+'" id="idea__id">';
 					newIdea += '<div class="row newsfeed--footer"><div class="col-sm-12" style="padding-right: 0px; padding-left: 0px;">';

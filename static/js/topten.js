@@ -13,30 +13,48 @@ $(document).ready( function() {
             for (var i = 0; i < data.data.length; i++) {                      
                 newTop += '<div class="col-sm-6 home--content--proposal" ><div class="row home--header">';
                 newTop += '<input type="hidden" class="idea__id" value="'+data.data[i].proposal+'">';
-                newTop += '<div class="col-sm-1" style="padding-left: 0px;">';
-                newTop += '<div class="home--profile--picture"><img class="img-circle new--user--icon--login" src="'+data.data[i].author_profilepic_url+'"></div></div><div class="col-sm-3 home--name">';
-                if($('#host_email').val() == data.data[i].author_email)
-                    newTop += '<a href="/participants">'+data.data[i].author_username+'</a></div>';
-                else
-                    newTop += '<a href="/participants/'+data.data[i].author_email+'">'+data.data[i].author_username+'</a></div>';
-                newTop += '<div class="col-sm-1 newsfeed--duration">';
-                newTop += '<p><img style="width: 15px;position: relative;top: -3px;" src="'+url_new+'images/clock-icon.png">&nbsp;';
-                newTop += '<p class="duration--info">&nbsp;'+data.data[i].duration+'</p></p></div>';
-                newTop += '<div class="col-sm-3 home--charge"><div class="progress home--progress">';
+                // IF IDEA DOESNT HAVE ANONYMOUS AUTHOR 
+                if(data.data[i].if_author_public){
+                    newTop += '<div class="col-sm-1" style="padding-left: 0px;">';
+                    newTop += '<div class="home--profile--picture"><img class="img-circle new--user--icon--login" src="'+data.data[i].author_profilepic_url+'"></div></div><div class="col-sm-3 home--name">';
+                    if($('#host_email').val() == data.data[i].author_email)
+                        newTop += '<a href="/participants">'+data.data[i].author_username+'</a></div>';
+                    else
+                        newTop += '<a href="/participants/'+data.data[i].author_email+'">'+data.data[i].author_username+'</a></div>';
+                    newTop += '<div class="col-sm-1 newsfeed--duration">';
+                    newTop += '<p><img style="width: 15px;position: relative;top: -3px;" src="'+url_new+'images/clock-icon.png">&nbsp;';
+                    newTop += '<p class="duration--info">&nbsp;'+data.data[i].duration+'</p></p></div>';
+                } else {
+                    newTop += '<div class="col-sm-1 newsfeed--duration">';
+                    newTop += '<p><img style="width: 15px;position: relative;top: -3px;" src="'+url_new+'images/clock-icon.png">&nbsp;';
+                    newTop += '<p class="duration--info">&nbsp;'+data.data[i].duration+'</p></p></div>';
+                    newTop += '<div class="col-sm-1" style="padding-left: 0px;"></div>';
+                    newTop += '<div class="col-sm-3 home--name"></div>';
+                }
+                
                 var supporters_percent = data.data[i].supporters_num*100/data.data[i].supporters_goal_num;
-                newTop += '<div class="progress-bar newsfeed--bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:'+supporters_percent+'%;"></div></div>';
-                if(data.data[i].volunteers_goal_num >0)
+                if(data.data[i].volunteers_goal_num >0){
+                    newTop += '<div class="col-sm-3 home--charge"><div class="progress home--progress">';
+                    newTop += '<div class="progress-bar newsfeed--bar " role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:'+supporters_percent+'%;"></div></div>';
                     newTop += '<div class="progress home--progress2">';
-                else
+                } else {
+                    newTop += '<div class="col-sm-3 home--charge one--progress__bar"><div class="progress home--progress">';
+                    newTop += '<div class="progress-bar newsfeed--bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:'+supporters_percent+'%;"></div></div>';
                     newTop += '<div>';
+                }
                 var volunteers_percent = data.data[i].volunteers_num*100/data.data[i].volunteers_goal_num;
                 newTop += '<div class="progress-bar newsfeed--bar2" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:'+volunteers_percent+'%;"></div></div></div>';
-                newTop += '<div class="col-sm-3 newsfeed--goals newsfeed--goals3"><p>'+data.data[i].supporters_num+'/'+data.data[i].supporters_goal_num+' supporters<br>';
+                
                 if(data.data[i].volunteers_goal_num >0){
+                    newTop += '<div class="col-sm-3 newsfeed--goals newsfeed--goals3"><p>'+data.data[i].supporters_num+'/'+data.data[i].supporters_goal_num+' supporters<br>';
                     newTop += data.data[i].volunteers_num+'/'+data.data[i].volunteers_goal_num+' volunteers<br>';
                     newTop += '</p></div></div><div class="row home--proposals--body" style="background-image: url('+data.data[i].image_url+');"><div class="col-sm-12 concern__div">';
                 } else {
-                    newTop += '</p></div></div><div class="row home--proposals--body" style="margin-top: 9px;background-image: url('+data.data[i].image_url+');"><div class="col-sm-12 concern__div">';
+                    newTop += '<div class="col-sm-3 newsfeed--goals newsfeed--goals3" style="top:10px!important;"><p>'+data.data[i].supporters_num+'/'+data.data[i].supporters_goal_num+' supporters<br>';
+                    if(data.data[i].if_author_public)
+                        newTop += '</p></div></div><div class="row home--proposals--body" style="margin-top: 9px;background-image: url('+data.data[i].image_url+');"><div class="col-sm-12 concern__div">';
+                    else
+                        newTop += '</p></div></div><div class="row home--proposals--body" style="margin-top: 28px;background-image: url('+data.data[i].image_url+');"><div class="col-sm-12 concern__div">';
                 }
                 newTop += '<div class="col-sm-11 newsfeed--problem">'+data.data[i].concern+'</div></div><div class="col-sm-12">';
                 newTop += '<div class="col-sm-11 col-sm-offset-1 newsfeed--proposal">'+data.data[i].proposal+'</div></div></div> <input type="hidden" value="'+data.data[i].idea_id+'" id="idea__id">';

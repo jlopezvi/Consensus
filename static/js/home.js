@@ -117,29 +117,46 @@ function showIdeas(list, index){
   code += '<div class="col-xs-12 col-sm-6 home--content--proposal">';
   code += '<div class="row home--header">';
   code += '<input type="hidden" class="idea__id" value="'+list.proposal+'">';
-	code += '<div class="col-sm-1" style="padding-left: 0px;">';
-	code += '<div class="home--profile--picture pic--home"><img src="'+list.author_profilepic_url+'"></div></div>';
-	code += '<div class="col-sm-3 home--name"><a href="/participants/'+list.author_email+'">'+list.author_username+'</a></div>';
-	code += '<div class="col-sm-1 newsfeed--duration"><p><img style="width:20px;position:relative;top:-3px;" src="/static/images/clock-icon.png">&nbsp;';
-	code += '<p class="duration--info">&nbsp;'+list.duration+'</p></p></div>';
-	//code += '<p><img style="width:20px;position:relative;top:-3px;" src="/static/images/clock-icon.png">&nbsp;'+list.duration+'</p></div>';
-	code += '<div class="col-sm-3 home--charge"><div class="progress home--progress">';
+  // IF IDEA DOESNT HAVE ANONYMOUS AUTHOR 
+  if(list.if_author_public){
+  	code += '<div class="col-sm-1" style="padding-left: 0px;">';
+  	code += '<div class="home--profile--picture pic--home"><img src="'+list.author_profilepic_url+'"></div></div>';
+  	code += '<div class="col-sm-3 home--name"><a href="/participants/'+list.author_email+'">'+list.author_username+'</a></div>';
+  	code += '<div class="col-sm-1 newsfeed--duration"><p><img style="width:20px;position:relative;top:-3px;" src="/static/images/clock-icon.png">&nbsp;';
+  	code += '<p class="duration--info">&nbsp;'+list.duration+'</p></p></div>';
+  } else {
+    code += '<div class="col-sm-1 newsfeed--duration"><p><img style="width:20px;position:relative;top:-3px;" src="/static/images/clock-icon.png">&nbsp;';
+  	code += '<p class="duration--info">&nbsp;'+list.duration+'</p></p></div>';
+    code += '<div class="col-sm-1" style="padding-left: 0px;"></div>';
+  	code += '<div class="col-sm-3 home--name"></div>';
+  }
+	
 	var support_percent = (list.supporters_num*100)/list.supporters_goal_num;
-	code += '<div class="progress-bar newsfeed--bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:'+support_percent+'%"></div></div>';
   if (list.volunteers_goal_num > 0) {
+    code += '<div class="col-sm-3 home--charge"><div class="progress home--progress">';
+    code += '<div class="progress-bar newsfeed--bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:'+support_percent+'%"></div></div>';
     code += '<div class="progress home--progress2">';
   }else{
+    code += '<div class="col-sm-3 home--charge" style="top:22px!important;"><div class="progress home--progress">';
+    code += '<div class="progress-bar newsfeed--bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:'+support_percent+'%"></div></div>';
     code += '<div>';
   }
+  
 	var volunter_percent = (list.volunteers_num*100)/list.volunteers_goal_num;
 	code += '<div class="progress-bar newsfeed--bar2" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:'+volunter_percent+'%"></div>';
-	code += '</div></div><div class="col-sm-4 newsfeed--goals">';
-	code += '<p>'+list.supporters_num+'/'+list.supporters_goal_num+' supporters<br>';
+	
 	if (list.volunteers_goal_num > 0) {
+	  code += '</div></div><div class="col-sm-4 newsfeed--goals">';
+	  code += '<p>'+list.supporters_num+'/'+list.supporters_goal_num+' supporters<br>';
 	  code += '<p>'+list.volunteers_num+'/'+list.volunteers_goal_num+' volunteers<br>';
 	  code += '</div></div><div class="row home--proposals--body" style="background-image: url('+list.image_url+');">';
 	} else {
-	  code += '</div></div><div class="row home--proposals--body" style="margin-top: 5px;background-image: url('+list.image_url+');">';
+	  code += '</div></div><div class="col-sm-4 newsfeed--goals" style="top:16px!important;">';
+	  code += '<p>'+list.supporters_num+'/'+list.supporters_goal_num+' supporters<br>';
+	  if(list.if_author_public)
+	    code += '</div></div><div class="row home--proposals--body" style="margin-top: 5px;background-image: url('+list.image_url+');">';
+   else
+      code += '</div></div><div class="row home--proposals--body" style="margin-top: 24px;background-image: url('+list.image_url+');">';
 	}
 	code += '<div class="col-sm-12"><div class="col-sm-11 newsfeed--problem">'+list.concern+'</div>';
 	code += '</div><div class="col-sm-12"><div class="col-sm-11 col-sm-offset-1 newsfeed--proposal">'+list.proposal+'</div></div>';
