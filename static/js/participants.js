@@ -81,7 +81,10 @@ $(document).ready( function() {
 					newIdea += '<div class="col-sm-1 redflag--img"><input type="hidden" class="id" value="'+json.ideas_data[i].proposal+'"><img class="redflag" src="'+url_new+'images/redflag.png"></div>';
 					newIdea += '<div class="col-sm-2 neewsfeed--moreinfo" style="float:right;">';
 					newIdea += '<input type="button" name="more-info" class="home--button"></div><div id="more--info--modal" hidden><p><h4>  More information about the problem: </h4> '+json.ideas_data[i].moreinfo_concern+'</br></br><h4> More information about the proposal: </h4>'+json.ideas_data[i].moreinfo_proposal+'</p></div></div></div>';
-					newIdea += '<div class="row newsfeed--persons newsfeed--persons2"><div class="col-sm-12"><div class="col-sm-1" style="padding:0;">';
+					if(url.length != 4)
+						newIdea += '<div class="row newsfeed--persons" style="top:5px;"><div class="col-sm-12"><div class="col-sm-1" style="padding:0;">';
+					else
+						newIdea += '<div class="row newsfeed--persons newsfeed--persons2"><div class="col-sm-12"><div class="col-sm-1" style="padding:0;">';
 					newIdea += '<img src="'+url_new+'images/check-small.png"></div><div class="col-sm-11 newsfeed--likes">';
 					newIdea += '<ul class="ul--liked">';
 					if(json.ideas_data[i].supporters_num > 0){
