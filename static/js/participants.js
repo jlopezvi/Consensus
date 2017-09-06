@@ -862,6 +862,11 @@ function seaarch_participant(search){
 		type: 'GET',
 		success: function (json) {
 			//console.log(json);
+			var _exists = false;
+			$('.addproposal--step2').find('legend').find('li input').each(function(){
+				if($(this).val() == json.participant_data.id)
+					return _exists = true;
+			});
 			if(json.result == 'OK'){
 				$('.spinner').show();
 				var newAppend = '';
@@ -878,30 +883,36 @@ function seaarch_participant(search){
                 setTimeout(function(){
                 	$('.spinner').hide();
 					$('.addproposal--step__div ul').find('li.participants__li__private').remove();	
+					
 	            	if (json.participant_data.group == 'Governing Board') {
 		       			$('.marketing, .sales, .governing, .technical, .human').hide();
 		       			$('.governing').show();
-		       			$('.governing').append(newAppend);
+		       			if(!_exists)
+		       				$('.governing').append(newAppend);
 		       		}	
 		       		if (json.participant_data.group == 'Marketing') {
 		       			$('.marketing, .sales, .governing, .technical, .human').hide();
 		       			$('.marketing').show();
-		       			$('.marketing').append(newAppend);
+		       			if(!_exists)
+		       				$('.marketing').append(newAppend);
 		       		}	
 		       		if (json.participant_data.group == 'Sales') {
 		       			$('.marketing, .sales, .governing, .technical, .human').hide();
 		       			$('.sales').show();
-		       			$('.sales').append(newAppend);
+		       			if(!_exists)
+		       				$('.sales').append(newAppend);
 		       		}	
 		       		if (json.participant_data.group == 'Technical') {
 		       			$('.marketing, .sales, .governing, .technical, .human').hide();
 		       			$('.technical').show();
-		       			$('.technical').append(newAppend);
+		       			if(!_exists)
+		       				$('.technical').append(newAppend);
 		       		}	
 		       		if (json.participant_data.group == 'Human Resources') {
 		       			$('.marketing, .sales, .governing, .technical, .human').hide();
 		       			$('.human').show();
-		       			$('.human').append(newAppend);
+		       			if(!_exists)
+		       				$('.human').append(newAppend);
 		       		}	
 					//div.append(newAppend);
 				}, 2000);
