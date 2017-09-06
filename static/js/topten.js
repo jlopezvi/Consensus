@@ -193,9 +193,14 @@ $(document).ready( function() {
 			}							
 		});
 
+        $('.edit--proposal--hint').show();
+		$('#modal_proposal1').find('h4.modal-title').html('Edit Proposal (1/3)');
+		$('#modal_proposal2').find('h4.modal-title').html('Edit Proposal (2/3)');
+		$('#modal_proposal3').find('h4.modal-title').html('Edit Proposal (3/3)');
+		$('#modal_proposal3').find('.modal-prev > button').attr("onclick", "showModal('modal_proposal2', false)");
     	$('#modal_proposal1').modal('toggle');
 
-    	$('.add--proposal--provisional').hide();
+    	$('.add--proposal--provisional').show();
     	$('.edit--proposal--provisional').hide();
     	$('.controlss').append('<a class="edit--proposal--provisional">Edit Proposal</a>');
     	$('.controlss').append('<input type="hidden" id="propoid" value="'+propid+'">');
@@ -236,6 +241,7 @@ $(document).ready( function() {
                 dataType: 'json',
                 success: function (json) {
                     alert(json.result_msg);
+                    window.location = '../home';
                     location.reload();
                 },
                 error: function(response){

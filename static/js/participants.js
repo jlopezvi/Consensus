@@ -590,7 +590,12 @@ $(document).ready( function() {
 			$('#cropme_bidea').append('<img style="width: 300px; height: 169px;" src='+json.image_url+'>');
 			}							
 		});
-
+		
+		$('.edit--proposal--hint').show();
+		$('#modal_proposal1').find('h4.modal-title').html('Edit Proposal (1/3)');
+		$('#modal_proposal2').find('h4.modal-title').html('Edit Proposal (2/3)');
+		$('#modal_proposal3').find('h4.modal-title').html('Edit Proposal (3/3)');
+		$('#modal_proposal3').find('.modal-prev > button').attr("onclick", "showModal('modal_proposal2', false)");
     	$('#modal_proposal1').modal('toggle');
 
     	$('.add--proposal--provisional').hide();
@@ -634,7 +639,9 @@ $(document).ready( function() {
 	     	   dataType: 'json',
 	     	   success: function (json) {
 	     	     alert(json.result_msg);
+    			 window.location = '../home';
 	     	     $('.close').click();
+	     	     
 	     	   },
 	     	   error: function(response){
 	     	     console.log('Error');

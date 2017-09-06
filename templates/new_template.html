@@ -97,6 +97,9 @@ body,
                         <input type="text" name="" id="concern" class="form-control" required maxlength="140">
                         <br><p>A proposal that may be consensual (140 characters). </p>
                         <input type="text" name="" id="proposal" class="form-control" required maxlength="140">
+                        <p class="edit--proposal--hint">
+                            REMARK: if you change the proposal it will be re-started and re-sent to all the voters
+                        </p>
                     </div>
                 </div>
                 <div class="col-xs-12" style="margin-top:20px;">
@@ -190,10 +193,10 @@ body,
             </div>
             <div class="col-sm-12 modal-controls">
                 <div class="modal-next">
-                    <button onclick="showModal('modal_proposal3')"><img src="{{ url_for('static',filename='images/next.png') }}"></button>
+                    <button onclick="showModal('modal_proposal3', true)"><img src="{{ url_for('static',filename='images/next.png') }}"></button>
                 </div>
                 <div class="modal-prev">
-                    <button onclick="showModal('modal_proposal1')"><img src="{{ url_for('static',filename='images/back.png') }}"></button>
+                    <button onclick="showModal('modal_proposal1', true)"><img src="{{ url_for('static',filename='images/back.png') }}"></button>
                 </div>
            </div>
           </div>
@@ -229,7 +232,7 @@ body,
             </div>
             <div class="col-sm-12 modal-controls controlss">
                 <div class="modal-prev">
-                    <button onclick="showModal('modal_proposal2')"><img src="{{ url_for('static',filename='images/back.png') }}"></button>
+                    <button onclick="showModal('modal_proposal2', true)"><img src="{{ url_for('static',filename='images/back.png') }}"></button>
                 </div>
                 <a class="add--proposal--provisional"></a>
            </div>

@@ -769,7 +769,7 @@ a.add--proposal--button:hover, a.add--proposal--button:active, a.add--proposal--
 	background: rgba(255,255,255,0.9);
 }
 #modal_proposal1 .modal-body {
-	height: 820px;
+	height: 830px;
 	padding: 20px 50px;
 }
 #modal_proposal1 .modal-header .close {
@@ -1716,4 +1716,10 @@ a.edit--proposal--provisional {
 }
 .one--progress__bar{
 	top:15px!important;
+}
+.edit--proposal--hint{
+	position: relative;
+	top: 5px;
+	color: red;
+	display: none;
 }

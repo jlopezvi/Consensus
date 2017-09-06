@@ -21,7 +21,10 @@ $(document).ready(function(){
 
   $('#next').on('click', function(){
     if ($('#proposal').val() != "" ) {
-        showModal('modal_proposal2');
+        if($('#modal_proposal1').find('h4.modal-title').html() == 'Edit Proposal (1/3)')
+          showModal('modal_proposal3', true);
+        else
+          showModal('modal_proposal2');
       }else{
         $('#proposal').css("border-color", "red");
       }  
@@ -203,12 +206,25 @@ $(document).ready(function(){
     }
     
   });
+  
+  $(document).on('click', '.add--proposal--button', function(){
+    $('.edit--proposal--hint').hide();
+		$('#modal_proposal1').find('h4.modal-title').html('Add Proposal (1/3)');
+		$('#modal_proposal2').find('h4.modal-title').html('Add Proposal (2/3)');
+		$('#modal_proposal3').find('h4.modal-title').html('Add Proposal (3/3)');
+		$('#modal_proposal3').find('.modal-prev > button').attr("onclick", "showModal('modal_proposal2', true)");
+  	$('.add--proposal--provisional').show();
+  	$('.edit--proposal--provisional').hide();
+  });
 
 });
 
-function showModal(id) {
+function showModal(id, _opt = true) {
     $('.modal').modal('hide');
-    $("#" + id).modal();
+    if(!_opt)
+       $("#modal_proposal1").modal();
+    else
+      $("#" + id).modal();
   }
 
 
