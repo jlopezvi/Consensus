@@ -48,11 +48,14 @@ $(document).ready( function() {
                 if(data.data[i].volunteers_goal_num >0){
                     newTop += '<div class="col-sm-3 newsfeed--goals newsfeed--goals3"><p>'+data.data[i].supporters_num+'/'+data.data[i].supporters_goal_num+' supporters<br>';
                     newTop += data.data[i].volunteers_num+'/'+data.data[i].volunteers_goal_num+' volunteers<br>';
-                    newTop += '</p></div></div><div class="row home--proposals--body" style="background-image: url('+data.data[i].image_url+');"><div class="col-sm-12 concern__div">';
+                    var _top = '';
+                    if(((i+1)%2)==0)
+                        _top = 'margin-top: 1px;';
+                    newTop += '</p></div></div><div class="row home--proposals--body" style="'+_top+'background-image: url('+data.data[i].image_url+');"><div class="col-sm-12 concern__div">';
                 } else {
                     newTop += '<div class="col-sm-3 newsfeed--goals newsfeed--goals3" style="top:10px!important;"><p>'+data.data[i].supporters_num+'/'+data.data[i].supporters_goal_num+' supporters<br>';
                     if(data.data[i].if_author_public)
-                        newTop += '</p></div></div><div class="row home--proposals--body" style="margin-top: 9px;background-image: url('+data.data[i].image_url+');"><div class="col-sm-12 concern__div">';
+                        newTop += '</p></div></div><div class="row home--proposals--body" style="margin-top: 10px;background-image: url('+data.data[i].image_url+');"><div class="col-sm-12 concern__div">';
                     else
                         newTop += '</p></div></div><div class="row home--proposals--body" style="margin-top: 28px;background-image: url('+data.data[i].image_url+');"><div class="col-sm-12 concern__div">';
                 }
@@ -194,9 +197,8 @@ $(document).ready( function() {
 		});
 
         $('.edit--proposal--hint').show();
-		$('#modal_proposal1').find('h4.modal-title').html('Edit Proposal (1/3)');
-		$('#modal_proposal2').find('h4.modal-title').html('Edit Proposal (2/3)');
-		$('#modal_proposal3').find('h4.modal-title').html('Edit Proposal (3/3)');
+		$('#modal_proposal1').find('h4.modal-title').html('Edit Proposal (1/2)');
+		$('#modal_proposal3').find('h4.modal-title').html('Edit Proposal (2/2)');
 		$('#modal_proposal3').find('.modal-prev > button').attr("onclick", "showModal('modal_proposal2', false)");
     	$('#modal_proposal1').modal('toggle');
 

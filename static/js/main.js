@@ -21,7 +21,7 @@ $(document).ready(function(){
 
   $('#next').on('click', function(){
     if ($('#proposal').val() != "" ) {
-        if($('#modal_proposal1').find('h4.modal-title').html() == 'Edit Proposal (1/3)')
+        if($('#modal_proposal1').find('h4.modal-title').html() == 'Edit Proposal (1/2)')
           showModal('modal_proposal3', true);
         else
           showModal('modal_proposal2');

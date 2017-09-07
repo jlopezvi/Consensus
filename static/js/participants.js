@@ -592,9 +592,8 @@ $(document).ready( function() {
 		});
 		
 		$('.edit--proposal--hint').show();
-		$('#modal_proposal1').find('h4.modal-title').html('Edit Proposal (1/3)');
-		$('#modal_proposal2').find('h4.modal-title').html('Edit Proposal (2/3)');
-		$('#modal_proposal3').find('h4.modal-title').html('Edit Proposal (3/3)');
+		$('#modal_proposal1').find('h4.modal-title').html('Edit Proposal (1/2)');
+		$('#modal_proposal3').find('h4.modal-title').html('Edit Proposal (2/2)');
 		$('#modal_proposal3').find('.modal-prev > button').attr("onclick", "showModal('modal_proposal2', false)");
     	$('#modal_proposal1').modal('toggle');
 
