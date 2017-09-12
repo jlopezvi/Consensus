@@ -9,8 +9,8 @@
     top: 220px;
 }
 .select--options img#rejected{
-    width: 30px!important;
-    height: 30px!important;
+    /*width: 30px!important;
+    height: 30px!important;*/
 }
 .home--name {
     left: 40px;
@@ -127,14 +127,9 @@
     margin-top: 0px;
 }
 .icons2 {
-    width: 45px!important;
-    height: 45px!important;
     top: -25px;
+    left:10px;
     position: relative;
-}
-#rejected {
-    width: 50px!important;
-    height: 50px!important;
 }
 .redflag2{
     top: 20px;

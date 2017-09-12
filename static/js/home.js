@@ -28,7 +28,7 @@ $(document).ready( function() {
     $('#uno').hide();
     $('#lastweek').empty();
     $('#dos').hide();
-    $('#thismounth').empty();
+    $('#thismonth').empty();
     $('#tres').hide();
     loadHomeIdeas(type_vote);
   });
@@ -144,12 +144,15 @@ function showIdeas(list, index){
   
 	var volunter_percent = (list.volunteers_num*100)/list.volunteers_goal_num;
 	code += '<div class="progress-bar newsfeed--bar2" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:'+volunter_percent+'%"></div>';
-	
+	var _top = '';
+  if(((index+1)%2)==0)
+    _top = 'margin-top: 1px;';
 	if (list.volunteers_goal_num > 0) {
 	  code += '</div></div><div class="col-sm-4 newsfeed--goals">';
 	  code += '<p>'+list.supporters_num+'/'+list.supporters_goal_num+' supporters<br>';
 	  code += '<p>'+list.volunteers_num+'/'+list.volunteers_goal_num+' volunteers<br>';
-	  code += '</div></div><div class="row home--proposals--body" style="background-image: url('+list.image_url+');">';
+	  
+	  code += '</div></div><div class="row home--proposals--body" style="'+_top+'background-image: url('+list.image_url+');">';
 	} else {
 	  code += '</div></div><div class="col-sm-4 newsfeed--goals" style="top:16px!important;">';
 	  code += '<p>'+list.supporters_num+'/'+list.supporters_goal_num+' supporters<br>';
@@ -170,11 +173,14 @@ function showIdeas(list, index){
 	
   code += '<div class="row home--share"><div class="col-sm-8 home--share--icons">';
   code += '<input type="hidden" class="index--idea" value="'+index+'">';
-	code += '<div class="col-sm-6" style="padding:0;">';
-	code += '<img src="/static/images/x-icon.png" class="home--share--button" id="rejected">';
-	code += '<img style="width: 50px;" src="/static/images/check-icon.png" class="home--share--button" id="supported">';
+	code += '<div class="col-sm-6" style="padding:4px 8px;">';
+	//code += '<img src="/static/images/x-icon.png" class="home--share--button" id="rejected">';
+	//code += '<img style="width: 50px;" src="/static/images/check-icon.png" class="home--share--button" id="supported">';
+  code += '<div id="rejected" class="home--share--button"></div>';
+  code += '<div id="supported" class="home--share--button"></div>';
   if (list.volunteers_goal_num > 0) {
-    code += '<img style="width: 50px;" src="/static/images/checkmark.png" class="home--share--button" id="supported-plus">';
+    //code += '<img style="width: 50px;" src="/static/images/checkmark.png" class="home--share--button" id="supported-plus">';
+    code += '<div id="supported-plus" class="home--share--button"></div>';
   }
 	code += '</div><div class="col-sm-6 home--followers hidden"><i class="fa fa-share-alt"></i><p>Share with: followers</p></div></div></div>';
 	

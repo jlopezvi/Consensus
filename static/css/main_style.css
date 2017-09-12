@@ -720,7 +720,7 @@ a.add--proposal--button:hover, a.add--proposal--button:active, a.add--proposal--
 	width: 30px;
 }
 .unselected--option img, .selected--option img{
-	margin: 0 2px 0 4px;
+	margin: 0 10px 0 4px;
 }
 .select--triangle:hover, .unselected--option:hover {
 	cursor: pointer;
@@ -1722,4 +1722,41 @@ a.edit--proposal--provisional {
 	top: 5px;
 	color: red;
 	display: none;
+}
+
+
+/*************** NEW HOVER BUTTONS ***********************/
+div#rejected, div#supported, div#ignored, div#support__plus--button, div#supported-plus{
+    background-size: cover;
+    display: inline-block;
+}
+div#rejected{
+	width: 34px;
+    height: 34px;
+    background-image: url('/static/images/reject-unhover.png');
+}
+div#rejected:hover{
+	background-image: url('/static/images/reject-hover.png');
+}
+div#supported, div#ignored, div#support__plus--button, div#supported-plus{
+	width: 40px;
+    height: 40px;
+}
+div#supported{
+	background-image: url('/static/images/check-unhover.png');
+}
+div#supported:hover{
+	background-image: url('/static/images/check-hover.png');
+}
+div#ignored{
+	background-image: url('/static/images/ignore-unhover.png');
+}
+div#ignored:hover{
+	background-image: url('/static/images/ignore-hover.png');
+}
+div#support__plus--button, div#supported-plus{
+	background-image: url('/static/images/check_volunteer-unhover.png');
+}
+div#support__plus--button:hover, div#supported-plus:hover{
+	background-image: url('/static/images/check_volunteer-hover.png');
 }
