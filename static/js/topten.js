@@ -202,9 +202,8 @@ $(document).ready( function() {
 		$('#modal_proposal3').find('.modal-prev > button').attr("onclick", "showModal('modal_proposal2', false)");
     	$('#modal_proposal1').modal('toggle');
 
-    	$('.add--proposal--provisional').show();
-    	$('.edit--proposal--provisional').hide();
-    	$('.controlss').append('<a class="edit--proposal--provisional">Edit Proposal</a>');
+    	$('.add--proposal--provisional').hide();
+    	$('.edit--proposal--provisional').show();
     	$('.controlss').append('<input type="hidden" id="propoid" value="'+propid+'">');
     });
     

@@ -601,8 +601,7 @@ $(document).ready( function() {
     	$('#modal_proposal1').modal('toggle');
 
     	$('.add--proposal--provisional').hide();
-    	$('.edit--proposal--provisional').hide();
-    	$('.controlss').append('<a class="edit--proposal--provisional">Edit Proposal</a>');
+    	$('.edit--proposal--provisional').show();
     	$('.controlss').append('<input type="hidden" id="propoid" value="'+propid+'">')
     });
 
