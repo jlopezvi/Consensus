@@ -430,7 +430,9 @@ def _get_idea_data(idea):
 #              ],
 #             'known_rejectors':[
 #                { 'email': 'd@', 'username': 'Elisa' }
-#              ]
+#              ],
+#             'vote_type': None / 'supported' / 'rejected' / 'ignored'
+#             'vote_ifvolunteered': None / True / False
 #            }
 def _get_idea_data_for_user(idea, user_email):
     from app import SUPPORT_RATE_MIN
@@ -478,6 +480,15 @@ def _get_idea_data_for_user(idea, user_email):
                       'rejectors_num': rejectors_num, 'volunteers_num': volunteers_num,
                       'support_rate': support_rate, 'support_rate_MIN': SUPPORT_RATE_MIN,
                       'known_supporters': known_supporters_data, 'known_rejectors': known_rejectors_data})
+    # add possible voting relationship, or None
+    vote_type = None
+    vote_ifvolunteered = None
+    voting_rel = getGraph().match_one(start_node=user, rel_type="VOTED_ON", end_node=idea)
+    if voting_rel:
+        vote_type = voting_rel["type"]
+        vote_ifvolunteered = voting_rel["ifvolunteered"]
+    idea_data.update({'vote_type': vote_type, 'vote_ifvolunteered': vote_ifvolunteered})
+    #
     return idea_data
 
 

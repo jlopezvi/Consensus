@@ -542,7 +542,9 @@ def get_ideas_created_by_participant(participant_email,user_email_DEBUG=None):
 #              ],
 #             'known_rejectors':[
 #                { 'email': 'd@', 'username': 'Elisa' }
-#              ]
+#              ],
+#             'vote_type': null / 'supported' / 'rejected' / 'ignored'
+#             'vote_ifvolunteered': null / true / false
 #            },
 #            {
 #              ...
@@ -748,7 +750,9 @@ def registration_receive_emailverification(token):
 #              ],
 #             'known_rejectors':[
 #                { 'email': 'd@', 'username': 'Elisa' }
-#              ]
+#              ],
+#             'vote_type': null / 'supported' / 'rejected' / 'ignored'
+#             'vote_ifvolunteered': null / true / false
 #            },
 #            {
 #              ...
@@ -789,7 +793,9 @@ def ideas_for_newsfeed(user_email_DEBUG = None):
 #              ],
 #             'known_rejectors':[
 #                { 'email': 'd@', 'username': 'Elisa' }
-#              ]
+#              ],
+#             'vote_type': null / 'supported' / 'rejected' / 'ignored'
+#             'vote_ifvolunteered': null / true / false
 #            },
 #            {
 #              ...
@@ -831,7 +837,9 @@ def ideas_for_home(user_email_DEBUG = None):
 #              ],
 #             'known_rejectors':[
 #                { 'email': 'd@', 'username': 'Elisa' }
-#              ]
+#              ],
+#             'vote_type': null / 'supported' / 'rejected' / 'ignored'
+#             'vote_ifvolunteered': null / true / false
 #            },
 #            {
 #              ...
