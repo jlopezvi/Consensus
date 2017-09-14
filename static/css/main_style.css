@@ -1609,6 +1609,7 @@ a.edit--proposal--provisional {
 }
 .vote__idea--button{
 	cursor: pointer;
+	margin-left: 5px;
 }
 .home--content--proposal {
     margin: 10px;
@@ -1748,4 +1749,15 @@ div#support__plus--button, div#supported-plus{
 }
 div#support__plus--button:hover, div#supported-plus:hover{
 	background-image: url('/static/images/check_volunteer-hover.png');
+}
+.update--password{
+	background-image: url(/static/images/update-password-btn.png);
+    width: 190px;
+    height: 40px;
+}
+.update--profile{
+	width: 190px;
+    font-size: 18px;
+    height: 40px;
+    padding: 0px;
 }
