@@ -112,7 +112,7 @@ function loadHomeIdeas(type_vote){
 }
 
 function showIdeas(list, index){
-  //console.log(list);
+  console.log(list);
   var code = '';
   code += '<div class="col-xs-12 col-sm-6 home--content--proposal">';
   code += '<div class="row home--header">';
@@ -225,25 +225,21 @@ function showIdeas(list, index){
 	}
   code += '</ul></div></div></div>';
 	code += '</div>';
-	
-	if (list.duration[6] == 'o' || list.duration[6] == 'u' || list.duration[4] == 'o' || list.duration[4] == 'u') {
-    $('#uno').show();
+	if (list.duration.toLowerCase().indexOf("hour") >= 0) {
     $('#today').append(code);
-  }else{
-    $('#uno').hide();
-  }
-  if (list.duration[3] == 'a' ) {
-    $('#dos').show();
+  }else
+  if (list.duration.toLowerCase().indexOf("day") >= 0) {
     $('#lastweek').append(code);
-  }else{
-    $('#dos').hide();
-  }
-  if (list.duration[4] == 'e' || list.duration[4] == 'w') {
-    $('#tres').show();
+  }else
+  if (list.duration.toLowerCase().indexOf("week") >= 0) {
     $('#thismonth').append(code);
-  }else{
-    $('#tres').hide();   
   }
+  if($('#today').children().length >0)
+    $('#uno').show();
+  if($('#lastweek').children().length>0)
+    $('#dos').show();
+  if($('#thismonth').children().length>0)
+    $('#tres').show();
 }
 
 $(document).on('click', '.neewsfeed--moreinfo', function(){
