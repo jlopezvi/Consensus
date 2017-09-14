@@ -659,38 +659,51 @@ $(document).ready( function() {
 	    	}
     });
     
+    $(document).on('click', '.update--password', function(){
+    	$('#message--modify').remove();
+    	$('#newpass').val('');
+    	$('#con--newpass').val('');
+    	$('#oldpass').val('');
+    });
+    
     $(document).on('click', '#accept_modify_password', function(){
-    	var newPass = {
+    	$('#message--modify').remove();
+    	 newPass = {
     		'old_password': $('#oldpass').val(),
     		'new_password': $('#newpass').val()
     	}
     	
-    	if ($('#newpass').val() == $('#con--newpass').val()) {
-    		$.ajax({
-	     	   url: url[0] + "//" + url[2] + '/modify_user_password',
-	     	   type: 'PUT',
-	     	   data: JSON.stringify(newPass),
-	     	   headers: {
-	     	     'Content-Type': 'application/json'
-	     	   },
-	     	   dataType: 'json',
-	     	   success: function (json) {
-	     	   	if (json.result == 'OK') {
-	     	   		alert('your password has been changed');
-	     	   		$('.close').click();
-	     	   	}else{
-	     	   		$('#oldpass').css("border-color", "red");
-	     	   	}
-	     	    	 
-	     	   },
-	     	   error: function(response){
-	     	     console.log('Error');
-	     	     console.log(response);
-	     	   }
-	     	});
+    	if ($('#newpass').val() != '' || $('#con--newpass').val() != '' || $('#oldpass').val() != ''){
+	    	if ($('#newpass').val() == $('#con--newpass').val()) {
+	    		$.ajax({
+		     	   url: url[0] + "//" + url[2] + '/modify_user_password',
+		     	   type: 'PUT',
+		     	   data: JSON.stringify(newPass),
+		     	   headers: {
+		     	     'Content-Type': 'application/json'
+		     	   },
+		     	   dataType: 'json',
+		     	   success: function (json) {
+		     	   	if (json.result == 'OK') {
+		     	   		alert('your password has been changed');
+		     	   		$('.close').click();
+		     	   		$('#message--modify').remove();
+		     	   	}else{
+		     	   		$('<span id="message--modify">Old password incorrect</span>').insertAfter('#last--div');
+		     	   	}
+		     	    	 
+		     	   },
+		     	   error: function(response){
+		     	     console.log('Error');
+		     	     console.log(response);
+		     	   }
+		     	});
 	    	}else{
-	      		$('#con--newpass').css("border-color", "red");
+	      		$('<span id="message--modify">New password and Confirm password does not match</span>').insertAfter('#last--div');
 	    	}
+    	} else {
+    		$('<span id="message--modify">Password must not be empty</span>').insertAfter('#last--div');
+    	}
     });
 
     $(document).on('click', '.icons', function(){

@@ -1761,3 +1761,10 @@ div#support__plus--button:hover, div#supported-plus:hover{
     height: 40px;
     padding: 0px;
 }
+#message--modify{
+	float: right;
+    top: -15px;
+    position: relative;
+    color: red;
+    right: 10px;
+}
