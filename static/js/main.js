@@ -212,7 +212,7 @@ $(document).ready(function(){
 		$('#modal_proposal3').find('.modal-prev > button').attr("onclick", "showModal('modal_proposal2')");
   	$('.add--proposal--provisional').show();
   	$('.edit--proposal--provisional').hide();
-  	$('#modal_proposal2 .modal-body').css('height', '600px');
+  	$('#modal_proposal2 .modal-body').css('height', '');
   	$('#modal_proposal2 .modal-body').children().children().first().show();
   	$('#modal_proposal2 .modal-body').children().children().first().next().show();
   });

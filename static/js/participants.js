@@ -87,41 +87,29 @@ $(document).ready( function() {
 						newIdea += '<div class="row newsfeed--persons newsfeed--persons2"><div class="col-sm-12"><div class="col-sm-1" style="padding:0;">';
 					newIdea += '<img src="'+url_new+'images/check-small.png"></div><div class="col-sm-11 newsfeed--likes">';
 					newIdea += '<ul class="ul--liked">';
-					if(json.ideas_data[i].supporters_num > 0){
-						for(var f=0; f<json.ideas_data[i].supporters_num; f++){
-							if(f<=3){
-								if(json.ideas_data[i].known_supporters[f].email != 'user')
-									newIdea += '<a href="/participants/'+json.ideas_data[i].known_supporters[f].email+'"><li>'+json.ideas_data[i].known_supporters[f].username+'</li></a>';
-								else
-									newIdea += '<a href="/participants"><li>'+json.ideas_data[i].known_supporters[f].username+'</li></a>';
-							} else {
-								if((json.ideas_data[i].supporters_num-4) > 0)
-									newIdea += '<a href="#" class="last--liked"><li>'+(json.ideas_data[i].supporters_num-4)+' people</li></a>';
-								break;
-							}
+					if(json.ideas_data[i].known_supporters.length > 0){
+						for(var f=0; f<json.ideas_data[i].known_supporters.length; f++){
+							if(json.ideas_data[i].known_supporters[f].email != 'user')
+								newIdea += '<a href="/participants/'+json.ideas_data[i].known_supporters[f].email+'"><li>'+json.ideas_data[i].known_supporters[f].username+'</li></a>';
+							else
+								newIdea += '<a href="/participants"><li>'+json.ideas_data[i].known_supporters[f].username+'</li></a>';
 						}
-					} else {
-						newIdea += '<a href="#" class="last--liked"><li>'+json.ideas_data[i].supporters_num+' people</li></a>';
+					} if(json.ideas_data[i].supporters_num-json.ideas_data[i].known_supporters.length > 0) {
+						newIdea += '<a href="#" class="last--liked"><li>'+(json.ideas_data[i].supporters_num-json.ideas_data[i].known_supporters.length)+' people</li></a>';
 					}
 					//
 					newIdea += '</ul></div></div>';
 					newIdea += '<div class="col-sm-12"><div class="col-sm-1" style="padding:0;"><img src="'+url_new+'images/x-small.png">';
 					newIdea += '</div><div class="col-sm-11 newsfeed--likes"><ul class="ul--disliked">';
-					if(json.ideas_data[i].rejectors_num > 0){
-						for(var f=0; f<json.ideas_data[i].rejectors_num; f++){
-							if(f<=3){
-								if(json.ideas_data[i].known_rejectors[f].email != 'user')
-									newIdea += '<a href="/participants/'+json.ideas_data[i].known_rejectors[f].email+'"><li>'+json.ideas_data[i].known_rejectors[f].username+'</li></a>';
-								else
-									newIdea += '<a href="/participants"><li>'+json.ideas_data[i].known_rejectors[f].username+'</li></a>';
-							} else {
-								if((json.ideas_data[i].rejectors_num-4) > 0)
-									newIdea += '<a href="#" class="last--liked"><li>'+(json.ideas_data[i].rejectors_num-4)+' people</li></a>';
-								break;
-							}
+					if(json.ideas_data[i].known_rejectors.length > 0){
+						for(var f=0; f<json.ideas_data[i].known_rejectors.length; f++){
+							if(json.ideas_data[i].known_rejectors[f].email != 'user')
+								newIdea += '<a href="/participants/'+json.ideas_data[i].known_rejectors[f].email+'"><li>'+json.ideas_data[i].known_rejectors[f].username+'</li></a>';
+							else
+								newIdea += '<a href="/participants"><li>'+json.ideas_data[i].known_rejectors[f].username+'</li></a>';
 						}
-					} else {
-						newIdea += '<a href="#" class="last--liked"><li>'+json.ideas_data[i].rejectors_num+' people</li></a>';
+					} if(json.ideas_data[i].rejectors_num-json.ideas_data[i].known_rejectors.length > 0) {
+						newIdea += '<a href="#" class="last--liked"><li>'+(json.ideas_data[i].rejectors_num-json.ideas_data[i].known_rejectors.length)+' people</li></a>';
 					}
 					
 					newIdea += '</ul></div></div></div>';
