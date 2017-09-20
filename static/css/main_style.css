@@ -1643,7 +1643,7 @@ a.edit--proposal--provisional {
 #cropme_bidea{
 	width: 300px;
     height: 192px;
-	background-image: url(/static/images/fondo-c.png);
+	background-image: url(/static/images/fondo-c.jpg);
     background-size: contain;
     background-repeat: no-repeat;
     cursor: pointer;

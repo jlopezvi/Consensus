@@ -471,6 +471,8 @@ $(document).ready( function() {
 		      dataType: 'json',
 		      success: function (json) {
 		      	$('.close').click();
+		      	alert('Edition Completed!');
+     	    	location.reload(true);
 		      	getCurrentUserInfo();
 		        $('.participant__newsfeed').empty();
 			    getIdeasCreatedByParticipant();
@@ -617,7 +619,7 @@ $(document).ready( function() {
    		 	dataedit['if_author_public'] = opt;
 	    	
 	    	dataedit['image'] = null;
-	    	if($('#cropme_bidea img').attr('src') != "/static/images/fondo-c.png"){
+	    	if($('#cropme_bidea img').attr('src') != "/static/images/fondo-c.jpg"){
 	      		dataedit['image'] = $('#cropme_bidea img').attr('src');
 	    	}
 
