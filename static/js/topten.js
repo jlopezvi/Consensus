@@ -7,7 +7,7 @@ $(document).ready( function() {
         url: url[0] + "//" + url[2] + '/get_topten_ideas',
         method: 'GET',
         success: function(data){
-            //console.log(data);
+            console.log(data);
             var newTop = '';
             var url_new = url[0] +'//'+ url[2] +'/static/';
             for (var i = 0; i < data.data.length; i++) {                      
@@ -73,41 +73,30 @@ $(document).ready( function() {
                 newTop += '<div class="row newsfeed--persons newsfeed--persons2"><div class="col-sm-12"><div class="col-sm-1" style="padding:0;">';
                 newTop += '<img src="'+url_new+'images/check-small.png"></div><div class="col-sm-11 newsfeed--likes">';
                 newTop += '<ul class="ul--liked"><a href="#" class="last--liked">';
-                if(data.data[i].supporters_num > 0){
-    				for(var f=0; f<data.data[i].supporters_num; f++){
-    					if(f<=3){
-    						if(data.data[i].known_supporters[f].email != 'user')
-    							newTop += '<a href="/participants/'+data.data[i].known_supporters[f].email+'"><li>'+data.data[i].known_supporters[f].username+'</li></a>';
-    						else
-    							newTop += '<a href="/participants"><li>'+data.data[i].known_supporters[f].username+'</li></a>';
-    					} else {
-    						if((data.data[i].supporters_num-4) > 0)
-    							newTop += '<a href="#" class="last--liked"><li>'+(data.data[i].supporters_num-4)+' people</li></a>';
-    						break;
-    					}
+                if(data.data[i].known_supporters.length > 0){
+    				for(var f=0; f<data.data[i].known_supporters.length; f++){
+						if(data.data[i].known_supporters[f].email != 'user')
+							newTop += '<a href="/participants/'+data.data[i].known_supporters[f].email+'"><li>'+data.data[i].known_supporters[f].username+'</li></a>';
+						else
+							newTop += '<a href="/participants"><li>'+data.data[i].known_supporters[f].username+'</li></a>';
+    				
     				}
-    			} else {
-    				newTop += '<a href="#" class="last--liked"><li>'+data.data[i].supporters_num+' people</li></a>';
+    			} if(data.data[i].supporters_num-data.data[i].known_supporters.length > 0) {
+    				newTop += '<a href="#" class="last--liked"><li>'+(data.data[i].supporters_num-data.data[i].known_supporters.length)+' people</li></a>';
     			}
     			//
                 newTop +='</ul></div></div>';
                 newTop += '<div class="col-sm-12"><div class="col-sm-1" style="padding:0;"><img src="'+url_new+'images/x-small.png">';
                 newTop += '</div><div class="col-sm-11 newsfeed--likes"><ul class="ul--disliked">';
-                if(data.data[i].rejectors_num > 0){
-					for(var f=0; f<data.data[i].rejectors_num; f++){
-						if(f<=3){
-							if(data.data[i].known_rejectors[f].email != 'user')
-								newTop += '<a href="/participants/'+data.data[i].known_rejectors[f].email+'"><li>'+data.data[i].known_rejectors[f].username+'</li></a>';
-							else
-								newTop += '<a href="/participants"><li>'+data.data[i].known_rejectors[f].username+'</li></a>';
-						} else {
-							if((data.data[i].rejectors_num-4) > 0)
-								newTop += '<a href="#" class="last--liked"><li>'+(data.data[i].rejectors_num-4)+' people</li></a>';
-							break;
-						}
+                if(data.data[i].known_rejectors.length > 0){
+					for(var f=0; f<data.data[i].known_rejectors.length; f++){
+						if(data.data[i].known_rejectors[f].email != 'user')
+							newTop += '<a href="/participants/'+data.data[i].known_rejectors[f].email+'"><li>'+data.data[i].known_rejectors[f].username+'</li></a>';
+						else
+							newTop += '<a href="/participants"><li>'+data.data[i].known_rejectors[f].username+'</li></a>';
 					}
-				} else {
-					newTop += '<a href="#" class="last--liked"><li>'+data.data[i].rejectors_num+' people</li></a>';
+				} if(data.data[i].rejectors_num-data.data[i].known_rejectors.length > 0) {
+					newTop += '<a href="#" class="last--liked"><li>'+(data.data[i].rejectors_num-data.data[i].known_rejectors.length)+' people</li></a>';
 				}
 					
                 newTop += '</ul></div></div></div>';

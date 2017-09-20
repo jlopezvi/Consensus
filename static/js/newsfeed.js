@@ -149,7 +149,8 @@ function showContent(id){
 				support_html += '<a href="/participants"><li>'+list[id].known_supporters[f].username+'</li></a>';
 		}
 	}
-	support_html += '<a href="#" class="last--liked"><li>'+(list[id].supporters_num-list[id].known_supporters.length)+' people</li></a>';
+	if(list[id].supporters_num-list[id].known_supporters.length > 0)
+	  support_html += '<a href="#" class="last--liked"><li>'+(list[id].supporters_num-list[id].known_supporters.length)+' people</li></a>';
   $('#newsfeed--supporters ul').empty().append(support_html);
   
   /****************************************** Add Supporters to the Supporters List ****************************************/
@@ -162,7 +163,8 @@ function showContent(id){
 				reject_html += '<a href="/participants"><li>'+list[id].known_rejectors[f].username+'</li></a>';
 		}
   }
-	reject_html += '<a href="#" class="last--liked"><li>'+(list[id].rejectors_num-list[id].known_rejectors.length)+' people</li></a>';
+  if(list[id].rejectors_num-list[id].known_rejectors.length > 0)
+	  reject_html += '<a href="#" class="last--liked"><li>'+(list[id].rejectors_num-list[id].known_rejectors.length)+' people</li></a>';
   $('#newsfeed--rejectors ul').empty().append(reject_html);
 }
 
