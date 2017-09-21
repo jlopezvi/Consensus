@@ -102,33 +102,29 @@ def _remove_idea(idea):
 def get_ideas_created_by_participant_aux(participant_email, user_email):
     user = _get_participant_node(user_email)
     participant = _get_participant_node(participant_email)
+    ifuserisparticipant = (user_email == participant_email)
     ifpublicprofile = participant['ifpublicprofile']
-    if user_email == participant_email or _getIfContactRelationshipExists(participant, user) is True \
-            or ifpublicprofile is True:
+    ideas_indices = []
+    if ifuserisparticipant or _getIfContactRelationshipExists(participant, user) or ifpublicprofile:
         ifallowed = True
-        response = _get_ideas_created_by_participant(participant_email)
-        response['ifallowed'] = ifallowed
-        return jsonify(response)
+        ideas_indices = _get_ideas_created_by_participant_for_user(participant_email, user_email)
     else:
         ifallowed = False
-    return jsonify({"result": "OK", "ifallowed": ifallowed})
+    return jsonify({"result": "OK", "ifallowed": ifallowed, "ideas_indices": ideas_indices})
 
 
 def get_ideas_data_created_by_participant_aux(participant_email, user_email):
     user = _get_participant_node(user_email)
     participant = _get_participant_node(participant_email)
+    ifuserisparticipant = (user_email == participant_email)
     ifpublicprofile = participant.get_properties()['ifpublicprofile']
     ideas_data = []
-    if user_email == participant_email or _getIfContactRelationshipExists(participant, user) is True \
-            or ifpublicprofile is True:
+    if ifuserisparticipant or _getIfContactRelationshipExists(participant, user) or ifpublicprofile:
         ifallowed = True
-        rels = list(getGraph().match(start_node=participant, rel_type="CREATED"))
-        for rel in rels:
-            idea_data = _get_idea_data_for_user(rel.end_node, user_email)
-            ideas_data.append(idea_data)
+        ideas_data = _get_ideas_data_created_by_participant_for_user(participant_email, user_email)
     else:
         ifallowed = False
-    return jsonify({'result': 'OK',"ifallowed": ifallowed,'ideas_data': ideas_data})
+    return jsonify({'result': 'OK',"ifallowed": ifallowed, "ideas_data": ideas_data})
 
 
 def get_vote_statistics_for_idea_aux(idea_index):
@@ -213,6 +209,7 @@ def vote_on_idea_aux(user_email, inputdict):
         _do_tasks_for_idea_successful(idea_index)
     #
     return response
+
 
 def redflag_idea_aux(user_email, idea_index, reason):
     user = _get_participant_node(user_email)
@@ -310,25 +307,42 @@ def _create_or_modify_voting_relationship_to_given_type(participant, idea, vote_
         return jsonify({"result": "OK: User vote was created"})
 
 
-# <Used by get_ideas_created_by_participant_aux, _get_participant_data_by_email>
-def _get_ideas_created_by_participant(participant_email):
+# <Used by get_ideas_created_by_participant_aux>
+def _get_ideas_created_by_participant_for_user(participant_email, user_email):
+    ifuserisparticipant = (participant_email == user_email)
     participant = _get_participant_node(participant_email)
     ideas_indices=[]
     ideas=[x.end_node for x in list(getGraph().match(start_node=participant, rel_type="CREATED"))]
-    for idea in ideas:
-        idea_index=idea['proposal']
-        ideas_indices.append(idea_index)
+    if ifuserisparticipant:  # no restrictions
+        for idea in ideas:
+            idea_index = idea['proposal']
+            ideas_indices.append(idea_index)
+    else:                    # erase anonymous ideas
+        for idea in ideas:
+            if idea['if_author_public'] is False:
+                continue
+            idea_index = idea['proposal']
+            ideas_indices.append(idea_index)
+
     return {'result': 'OK', 'ideas_indices': ideas_indices}
 
 
-def _get_ideas_data_created_by_participant(participant_email):
+# <Used by get_ideas_data_created_by_participant_aux>
+def _get_ideas_data_created_by_participant_for_user(participant_email, user_email):
+    ifuserisparticipant = (participant_email == user_email)
     participant = _get_participant_node(participant_email)
     ideas_data = []
     rels = list(getGraph().match(start_node=participant, rel_type="CREATED"))
-    for rel in rels:
-        # idea_data = rel.end_node.get_properties()
-        idea_data = _get_idea_data(rel.end_node)
-        ideas_data.append(idea_data)
+    if ifuserisparticipant:  # no restrictions
+        for rel in rels:
+            idea_data = _get_idea_data(rel.end_node)
+            ideas_data.append(idea_data)
+    else:                    # erase anonymous ideas
+        for rel in rels:
+            if rel.end_node['if_author_public'] is False:
+                continue
+            idea_data = _get_idea_data(rel.end_node)
+            ideas_data.append(idea_data)
     return {'result': 'OK', 'ideas_data': ideas_data}
 
 
