@@ -506,7 +506,7 @@ def remove_idea():
 #    "ideas_indices": []
 #    }
 @app.route('/get_ideas_created_by_participant/<participant_email>', methods=['GET'])
-@app.route('/get_ideas_created_by_participant/<participant_email>/<user_email>', methods=['GET'])
+@app.route('/get_ideas_created_by_participant/<participant_email>/<user_email_DEBUG>', methods=['GET'])
 def get_ideas_created_by_participant(participant_email,user_email_DEBUG=None):
     if DEBUG and user_email_DEBUG is not None:
         user_email = user_email_DEBUG
@@ -557,13 +557,13 @@ def get_ideas_created_by_participant(participant_email,user_email_DEBUG=None):
 #    "ideas_data": []
 #    }
 @app.route('/get_ideas_data_created_by_participant/<participant_email>', methods=['GET'])
-@app.route('/get_ideas_data_created_by_participant/<participant_email>/<user_email>', methods=['GET'])
+@app.route('/get_ideas_data_created_by_participant/<participant_email>/<user_email_DEBUG>', methods=['GET'])
 def get_ideas_data_created_by_participant(participant_email,user_email_DEBUG=None):
     if DEBUG and user_email_DEBUG is not None:
         user_email = user_email_DEBUG
     else:
         user_email = flask_login.current_user.id
-    return get_ideas_data_created_by_participant_aux(participant_email,user_email)
+    return get_ideas_data_created_by_participant_aux(participant_email, user_email)
 
 
 # input   idea_proposal

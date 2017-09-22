@@ -113,7 +113,7 @@ def get_ideas_created_by_participant_aux(participant_email, user_email):
     ideas_indices = []
     if ifuserisparticipant or _getIfContactRelationshipExists(participant, user) or ifpublicprofile:
         ifallowed = True
-        ideas_indices = _get_ideas_created_by_participant_for_user(participant_email, user_email)
+        ideas_indices = _get_ideas_created_by_participant_for_user(participant_email, user_email)['ideas_indices']
     else:
         ifallowed = False
     return jsonify({"result": "OK", "ifallowed": ifallowed, "ideas_indices": ideas_indices})
@@ -127,7 +127,7 @@ def get_ideas_data_created_by_participant_aux(participant_email, user_email):
     ideas_data = []
     if ifuserisparticipant or _getIfContactRelationshipExists(participant, user) or ifpublicprofile:
         ifallowed = True
-        ideas_data = _get_ideas_data_created_by_participant_for_user(participant_email, user_email)
+        ideas_data = _get_ideas_data_created_by_participant_for_user(participant_email, user_email)['ideas_data']
     else:
         ifallowed = False
     return jsonify({'result': 'OK',"ifallowed": ifallowed, "ideas_data": ideas_data})
@@ -329,11 +329,21 @@ def _get_ideas_created_by_participant_for_user(participant_email, user_email):
                 continue
             idea_index = idea['proposal']
             ideas_indices.append(idea_index)
-
     return {'result': 'OK', 'ideas_indices': ideas_indices}
 
 
-# <Used by get_ideas_data_created_by_participant_aux>
+# <Used by _get_participant_data_DEBUG>
+def _get_ideas_created_by_participant_DEBUG(participant_email):
+    participant = _get_participant_node(participant_email)
+    ideas_indices=[]
+    ideas=[x.end_node for x in list(getGraph().match(start_node=participant, rel_type="CREATED"))]
+    for idea in ideas:
+        idea_index = idea['proposal']
+        ideas_indices.append(idea_index)
+    return {'result': 'OK', 'ideas_indices': ideas_indices}
+
+
+# <Used by get_ideas_data_created_by_participant_aux, _get_participant_data_for_user>
 def _get_ideas_data_created_by_participant_for_user(participant_email, user_email):
     ifuserisparticipant = (participant_email == user_email)
     participant = _get_participant_node(participant_email)
@@ -350,6 +360,7 @@ def _get_ideas_data_created_by_participant_for_user(participant_email, user_emai
             idea_data = _get_idea_data(rel.end_node)
             ideas_data.append(idea_data)
     return {'result': 'OK', 'ideas_data': ideas_data}
+
 
 
 def _if_ideaisinfirstphase(idea):

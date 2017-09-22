@@ -121,6 +121,7 @@ def modify_user_data_aux(user_data, user_email):
                 return jsonify({'result': 'Wrong: New e-mail already exists'})
             _removeFromParticipantsIndex(user_email, participant)
             _addToParticipantsIndex(new_email, participant)
+            # this line may be unnecessary or even a problem
             participant['email']= new_email
             user = User(new_email)
             flask_login.login_user(user)
@@ -138,9 +139,9 @@ def modify_user_password_aux(user_password_data, user_email):
 
 
 def get_user_data_aux(user_email):
-    participant = _get_participant_node(user_email)
-    participant_data = participant.get_properties()
-    return jsonify({"result": "OK", "data": participant_data})
+    user = _get_participant_node(user_email)
+    user_data = user.get_properties()
+    return jsonify({"result": "OK", "data": user_data})
 
 
 def remove_user_aux(user_email) :
@@ -161,7 +162,7 @@ def remove_user_aux(user_email) :
 
 
 def get_participant_data_aux(currentuser_email, participant_email):
-    from ideaManager import get_ideas_data_created_by_participant_aux
+    from ideaManager import _get_ideas_created_by_participant_for_user
     currentuser = _get_participant_node(currentuser_email)
     participant = _get_participant_node(participant_email)
     ifpublicprofile = participant.get_properties()['ifpublicprofile']
@@ -174,7 +175,7 @@ def get_participant_data_aux(currentuser_email, participant_email):
         fullname = participant.get_properties()['fullname']
         followers_num = len(_get_participant_followers(participant_email))
         followings_num = len(_get_participant_followings(participant_email))
-        ideas_num = len(get_ideas_data_created_by_participant_aux(participant_email))
+        ideas_num = len(_get_ideas_created_by_participant_for_user(participant_email, currentuser_email)['ideas_indices'])
         participant_data.update({'id': participant_email,'profilepic_url': profilepic_url,
                                  'username' : username, 'fullname': fullname,
                                  'ideas_num' : ideas_num,
@@ -186,7 +187,7 @@ def get_participant_data_aux(currentuser_email, participant_email):
 
 
 def get_participant_data_by_email_unrestricted_aux(participant_email):
-    return jsonify(_get_participant_data_by_email(participant_email))
+    return jsonify(_get_participant_data_DEBUG(participant_email))
 
 
 def if_participant_exists_by_email_aux(participant_email):
@@ -420,13 +421,13 @@ def _if_removed_following_contact_to_user(followingcontact_email, user_email) :
 
 
 # <Used by /get_participant_data_by_email_unrestricted>
-def _get_participant_data_by_email(participant_email):
-    from ideaManager import _get_ideas_created_by_participant
+def _get_participant_data_DEBUG(participant_email):
+    from ideaManager import _get_ideas_created_by_participant_DEBUG
     participant = _get_participant_node(participant_email)
     participant_data= {}
     followers_num = len(_get_participant_followers(participant_email))
     followings_num = len(_get_participant_followings(participant_email))
-    ideas_num = len(_get_ideas_created_by_participant(participant_email)['ideas_indices'])
+    ideas_num = len(_get_ideas_created_by_participant_DEBUG(participant_email)['ideas_indices'])
     participant_data.update({'id': participant_email,'profilepic_url': participant['profilepic_url'],
                              'username': participant['username'], 'fullname': participant['fullname'],
                              'position': participant['position'], 'group': participant['group'],
@@ -434,8 +435,6 @@ def _get_participant_data_by_email(participant_email):
                              'followers_num': followers_num,
                              'followings_num': followings_num})
     return {"result": "OK", "participant_data": participant_data}
-
-
 
 
 ####################
