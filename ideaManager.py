@@ -6,7 +6,9 @@ from flask import jsonify, render_template
 import json, uuid
 from datetime import datetime,date
 from math import log10
-from imageConverter import * 
+from imageConverter import *
+import os
+basedir = os.path.abspath(os.path.dirname(__file__))
 
 # class Idea:
 #     def __init__(self, idea_dict):
@@ -65,10 +67,14 @@ def modify_idea_aux(idea_dict):
         idea[k]=v
     if 'image' in idea_dict:
         # image goes from base64 to separate JPG file
+        code_uuid = str(uuid.uuid4())
         if idea_dict.get('image') is None:
             image_url = '/static/images/fondo-c.jpg'
         else:
-            image_url = base64ToJGP(idea_dict['image'], '/ideas/' + idea['uuid'])
+            image_url = base64ToJGP(idea_dict['image'], '/ideas/' + code_uuid)
+        path = basedir + idea['image_url']
+        if os.path.isfile(path):
+            os.remove(path)
         idea['image_url'] = image_url
     if 'proposal' in idea_dict:
         idea_index = idea_dict['proposal']

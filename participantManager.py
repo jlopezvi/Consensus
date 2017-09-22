@@ -1,15 +1,16 @@
 from py2neo import neo4j
 from flask import jsonify, abort, redirect,url_for, render_template
 import ast
-import json
+import json,  uuid
 import logging
 from utils import getGraph, save_file, send_email, _remove_file
 from uuid_token import generate_confirmation_token
 from datetime import datetime, date
 from user_authentification import User
 import flask_login
-from imageConverter import * 
-
+from imageConverter import *
+import os
+basedir = os.path.abspath(os.path.dirname(__file__))
 
 # input: python dict {'fullname':'Juan Lopez','email': 'jj@gmail.com', 'username': 'jlopezvi',
 #              'position': 'employee', 'group': 'IT', 'password': 'MD5password',
@@ -69,12 +70,12 @@ def _newParticipant(participantdict):
     email = participantdict.get('email')
     timestamp = (datetime.now()).strftime("%d.%m.%Y %H:%M:%S")
     # image goes from base64 to separate JPG file
-    profilepic_filename = email.replace(".", "")
+    code_uuid = str(uuid.uuid4())
     if participantdict['profilepic'] is None:
         profilepic_url = '/static/images/perfil-mediano.png'
     else:
-        profilepic_url = base64ToJGP(participantdict['profilepic'], '/profilepics/'+profilepic_filename)
-    
+        profilepic_url = base64ToJGP(participantdict['profilepic'], '/profilepics/'+code_uuid)
+
     newparticipant, = getGraph().create({"fullname" : participantdict.get('fullname'), "email" : email,
                                   "username" : participantdict.get('username'), "position" : participantdict.get('position'),
                                   "group" : participantdict.get('group'), "password" : participantdict.get('password'),
@@ -93,7 +94,7 @@ def _newParticipant(participantdict):
 
 def modify_user_data_aux(user_data, user_email):
     participant = _get_participant_node(user_email)
-    fields = ['new_email', 'position', 'group', 'password', 'ifsupportingproposalsvisible',
+    fields = ['position', 'group', 'password', 'ifsupportingproposalsvisible',
               'ifrejectingproposalsvisible',
               'username', 'ifpublicprofile', 'fullname']
     data = {}
@@ -104,11 +105,14 @@ def modify_user_data_aux(user_data, user_email):
         participant[k] = v
     if 'profilepic' in user_data:
         # image goes from base64 to separate JPG file
-        profilepic_filename = user_email.replace(".", "")
+        code_uuid = str(uuid.uuid4())
         if user_data['profilepic'] is None:
             profilepic_url = '/static/images/perfil-mediano.png'
         else:
-            profilepic_url = base64ToJGP(user_data['profilepic'], '/profilepics/' + profilepic_filename)
+            profilepic_url = base64ToJGP(user_data['profilepic'], '/profilepics/' + code_uuid)
+        path = basedir + participant["profilepic_url"]
+        if os.path.isfile(path):
+            os.remove(path)
         participant["profilepic_url"] = profilepic_url
     if 'new_email' in user_data:
         if user_data['new_email'] != user_email:
@@ -117,6 +121,7 @@ def modify_user_data_aux(user_data, user_email):
                 return jsonify({'result': 'Wrong: New e-mail already exists'})
             _removeFromParticipantsIndex(user_email, participant)
             _addToParticipantsIndex(new_email, participant)
+            participant['email']= new_email
             user = User(new_email)
             flask_login.login_user(user)
             # TODO: change profilepic_url in database and profilepic filename, provided there is a picture
