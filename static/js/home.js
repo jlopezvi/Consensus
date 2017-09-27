@@ -112,7 +112,7 @@ function loadHomeIdeas(type_vote){
 }
 
 function showIdeas(list, index){
-  console.log(list);
+  //console.log(list);
   var code = '';
   code += '<div class="col-xs-12 col-sm-6 home--content--proposal">';
   code += '<div class="row home--header">';

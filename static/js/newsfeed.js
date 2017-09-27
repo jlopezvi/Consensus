@@ -66,9 +66,9 @@ $(document).ready(function(){
         'vote_ifvolunteered': vote_ifvolunteered,
         'vote_type': type
       };
-      console.log(data.idea_proposal);
-      console.log(data.vote_ifvolunteered);
-      console.log(data.vote_type);
+      //console.log(data.idea_proposal);
+      //console.log(data.vote_ifvolunteered);
+      //console.log(data.vote_type);
       
       removeElementFromList(id);
     	$.ajax({

@@ -72,10 +72,7 @@ $(document).ready( function() {
 					newIdea += '<div class="col-sm-11 col-sm-offset-1 newsfeed--proposal">'+json.ideas_data[i].proposal+'</div></div></div> <input type="hidden" value="'+json.ideas_data[i].idea_id+'" id="idea__id">';
 					newIdea += '<div class="row newsfeed--footer"><div class="col-sm-12" style="padding-right: 0px; padding-left: 0px;">';
 					newIdea += '<div class="col-sm-9 newsfeed--support" style="padding-right:0;padding-left:30px;">';
-					var rate = ((json.ideas_data[i].supporters_num) * 100 / (json.ideas_data[i].supporters_num + json.ideas_data[i].known_rejectors.length));
-					if (json.ideas_data[i].supporters_num + json.ideas_data[i].known_rejectors.length == 0) {
-						rate = 0
-					}
+					
 					newIdea += '<input type="text" value="'+json.ideas_data[i].support_rate+'" id="percent" hidden><div class="input--percent">';
 					newIdea += '<label> Support Rate: '+json.ideas_data[i].support_rate+'% </label></div></div>';
 					newIdea += '<div class="col-sm-1 redflag--img"><input type="hidden" class="id" value="'+json.ideas_data[i].proposal+'"><img class="redflag" src="'+url_new+'images/redflag.png"></div>';
@@ -87,36 +84,36 @@ $(document).ready( function() {
 						newIdea += '<div class="row newsfeed--persons newsfeed--persons2"><div class="col-sm-12"><div class="col-sm-1" style="padding:0;">';
 					newIdea += '<img src="'+url_new+'images/check-small.png"></div><div class="col-sm-11 newsfeed--likes">';
 					newIdea += '<ul class="ul--liked">';
-					if(json.ideas_data[i].known_supporters.length > 0){
-						for(var f=0; f<json.ideas_data[i].known_supporters.length; f++){
-							if(json.ideas_data[i].known_supporters[f].email != 'user')
-								newIdea += '<a href="/participants/'+json.ideas_data[i].known_supporters[f].email+'"><li>'+json.ideas_data[i].known_supporters[f].username+'</li></a>';
+					if(json.ideas_data[i].supporters.length > 0){
+						for(var f=0; f<json.ideas_data[i].supporters.length; f++){
+							if(json.ideas_data[i].supporters[f].email != 'user')
+								newIdea += '<a href="/participants/'+json.ideas_data[i].supporters[f].email+'"><li>'+json.ideas_data[i].supporters[f].username+'</li></a>';
 							else
-								newIdea += '<a href="/participants"><li>'+json.ideas_data[i].known_supporters[f].username+'</li></a>';
+								newIdea += '<a href="/participants"><li>'+json.ideas_data[i].supporters[f].username+'</li></a>';
 						}
-					} if(json.ideas_data[i].supporters_num-json.ideas_data[i].known_supporters.length > 0) {
-						newIdea += '<a href="#" class="last--liked"><li>'+(json.ideas_data[i].supporters_num-json.ideas_data[i].known_supporters.length)+' people</li></a>';
+					} if(json.ideas_data[i].supporters_num-json.ideas_data[i].supporters.length > 0) {
+						newIdea += '<a href="#" class="last--liked"><li>'+(json.ideas_data[i].supporters_num-json.ideas_data[i].supporters.length)+' people</li></a>';
 					}
 					//
 					newIdea += '</ul></div></div>';
 					newIdea += '<div class="col-sm-12"><div class="col-sm-1" style="padding:0;"><img src="'+url_new+'images/x-small.png">';
 					newIdea += '</div><div class="col-sm-11 newsfeed--likes"><ul class="ul--disliked">';
-					if(json.ideas_data[i].known_rejectors.length > 0){
-						for(var f=0; f<json.ideas_data[i].known_rejectors.length; f++){
-							if(json.ideas_data[i].known_rejectors[f].email != 'user')
-								newIdea += '<a href="/participants/'+json.ideas_data[i].known_rejectors[f].email+'"><li>'+json.ideas_data[i].known_rejectors[f].username+'</li></a>';
+					if(json.ideas_data[i].rejectors.length > 0){
+						for(var f=0; f<json.ideas_data[i].rejectors.length; f++){
+							if(json.ideas_data[i].rejectors[f].email != 'user')
+								newIdea += '<a href="/participants/'+json.ideas_data[i].rejectors[f].email+'"><li>'+json.ideas_data[i].rejectors[f].username+'</li></a>';
 							else
-								newIdea += '<a href="/participants"><li>'+json.ideas_data[i].known_rejectors[f].username+'</li></a>';
+								newIdea += '<a href="/participants"><li>'+json.ideas_data[i].rejectors[f].username+'</li></a>';
 						}
-					} if(json.ideas_data[i].rejectors_num-json.ideas_data[i].known_rejectors.length > 0) {
-						newIdea += '<a href="#" class="last--liked"><li>'+(json.ideas_data[i].rejectors_num-json.ideas_data[i].known_rejectors.length)+' people</li></a>';
+					} if(json.ideas_data[i].rejectors_num-json.ideas_data[i].rejectors.length > 0) {
+						newIdea += '<a href="#" class="last--liked"><li>'+(json.ideas_data[i].rejectors_num-json.ideas_data[i].rejectors.length)+' people</li></a>';
 					}
 					
 					newIdea += '</ul></div></div></div>';
 					newIdea += '<div class="row home--share home--share2"><div class="col-sm-12 home--share--icons">';
 					newIdea += '<input type="hidden" class="supporters--input" value="'+json.ideas_data[i].supporters_num+'">';
 					newIdea += '<input type="hidden" class="volunteers--input" value="'+json.ideas_data[i].volunteers_num+'">';
-					newIdea += '<input type="hidden" class="rejectors--input" value="'+json.ideas_data[i].known_rejectors.length+'">';
+					newIdea += '<input type="hidden" class="rejectors--input" value="'+json.ideas_data[i].rejectors.length+'">';
 					newIdea += '<input type="hidden" class="supporters--goal--input" value="'+json.ideas_data[i].supporters_goal_num+'">';
 					newIdea += '<input type="hidden" class="volunteers--goal--input" value="'+json.ideas_data[i].volunteers_goal_num+'">';
 					newIdea += '<div class="col-sm-6" style="padding:0;width: 100%;"><input type="hidden" class="id" value="'+json.ideas_data[i].proposal+'">';
@@ -291,7 +288,7 @@ $(document).ready( function() {
 		var validation = false;
 		if(guest_email != ''){
 			for(var i=0; i<guest_email.length; i++){
-				console.log(guest_email[i]);
+				//console.log(guest_email[i]);
 				if( !isValidEmailAddress( guest_email[i] ) ) {
 					validation = true;
 					break;
