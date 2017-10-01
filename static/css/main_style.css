@@ -1614,6 +1614,7 @@ a.edit--proposal--provisional {
 .home--content--proposal {
     margin: 10px;
     width: 48%;
+    min-height: 549px!important;
 }
 .progress-bar {
     background-image: -webkit-linear-gradient(top,#bfff00 0,#9fcb1b 100%)!important;

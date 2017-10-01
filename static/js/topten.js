@@ -72,7 +72,7 @@ $(document).ready( function() {
                 newTop += '<input type="hidden" class="id" value="'+data.data[i].proposal+'"><img class="redflag redflag2" src="'+url_new+'images/redflag.png"><input type="button" name="more-info" class="home--button" style="float: right;"></div><div id="more--info--modal" hidden><p><h4>  More information about the problem: </h4> '+data.data[i].moreinfo_concern+'</br></br><h4> More information about the proposal: </h4>'+data.data[i].moreinfo_proposal+'</p></div></div></div>';
                 newTop += '<div class="row newsfeed--persons newsfeed--persons2"><div class="col-sm-12"><div class="col-sm-1" style="padding:0;">';
                 newTop += '<img src="'+url_new+'images/check-small.png"></div><div class="col-sm-11 newsfeed--likes">';
-                newTop += '<ul class="ul--liked"><a href="#" class="last--liked">';
+                newTop += '<ul class="ul--liked">';
                 if(data.data[i].known_supporters.length > 0){
     				for(var f=0; f<data.data[i].known_supporters.length; f++){
 						if(data.data[i].known_supporters[f].email != 'user')

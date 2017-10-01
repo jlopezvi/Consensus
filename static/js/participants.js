@@ -27,14 +27,14 @@ $(document).ready( function() {
 				var newIdea = '';
 				var url_new = url[0] +'//'+ url[2] +'/static/';
 				for (var i = 0; i < json.ideas_data.length; i++) {
-					newIdea += '<div class="col-sm-12 "><div class="row home--header">';
+					newIdea += '<div class="col-sm-12 "><div class="row home--header home--header2">';
 					newIdea += '<input type="hidden" class="idea__id" value="'+json.ideas_data[i].proposal+'">';
 					// IF IDEA DOESNT HAVE ANONYMOUS AUTHOR 
 					//if(json.ideas_data[i].if_author_public){
 						newIdea += '<div class="col-sm-1" style="padding-left: 0px;">';
 						newIdea += '<div class="home--profile--picture"><img class="img-circle new--user--icon--login" id="img-modify" src="'+json.ideas_data[i].author_profilepic_url+'"></div></div><div class="col-sm-3 home--name">';
 						newIdea += '<a href="#" id="name--modify">'+json.ideas_data[i].author_username+'</a>';
-						newIdea += '</div><div class="col-sm-3 newsfeed--duration"><p><img style="width: 15px;position: relative;top: -3px;" src="'+url_new+'images/clock-icon.png">&nbsp;';
+						newIdea += '</div><div class="col-sm-3 newsfeed--duration participant__duration"><p><img style="width: 15px;position: relative;top: -3px;" src="'+url_new+'images/clock-icon.png">&nbsp;';
 						newIdea += '<p class="duration--info">&nbsp;'+json.ideas_data[i].duration+'</p></p></div>';
 					/*
 					} else {
@@ -64,7 +64,7 @@ $(document).ready( function() {
 						newIdea += '</p></div></div><div class="row home--proposals--body home--proposals--body2" style="background-image: url('+json.ideas_data[i].image_url+'); padding-top:47.40%;"><div class="col-sm-12 concern__div">';
 					} else {
 						newIdea += '<div class="col-sm-3 newsfeed--goals newsfeed--goals2" style="top: 12px!important;"><p>'+json.ideas_data[i].supporters_num+'/'+json.ideas_data[i].supporters_goal_num+' supporters';
-						newIdea += '</p></div></div><div class="row home--proposals--body home--proposals--body2" style="margin-top: 10px;background-image: url('+json.ideas_data[i].image_url+'); padding-top:47.40%;"><div class="col-sm-12 concern__div">';
+						newIdea += '</p></div></div><div class="row home--proposals--body home--proposals--body2" style="background-image: url('+json.ideas_data[i].image_url+'); padding-top:47.40%;"><div class="col-sm-12 concern__div">';
 						
 					}
 					
@@ -119,15 +119,15 @@ $(document).ready( function() {
 					newIdea += '<div class="col-sm-6" style="padding:0;width: 100%;"><input type="hidden" class="id" value="'+json.ideas_data[i].proposal+'">';
 					//MODIFY / DELETE IDEA, ONLY FOR CURRENT LOGGED USER
 					if(url.length == 4){
-						newIdea += '<div class="col-sm-12 idea--action--buttons"><div class="col-xs-1"><span class="glyphicon glyphicon-edit edit"></span></div>';
-		    			newIdea += '<div class="col-xs-1"><span class="glyphicon glyphicon-trash trash"></span></div></div>';
+						newIdea += '<div class="col-sm-12 idea--action--buttons"><div class="col-xs-1"><span class="glyphicon glyphicon-edit edit" style="top: 10px;"></span></div>';
+		    			newIdea += '<div class="col-xs-1"><span class="glyphicon glyphicon-trash trash"  style="top: 10px;"></span></div></div>';
 					}
 					//newIdea += '<img class="icons icons2" src="'+url_new+'images/x-icon.png" id="rejected" hidden><img class="icons icons2" style="width: 50px;" src="'+url_new+'images/check-icon.png" id="supported" hidden>';
-					newIdea += '<div id="rejected" class="icons icons2" style="display:none;"></div>';
-					newIdea += '<div id="supported" class="icons icons2" style="display:none;"></div>';
+					newIdea += '<div id="rejected" class="icons icons2 icons2__participant" style="display:none;"></div>';
+					newIdea += '<div id="supported" class="icons icons2 icons2__participant" style="display:none;"></div>';
 					if (json.ideas_data[i].volunteers_goal_num > 0) {
 						//newIdea += '<img class="icons icons2" style="width: 48px;" src="'+url_new+'images/checkmark.png" id="support__plus--button" hidden>';
-						newIdea += '<div id="support__plus--button" class="icons icons2" style="display:none;"></div>';
+						newIdea += '<div id="support__plus--button" class="icons icons2 icons2__participant" style="display:none;"></div>';
 					}
 				    newIdea += '</div><div class="col-sm-6 home--followers hidden" style="width: 100%;">';
 				    newIdea += '</div></div></div></div>';

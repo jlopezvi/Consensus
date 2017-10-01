@@ -85,7 +85,7 @@
 .newsfeed--likes ul {
     padding-left: 0px;
 }
-.newsfeed--likes ul a li{
+.newsfeed--likes ul a:nth-child(1) li{
     margin-left: 40px;
 }
 .home--share--icons img {
@@ -165,4 +165,13 @@
     text-align: center;
     -webkit-animation: sk-rotate 2.0s infinite linear;
     animation: sk-rotate 2.0s infinite linear;
+}
+.participant__duration {
+    width: 11%;
+}
+.icons2__participant{
+    top: 0;
+}
+.home--header2 {
+    min-height: 63px;
 }
