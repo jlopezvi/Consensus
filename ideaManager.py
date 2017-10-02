@@ -313,7 +313,7 @@ def _create_or_modify_voting_relationship_to_given_type(participant, idea, vote_
         return jsonify({"result": "OK: User vote was created"})
 
 
-# <Used by get_ideas_created_by_participant_aux>
+# <Used by get_ideas_created_by_participant_aux, _get_participant_summary_data_unrestricted>
 def _get_ideas_created_by_participant_for_user(participant_email, user_email):
     ifuserisparticipant = (participant_email == user_email)
     participant = _get_participant_node(participant_email)
@@ -332,8 +332,7 @@ def _get_ideas_created_by_participant_for_user(participant_email, user_email):
     return {'result': 'OK', 'ideas_indices': ideas_indices}
 
 
-# <Used by _get_participant_data_DEBUG>
-def _get_ideas_created_by_participant_DEBUG(participant_email):
+def _get_all_ideas_created_by_participant_DEBUG(participant_email):
     participant = _get_participant_node(participant_email)
     ideas_indices=[]
     ideas=[x.end_node for x in list(getGraph().match(start_node=participant, rel_type="CREATED"))]

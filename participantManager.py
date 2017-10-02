@@ -161,13 +161,13 @@ def remove_user_aux(user_email) :
     return jsonify({'result': 'OK'})
 
 
-def get_participant_data_aux(currentuser_email, participant_email):
+def get_participant_data_aux(participant_email, user_email):
     from ideaManager import _get_ideas_created_by_participant_for_user
-    currentuser = _get_participant_node(currentuser_email)
+    user = _get_participant_node(user_email)
     participant = _get_participant_node(participant_email)
     ifpublicprofile = participant.get_properties()['ifpublicprofile']
     participant_data= {}
-    if participant_email == currentuser_email or _getIfContactRelationshipExists(participant, currentuser) is True \
+    if participant_email == user_email or _getIfContactRelationshipExists(participant, user) is True \
             or ifpublicprofile is True:
         ifallowed = True
         profilepic_url = participant.get_properties()['profilepic_url']
@@ -175,7 +175,7 @@ def get_participant_data_aux(currentuser_email, participant_email):
         fullname = participant.get_properties()['fullname']
         followers_num = len(_get_participant_followers(participant_email))
         followings_num = len(_get_participant_followings(participant_email))
-        ideas_num = len(_get_ideas_created_by_participant_for_user(participant_email, currentuser_email)['ideas_indices'])
+        ideas_num = len(_get_ideas_created_by_participant_for_user(participant_email, user_email)['ideas_indices'])
         participant_data.update({'id': participant_email,'profilepic_url': profilepic_url,
                                  'username' : username, 'fullname': fullname,
                                  'ideas_num' : ideas_num,
@@ -186,8 +186,8 @@ def get_participant_data_aux(currentuser_email, participant_email):
     return jsonify({"result":"OK", 'ifallowed': ifallowed, "participant_data": participant_data})
 
 
-def get_participant_data_by_email_unrestricted_aux(participant_email):
-    return jsonify(_get_participant_data_DEBUG(participant_email))
+def get_participant_data_by_email_unrestricted_aux(participant_email, user_email):
+    return jsonify(_get_participant_summary_data_unrestricted(participant_email, user_email))
 
 
 def if_participant_exists_by_email_aux(participant_email):
@@ -421,13 +421,13 @@ def _if_removed_following_contact_to_user(followingcontact_email, user_email) :
 
 
 # <Used by /get_participant_data_by_email_unrestricted>
-def _get_participant_data_DEBUG(participant_email):
-    from ideaManager import _get_ideas_created_by_participant_DEBUG
+def _get_participant_summary_data_unrestricted(participant_email, user_email):
+    from ideaManager import _get_ideas_created_by_participant_for_user
     participant = _get_participant_node(participant_email)
     participant_data= {}
     followers_num = len(_get_participant_followers(participant_email))
     followings_num = len(_get_participant_followings(participant_email))
-    ideas_num = len(_get_ideas_created_by_participant_DEBUG(participant_email)['ideas_indices'])
+    ideas_num = len(_get_ideas_created_by_participant_for_user(participant_email, user_email)['ideas_indices'])
     participant_data.update({'id': participant_email,'profilepic_url': participant['profilepic_url'],
                              'username': participant['username'], 'fullname': participant['fullname'],
                              'position': participant['position'], 'group': participant['group'],
