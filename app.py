@@ -161,9 +161,10 @@ def logout():
 
 # input:  application/json
 #                      {"fullname":"Juan Lopez","email":"jj@gmail.com", "username": "jlopezvi",
-#                       "position":"employee", "group":"IT", "password":"MD5password",
+#                       "position":"employee", "group":"Marketing", "password":"MD5password",
 #                       "host_email":"asdf@das"/null, "ifpublicprofile":true/false,
 #                       "ifregistrationfromemail":true/false, "profilepic": "base64_string"/null}
+#         *Group: Governing Board, Marketing, Sales, Technical, Human Resources
 # output: json
 #          1. Wrong (participant registered already!)
 #                       {"result":"Wrong","ifemailexists":true,"ifemailexists_msg":"message"}
@@ -274,10 +275,10 @@ def get_participant_data(participant_email, user_email_DEBUG=None):
         user_email = user_email_DEBUG
     else:
         user_email = flask_login.current_user.id
-    return get_participant_data_aux(user_email, participant_email)
+    return get_participant_data_aux(participant_email, user_email)
 
 
-# input: participant_email: new@gmail.com
+# input: participant_email: participant@gmail.com,  user_email (user logged in)
 # output: json  {"result":"OK", "participant_data": participant_data }
 #        participant_data:
 #        {
@@ -292,8 +293,13 @@ def get_participant_data(participant_email, user_email_DEBUG=None):
 #            'followings_num': 2
 #        }
 @app.route('/get_participant_data_by_email_unrestricted/<participant_email>')
-def get_participant_data_by_email_unrestricted(participant_email):
-    return get_participant_data_by_email_unrestricted_aux(participant_email)
+@app.route('/get_participant_data_by_email_unrestricted/<participant_email>/<user_email_DEBUG>')
+def get_participant_data_by_email_unrestricted(participant_email, user_email_DEBUG=None):
+    if DEBUG and user_email_DEBUG is not None:
+        user_email = user_email_DEBUG
+    else:
+        user_email = flask_login.current_user.id
+    return get_participant_data_by_email_unrestricted_aux(participant_email, user_email)
 
 
 # input: email
