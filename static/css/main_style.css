@@ -1722,16 +1722,14 @@ div#rejected, div#supported, div#ignored, div#support__plus--button, div#support
     display: inline-block;
 }
 div#rejected{
-	width: 34px;
-    height: 34px;
     background-image: url('/static/images/reject-unhover.png');
 }
 div#rejected:hover{
 	background-image: url('/static/images/reject-hover.png');
 }
-div#supported, div#ignored, div#support__plus--button, div#supported-plus{
-	width: 40px;
-    height: 40px;
+div#supported, div#ignored, div#support__plus--button, div#supported-plus, div#rejected{
+	width: 30px;
+    height: 30px;
 }
 div#supported{
 	background-image: url('/static/images/check-unhover.png');
@@ -1768,4 +1766,10 @@ div#support__plus--button:hover, div#supported-plus:hover{
     position: relative;
     color: red;
     right: 10px;
+}
+div.home--share--button {
+    margin-left: 5px;
+}
+div#supported {
+    margin-left: 10px;
 }

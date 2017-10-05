@@ -170,7 +170,8 @@
     width: 11%;
 }
 .icons2__participant{
-    top: 0;
+    top: -5px;
+    margin-left: 5px;
 }
 .home--header2 {
     min-height: 63px;

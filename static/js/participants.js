@@ -124,7 +124,7 @@ $(document).ready( function() {
 					}
 					//newIdea += '<img class="icons icons2" src="'+url_new+'images/x-icon.png" id="rejected" hidden><img class="icons icons2" style="width: 50px;" src="'+url_new+'images/check-icon.png" id="supported" hidden>';
 					newIdea += '<div id="rejected" class="icons icons2 icons2__participant" style="display:none;"></div>';
-					newIdea += '<div id="supported" class="icons icons2 icons2__participant" style="display:none;"></div>';
+					newIdea += '<div id="supported" class="icons icons2 icons2__participant" style="display:none;margin-left: 10px;"></div>';
 					if (json.ideas_data[i].volunteers_goal_num > 0) {
 						//newIdea += '<img class="icons icons2" style="width: 48px;" src="'+url_new+'images/checkmark.png" id="support__plus--button" hidden>';
 						newIdea += '<div id="support__plus--button" class="icons icons2 icons2__participant" style="display:none;"></div>';
