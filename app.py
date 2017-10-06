@@ -15,7 +15,7 @@ from participantManager import get_participantnotifications_for_user_aux, remove
 from ideaManager import get_ideas_data_created_by_participant_aux, get_ideas_created_by_participant_aux,\
     add_idea_to_user_aux, vote_on_idea_aux, modify_idea_aux, remove_idea_aux, _get_supporters_emails_for_idea_aux, \
     _get_volunteers_emails_for_idea_aux, get_vote_statistics_for_idea_aux, get_voting_rel_between_user_and_idea_aux, \
-    redflag_idea_aux, get_all_ideas_admin_aux, get_idea_data_admin_aux, get_idea_node_data_aux
+    redflag_idea_aux, get_all_ideas_admin_aux, get_idea_data_admin_aux, get_idea_node_data_aux, get_idea_data_for_user_aux
 from ideaManager import get_ideanotifications_for_user_aux, remove_notification_from_idea_to_participant_aux, \
     _do_tasks_for_idea_editedproposal
 from webManager import ideas_for_newsfeed_aux, ideas_for_home_aux, registration_receive_emailverification_aux, \
@@ -645,6 +645,17 @@ def redflag_idea(user_email_DEBUG = None):
 @app.route('/get_all_ideas_admin', methods=['GET','OPTIONS'])
 def get_all_ideas_admin():
     return json.dumps(get_all_ideas_admin_aux())
+
+
+@app.route('/get_idea_data_for_user',methods=['GET'])
+@app.route('/get_idea_data_for_user/<user_email_DEBUG>',methods=['GET'])
+def get_idea_data_for_user(user_email_DEBUG = None):
+    if DEBUG and user_email_DEBUG is not None:
+        user_email = user_email_DEBUG
+    else:
+        user_email = flask_login.current_user.id
+    idea_index = request.get_json()['idea_index']
+    return get_idea_data_for_user_aux(idea_index, user_email)
 
 
 # input   idea_proposal

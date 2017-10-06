@@ -438,7 +438,15 @@ def _get_idea_data(idea):
     return idea_data
 
 
-# <Used by ideas_for_newsfeed_aux / ideas_for_home_aux / get_ideas_data_created_by_participant_aux / get_topten_ideas >
+def get_idea_data_for_user_aux(idea_index, user_email):
+    idea = _get_idea_by_ideaindex(idea_index)
+    idea_data = get_idea_data_for_user_aux(idea, user_email)
+    return {'result': 'OK', 'idea_data': idea_data}
+
+
+
+# <Used by ideas_for_newsfeed_aux / ideas_for_home_aux / get_ideas_data_created_by_participant_aux / get_topten_ideas /
+# get_idea_data_for_user_aux >
 # input   idea_node
 # Output: << return  idea_data>>
 # idea_data = {
