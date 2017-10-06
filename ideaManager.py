@@ -440,8 +440,8 @@ def _get_idea_data(idea):
 
 def get_idea_data_for_user_aux(idea_index, user_email):
     idea = _get_idea_by_ideaindex(idea_index)
-    idea_data = get_idea_data_for_user_aux(idea, user_email)
-    return {'result': 'OK', 'idea_data': idea_data}
+    idea_data = _get_idea_data_for_user(idea, user_email)
+    return jsonify({'result': 'OK', 'idea_data': idea_data})
 
 
 

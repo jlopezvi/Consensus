@@ -647,14 +647,13 @@ def get_all_ideas_admin():
     return json.dumps(get_all_ideas_admin_aux())
 
 
-@app.route('/get_idea_data_for_user',methods=['GET'])
-@app.route('/get_idea_data_for_user/<user_email_DEBUG>',methods=['GET'])
-def get_idea_data_for_user(user_email_DEBUG = None):
+@app.route('/get_idea_data_for_user/<idea_index>',methods=['GET'])
+@app.route('/get_idea_data_for_user/<idea_index>/<user_email_DEBUG>',methods=['GET'])
+def get_idea_data_for_user(idea_index, user_email_DEBUG = None):
     if DEBUG and user_email_DEBUG is not None:
         user_email = user_email_DEBUG
     else:
         user_email = flask_login.current_user.id
-    idea_index = request.get_json()['idea_index']
     return get_idea_data_for_user_aux(idea_index, user_email)
 
 
