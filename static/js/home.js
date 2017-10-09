@@ -157,9 +157,9 @@ function showIdeas(list, index){
 	  code += '</div></div><div class="col-sm-4 newsfeed--goals" style="top:16px!important;">';
 	  code += '<p>'+list.supporters_num+'/'+list.supporters_goal_num+' supporters<br>';
 	  if(list.if_author_public)
-	    code += '</div></div><div class="row home--proposals--body" style="margin-top: 5px;background-image: url('+list.image_url+');">';
+	    code += '</div></div><div class="row home--proposals--body" style="height:352px;margin-top: 5px;background-image: url('+list.image_url+');">';
    else
-      code += '</div></div><div class="row home--proposals--body" style="margin-top: 24px;background-image: url('+list.image_url+');">';
+      code += '</div></div><div class="row home--proposals--body" style="height:352px;margin-top: 24px;background-image: url('+list.image_url+');">';
 	}
 	code += '<div class="col-sm-12"><div class="col-sm-11 newsfeed--problem">'+list.concern+'</div>';
 	code += '</div><div class="col-sm-12"><div class="col-sm-11 col-sm-offset-1 newsfeed--proposal">'+list.proposal+'</div></div>';
@@ -197,7 +197,7 @@ function showIdeas(list, index){
 				code += '<a href="/participants"><li>'+list.known_supporters[f].username+'</li></a>';
 		}
 	} 
-	if(list.supporters_num-list.known_supporters.length > 0) {
+	if(list.supporters_num-list.known_supporters.length >= 0) {
 		code += '<a href="#" class="last--liked"><li>'+(list.supporters_num-list.known_supporters.length)+' people</li></a>';
 	}
 	code += '</ul></div></div><div class="col-sm-12"><div class="col-sm-1" style="padding:0;"><img src="/static/images/x-small.png"></div>';
@@ -210,7 +210,7 @@ function showIdeas(list, index){
 			else
 				code += '<a href="/participants"><li>'+list.known_rejectors[f].username+'</li></a>';
 		}
-	} if(list.rejectors_num-list.known_rejectors.length > 0) {
+	} if(list.rejectors_num-list.known_rejectors.length >= 0) {
 		code += '<a href="#" class="last--liked"><li>'+(list.rejectors_num-list.known_rejectors.length)+' people</li></a>';
 	}
   code += '</ul></div></div></div>';

@@ -116,6 +116,8 @@
 }
 .home--proposals--body2 {
     height: 360px;
+    max-width: 560px;
+    min-width: 560px;
 }
 .home--share2 {
     top: -100px;

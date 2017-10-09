@@ -81,7 +81,7 @@ $(document).ready( function() {
 							newTop += '<a href="/participants"><li>'+data.data[i].known_supporters[f].username+'</li></a>';
     				
     				}
-    			} if(data.data[i].supporters_num-data.data[i].known_supporters.length > 0) {
+    			} if(data.data[i].supporters_num-data.data[i].known_supporters.length >= 0) {
     				newTop += '<a href="#" class="last--liked"><li>'+(data.data[i].supporters_num-data.data[i].known_supporters.length)+' people</li></a>';
     			}
     			//
@@ -95,7 +95,7 @@ $(document).ready( function() {
 						else
 							newTop += '<a href="/participants"><li>'+data.data[i].known_rejectors[f].username+'</li></a>';
 					}
-				} if(data.data[i].rejectors_num-data.data[i].known_rejectors.length > 0) {
+				} if(data.data[i].rejectors_num-data.data[i].known_rejectors.length >= 0) {
 					newTop += '<a href="#" class="last--liked"><li>'+(data.data[i].rejectors_num-data.data[i].known_rejectors.length)+' people</li></a>';
 				}
 					

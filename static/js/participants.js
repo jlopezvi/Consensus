@@ -91,7 +91,7 @@ $(document).ready( function() {
 							else
 								newIdea += '<a href="/participants"><li>'+json.ideas_data[i].supporters[f].username+'</li></a>';
 						}
-					} if(json.ideas_data[i].supporters_num-json.ideas_data[i].supporters.length > 0) {
+					} if(json.ideas_data[i].supporters_num-json.ideas_data[i].supporters.length >= 0) {
 						newIdea += '<a href="#" class="last--liked"><li>'+(json.ideas_data[i].supporters_num-json.ideas_data[i].supporters.length)+' people</li></a>';
 					}
 					//
@@ -105,9 +105,11 @@ $(document).ready( function() {
 							else
 								newIdea += '<a href="/participants"><li>'+json.ideas_data[i].rejectors[f].username+'</li></a>';
 						}
-					} if(json.ideas_data[i].rejectors_num-json.ideas_data[i].rejectors.length > 0) {
+					} if(json.ideas_data[i].rejectors_num-json.ideas_data[i].rejectors.length >= 0) {
 						newIdea += '<a href="#" class="last--liked"><li>'+(json.ideas_data[i].rejectors_num-json.ideas_data[i].rejectors.length)+' people</li></a>';
 					}
+					console.log(json.ideas_data[i]);
+					console.log(json.ideas_data[i].rejectors_num-json.ideas_data[i].rejectors.length);
 					
 					newIdea += '</ul></div></div></div>';
 					newIdea += '<div class="row home--share home--share2"><div class="col-sm-12 home--share--icons">';
@@ -735,63 +737,59 @@ $(document).ready( function() {
 			        	var div_header = element.parent().parent().parent().siblings('.home--header');
 			        	var div_persons = element.parent().parent().parent().siblings('.newsfeed--persons');
 			        	var div_footer = element.parent().parent().parent().siblings('.newsfeed--footer');
-		        		var support_goal = element.parent().parent().children('input.supporters--goal--input').val();
-		        		var volunt_goal = element.parent().parent().children('input.volunteers--goal--input').val();
-        				var volunt = parseInt(element.parent().parent().children('input.volunteers--input').val());
-        				var rejector = parseInt(element.parent().parent().children('input.rejectors--input').val());
-        				var support = parseInt(element.parent().parent().children('input.supporters--input').val());
 		        		
 		        		if (json.result != 'Wrong: User vote exists of same type'){
-		        			if(data_input.vote_type == 'supported'){
-		        				var answer = 'Now you are supporting this idea!';
-		        				if(vote_ifvolunteered){
-		        					volunt++;
-		        					element.parent().parent().children('input.volunteers--input').val(volunt);
-		        					if(current_vote == 'rejected' || current_vote == 'ignored' || data.result == 'Wrong'){
-		        						support++;
-			        					element.parent().parent().children('input.supporters--input').val(support);
-		        					}
-		        				} else {
-		        					if(current_vote == 'volunteer'){
-		        						volunt--;
-		        						element.parent().parent().children('input.volunteers--input').val(volunt);
-		        					} else {
-			        					support++;
-			        					element.parent().parent().children('input.supporters--input').val(support);
-		        					}
-		        				}
-		        				if(current_vote == 'rejected'){
-		        					rejector--;
-		        					element.parent().parent().children('input.rejectors--input').val(rejector);
-		        				}
+		        			
+		        			$.ajax({
+						        url: url[0] + "//" + url[2] + '/get_idea_data_for_user/'+data_input.idea_proposal,
+						        type: 'GET',
+						        success: function(json){
+						        	console.log(json);
+						        	var supp_percent = json.idea_data.supporters_num*100/json.idea_data.supporters_goal_num;
+						        	var volunt_percent = json.idea_data.volunteers_num*100/json.idea_data.volunteers_goal_num;
+						        	div_header.children('.newsfeed--goals').children('p').html('<p>'+json.idea_data.supporters_num+'/'+json.idea_data.supporters_goal_num+' supporters<br>'+json.idea_data.volunteers_num+'/'+json.idea_data.volunteers_goal_num+' volunteers</p>');
+						        	div_header.children('.home--charge').children('.home--progress').children().css('width', supp_percent+'%');
+						        	div_header.children('.home--charge').children('.home--progress2').children().css('width', volunt_percent+'%');
+						        	div_footer.find('.input--percent').children('label').html(' Support Rate: '+json.idea_data.support_rate+'% ');
+						        	
+						        	var ideaChanged = '';
+						        	if(json.idea_data.known_supporters.length > 0){
+										for(var f=0; f<json.idea_data.known_supporters.length; f++){
+											if(json.idea_data.known_supporters[f].email != 'user')
+												ideaChanged += '<a href="/participants/'+json.idea_data.known_supporters[f].email+'"><li>'+json.idea_data.known_supporters[f].username+'</li></a>';
+											else
+												ideaChanged += '<a href="/participants"><li>'+json.idea_data.known_supporters[f].username+'</li></a>';
+										}
+						        	}
+						        	if(json.idea_data.supporters_num-json.idea_data.known_supporters.length >= 0)
+										ideaChanged += '<a href="#" class="last--liked"><li>'+(json.idea_data.supporters_num-json.idea_data.known_supporters.length)+' people</li></a>';
+									div_persons.find('.ul--liked').html(ideaChanged);
+									
+									ideaChanged = '';
+						        	if(json.idea_data.known_rejectors.length > 0){
+										for(var f=0; f<json.idea_data.known_rejectors.length; f++){
+											if(json.idea_data.known_rejectors[f].email != 'user')
+												ideaChanged += '<a href="/participants/'+json.idea_data.known_rejectors[f].email+'"><li>'+json.idea_data.known_rejectors[f].username+'</li></a>';
+											else
+												ideaChanged += '<a href="/participants"><li>'+json.idea_data.known_rejectors[f].username+'</li></a>';
+										}
+									} 
+									if(json.idea_data.rejectors_num-json.idea_data.known_rejectors.length >= 0)
+										ideaChanged += '<a href="#" class="last--liked"><li>'+(json.idea_data.rejectors_num-json.idea_data.known_rejectors.length)+' people</li></a>';
+									div_persons.find('.ul--disliked').html(ideaChanged);
+						        	
+						        },
+						        error: function(response){
+						        	console.log('error');
+						        	console.log(response);
+						        }
+		        			});
+		        			
+		        			if(vote_ifvolunteered){
+		        				var answer = 'Now you are  <b>Volunteer</b> for this idea';
 		        			} else {
-		        				var answer = 'Idea rejected successfully!';
-		        				rejector++;
-	        					element.parent().parent().children('input.rejectors--input').val(rejector);
-	        					if(current_vote == 'volunteer'){
-	        						volunt--;
-		        					element.parent().parent().children('input.volunteers--input').val(volunt);
-		        					support--;
-		        					element.parent().parent().children('input.supporters--input').val(support);
-	        					} else if(current_vote == 'supported'){
-	        						support--;
-		        					element.parent().parent().children('input.supporters--input').val(support);
-	        					}
+		        				var answer = 'Now you are  <b>'+type+'</b> for this idea';
 		        			}
-		        			var volunt_percent = ((volunt*100)/volunt_goal)+'%';
-			        		var support_percent = ((support*100)/support_goal)+'%';
-			        		div_header.children('.home--charge').children('.home--progress2').children('div').attr('style', '').css('width', volunt_percent);
-			        		div_header.children('.home--charge').children('.home--progress').children('div').attr('style', '').css('width', support_percent);
-			        		div_header.children('.newsfeed--goals').children('p').empty().append(support+'/'+support_goal+' supporters<br>'+volunt+'/'+volunt_goal+' volunteers');
-			        		if(volunt == '' || volunt == 0){
-			        			div_header.children('.newsfeed--goals').children('p').empty().append(support+'/'+support_goal+' supporters');
-			        		}
-			        		div_persons.find('.newsfeed--likes ul.ul--liked a.last--liked li').empty().append(support+' people');
-			        		div_persons.find('.newsfeed--likes ul.ul--disliked a.last--liked li').empty().append(rejector+' people');
-			        		var rate = ((support * 100) / (support + rejector));
-			        		if(support + rejector == 0)
-			        			rate = 0;
-			        		div_footer.find('.input--percent label').empty().append('Support Rate: '+rate+'%');
 		        		
 			        		$('#invitation-modal-info h4.modal-title').empty().append('Operation Completed');
 			      			$('#invitation-modal-info p#modal--invitation').empty().append(answer); 
@@ -800,57 +798,7 @@ $(document).ready( function() {
 			      			$('#invitation-modal-info p#modal--invitation').empty().append('You can not vote the same for this idea.');
 		        		}
 		        		$('#invitation-modal-info').modal('toggle');
-/*		        		
-			      		if(data_input.vote_type == 'supported' ){
-			      			var answer = 'Now you are supporting this idea!';
-			      			if (json.result != 'Wrong: User vote exists of same type'){
-			      				var volunt = parseInt(element.parent().parent().children('input.volunteers--input').val());
-			      				if(vote_ifvolunteered){
-			      					
-			      					if(current_vote != 'volunteer')
-			      						volunt += 1;
-			      					var volunt_percent = ((volunt*100)/volunt_goal)+'%';
-			      					div_header.children('.home--charge').children('.home--progress2').children('div').attr('style', '').css('width', volunt_percent);
-			      				}
-			      				
-			      				if(current_vote != 'supported')
-			  						
-			  					else if(current_vote == 'supported')
-			  						var support = parseInt(element.parent().parent().children('input.supporters--input').val());
-			  					var support_percent = ((support*100)/support_goal)+'%';
-			  					div_header.children('.home--charge').children('.home--progress').children('div').attr('style', '').css('width', support_percent);
-			  					div_header.children('.newsfeed--goals').children('p').empty().append(support+'/200 supporters goals<br>'+volunt+'/14 volunteers goals');
-			      				div_persons.find('.newsfeed--likes ul.ul--liked a.last--liked li').empty().append(support+' people');
-			      				
-		      					if(current_vote == 'rejected'){
-		      						
-		      						div_persons.find('.newsfeed--likes ul.ul--disliked a.last--liked li').empty().append(rejector+' people');
-		      					}
-			      			}
-			      		} else {
-			      			
-			      			if (json.result != 'Wrong: User vote exists of same type'){
-			      				var volunt = parseInt(element.parent().parent().children('input.volunteers--input').val()) + 1;
-			      				div_persons.find('.newsfeed--likes ul.ul--disliked a.last--liked li').empty().append(volunt+' people');
-			      				if(current_vote == 'supported' || current_vote == 'volunteer'){
-			      					var support = parseInt(element.parent().parent().children('input.supporters--input').val()) - 1;
-			      					div_persons.find('.newsfeed--likes ul.ul--liked a.last--liked li').empty().append(support+' people');
-			      				}
-			      			}
-			      		}
-			    		if(json.result == 'OK: User vote was modified'){
-			      			$('#invitation-modal-info h4.modal-title').empty().append('Operation Completed');
-			      			$('#invitation-modal-info p#modal--invitation').empty().append(answer);       			
-			    		} else if (json.result == 'OK: User vote was created'){
-			    			$('#invitation-modal-info h4.modal-title').empty().append('Operation Completed');
-			      			$('#invitation-modal-info p#modal--invitation').empty().append(answer); 
-			    		}
-			    		else if (json.result == 'Wrong: User vote exists of same type'){
-			      			$('#invitation-modal-info h4.modal-title').empty().append('Error');
-			      			$('#invitation-modal-info p#modal--invitation').empty().append('You can not vote the same for this idea.');
-			    		}
-			    		$('#invitation-modal-info').modal('toggle');
-*/
+
 			        },
 			        error: function(response){
 			          console.log('error');
