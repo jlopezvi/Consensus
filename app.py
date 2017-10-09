@@ -647,6 +647,34 @@ def get_all_ideas_admin():
     return json.dumps(get_all_ideas_admin_aux())
 
 
+# input:  idea_index and user's email (flask_login.current_user.id),
+# output: json
+#          {"result":"OK",
+#           "idea_data":
+#            {
+#             'concern': 'Some text for the concern',
+#             'proposal': 'Some text for the proposal',
+#             'image_url': 'static/.../asdf.JPG'/null,
+#             'uuid': 'unique_identifier_string',
+#             'moreinfo_concern': 'blah blah blah more info',
+#             'moreinfo_proposal': 'blah blah blah more info',
+#             'supporters_goal_num': 200,
+#             'volunteers_goal_num': 5,
+#             'if_author_public': true / false
+#             'author_profilepic_url': 'static/.../pic.jpg'/null, 'author_username': 'daniela', 'author_email': 'a@gmail.com',
+#             'duration' : "4 hours/ days/ weeks",
+#             'supporters_num' : 5, 'volunteers_num' : 2, 'rejectors_num': 3,
+#             'support_rate' : 95, 'support_rate_MIN' : 90,
+#             'known_supporters': [
+#                { 'email': 'user', 'username': 'me' }, { 'email': 'c@gmail.com', 'username': 'Pedro' }
+#              ],
+#             'known_rejectors':[
+#                { 'email': 'd@', 'username': 'Elisa' }
+#              ],
+#             'vote_type': null / 'supported' / 'rejected' / 'ignored'
+#             'vote_ifvolunteered': null / true / false
+#            }
+#          }
 @app.route('/get_idea_data_for_user/<idea_index>',methods=['GET'])
 @app.route('/get_idea_data_for_user/<idea_index>/<user_email_DEBUG>',methods=['GET'])
 def get_idea_data_for_user(idea_index, user_email_DEBUG = None):
