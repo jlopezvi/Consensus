@@ -117,7 +117,11 @@ def home():
 def participants(participant_email=None):
     user_email = flask_login.current_user.id
     message = {"user": user_email, "participant": participant_email}
-    return render_template('participants.html', message = message)
+    # if the same login user
+    if user_email == participant_email:
+        return redirect(url_for('participants'))
+    else:
+        return render_template('participants.html', message = message)
 
 
 @app.route('/topten')
