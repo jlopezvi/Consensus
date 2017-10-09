@@ -432,7 +432,7 @@ def _get_idea_data(idea):
     idea_data.update({'author_profilepic_url': author_profilepic_url, 'author_username' : author_username,
                       'duration': duration, 'uuid': uuid,
                       'author_email' : author_email, 'supporters_num' : supporters_num,
-                      'volunteers_num': volunteers_num,
+                      'volunteers_num': volunteers_num, 'rejectors_num': rejectors_num,
                       'support_rate': support_rate, 'support_rate_MIN': SUPPORT_RATE_MIN,
                       'supporters' : supporters_data, 'rejectors' : rejectors_data})
     return idea_data
@@ -509,7 +509,8 @@ def _get_idea_data_for_user(idea, user_email):
     for known_rejector in known_rejectors:
         if known_rejector == user:
             known_rejectors_data.insert(0, {'email': 'user', 'username': 'me'})
-        known_rejectors_data.append({'email': known_rejector['email'], 'username': known_rejector['username']})
+        else:
+            known_rejectors_data.append({'email': known_rejector['email'], 'username': known_rejector['username']})
     #
     idea_data=idea.get_properties()
     idea_data.update({'author_profilepic_url': author_profilepic_url, 'author_username': author_username,
