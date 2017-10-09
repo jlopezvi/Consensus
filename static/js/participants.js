@@ -30,20 +30,20 @@ $(document).ready( function() {
 					newIdea += '<div class="col-sm-12 "><div class="row home--header home--header2">';
 					newIdea += '<input type="hidden" class="idea__id" value="'+json.ideas_data[i].proposal+'">';
 					// IF IDEA DOESNT HAVE ANONYMOUS AUTHOR 
-					//if(json.ideas_data[i].if_author_public){
+					if(json.ideas_data[i].if_author_public){
 						newIdea += '<div class="col-sm-1" style="padding-left: 0px;">';
 						newIdea += '<div class="home--profile--picture"><img class="img-circle new--user--icon--login" id="img-modify" src="'+json.ideas_data[i].author_profilepic_url+'"></div></div><div class="col-sm-3 home--name">';
 						newIdea += '<a href="#" id="name--modify">'+json.ideas_data[i].author_username+'</a>';
 						newIdea += '</div><div class="col-sm-3 newsfeed--duration participant__duration"><p><img style="width: 15px;position: relative;top: -3px;" src="'+url_new+'images/clock-icon.png">&nbsp;';
 						newIdea += '<p class="duration--info">&nbsp;'+json.ideas_data[i].duration+'</p></p></div>';
-					/*
+					
 					} else {
 						newIdea += '<div class="col-sm-3 newsfeed--duration"><p><img style="width: 15px;position: relative;top: -3px;" src="'+url_new+'images/clock-icon.png">&nbsp;';
 						newIdea += '<p class="duration--info">&nbsp;'+json.ideas_data[i].duration+'</p></p></div>';
 						newIdea += '<div class="col-sm-1" style="padding-left: 0px;"></div>';
 						newIdea += '<div class="col-sm-3 home--name"></div>';
 					}
-					*/
+					
 					
 					var supporters_percent = json.ideas_data[i].supporters_num*100/json.ideas_data[i].supporters_goal_num;
 					if (json.ideas_data[i].volunteers_goal_num > 0) {
