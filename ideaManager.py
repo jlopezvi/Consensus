@@ -350,13 +350,13 @@ def _get_ideas_data_created_by_participant_for_user(participant_email, user_emai
     rels = list(getGraph().match(start_node=participant, rel_type="CREATED"))
     if ifuserisparticipant:  # no restrictions
         for rel in rels:
-            idea_data = _get_idea_data(rel.end_node)
+            idea_data = _get_idea_data_for_user(rel.end_node, user_email)
             ideas_data.append(idea_data)
     else:                    # erase anonymous ideas
         for rel in rels:
             if rel.end_node['if_author_public'] is False:
                 continue
-            idea_data = _get_idea_data(rel.end_node)
+            idea_data = _get_idea_data_for_user(rel.end_node, user_email)
             ideas_data.append(idea_data)
     return {'result': 'OK', 'ideas_data': ideas_data}
 
@@ -445,8 +445,8 @@ def get_idea_data_for_user_aux(idea_index, user_email):
 
 
 
-# <Used by ideas_for_newsfeed_aux / ideas_for_home_aux / get_ideas_data_created_by_participant_aux / get_topten_ideas /
-# get_idea_data_for_user_aux >
+# <Used by ideas_for_newsfeed_aux / ideas_for_home_aux / get_topten_ideas /
+# get_idea_data_for_user_aux / _get_ideas_data_created_by_participant_for_user >
 # input   idea_node
 # Output: << return  idea_data>>
 # idea_data = {
