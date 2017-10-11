@@ -444,7 +444,6 @@ def _get_idea_data(idea):
     return idea_data
 
 
-
 # <Used by ideas_for_newsfeed_aux / ideas_for_home_aux / get_topten_ideas /
 # get_idea_data_for_user_aux / _get_ideas_data_created_by_participant_for_user >
 # input   idea_node
@@ -495,7 +494,7 @@ def _get_idea_data_for_user(idea, user_email):
     supporters = [x.start_node for x in vote_rels if x["type"] == "supported"]
     # known supporters are either the user or (followers or followings with the right public permissions)
     known_supporters = [x for x in supporters if x == user or
-                        (x in followers or x in followings and x['ifsupportingproposalsvisible'] is True)]
+                        ((x in followers or x in followings) and x['ifsupportingproposalsvisible'] is True)]
     for known_supporter in known_supporters:
         if known_supporter == user:
             known_supporters_data.insert(0, {'email': 'user', 'username': 'me'})
@@ -505,7 +504,7 @@ def _get_idea_data_for_user(idea, user_email):
     rejectors = [x.start_node for x in vote_rels if x["type"] == "rejected"]
     # known rejectors are either the user or (followers or followings with the right public permissions)
     known_rejectors = [x for x in rejectors if x == user or
-                        (x in followers or x in followings and x['ifrejectingproposalsvisible'] is True)]
+                        ((x in followers or x in followings) and x['ifrejectingproposalsvisible'] is True)]
     for known_rejector in known_rejectors:
         if known_rejector == user:
             known_rejectors_data.insert(0, {'email': 'user', 'username': 'me'})
