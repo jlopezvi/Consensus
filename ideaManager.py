@@ -119,6 +119,12 @@ def get_ideas_created_by_participant_aux(participant_email, user_email):
     return jsonify({"result": "OK", "ifallowed": ifallowed, "ideas_indices": ideas_indices})
 
 
+def get_idea_data_for_user_aux(idea_index, user_email):
+    idea = _get_idea_by_ideaindex(idea_index)
+    idea_data = _get_idea_data_for_user(idea, user_email)
+    return jsonify({'result': 'OK', 'idea_data': idea_data})
+
+
 def get_ideas_data_created_by_participant_aux(participant_email, user_email):
     user = _get_participant_node(user_email)
     participant = _get_participant_node(participant_email)
@@ -438,12 +444,6 @@ def _get_idea_data(idea):
     return idea_data
 
 
-def get_idea_data_for_user_aux(idea_index, user_email):
-    idea = _get_idea_by_ideaindex(idea_index)
-    idea_data = _get_idea_data_for_user(idea, user_email)
-    return jsonify({'result': 'OK', 'idea_data': idea_data})
-
-
 
 # <Used by ideas_for_newsfeed_aux / ideas_for_home_aux / get_topten_ideas /
 # get_idea_data_for_user_aux / _get_ideas_data_created_by_participant_for_user >
@@ -486,7 +486,7 @@ def _get_idea_data_for_user(idea, user_email):
     rejectors_num = _get_vote_statistics_for_idea(idea_proposal)[1]
     active_voters_num = supporters_num + rejectors_num
     volunteers_num=_get_vote_statistics_for_idea(idea_proposal)[3]
-    support_rate = (supporters_num / active_voters_num) * 100 if active_voters_num is not 0 else 100
+    support_rate = round((supporters_num / active_voters_num) * 100, 1) if active_voters_num is not 0 else 100
     #
     vote_rels = list(getGraph().match(end_node=idea, rel_type="VOTED_ON"))
     followers = _get_participant_followers(user_email)
