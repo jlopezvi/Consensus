@@ -173,7 +173,7 @@ function showIdeas(list, index){
 	
   code += '<div class="row home--share"><div class="col-sm-8 home--share--icons">';
   code += '<input type="hidden" class="index--idea" value="'+index+'">';
-	code += '<div class="col-sm-6" style="padding:4px 8px;">';
+	code += '<div class="col-sm-6" style="padding:10px 8px;">';
 	//code += '<img src="/static/images/x-icon.png" class="home--share--button" id="rejected">';
 	//code += '<img style="width: 50px;" src="/static/images/check-icon.png" class="home--share--button" id="supported">';
   code += '<div id="rejected" class="home--share--button"></div>';

@@ -63,10 +63,7 @@ $(document).ready( function() {
                 newTop += '<div class="col-sm-11 col-sm-offset-1 newsfeed--proposal">'+data.data[i].proposal+'</div></div></div> <input type="hidden" value="'+data.data[i].idea_id+'" id="idea__id">';
                 newTop += '<div class="row newsfeed--footer"><div class="col-sm-12" style="padding-right: 0px; padding-left: 0px;">';
                 newTop += '<div class="col-sm-8 newsfeed--support" style="padding-right:0;padding-left:30px;">';
-                var rate = ((data.data[i].supporters_num) * 100 / (data.data[i].supporters_num + data.data[i].rejectors_num));
-                if (data.data[i].supporters_num + data.data[i].rejectors_num == 0) {
-                    rate = 0
-                }
+                
                 newTop += '<input type="text" value="'+data.data[i].support_rate+'" id="percent" hidden><div class="input--percent">';
                 newTop += '<label> Support Rate: '+data.data[i].support_rate+'% </label></div></div><div class="col-sm-4 neewsfeed--moreinfo" style="float:right;padding: 0px;">';
                 newTop += '<input type="hidden" class="id" value="'+data.data[i].proposal+'"><img class="redflag redflag2" src="'+url_new+'images/redflag.png"><input type="button" name="more-info" class="home--button" style="float: right;"></div><div id="more--info--modal" hidden><p><h4>  More information about the problem: </h4> '+data.data[i].moreinfo_concern+'</br></br><h4> More information about the proposal: </h4>'+data.data[i].moreinfo_proposal+'</p></div></div></div>';
