@@ -35,6 +35,9 @@ class BaseConfig(object):
     # Consensus variables
     # Global variable support_rate_MIN = 90%
     SUPPORT_RATE_MIN = 90
+    #
+    SUPPORTERS_CHAR_NUM_MAX = 35
+    REJECTORS_CHAR_NUM_MAX = 80
 
 class DevelopmentConfig(BaseConfig):
     """Development configuration."""

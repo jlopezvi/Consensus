@@ -462,17 +462,20 @@ def _get_idea_data(idea):
 #             'duration' : "4 hours/ days/ weeks",
 #             'supporters_num' : 5, 'volunteers_num' : 2, 'rejectors_num': 3,
 #             'support_rate' : 95, 'support_rate_MIN' : 90,
-#             'known_supporters': [
+#             'identified_supporters': [
 #                { 'email': 'user', 'username': 'me' }, { 'email': 'c@gmail.com', 'username': 'Pedro' }
 #              ],
-#             'known_rejectors':[
+#             'identified_rejectors':[
 #                { 'email': 'd@', 'username': 'Elisa' }
 #              ],
 #             'vote_type': None / 'supported' / 'rejected' / 'ignored'
 #             'vote_ifvolunteered': None / True / False
+#             'vote_duration': '<24h' / '<7days' / '<30days' / 'older'
+#             'unidentified_supporters_text': "+ 2 people"/"",
+#             'unidentified_rejectors_text': "+ 2 people"/""
 #            }
 def _get_idea_data_for_user(idea, user_email):
-    from app import SUPPORT_RATE_MIN
+    from app import SUPPORT_RATE_MIN, SUPPORTERS_CHAR_NUM_MAX, REJECTORS_CHAR_NUM_MAX
     user = _get_participant_node(user_email)
     author_email = getGraph().match_one(end_node=idea, rel_type="CREATED").start_node['email']
     author_profilepic_url = _get_participant_node(author_email)['profilepic_url']
@@ -490,26 +493,46 @@ def _get_idea_data_for_user(idea, user_email):
     vote_rels = list(getGraph().match(end_node=idea, rel_type="VOTED_ON"))
     followers = _get_participant_followers(user_email)
     followings = _get_participant_followings(user_email)
-    known_supporters_data = []
+    #
+    identified_supporters_data = []
+    supporters_char_counter = 0
     supporters = [x.start_node for x in vote_rels if x["type"] == "supported"]
     # known supporters are either the user or (followers or followings with the right public permissions)
-    known_supporters = [x for x in supporters if x == user or
+    identified_supporters = [x for x in supporters if x == user or
                         ((x in followers or x in followings) and x['ifsupportingproposalsvisible'] is True)]
-    for known_supporter in known_supporters:
-        if known_supporter == user:
-            known_supporters_data.insert(0, {'email': 'user', 'username': 'me'})
+    for identified_supporter in identified_supporters:
+        if identified_supporter == user:
+            supporters_char_counter += 4
+            identified_supporters_data.insert(0, {'email': 'user', 'username': 'me'})
         else:
-            known_supporters_data.append({'email': known_supporter['email'], 'username': known_supporter['username']})
-    known_rejectors_data = []
+            supporters_char_counter=supporters_char_counter + 2 + len(identified_supporter['username'])
+            if supporters_char_counter <= SUPPORTERS_CHAR_NUM_MAX:
+                identified_supporters_data.append({'email': identified_supporter['email'], 'username': identified_supporter['username']})
+    unidentified_supporters_num = supporters_num - len(identified_supporters_data)
+    unidentified_supporters_text_beginning = "+ " if len(identified_supporters_data) >= 1 else ""
+    unidentified_supporters_text = unidentified_supporters_text_beginning + str(unidentified_supporters_num) + " people"
+    if len(identified_supporters_data) >=1 and unidentified_supporters_num == 0:
+        unidentified_supporters_text = ""
+    #
+    identified_rejectors_data = []
+    rejectors_char_counter = 0
     rejectors = [x.start_node for x in vote_rels if x["type"] == "rejected"]
     # known rejectors are either the user or (followers or followings with the right public permissions)
-    known_rejectors = [x for x in rejectors if x == user or
+    identified_rejectors = [x for x in rejectors if x == user or
                         ((x in followers or x in followings) and x['ifrejectingproposalsvisible'] is True)]
-    for known_rejector in known_rejectors:
-        if known_rejector == user:
-            known_rejectors_data.insert(0, {'email': 'user', 'username': 'me'})
+    for identified_rejector in identified_rejectors:
+        if identified_rejector == user:
+            rejectors_char_counter = rejectors_char_counter + 4
+            identified_rejectors_data.insert(0, {'email': 'user', 'username': 'me'})
         else:
-            known_rejectors_data.append({'email': known_rejector['email'], 'username': known_rejector['username']})
+            rejectors_char_counter = rejectors_char_counter + 2 + len(identified_rejector['username'])
+            if rejectors_char_counter <= REJECTORS_CHAR_NUM_MAX:
+                identified_rejectors_data.append({'email': identified_rejector['email'], 'username': identified_rejector['username']})
+    unidentified_rejectors_num = rejectors_num - len(identified_rejectors_data)
+    unidentified_rejectors_text_beginning = "+ " if len(identified_rejectors_data) >= 1 else ""
+    unidentified_rejectors_text = unidentified_rejectors_text_beginning + str(unidentified_rejectors_num) + " people"
+    if len(identified_rejectors_data) >=1 and unidentified_rejectors_num == 0:
+        unidentified_rejectors_text = ""
     #
     idea_data=idea.get_properties()
     idea_data.update({'author_profilepic_url': author_profilepic_url, 'author_username': author_username,
@@ -517,15 +540,18 @@ def _get_idea_data_for_user(idea, user_email):
                       'author_email': author_email, 'supporters_num': supporters_num,
                       'rejectors_num': rejectors_num, 'volunteers_num': volunteers_num,
                       'support_rate': support_rate, 'support_rate_MIN': SUPPORT_RATE_MIN,
-                      'known_supporters': known_supporters_data, 'known_rejectors': known_rejectors_data})
+                      'identified_supporters': identified_supporters_data, 'identified_rejectors': identified_rejectors_data,
+                      'unidentified_supporters_text': unidentified_supporters_text, 'unidentified_rejectors_text': unidentified_rejectors_text})
     # add possible voting relationship, or None
     vote_type = None
     vote_ifvolunteered = None
+    vote_duration = None
     voting_rel = getGraph().match_one(start_node=user, rel_type="VOTED_ON", end_node=idea)
     if voting_rel:
         vote_type = voting_rel["type"]
         vote_ifvolunteered = voting_rel["ifvolunteered"]
-    idea_data.update({'vote_type': vote_type, 'vote_ifvolunteered': vote_ifvolunteered})
+        vote_duration = _get_idea_vote_duration(datetime.strptime(voting_rel["timestamp"], '%d.%m.%Y %H:%M:%S'))
+    idea_data.update({'vote_type': vote_type, 'vote_ifvolunteered': vote_ifvolunteered, 'vote_duration':vote_duration})
     #
     return idea_data
 
@@ -553,6 +579,20 @@ def _get_idea_duration(idea_index):
         if week == 1:
             duration = str(week) + ' week'
     return duration
+
+
+def _get_idea_vote_duration(vote_timestamp):
+    duration_raw = (datetime.now() - vote_timestamp)
+    duration_days = duration_raw.days
+    if duration_days < 1:
+        vote_duration = "<24h"
+    elif duration_days < 7:
+        vote_duration = "<7days"
+    elif duration_days < 30:
+        vote_duration = "<30days"
+    else:
+        vote_duration = "older"
+    return vote_duration
 
 
 # <used by _get_idea_data> [0]->supporters, [1]->rejectors, [2]->passives, [3]->volunteers

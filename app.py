@@ -47,7 +47,8 @@ except KeyError:
 
 MAIL_DEFAULT_SENDER=app.config['MAIL_DEFAULT_SENDER']
 SUPPORT_RATE_MIN=app.config['SUPPORT_RATE_MIN']
-
+SUPPORTERS_CHAR_NUM_MAX=app.config['SUPPORTERS_CHAR_NUM_MAX']
+REJECTORS_CHAR_NUM_MAX=app.config['REJECTORS_CHAR_NUM_MAX']
 
 ####################
 #### extensions ####
