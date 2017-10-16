@@ -144,12 +144,12 @@ function showContent(id){
   if(list[id].identified_supporters.length > 0){
 		for(var f=0; f<list[id].identified_supporters.length; f++){
 			if(list[id].identified_supporters[f].email != 'user')
-				support_html += '<a href="/participants/'+list[id].identified_supporters[f].email+'"><li>'+list[id].identified_supporters[f].username+'</li></a>';
+				support_html += '<a style="margin-left: 10px;" href="/participants/'+list[id].identified_supporters[f].email+'"><li>'+list[id].identified_supporters[f].username+'</li></a>';
 			else
-				support_html += '<a href="/participants"><li>'+list[id].identified_supporters[f].username+'</li></a>';
+				support_html += '<a style="margin-left: 10px;" href="/participants"><li>'+list[id].identified_supporters[f].username+'</li></a>';
 		}
 	}
-	support_html += '<a href="#" class="last--liked"><li>'+list[id].unidentified_supporters_text+'</li></a>';
+	support_html += '<a style="margin-left: 10px;" href="#" class="last--liked"><li>'+list[id].unidentified_supporters_text+'</li></a>';
   $('#newsfeed--supporters ul').empty().append(support_html);
   
   /****************************************** Add Supporters to the Supporters List ****************************************/
@@ -157,12 +157,12 @@ function showContent(id){
   if(list[id].identified_rejectors.length > 0){
 		for(var f=0; f<list[id].identified_rejectors.length; f++){
 			if(list[id].identified_rejectors[f].email != 'user')
-				reject_html += '<a href="/participants/'+list[id].identified_rejectors[f].email+'"><li>'+list[id].identified_rejectors[f].username+'</li></a>';
+				reject_html += '<a style="margin-left: 10px;" href="/participants/'+list[id].identified_rejectors[f].email+'"><li>'+list[id].identified_rejectors[f].username+'</li></a>';
 			else
-				reject_html += '<a href="/participants"><li>'+list[id].identified_rejectors[f].username+'</li></a>';
+				reject_html += '<a style="margin-left: 10px;" href="/participants"><li>'+list[id].identified_rejectors[f].username+'</li></a>';
 		}
   }
-  reject_html += '<a href="#" class="last--liked"><li>'+list[id].unidentified_rejectors_text+'</li></a>';
+  reject_html += '<a style="margin-left: 10px;" href="#" class="last--liked"><li>'+list[id].unidentified_rejectors_text+'</li></a>';
   $('#newsfeed--rejectors ul').empty().append(reject_html);
 }
 

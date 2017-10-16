@@ -1615,7 +1615,7 @@ a.edit--proposal--provisional {
 	margin-left: 5px;
 }
 .home--content--proposal {
-    margin: 10px;
+    margin: 25px 10px;
     width: 48%;
     min-height: 549px!important;
     max-height: 549px!important;
