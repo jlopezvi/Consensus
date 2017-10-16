@@ -70,31 +70,31 @@ $(document).ready( function() {
                 newTop += '<div class="row newsfeed--persons newsfeed--persons2"><div class="col-sm-12"><div class="col-sm-1" style="padding:0;">';
                 newTop += '<img src="'+url_new+'images/check-small.png"></div><div class="col-sm-11 newsfeed--likes">';
                 newTop += '<ul class="ul--liked">';
-                if(data.data[i].known_supporters.length > 0){
-    				for(var f=0; f<data.data[i].known_supporters.length; f++){
-						if(data.data[i].known_supporters[f].email != 'user')
-							newTop += '<a href="/participants/'+data.data[i].known_supporters[f].email+'"><li>'+data.data[i].known_supporters[f].username+'</li></a>';
+                if(data.data[i].identified_supporters.length > 0){
+    				for(var f=0; f<data.data[i].identified_supporters.length; f++){
+						if(data.data[i].identified_supporters[f].email != 'user')
+							newTop += '<a href="/participants/'+data.data[i].identified_supporters[f].email+'"><li>'+data.data[i].identified_supporters[f].username+'</li></a>';
 						else
-							newTop += '<a href="/participants"><li>'+data.data[i].known_supporters[f].username+'</li></a>';
+							newTop += '<a href="/participants"><li>'+data.data[i].identified_supporters[f].username+'</li></a>';
     				
     				}
-    			} if(data.data[i].supporters_num-data.data[i].known_supporters.length >= 0) {
-    				newTop += '<a href="#" class="last--liked"><li>'+(data.data[i].supporters_num-data.data[i].known_supporters.length)+' people</li></a>';
-    			}
+    			} 
+    			newTop += '<a href="#" class="last--liked"><li>'+data.data[i].unidentified_supporters_text+'</li></a>';
+    			
     			//
                 newTop +='</ul></div></div>';
                 newTop += '<div class="col-sm-12"><div class="col-sm-1" style="padding:0;"><img src="'+url_new+'images/x-small.png">';
                 newTop += '</div><div class="col-sm-11 newsfeed--likes"><ul class="ul--disliked">';
-                if(data.data[i].known_rejectors.length > 0){
-					for(var f=0; f<data.data[i].known_rejectors.length; f++){
-						if(data.data[i].known_rejectors[f].email != 'user')
-							newTop += '<a href="/participants/'+data.data[i].known_rejectors[f].email+'"><li>'+data.data[i].known_rejectors[f].username+'</li></a>';
+                if(data.data[i].identified_rejectors.length > 0){
+					for(var f=0; f<data.data[i].identified_rejectors.length; f++){
+						if(data.data[i].identified_rejectors[f].email != 'user')
+							newTop += '<a href="/participants/'+data.data[i].identified_rejectors[f].email+'"><li>'+data.data[i].identified_rejectors[f].username+'</li></a>';
 						else
-							newTop += '<a href="/participants"><li>'+data.data[i].known_rejectors[f].username+'</li></a>';
+							newTop += '<a href="/participants"><li>'+data.data[i].identified_rejectors[f].username+'</li></a>';
 					}
-				} if(data.data[i].rejectors_num-data.data[i].known_rejectors.length >= 0) {
-					newTop += '<a href="#" class="last--liked"><li>'+(data.data[i].rejectors_num-data.data[i].known_rejectors.length)+' people</li></a>';
-				}
+				} 
+				newTop += '<a href="#" class="last--liked"><li>'+data.data[i].unidentified_rejectors_text+'</li></a>';
+				
 					
                 newTop += '</ul></div></div></div>';
                 newTop += '<div class="row home--share"><div class="col-sm-12 home--share--icons">';

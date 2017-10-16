@@ -84,38 +84,34 @@ $(document).ready( function() {
 						newIdea += '<div class="row newsfeed--persons newsfeed--persons2"><div class="col-sm-12"><div class="col-sm-1" style="padding:0;">';
 					newIdea += '<img src="'+url_new+'images/check-small.png"></div><div class="col-sm-11 newsfeed--likes">';
 					newIdea += '<ul class="ul--liked">';
-					if(json.ideas_data[i].known_supporters.length > 0){
-						for(var f=0; f<json.ideas_data[i].known_supporters.length; f++){
-							if(json.ideas_data[i].known_supporters[f].email != 'user')
-								newIdea += '<a href="/participants/'+json.ideas_data[i].known_supporters[f].email+'"><li>'+json.ideas_data[i].known_supporters[f].username+'</li></a>';
+					if(json.ideas_data[i].identified_supporters.length > 0){
+						for(var f=0; f<json.ideas_data[i].identified_supporters.length; f++){
+							if(json.ideas_data[i].identified_supporters[f].email != 'user')
+								newIdea += '<a href="/participants/'+json.ideas_data[i].identified_supporters[f].email+'"><li>'+json.ideas_data[i].identified_supporters[f].username+'</li></a>';
 							else
-								newIdea += '<a href="/participants"><li>'+json.ideas_data[i].known_supporters[f].username+'</li></a>';
+								newIdea += '<a href="/participants"><li>'+json.ideas_data[i].identified_supporters[f].username+'</li></a>';
 						}
-					} if(json.ideas_data[i].supporters_num-json.ideas_data[i].known_supporters.length >= 0) {
-						newIdea += '<a href="#" class="last--liked"><li>'+(json.ideas_data[i].supporters_num-json.ideas_data[i].known_supporters.length)+' people</li></a>';
 					}
-					//
+					newIdea += '<a href="#" class="last--liked"><li>'+json.ideas_data[i].unidentified_supporters_text+'</li></a>';
+					
 					newIdea += '</ul></div></div>';
 					newIdea += '<div class="col-sm-12"><div class="col-sm-1" style="padding:0;"><img src="'+url_new+'images/x-small.png">';
 					newIdea += '</div><div class="col-sm-11 newsfeed--likes"><ul class="ul--disliked">';
-					if(json.ideas_data[i].known_rejectors.length > 0){
-						for(var f=0; f<json.ideas_data[i].known_rejectors.length; f++){
-							if(json.ideas_data[i].known_rejectors[f].email != 'user')
-								newIdea += '<a href="/participants/'+json.ideas_data[i].known_rejectors[f].email+'"><li>'+json.ideas_data[i].known_rejectors[f].username+'</li></a>';
+					if(json.ideas_data[i].identified_rejectors.length > 0){
+						for(var f=0; f<json.ideas_data[i].identified_rejectors.length; f++){
+							if(json.ideas_data[i].identified_rejectors[f].email != 'user')
+								newIdea += '<a href="/participants/'+json.ideas_data[i].identified_rejectors[f].email+'"><li>'+json.ideas_data[i].identified_rejectors[f].username+'</li></a>';
 							else
-								newIdea += '<a href="/participants"><li>'+json.ideas_data[i].known_rejectors[f].username+'</li></a>';
+								newIdea += '<a href="/participants"><li>'+json.ideas_data[i].identified_rejectors[f].username+'</li></a>';
 						}
-					} if(json.ideas_data[i].rejectors_num-json.ideas_data[i].known_rejectors.length >= 0) {
-						newIdea += '<a href="#" class="last--liked"><li>'+(json.ideas_data[i].rejectors_num-json.ideas_data[i].known_rejectors.length)+' people</li></a>';
-					}
-					console.log(json.ideas_data[i]);
-					console.log(json.ideas_data[i].rejectors_num-json.ideas_data[i].known_rejectors.length);
+					} 
+					newIdea += '<a href="#" class="last--liked"><li>'+json.ideas_data[i].unidentified_rejectors_text+'</li></a>';
 					
 					newIdea += '</ul></div></div></div>';
 					newIdea += '<div class="row home--share home--share2"><div class="col-sm-12 home--share--icons">';
 					newIdea += '<input type="hidden" class="supporters--input" value="'+json.ideas_data[i].supporters_num+'">';
 					newIdea += '<input type="hidden" class="volunteers--input" value="'+json.ideas_data[i].volunteers_num+'">';
-					newIdea += '<input type="hidden" class="rejectors--input" value="'+json.ideas_data[i].known_rejectors.length+'">';
+					newIdea += '<input type="hidden" class="rejectors--input" value="'+json.ideas_data[i].identified_rejectors.length+'">';
 					newIdea += '<input type="hidden" class="supporters--goal--input" value="'+json.ideas_data[i].supporters_goal_num+'">';
 					newIdea += '<input type="hidden" class="volunteers--goal--input" value="'+json.ideas_data[i].volunteers_goal_num+'">';
 					newIdea += '<div class="col-sm-6" style="padding:0;width: 100%;"><input type="hidden" class="id" value="'+json.ideas_data[i].proposal+'">';
@@ -744,7 +740,7 @@ $(document).ready( function() {
 						        url: url[0] + "//" + url[2] + '/get_idea_data_for_user/'+data_input.idea_proposal,
 						        type: 'GET',
 						        success: function(json){
-						        	console.log(json);
+						        	//console.log(json);
 						        	var supp_percent = json.idea_data.supporters_num*100/json.idea_data.supporters_goal_num;
 						        	var volunt_percent = json.idea_data.volunteers_num*100/json.idea_data.volunteers_goal_num;
 						        	div_header.children('.newsfeed--goals').children('p').html('<p>'+json.idea_data.supporters_num+'/'+json.idea_data.supporters_goal_num+' supporters<br>'+json.idea_data.volunteers_num+'/'+json.idea_data.volunteers_goal_num+' volunteers</p>');
@@ -753,29 +749,27 @@ $(document).ready( function() {
 						        	div_footer.find('.input--percent').children('label').html(' Support Rate: '+json.idea_data.support_rate+'% ');
 						        	
 						        	var ideaChanged = '';
-						        	if(json.idea_data.known_supporters.length > 0){
-										for(var f=0; f<json.idea_data.known_supporters.length; f++){
-											if(json.idea_data.known_supporters[f].email != 'user')
-												ideaChanged += '<a href="/participants/'+json.idea_data.known_supporters[f].email+'"><li>'+json.idea_data.known_supporters[f].username+'</li></a>';
+						        	if(json.idea_data.identified_supporters.length > 0){
+										for(var f=0; f<json.idea_data.identified_supporters.length; f++){
+											if(json.idea_data.identified_supporters[f].email != 'user')
+												ideaChanged += '<a href="/participants/'+json.idea_data.identified_supporters[f].email+'"><li>'+json.idea_data.identified_supporters[f].username+'</li></a>';
 											else
-												ideaChanged += '<a href="/participants"><li>'+json.idea_data.known_supporters[f].username+'</li></a>';
+												ideaChanged += '<a href="/participants"><li>'+json.idea_data.identified_supporters[f].username+'</li></a>';
 										}
 						        	}
-						        	if(json.idea_data.supporters_num-json.idea_data.known_supporters.length >= 0)
-										ideaChanged += '<a href="#" class="last--liked"><li>'+(json.idea_data.supporters_num-json.idea_data.known_supporters.length)+' people</li></a>';
+									ideaChanged += '<a href="#" class="last--liked"><li>'+json.idea_data.unidentified_supporters_text+'</li></a>';
 									div_persons.find('.ul--liked').html(ideaChanged);
 									
 									ideaChanged = '';
-						        	if(json.idea_data.known_rejectors.length > 0){
-										for(var f=0; f<json.idea_data.known_rejectors.length; f++){
-											if(json.idea_data.known_rejectors[f].email != 'user')
-												ideaChanged += '<a href="/participants/'+json.idea_data.known_rejectors[f].email+'"><li>'+json.idea_data.known_rejectors[f].username+'</li></a>';
+						        	if(json.idea_data.identified_rejectors.length > 0){
+										for(var f=0; f<json.idea_data.identified_rejectors.length; f++){
+											if(json.idea_data.identified_rejectors[f].email != 'user')
+												ideaChanged += '<a href="/participants/'+json.idea_data.identified_rejectors[f].email+'"><li>'+json.idea_data.identified_rejectors[f].username+'</li></a>';
 											else
-												ideaChanged += '<a href="/participants"><li>'+json.idea_data.known_rejectors[f].username+'</li></a>';
+												ideaChanged += '<a href="/participants"><li>'+json.idea_data.identified_rejectors[f].username+'</li></a>';
 										}
 									} 
-									if(json.idea_data.rejectors_num-json.idea_data.known_rejectors.length >= 0)
-										ideaChanged += '<a href="#" class="last--liked"><li>'+(json.idea_data.rejectors_num-json.idea_data.known_rejectors.length)+' people</li></a>';
+									ideaChanged += '<a href="#" class="last--liked"><li>'+json.idea_data.unidentified_rejectors_text+'</li></a>';
 									div_persons.find('.ul--disliked').html(ideaChanged);
 						        	
 						        },
@@ -939,7 +933,6 @@ function follow_unfollow_participant(type, user){
 			alert('Sorry, something went wrong. Try again later.');		
 		}
 	});
-	console.log();
 }
 
 function change_view(view){

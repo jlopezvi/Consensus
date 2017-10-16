@@ -189,30 +189,29 @@ function showIdeas(list, index){
 	code += '<div class="col-sm-11 newsfeed--likes"><ul>';
 	
 
-	if(list.known_supporters.length > 0){
-		for(var f=0; f<list.known_supporters.length; f++){
-			if(list.known_supporters[f].email != 'user')
-				code += '<a href="/participants/'+list.known_supporters[f].email+'"><li>'+list.known_supporters[f].username+'</li></a>';
+	if(list.identified_supporters.length > 0){
+		for(var f=0; f<list.identified_supporters.length; f++){
+			if(list.identified_supporters[f].email != 'user')
+				code += '<a href="/participants/'+list.identified_supporters[f].email+'"><li>'+list.identified_supporters[f].username+'</li></a>';
 			else
-				code += '<a href="/participants"><li>'+list.known_supporters[f].username+'</li></a>';
+				code += '<a href="/participants"><li>'+list.identified_supporters[f].username+'</li></a>';
 		}
 	} 
-	if(list.supporters_num-list.known_supporters.length >= 0) {
-		code += '<a href="#" class="last--liked"><li>'+(list.supporters_num-list.known_supporters.length)+' people</li></a>';
-	}
+	code += '<a href="#" class="last--liked"><li>'+list.unidentified_supporters_text+'</li></a>';
+	
 	code += '</ul></div></div><div class="col-sm-12"><div class="col-sm-1" style="padding:0;"><img src="/static/images/x-small.png"></div>';
 	code += '<div class="col-sm-11 newsfeed--likes"><ul>';
 	
-	if(list.known_rejectors.length > 0){
-		for(var f=0; f<list.known_rejectors.length; f++){
-			if(list.known_rejectors[f].email != 'user')
-				code += '<a href="/participants/'+list.known_rejectors[f].email+'"><li>'+list.known_rejectors[f].username+'</li></a>';
+	if(list.identified_rejectors.length > 0){
+		for(var f=0; f<list.identified_rejectors.length; f++){
+			if(list.identified_rejectors[f].email != 'user')
+				code += '<a href="/participants/'+list.identified_rejectors[f].email+'"><li>'+list.identified_rejectors[f].username+'</li></a>';
 			else
-				code += '<a href="/participants"><li>'+list.known_rejectors[f].username+'</li></a>';
+				code += '<a href="/participants"><li>'+list.identified_rejectors[f].username+'</li></a>';
 		}
-	} if(list.rejectors_num-list.known_rejectors.length >= 0) {
-		code += '<a href="#" class="last--liked"><li>'+(list.rejectors_num-list.known_rejectors.length)+' people</li></a>';
-	}
+	} 
+	code += '<a href="#" class="last--liked"><li>'+list.unidentified_rejectors_text+'</li></a>';
+	
   code += '</ul></div></div></div>';
 	code += '</div>';
 	if (list.duration.toLowerCase().indexOf("hour") >= 0) {

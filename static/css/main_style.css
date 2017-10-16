@@ -96,7 +96,8 @@ body {
 .home--login, .home--register {
 	background-color: #f0f1f3;
 	padding: 5% 7%;
-	width: 90%;
+    min-width: 236px;
+    max-width: 236px;
 	border-top: solid 10px #3faf2e;
 }
 .home--register {
@@ -762,7 +763,8 @@ a.add--proposal--button:hover, a.add--proposal--button:active, a.add--proposal--
 	top: 10%;
     left: 20%;
     position: absolute;
-    width: 60%;
+    min-width: 810px;
+    max-width: 810px;
 	margin: 0;
 	color: #75787d;
 }
@@ -823,7 +825,8 @@ a.add--proposal--button:hover, a.add--proposal--button:active, a.add--proposal--
 	top: 10%;
     left: 20%;
     position: absolute;
-    width: 60%;
+    min-width: 810px;
+    max-width: 810px;
 	margin: 0;
 	color: #75787d;
 }
@@ -925,7 +928,8 @@ a.add--proposal--button:hover, a.add--proposal--button:active, a.add--proposal--
 	top: 10%;
     left: 20%;
     position: absolute;
-    width: 60%;
+    min-width: 810px;
+    max-width: 810px;
 	margin: 0;
 	color: #75787d;
 }

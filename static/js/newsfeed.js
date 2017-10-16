@@ -141,30 +141,28 @@ function showContent(id){
   $('.input--percent label').empty().append('Support Rate: '+list[id].support_rate+'%');
   /****************************************** Add Supporters to the Supporters List ****************************************/
   var support_html = '';
-  if(list[id].known_supporters.length > 0){
-		for(var f=0; f<list[id].known_supporters.length; f++){
-			if(list[id].known_supporters[f].email != 'user')
-				support_html += '<a href="/participants/'+list[id].known_supporters[f].email+'"><li>'+list[id].known_supporters[f].username+'</li></a>';
+  if(list[id].identified_supporters.length > 0){
+		for(var f=0; f<list[id].identified_supporters.length; f++){
+			if(list[id].identified_supporters[f].email != 'user')
+				support_html += '<a href="/participants/'+list[id].identified_supporters[f].email+'"><li>'+list[id].identified_supporters[f].username+'</li></a>';
 			else
-				support_html += '<a href="/participants"><li>'+list[id].known_supporters[f].username+'</li></a>';
+				support_html += '<a href="/participants"><li>'+list[id].identified_supporters[f].username+'</li></a>';
 		}
 	}
-	if(list[id].supporters_num-list[id].known_supporters.length >= 0)
-	  support_html += '<a href="#" class="last--liked"><li>'+(list[id].supporters_num-list[id].known_supporters.length)+' people</li></a>';
+	support_html += '<a href="#" class="last--liked"><li>'+list[id].unidentified_supporters_text+'</li></a>';
   $('#newsfeed--supporters ul').empty().append(support_html);
   
   /****************************************** Add Supporters to the Supporters List ****************************************/
   var reject_html = '';
-  if(list[id].known_rejectors.length > 0){
-		for(var f=0; f<list[id].known_rejectors.length; f++){
-			if(list[id].known_rejectors[f].email != 'user')
-				reject_html += '<a href="/participants/'+list[id].known_rejectors[f].email+'"><li>'+list[id].known_rejectors[f].username+'</li></a>';
+  if(list[id].identified_rejectors.length > 0){
+		for(var f=0; f<list[id].identified_rejectors.length; f++){
+			if(list[id].identified_rejectors[f].email != 'user')
+				reject_html += '<a href="/participants/'+list[id].identified_rejectors[f].email+'"><li>'+list[id].identified_rejectors[f].username+'</li></a>';
 			else
-				reject_html += '<a href="/participants"><li>'+list[id].known_rejectors[f].username+'</li></a>';
+				reject_html += '<a href="/participants"><li>'+list[id].identified_rejectors[f].username+'</li></a>';
 		}
   }
-  if(list[id].rejectors_num-list[id].known_rejectors.length >= 0)
-	  reject_html += '<a href="#" class="last--liked"><li>'+(list[id].rejectors_num-list[id].known_rejectors.length)+' people</li></a>';
+  reject_html += '<a href="#" class="last--liked"><li>'+list[id].unidentified_rejectors_text+'</li></a>';
   $('#newsfeed--rejectors ul').empty().append(reject_html);
 }
 
