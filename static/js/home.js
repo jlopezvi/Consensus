@@ -30,6 +30,8 @@ $(document).ready( function() {
     $('#dos').hide();
     $('#thismonth').empty();
     $('#tres').hide();
+    $('#older').empty();
+    $('#cuatro').hide();
     loadHomeIdeas(type_vote);
   });
   
@@ -112,7 +114,7 @@ function loadHomeIdeas(type_vote){
 }
 
 function showIdeas(list, index){
-  //console.log(list);
+  console.log(list);
   var code = '';
   code += '<div class="col-xs-12 col-sm-6 home--content--proposal">';
   code += '<div class="row home--header">';
@@ -214,14 +216,16 @@ function showIdeas(list, index){
 	
   code += '</ul></div></div></div>';
 	code += '</div>';
-	if (list.duration.toLowerCase().indexOf("hour") >= 0) {
+	if (list.vote_duration == '<24h') {
     $('#today').append(code);
   }else
-  if (list.duration.toLowerCase().indexOf("day") >= 0) {
+  if (list.vote_duration == '<7days') {
     $('#lastweek').append(code);
   }else
-  if (list.duration.toLowerCase().indexOf("week") >= 0) {
+  if (list.vote_duration == '<30days') {
     $('#thismonth').append(code);
+  }else{
+    $('#older').append(code);
   }
   if($('#today').children().length >0)
     $('#uno').show();
@@ -229,6 +233,8 @@ function showIdeas(list, index){
     $('#dos').show();
   if($('#thismonth').children().length>0)
     $('#tres').show();
+  if($('#older').children().length>0)
+    $('#cuatro').show();
 }
 
 $(document).on('click', '.neewsfeed--moreinfo', function(){

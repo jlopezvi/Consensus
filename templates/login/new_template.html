@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html style="min-width: 1200px;">
 <head>
     <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
     <script src="{{ url_for('static',filename='js/jquery.min.js') }}"></script>
@@ -25,10 +25,17 @@
 	<meta http-equiv="Expires" content="-1">
 	<meta http-equiv="Cache-control" content="no-cache">
 </head>
+<style>
+body,
+.navbar-fixed-top,
+.navbar-fixed-bottom {
+    min-width: 1200px;
+}
+</style>
 <body class="container home--content">
 
     <nav class="navbar navbar-fixed-top nav--style">
-      <div class="container">
+      <div class="container" style="min-width: 1200px;">
 
         <!--<span class="glyphicon glyphicon-chevron-down logout__button" aria-hidden="true" ></span>
          <span class="glyphicon glyphicon-log-out logout__button" aria-hidden="true" ></span>

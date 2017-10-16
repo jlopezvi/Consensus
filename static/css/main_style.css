@@ -445,7 +445,6 @@ body.modal-open {
 	color: #1067fc;
 	display: inline-block!important;
   	text-decoration: none;
-  	margin-left: 15px;
 }
 .vote--on{
     padding: 0px;
@@ -462,7 +461,6 @@ body.modal-open {
     font-size: 12px;
 }
 .newsfeed--likes ul a li {
-	margin-right: 5px;
     border-bottom: 1px solid;
     font-size: 16px;
 }
@@ -1778,4 +1776,16 @@ div.home--share--button {
 }
 div#supported {
     margin-left: 10px;
+}
+#delete-idea {
+	position: absolute;
+	top: 300px;
+    left: 550px;
+    min-width: 300px;
+    max-width: 300px;
+}
+#delete-idea .modal-dialog {
+	min-width: 300px;
+    position: absolute;
+    max-width: 300px;
 }
