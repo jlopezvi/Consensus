@@ -188,6 +188,10 @@ $(document).ready(function(){
             alert(json.result_msg);
             $('#redflag-modal').modal('hide');
             red_flag_idea.remove();
+            if(url[3] == 'participants'){
+              var active_p = $('.participant__active--p .activess').html();
+              $('.participant__active--p .activess').html(active_p-1);
+            }
           },
           error: function(response){
             console.log('Error');
