@@ -112,6 +112,8 @@ function showContent(id){
     $('#picture__profile').attr('src', list[id].author_profilepic_url).show();
     $('.newsfeed--name a').empty().append(list[id].author_username);
     $('.newsfeed--duration').removeClass('uknown__user--duration');
+    var _html = $('.duration--info').parent();
+    _html.remove().clone().insertAfter($('.newsfeed--name'));
   } else {
     $('.duration--info').empty().append(list[id].duration);
     var _html = $('.duration--info').parent();
