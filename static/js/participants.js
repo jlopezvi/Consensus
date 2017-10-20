@@ -4,7 +4,12 @@ var current_vote = '';
 $('.cropme2').simpleCropper();
 var img_validator;
 
+$(window).on('load',function(){
+	$('.participant__follow').find('.check--followers').hide();
+});
+
 $(document).ready( function() {
+	
 	if($('#participant_email').val() == 'None')
 		var current_email = $('#host_email').val();
 	else {
