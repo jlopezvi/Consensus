@@ -191,6 +191,8 @@ $(document).ready(function(){
             if(url[3] == 'participants'){
               var active_p = $('.participant__active--p .activess').html();
               $('.participant__active--p .activess').html(active_p-1);
+            } else if(url[3] == 'topten'){
+              location.reload();
             }
           },
           error: function(response){
