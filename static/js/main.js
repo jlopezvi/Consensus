@@ -193,6 +193,15 @@ $(document).ready(function(){
               $('.participant__active--p .activess').html(active_p-1);
             } else if(url[3] == 'topten'){
               location.reload();
+            } else if(url[3] == 'newsfeed'){
+                var id_newsfeed = $('#list__id').val();
+                removeElementFromList(id_newsfeed);
+                if(list.length == 0){
+                  $('.spinner').show();
+                  var answer = '<br><br>There are no more ideas left! <br>Redirecting to <strong>Home</strong>';
+                  $('#invitation-modal-info p#modal--invitation').empty().append(answer);
+                  $('#invitation-modal-info').modal('toggle');
+                }
             }
           },
           error: function(response){

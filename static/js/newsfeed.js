@@ -219,7 +219,7 @@ function removeElementFromList(id){
   } else {
     setTimeout(function(){
       window.location = '/home';
-    }, 6000);
+    }, 4000);
   }
 }
 $(document).ready(function(){
