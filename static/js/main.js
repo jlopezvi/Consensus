@@ -187,11 +187,12 @@ $(document).ready(function(){
           success: function (json) {
             alert(json.result_msg);
             $('#redflag-modal').modal('hide');
-            red_flag_idea.remove();
             if(url[3] == 'participants'){
+              red_flag_idea.remove();
               var active_p = $('.participant__active--p .activess').html();
               $('.participant__active--p .activess').html(active_p-1);
             } else if(url[3] == 'topten'){
+              red_flag_idea.remove();
               location.reload();
             } else if(url[3] == 'newsfeed'){
                 var id_newsfeed = $('#list__id').val();

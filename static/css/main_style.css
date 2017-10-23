@@ -432,14 +432,19 @@ body.modal-open {
 }
 .newsfeed--likes {
 	padding-left: 0;
-	margin-left: -50px;
+	/*margin-left: -50px;*/
     margin-top: 12px;
 }
 .newsfeed--likes ul{
 	display: inline-block!important;
 	list-style: none;
-	padding-left: 10px;
+	padding-left: 0px;
 	font-size: 16px;
+	left: -15px;
+    position: relative;
+}
+.newsfeed--userlist--img{
+    width: 30px;
 }
 .newsfeed--likes ul a li, .newsfeed--name a{
 	color: #1067fc;
@@ -485,7 +490,7 @@ body.modal-open {
 	text-decoration: underline;
 }
 .newsfeed--persons img {
-    margin-top: 8px;
+    margin-top: 12px;
 }
 .newsfeed--followers {
 	padding-top: 20px;
@@ -1167,7 +1172,7 @@ input.form-control.invite__button:focus {
 }
 .participant__newsfeed {
 	border: 1px solid #c6c6c8;
-    padding: 50px 40px;
+    padding: 35px 40px 50px 40px;
     overflow-y: scroll;
     max-height: 1600px;
 }

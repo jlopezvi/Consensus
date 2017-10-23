@@ -68,7 +68,7 @@ $(document).ready( function() {
                 newTop += '<label> Support Rate: '+data.data[i].support_rate+'% </label></div></div><div class="col-sm-4 neewsfeed--moreinfo" style="float:right;padding: 0px;">';
                 newTop += '<input type="hidden" class="id" value="'+data.data[i].proposal+'"><img class="redflag redflag2" src="'+url_new+'images/redflag.png"><input type="button" name="more-info" class="home--button" style="float: right;"></div><div id="more--info--modal" hidden><p><h4>  More information about the problem: </h4> '+data.data[i].moreinfo_concern+'</br></br><h4> More information about the proposal: </h4>'+data.data[i].moreinfo_proposal+'</p></div></div></div>';
                 newTop += '<div class="row newsfeed--persons newsfeed--persons2"><div class="col-sm-12"><div class="col-sm-1" style="padding:0;">';
-                newTop += '<img src="'+url_new+'images/check-small.png"></div><div class="col-sm-11 newsfeed--likes">';
+                newTop += '<img src="'+url_new+'images/check-hover.png"></div><div class="col-sm-11 newsfeed--likes">';
                 newTop += '<ul class="ul--liked">';
                 if(data.data[i].identified_supporters.length > 0){
     				for(var f=0; f<data.data[i].identified_supporters.length; f++){
@@ -83,7 +83,7 @@ $(document).ready( function() {
     			
     			//
                 newTop +='</ul></div></div>';
-                newTop += '<div class="col-sm-12"><div class="col-sm-1" style="padding:0;"><img src="'+url_new+'images/x-small.png">';
+                newTop += '<div class="col-sm-12"><div class="col-sm-1" style="padding:0;"><img src="'+url_new+'images/reject-hover.png">';
                 newTop += '</div><div class="col-sm-11 newsfeed--likes"><ul class="ul--disliked">';
                 if(data.data[i].identified_rejectors.length > 0){
 					for(var f=0; f<data.data[i].identified_rejectors.length; f++){

@@ -3,7 +3,6 @@ url = url.split("/");
 var list;
 
 $(document).ready(function(){
-  $('html').css('overflow-y','hidden');
   
 	$('.home--content').css('background-image','url("")');
 	$('#nav--home').css('display', 'none');
@@ -115,6 +114,7 @@ function showContent(id){
     var _html = $('.duration--info').parent();
     _html.remove().clone().insertAfter($('.newsfeed--name'));
   } else {
+    $('#picture__profile').attr('src', list[id].author_profilepic_url).hide();
     $('.duration--info').empty().append(list[id].duration);
     var _html = $('.duration--info').parent();
     _html.remove().clone().insertBefore($('.profile--picture').parent());
@@ -146,9 +146,9 @@ function showContent(id){
   if(list[id].identified_supporters.length > 0){
 		for(var f=0; f<list[id].identified_supporters.length; f++){
 			if(list[id].identified_supporters[f].email != 'user')
-				support_html += '<a style="margin-left: 10px;" href="/participants/'+list[id].identified_supporters[f].email+'"><li>'+list[id].identified_supporters[f].username+'</li></a>';
+				support_html += '<a href="/participants/'+list[id].identified_supporters[f].email+'"><li>'+list[id].identified_supporters[f].username+'</li></a>';
 			else
-				support_html += '<a style="margin-left: 10px;" href="/participants"><li>'+list[id].identified_supporters[f].username+'</li></a>';
+				support_html += '<a href="/participants"><li>'+list[id].identified_supporters[f].username+'</li></a>';
 		}
 	}
 	support_html += '<a style="margin-left: 10px;" href="#" class="last--liked"><li>'+list[id].unidentified_supporters_text+'</li></a>';
@@ -202,22 +202,17 @@ function moveFeed(element, id){
 
 function removeElementFromList(id){
   list.splice(id,1);
+  console.log(list);
   if(list.length > 0){
-    if(list.length == 1){
-      $('#newsfeed__body').hide();
-      $('.spinner').show();
-      showContent(0);
-      setTimeout(function(){
-        $('#newsfeed__body').show();
-        $('.spinner').hide();
-      }, 2500);
-      $('.arrow__newsfeed__right').hide();
-      $('.arrow__newsfeed__left').hide();
-    } else if(id == (list.length-1)) {
-      moveFeed('left__feed', id);
-    } else {
-      moveFeed('right__feed', id);
-    }
+    $('#newsfeed__body').hide();
+    $('.spinner').show();
+    showContent(0);
+    setTimeout(function(){
+      $('#newsfeed__body').show();
+      $('.spinner').hide();
+    }, 2500);
+    $('.arrow__newsfeed__right').hide();
+    $('.arrow__newsfeed__left').hide();
   } else {
     setTimeout(function(){
       window.location = '/home';

@@ -58,7 +58,6 @@
 			</div>
 		</div>
 		
-		<span class="glyphicon glyphicon-chevron-left arrow__newsfeed__left" id="left__feed"></span>
         <div class="row newsfeed--body">
 			
 			<div class="col-sm-12 newsfeed__concern" >
@@ -111,18 +110,18 @@
         <div class="row newsfeed--persons" style="top:-5px;">
 			<div class="col-sm-12">
 				<div class="col-sm-1" style="padding:0;">
-					<img src="{{ url_for('static',filename='images/check-small.png') }}">
+					<img class="newsfeed--userlist--img" src="{{ url_for('static',filename='images/check-hover.png') }}">
 				</div>
-				<div class="col-sm-11 newsfeed--likes" id="newsfeed--supporters">
+				<div class="col-sm-9 newsfeed--likes" id="newsfeed--supporters">
 					<ul>
 					</ul>
 				</div>
 			</div>
 			<div class="col-sm-12" style="margin-top: -8px;">
 				<div class="col-sm-1" style="padding:0;">
-					<img src="{{ url_for('static',filename='images/x-small.png') }}">
+					<img class="newsfeed--userlist--img" src="{{ url_for('static',filename='images/reject-hover.png') }}">
 				</div>
-				<div class="col-sm-11 newsfeed--likes" id="newsfeed--rejectors">
+				<div class="col-sm-9 newsfeed--likes" id="newsfeed--rejectors">
 					<ul>
 					</ul>
 				</div>

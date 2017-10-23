@@ -89,12 +89,22 @@
     margin-right: 10px;
 }
 
-.newsfeed--likes ul a:nth-child(1) {
+.newsfeed--likes2 ul a:nth-child(1) {
     margin-left: 40px;
 }
-.home--share--icons img {
-    width: 50px;
+.participants--likes ul a:nth-child(1) {
+    margin-left: 40px!important;
 }
+.home--share--icons img {
+    right: 10px;
+    position: relative;
+    float: right;
+    width: 25px;
+}
+.newsfeed--persons .col-sm-12:nth-child(1) div img{
+    right: 8px;
+}
+
 .home--share--icons img:nth-child(2),
 .home--share--icons img:nth-child(3){
     width: 45px!important;
@@ -112,7 +122,7 @@
 }
 .newsfeed--goals2,
 .newsfeed--goals3{
-    margin-top: -7px;
+    margin-top: -1px;
     right: -45px;
 }
 .newsfeed--goals3{
@@ -124,10 +134,10 @@
     min-width: 560px;
 }
 .home--share2 {
-    top: -108px;
+    top: -18px;
 }
 .newsfeed--persons2 {
-    top: -10px;
+    top: 5px;
 }
 .newsfeed--problem, .newsfeed--proposal {
     margin-top: 0px;
@@ -181,4 +191,9 @@
 }
 .home--header2 {
     min-height: 63px;
+}
+.home--new--bars{
+    width: 110%;
+    left: 10px;
+    position: relative;
 }

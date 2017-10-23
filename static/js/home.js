@@ -187,7 +187,7 @@ function showIdeas(list, index){
 	code += '</div><div class="col-sm-6 home--followers hidden"><i class="fa fa-share-alt"></i><p>Share with: followers</p></div></div></div>';
 	
 	code += '<div class="row newsfeed--persons"><div class="col-sm-12">';
-	code += '<div class="col-sm-1" style="padding:0;"><img src="/static/images/check-small.png"></div>';
+	code += '<div class="col-sm-1" style="padding:0;"><img src="/static/images/check-hover.png"></div>';
 	code += '<div class="col-sm-11 newsfeed--likes"><ul>';
 	
 
@@ -201,7 +201,7 @@ function showIdeas(list, index){
 	} 
 	code += '<a href="#" class="last--liked"><li>'+list.unidentified_supporters_text+'</li></a>';
 	
-	code += '</ul></div></div><div class="col-sm-12"><div class="col-sm-1" style="padding:0;"><img src="/static/images/x-small.png"></div>';
+	code += '</ul></div></div><div class="col-sm-12"><div class="col-sm-1" style="padding:0;"><img src="/static/images/reject-hover.png"></div>';
 	code += '<div class="col-sm-11 newsfeed--likes"><ul>';
 	
 	if(list.identified_rejectors.length > 0){

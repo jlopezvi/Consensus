@@ -144,7 +144,7 @@ $(document).ready( function() {
       'host_email': null,
       'ifemailverified': false
     };
-    console.log(data.group);
+    
     if(data.email == '' || data.password == '' || $('#password2_r').val() == '' || data.fullname == '' || data.username == '' || data.position == '' || data.group == '' || data.group == 0){
         $('.register--message').removeClass('alert-success').addClass('alert-danger');
         $('.register--message').empty().append('All fields must be fills!').show();
@@ -207,18 +207,9 @@ $(document).ready( function() {
     if($('.cropme_profile img').length){
       newData['profilepic'] = $('.cropme_profile img').attr('src');
     }
-    console.log(newData);
-    var redirect = false;
-    $.ajax({
-      url: url[0] + "//" + url[2] + '/get_ideas_created_by_participant/'+hostEmail,
-      type: 'GET',
-      success: function(data){
-        if(data.ideas_indices.length > 0){
-          redirect = true;
-        }
-      }
-    });
-
+    
+    var host_ideas_lenght = 0;
+        
     $.ajax({
       url: url[0] + "//" + url[2] + '/registration',
       type: 'POST',
@@ -234,10 +225,21 @@ $(document).ready( function() {
           $('.register--button').prop('disabled', 'false');
         } else {
           if((json.ifhost) && (json.ifemailverified)){
-            if(redirect)
-              window.location = '/newsfeed';
-            else
-              window.location = '/home';
+            
+            $.ajax({
+              url: url[0] + "//" + url[2] + '/get_ideas_created_by_participant/'+hostEmail,
+              type: 'GET',
+              success: function(ideas){
+                host_ideas_lenght = ideas.ideas_indices.length;
+            /*
+                if(host_ideas_lenght > 0)
+                  window.location = '/newsfeed';
+                else
+                  window.location = '/home';
+            */
+              }
+            });
+            
           }
           else{
             $('.register--message').removeClass('alert-danger').addClass('alert-success');
@@ -250,7 +252,7 @@ $(document).ready( function() {
         console.log(response);
       }
     });
-
+    
   });
 
   function archive(evt) {
