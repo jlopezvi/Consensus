@@ -58,12 +58,22 @@ def registration_receive_emailverification_aux(token):
 
 
 def ideas_for_newsfeed_aux(user_email):
+    return jsonify(_ideas_for_newsfeed_aux(user_email))
+
+
+def if_ideas_for_newsfeed_aux(user_email):
+    return jsonify(_ideas_for_newsfeed_aux(user_email, False))
+
+
+def _ideas_for_newsfeed_aux(user_email,if_return_ideas=True):
     user = _get_participant_node(user_email)
     ideas = []
     ideas_data = []
     followings = [x.end_node for x in list(getGraph().match(start_node=user, rel_type="FOLLOWS"))]
     if len(followings) is 0:
-        return jsonify({"result": "OK", "data": []})
+        if if_return_ideas is False:
+            return {"result": False}
+        return {"result": "OK", "data": []}
     # ideas of followings that have created them
     for following in followings:
         ideas_created = [x.end_node for x in list(getGraph().match(start_node=following, rel_type="CREATED"))]
@@ -73,8 +83,12 @@ def ideas_for_newsfeed_aux(user_email):
             if _if_isnewideaforparticipant(idea_created, user):
                 if _if_ideaisinfirstphase(idea_created):
                     if getGraph().match_one(start_node=idea_created, rel_type="GOES_FIRST_TO", end_node=user) is not None:
+                        if if_return_ideas is False:
+                            return {"result": True}
                         ideas.append(idea_created)
                 else:
+                    if if_return_ideas is False:
+                        return {"result": True}
                     ideas.append(idea_created)
     # ideas of followings that have voted on them
     for following2 in followings:
@@ -87,12 +101,16 @@ def ideas_for_newsfeed_aux(user_email):
                 if _if_ideaisinfirstphase(idea_voted):
                     continue
                 else:
+                    if if_return_ideas is False:
+                        return {"result": True}
                     ideas.append(idea_voted)
     #
+    if if_return_ideas is False:
+        return {"result": False}
     for idea in ideas:
         newfeed = _get_idea_data_for_user(idea, user_email)
         ideas_data.append(newfeed)
-    return jsonify({"result": "OK", "data": ideas_data})
+    return {"result": "OK", "data": ideas_data}
 
 
 def ideas_for_home_aux(user_email, vote_type):

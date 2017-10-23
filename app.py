@@ -18,7 +18,7 @@ from ideaManager import get_ideas_data_created_by_participant_aux, get_ideas_cre
     redflag_idea_aux, get_all_ideas_admin_aux, get_idea_data_admin_aux, get_idea_node_data_aux, get_idea_data_for_user_aux
 from ideaManager import get_ideanotifications_for_user_aux, remove_notification_from_idea_to_participant_aux, \
     _do_tasks_for_idea_editedproposal
-from webManager import ideas_for_newsfeed_aux, ideas_for_home_aux, registration_receive_emailverification_aux, \
+from webManager import ideas_for_newsfeed_aux, if_ideas_for_newsfeed_aux, ideas_for_home_aux, registration_receive_emailverification_aux, \
     registration_from_invitation_aux, registration_send_invitation_aux, do_cron_tasks_aux, get_topten_ideas_aux
 
 import logging
@@ -777,36 +777,9 @@ def registration_receive_emailverification(token):
 # TODO: add weights for ideas
 # Get Ideas For Newsfeed
 # Input: user_email   (user logged in)
-# Output: json with fields 'result' and 'data'. 'data' contains array with all ideas that the user has not << VOTED_ON >>
+# Output: json with fields 'result' and 'data'. 'data' contains array with all ideas for the newsfeed
 # {"result": "OK",
-#  "data": [
-#            {
-#             'concern': 'Some text for the concern',
-#             'proposal': 'Some text for the proposal',
-#             'image_url': 'static/.../asdf.JPG'/null,
-#             'uuid': 'unique_identifier_string',
-#             'moreinfo_concern': 'blah blah blah more info',
-#             'moreinfo_proposal': 'blah blah blah more info',
-#             'supporters_goal_num': 200,
-#             'volunteers_goal_num': 5,
-#             'if_author_public': true / false
-#             'author_profilepic_url': 'static/.../pic.jpg'/null, 'author_username': 'daniela', 'author_email': 'a@gmail.com',
-#             'duration' : "4 hours/ days/ weeks",
-#             'supporters_num' : 5, 'volunteers_num' : 2, 'rejectors_num': 3,
-#             'support_rate' : 95, 'support_rate_MIN' : 90,
-#             'known_supporters': [
-#                { 'email': 'user', 'username': 'me' }, { 'email': 'c@gmail.com', 'username': 'Pedro' }
-#              ],
-#             'known_rejectors':[
-#                { 'email': 'd@', 'username': 'Elisa' }
-#              ],
-#             'vote_type': null / 'supported' / 'rejected' / 'ignored'
-#             'vote_ifvolunteered': null / true / false
-#            },
-#            {
-#              ...
-#            }
-#          ]
+#  "data": [ {*see /get_idea_data_for_user}, {*see /get_idea_data_for_user}  ]
 # }
 @app.route('/ideas_for_newsfeed',methods=['GET'])
 @app.route('/ideas_for_newsfeed/<user_email_DEBUG>',methods=['GET'])
@@ -816,6 +789,18 @@ def ideas_for_newsfeed(user_email_DEBUG = None):
     else:
         user_email = flask_login.current_user.id
     return ideas_for_newsfeed_aux(user_email)
+
+
+# Input: user_email   (user logged in)
+# Output: json  {"result": true/false}
+@app.route('/if_ideas_for_newsfeed',methods=['GET'])
+@app.route('/if_ideas_for_newsfeed/<user_email_DEBUG>',methods=['GET'])
+def if_ideas_for_newsfeed(user_email_DEBUG = None):
+    if DEBUG and user_email_DEBUG is not None:
+        user_email = user_email_DEBUG
+    else:
+        user_email = flask_login.current_user.id
+    return if_ideas_for_newsfeed_aux(user_email)
 
 
 # Ideas For Home: See the Supported + Volunteered ideas/ See the ignored ideas / See the rejected ideas
