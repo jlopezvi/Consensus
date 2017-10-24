@@ -109,7 +109,7 @@ $(document).ready( function() {
                 url: url[0] + "//" + url[2] + '/if_ideas_for_newsfeed',
                 type: 'GET',
                 success: function (json){
-                  if(_if_newsfeed)
+                  if(json.result)
                     window.location = '/newsfeed';
                   else
                     window.location = '/home';
