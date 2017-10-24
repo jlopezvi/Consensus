@@ -13,7 +13,8 @@ $(document).ready(function(){
 	$('#middle--home--button').on('click', function(e){
       e.preventDefault();
 	});
-
+	
+	
 	$.ajax({
     url: url[0] + "//" + url[2] + '/ideas_for_newsfeed',
     type: 'GET',

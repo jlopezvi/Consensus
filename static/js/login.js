@@ -104,21 +104,16 @@ $(document).ready( function() {
               $('.login--message').empty().append('e-mail not found / not verified').show();
             } else if(json.result == 'OK'){
               //GETTING ALL IDEAS FOR NEWSFEED TO VALIDATE THE REDIRECT
+              
               $.ajax({
-                url: url[0] + "//" + url[2] + '/ideas_for_newsfeed',
+                url: url[0] + "//" + url[2] + '/if_ideas_for_newsfeed',
                 type: 'GET',
-                data: JSON.stringify(data),
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                dataType: 'json',
-                success: function (json) {
-                  //console.log(json.data);
-                  if(json.data.length > 0)
+                success: function (json){
+                  if(_if_newsfeed)
                     window.location = '/newsfeed';
                   else
                     window.location = '/home';
-                }
+                } 
               });
               
             }
@@ -226,19 +221,16 @@ $(document).ready( function() {
         } else {
           if((json.ifhost) && (json.ifemailverified)){
             
-            $.ajax({
-              url: url[0] + "//" + url[2] + '/get_ideas_created_by_participant/'+hostEmail,
-              type: 'GET',
-              success: function(ideas){
-                host_ideas_lenght = ideas.ideas_indices.length;
-            /*
-                if(host_ideas_lenght > 0)
-                  window.location = '/newsfeed';
-                else
-                  window.location = '/home';
-            */
-              }
-            });
+              $.ajax({
+                url: url[0] + "//" + url[2] + '/if_ideas_for_newsfeed',
+                type: 'GET',
+                success: function (json){
+                  if(json.result)
+                    window.location = '/newsfeed';
+                  else
+                    window.location = '/home';
+                } 
+              });
             
           }
           else{
