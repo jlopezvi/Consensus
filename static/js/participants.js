@@ -192,8 +192,10 @@ $(document).ready( function() {
 				followerList = '';	
 				for(var i = 0; i < json.followers_num; i++){
 					followerList += '<li>';
-					if(url.length <= 4)
-						followerList += '<input value="'+json.followers_info[i].email+'" class="checkbox check--followers" type="checkbox" name="check[]">';
+					var _if_show = 'visible';
+					if(url.length > 4)
+						_if_show = 'hidden';
+					followerList += '<input value="'+json.followers_info[i].email+'" class="checkbox check--followers" type="checkbox" name="check[]" style="visibility:'+_if_show+';">';
 					followerList += '<img class="new--user--icon--login" src="'+json.followers_info[i].profilepic_url+'">'
 					followerList += '<p><a href="#">'+json.followers_info[i].username+'</a>';					
 					followerList += '<br>'+json.followers_info[i].fullname+'</p></li>';
@@ -223,8 +225,10 @@ $(document).ready( function() {
 				followingList = '';	
 				for(var i = 0; i < json.followings_num; i++){
 					followingList += '<li>';
-					if(url.length <= 4)
-						followingList += '<input value="'+json.followings_info[i].email+'" class="checkbox check--followers" type="checkbox" name="check[]">';
+					var _if_show = 'visible';
+					if(url.length > 4)
+						_if_show = 'hidden';
+					followingList += '<input value="'+json.followings_info[i].email+'" class="checkbox check--followers" type="checkbox" name="check[]" style="visibility:'+_if_show+';">';
 					followingList += '<img class="new--user--icon--login" src="'+json.followings_info[i].profilepic_url+'">';
 					followingList += '<p><a href="#">'+json.followings_info[i].username+'</a>';					
 					followingList += '<br>'+json.followings_info[i].fullname+'</p></li>';
