@@ -242,6 +242,13 @@ $(document).ready(function(){
   	$('#modal_proposal2 .modal-body').css('height', '');
   	$('#modal_proposal2 .modal-body').children().children().first().show();
   	$('#modal_proposal2 .modal-body').children().children().first().next().show();
+  	
+  	$('input#proposal').val('');
+  	$('input#concern').val('');
+  	$('textarea#moreinfo_proposal').val('');
+  	$('textarea#moreinfo_concern').val('');
+  	$('input#volunteers_goal_num').val(0);
+  	$('#cropme_bidea img').remove();
   });
 
 });

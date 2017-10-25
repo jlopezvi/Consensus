@@ -110,16 +110,18 @@ function showContent(id){
   $('.duration--info').empty().append(list[id].duration);
   if(list[id].if_author_public){
     $('#picture__profile').attr('src', list[id].author_profilepic_url).show();
-    $('.newsfeed--name a').empty().append(list[id].author_username);
+    $('.newsfeed--name a').empty().append(list[id].author_username).show();
     $('.newsfeed--duration').removeClass('uknown__user--duration');
     var _html = $('.duration--info').parent();
     _html.remove().clone().insertAfter($('.newsfeed--name'));
+    $('.newsfeed--name').css('visibility','visible');
   } else {
     $('#picture__profile').attr('src', list[id].author_profilepic_url).hide();
     $('.duration--info').empty().append(list[id].duration);
     var _html = $('.duration--info').parent();
     _html.remove().clone().insertBefore($('.profile--picture').parent());
     $('.newsfeed--duration').addClass('uknown__user--duration');
+    $('.newsfeed--name').css('visibility','hidden');
   }
   
   $('.newsfeed--body').css('background-image', 'url('+list[id].image_url+')');
@@ -131,6 +133,8 @@ function showContent(id){
     $('#support__plus--button').hide();
     $('.newsfeed--charge, .newsfeed--goals').addClass('one--progress__bar');
   } else {
+    $('.newsfeed--progress2').show();
+    $('#support__plus--button').show();
     $('.newsfeed--charge, .newsfeed--goals').removeClass('one--progress__bar');
   }
   $('.newsfeed--bar2').css('width',volunter_percent+'%');

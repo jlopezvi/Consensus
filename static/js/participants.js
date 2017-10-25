@@ -4,12 +4,6 @@ var current_vote = '';
 $('.cropme2').simpleCropper();
 var img_validator;
 
-$(window).on('load',function(){
-	setTimeout(function(){
-		if(url.length > 4);
-			$('.participant__follow').find('.check--followers').hide();
-	}, 250);
-});
 
 $(document).ready( function() {
 	
@@ -197,7 +191,9 @@ $(document).ready( function() {
 				}else{		
 				followerList = '';	
 				for(var i = 0; i < json.followers_num; i++){
-					followerList += '<li><input value="'+json.followers_info[i].email+'" class="checkbox check--followers" type="checkbox" name="check[]">';
+					followerList += '<li>';
+					if(url.length <= 4)
+						followerList += '<input value="'+json.followers_info[i].email+'" class="checkbox check--followers" type="checkbox" name="check[]">';
 					followerList += '<img class="new--user--icon--login" src="'+json.followers_info[i].profilepic_url+'">'
 					followerList += '<p><a href="#">'+json.followers_info[i].username+'</a>';					
 					followerList += '<br>'+json.followers_info[i].fullname+'</p></li>';
@@ -226,7 +222,9 @@ $(document).ready( function() {
 				}else{
 				followingList = '';	
 				for(var i = 0; i < json.followings_num; i++){
-					followingList += '<li><input value="'+json.followings_info[i].email+'" class="checkbox check--followers" type="checkbox" name="check[]">';
+					followingList += '<li>';
+					if(url.length <= 4)
+						followingList += '<input value="'+json.followings_info[i].email+'" class="checkbox check--followers" type="checkbox" name="check[]">';
 					followingList += '<img class="new--user--icon--login" src="'+json.followings_info[i].profilepic_url+'">';
 					followingList += '<p><a href="#">'+json.followings_info[i].username+'</a>';					
 					followingList += '<br>'+json.followings_info[i].fullname+'</p></li>';
