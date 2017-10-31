@@ -485,6 +485,7 @@ body.modal-open {
 .newsfeed--persons {   
 	padding-left: 0;
     position: relative;
+    margin-left: 5px;
 }
 .newsfeed--name a {
 	text-decoration: underline;
@@ -1140,6 +1141,7 @@ input.form-control.invite__button:focus {
 	border: 1px solid #3faf2e;
 }
 .participant__content {
+    max-width: 540px;
     color: #707175;
 }
 .participant__content textarea {
@@ -1171,10 +1173,11 @@ input.form-control.invite__button:focus {
     margin-top: 50px;
 }
 .participant__newsfeed {
+	min-width: 630px;
+	max-width: 630px;
 	border: 1px solid #c6c6c8;
     padding: 35px 40px 50px 40px;
     overflow-y: scroll;
-    max-height: 1600px;
 }
 .nav-tabs {
 	border-bottom: none!important;

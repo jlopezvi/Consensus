@@ -26,6 +26,7 @@ $(document).ready( function() {
 			success: function (json) {	
 				
 				//console.log(json);
+				var bars_wo_user = '';
 				var newIdea = '';
 				var url_new = url[0] +'//'+ url[2] +'/static/';
 				for (var i = 0; i < json.ideas_data.length; i++) {
@@ -33,6 +34,7 @@ $(document).ready( function() {
 					newIdea += '<input type="hidden" class="idea__id" value="'+json.ideas_data[i].proposal+'">';
 					// IF IDEA DOESNT HAVE ANONYMOUS AUTHOR 
 					if(json.ideas_data[i].if_author_public){
+						bars_wo_user = 'right: -40px;';
 						newIdea += '<div class="col-sm-1" style="padding-left: 0px;">';
 						newIdea += '<div class="home--profile--picture"><img class="img-circle new--user--icon--login" id="img-modify" src="'+json.ideas_data[i].author_profilepic_url+'"></div></div><div class="col-sm-3 home--name">';
 						newIdea += '<a href="#" id="name--modify">'+json.ideas_data[i].author_username+'</a>';
@@ -61,11 +63,11 @@ $(document).ready( function() {
 					newIdea += '<div class="progress-bar newsfeed--bar2" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:'+volunteers_percent+'%;"></div></div></div>';
 					
 					if (json.ideas_data[i].volunteers_goal_num > 0) {
-						newIdea += '<div class="col-sm-3 newsfeed--goals newsfeed--goals2"><p>'+json.ideas_data[i].supporters_num+'/'+json.ideas_data[i].supporters_goal_num+' supporters';
+						newIdea += '<div class="col-sm-3 newsfeed--goals newsfeed--goals2" style="'+bars_wo_user+'"><p>'+json.ideas_data[i].supporters_num+'/'+json.ideas_data[i].supporters_goal_num+' supporters';
 						newIdea += '<br>'+json.ideas_data[i].volunteers_num+'/'+json.ideas_data[i].volunteers_goal_num+' volunteers';
 						newIdea += '</p></div></div><div class="row home--proposals--body home--proposals--body2" style="background-image: url('+json.ideas_data[i].image_url+'); padding-top:47.40%;"><div class="col-sm-12 concern__div">';
 					} else {
-						newIdea += '<div class="col-sm-3 newsfeed--goals newsfeed--goals2" style="top: 12px!important;"><p>'+json.ideas_data[i].supporters_num+'/'+json.ideas_data[i].supporters_goal_num+' supporters';
+						newIdea += '<div class="col-sm-3 newsfeed--goals newsfeed--goals2" style="top: 12px!important;'+bars_wo_user+'"><p>'+json.ideas_data[i].supporters_num+'/'+json.ideas_data[i].supporters_goal_num+' supporters';
 						newIdea += '</p></div></div><div class="row home--proposals--body home--proposals--body2" style="background-image: url('+json.ideas_data[i].image_url+'); padding-top:47.40%;"><div class="col-sm-12 concern__div">';
 						
 					}
