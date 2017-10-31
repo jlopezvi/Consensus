@@ -105,12 +105,13 @@ $(document).ready(function(){
 function showContent(id){
   $('#list__id').val(id);
   $('.idea__id').val(list[id].proposal);
-  //console.log(list[id]);
+  console.log(list[id]);
   
   $('.duration--info').empty().append(list[id].duration);
   if(list[id].if_author_public){
     $('#picture__profile').attr('src', list[id].author_profilepic_url).show();
     $('.newsfeed--name a').empty().append(list[id].author_username).show();
+    $('.newsfeed--name a').attr('href', '/participants/'+list[id].author_email);
     $('.newsfeed--duration').removeClass('uknown__user--duration');
     var _html = $('.duration--info').parent();
     _html.remove().clone().insertAfter($('.newsfeed--name'));
