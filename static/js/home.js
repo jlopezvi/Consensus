@@ -62,7 +62,7 @@ $(document).ready( function() {
       },
       dataType: 'json',
       success: function(json){
-        //console.log(json);
+        ////console.log(json);
         if(data.vote_type == 'supported' || data.vote_type == 'supported-plus')
           var answer = 'Now you are supporting this idea!';
         else
@@ -78,8 +78,8 @@ $(document).ready( function() {
         $('#invitation-modal-info').modal('toggle');
       },
       error: function(response){
-        console.log('error');
-        console.log(response);
+        //console.log('error');
+        //console.log(response);
       }
   	});
   });
@@ -96,7 +96,7 @@ function loadHomeIdeas(type_vote){
       'Content-Type': 'application/json'
     },
     success: function(json){
-      //console.log(json.data);
+      ////console.log(json.data);
       list = json.data;
       for(i=0; i<json.data.length;i++){
         showIdeas(json.data[i], i);
@@ -107,14 +107,14 @@ function loadHomeIdeas(type_vote){
       }, 2500);
     },
     error: function(response){
-      console.log('error');
-      console.log(response);
+      //console.log('error');
+      //console.log(response);
     }
 	});
 }
 
 function showIdeas(list, index){
-  console.log(list);
+  //console.log(list);
   var code = '';
   code += '<div class="col-xs-12 col-sm-6 home--content--proposal">';
   code += '<div class="row home--header">';

@@ -105,7 +105,7 @@ $(document).ready(function(){
 function showContent(id){
   $('#list__id').val(id);
   $('.idea__id').val(list[id].proposal);
-  console.log(list[id]);
+  //console.log(list[id]);
   
   $('.duration--info').empty().append(list[id].duration);
   if(list[id].if_author_public){
@@ -208,7 +208,7 @@ function moveFeed(element, id){
 
 function removeElementFromList(id){
   list.splice(id,1);
-  console.log(list);
+  //console.log(list);
   if(list.length > 0){
     $('#newsfeed__body').hide();
     $('.spinner').show();

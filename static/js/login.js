@@ -119,7 +119,7 @@ $(document).ready( function() {
             }
           },
           error: function(response){
-            console.log(response);
+            //console.log(response);
           }
         });
     }
@@ -161,7 +161,7 @@ $(document).ready( function() {
                 }
               },
               error: function(response){
-                console.log('error');
+                //console.log('error');
               }
             });
 
@@ -241,7 +241,7 @@ $(document).ready( function() {
         }
       },
       error: function(response){
-        console.log(response);
+        //console.log(response);
       }
     });
     
@@ -292,7 +292,7 @@ $( window ).load(function(){
       },
       dataType: 'json',
       success: function (json) {
-        //console.log(json);
+        ////console.log(json);
         $('.home--content--left h1').html(json.fullname + '<br>Welcomes You!');
         if(json.fullname.length > 18)
           $('.home--content--left h1').css('font-size', '65px');
@@ -303,7 +303,7 @@ $( window ).load(function(){
           
       },
       error: function(response){
-        //console.log(response.responseText);
+        ////console.log(response.responseText);
         //$('.login--message2').append('You have been invited by <strong>'+ response.responseText +'</strong>');
       }
     });

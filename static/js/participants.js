@@ -25,7 +25,7 @@ $(document).ready( function() {
 			type: 'GET',
 			success: function (json) {	
 				
-				//console.log(json);
+				////console.log(json);
 				var bars_wo_user = '';
 				var newIdea = '';
 				var url_new = url[0] +'//'+ url[2] +'/static/';
@@ -170,7 +170,7 @@ $(document).ready( function() {
 			url: url[0] + "//" + url[2] + '/get_participant_data_by_email_unrestricted/'+current_email,
 			type: 'GET',
 			success: function (json) {
-				//console.log(json);
+				////console.log(json);
 				$('.profile--picture img').attr('src', json.participant_data.profilepic_url);
 				$('.participant__name a').empty().append(json.participant_data.username);
 				$('.participant__name label').empty().append(json.participant_data.fullname);
@@ -187,7 +187,7 @@ $(document).ready( function() {
 		url: url[0] + "//" + url[2] + '/get_participant_followers_info/'+current_email,
 		type: 'GET',
 		success: function (json) {
-				//console.log(json);
+				////console.log(json);
 				if (json.ifallowed == false) {
 					$('#menu1 ul').append('<center><h3 >User private</h3></center>');
 				}else{		
@@ -220,7 +220,7 @@ $(document).ready( function() {
 		url: url[0] + "//" + url[2] + '/get_participant_followings_info/'+current_email,
 		type: 'GET',
 		success: function (json) {
-			//console.log(json);
+			////console.log(json);
 				if (json.ifallowed == false){
 					$('#home ul').append('<center><h3>User private</h3></center>');
 				}else{
@@ -254,7 +254,7 @@ $(document).ready( function() {
 		},
 		dataType: 'json',
 		success: function(json) {
-			//console.log(json);
+			////console.log(json);
 	       	for (var i = 0; i < json.length; i++) {
 	       		if_following = '';
 	       		if(json[i].if_following)
@@ -290,7 +290,7 @@ $(document).ready( function() {
 	       		}	
 
 	       	}
-	       	//console.log(newParti);
+	       	////console.log(newParti);
 		}
 	});
 
@@ -304,7 +304,7 @@ $(document).ready( function() {
 		var validation = false;
 		if(guest_email != ''){
 			for(var i=0; i<guest_email.length; i++){
-				//console.log(guest_email[i]);
+				////console.log(guest_email[i]);
 				if( !isValidEmailAddress( guest_email[i] ) ) {
 					validation = true;
 					break;
@@ -395,7 +395,7 @@ $(document).ready( function() {
     	e.preventDefault();
     	var redirect = $(this).parent().parent().children('input').val();
     	if($(this).parent().parent().hasClass('participants__li__private'))
-    		console.log('Not Allowed');
+    		//console.log('Not Allowed');
     	else if($('#host_email').val() == redirect)
     		window.location = '/participants';
     	else
@@ -425,7 +425,7 @@ $(document).ready( function() {
 		},
 		dataType: 'json',
 		success: function (json) {
-			//console.log(json.data);
+			////console.log(json.data);
 			$('#p_fullname').val(''+json.data.fullname+'');
 			$('#p_username').val(''+json.data.username+'');
 			$('#p_email').val(''+json.data.email+'');
@@ -507,7 +507,7 @@ $(document).ready( function() {
 		        */
 		      },
 		      error: function(response){
-		        console.log(response);
+		        //console.log(response);
 		      }
 		    });
     	}else{
@@ -559,7 +559,7 @@ $(document).ready( function() {
 				url: url[0] + "//" + url[2] + '/get_participant_data_by_email_unrestricted/'+current_email,
 				type: 'GET',
 				success: function (json) {
-					//console.log(json);
+					////console.log(json);
 					$('.profile--picture img').attr('src', '');
 					$('.participant__name a').empty();
 					$('.participant__name label').empty();
@@ -586,7 +586,7 @@ $(document).ready( function() {
 		},
 		dataType: 'json',
 		success: function (json) {
-			//console.log(json);
+			////console.log(json);
 			$('#concern').val(''+json.concern+'');
 			$('#proposal').val(''+json.proposal+'');
 			$('#moreinfo_concern').val(''+json.moreinfo_concern+'');
@@ -653,8 +653,8 @@ $(document).ready( function() {
      	     
      	   },
      	   error: function(response){
-     	     console.log('Error');
-     	     console.log(response);
+     	     //console.log('Error');
+     	     //console.log(response);
      	   }
      	});
     	}else{
@@ -697,8 +697,8 @@ $(document).ready( function() {
 		     	    	 
 		     	   },
 		     	   error: function(response){
-		     	     console.log('Error');
-		     	     console.log(response);
+		     	     //console.log('Error');
+		     	     //console.log(response);
 		     	   }
 		     	});
 	    	}else{
@@ -729,7 +729,7 @@ $(document).ready( function() {
 			url: url[0] + "//" + url[2] + '/get_voting_rel_between_user_and_idea/'+data_input.idea_proposal,
 			type: 'GET',
 			success: function(data){
-      			//console.log(data);
+      			////console.log(data);
 				if(data.result == 'OK' && ((data.vote_ifvolunteered) && (data.vote_type == 'supported')))
 					current_vote = 'volunteer';
 				else if(data.result == 'OK' && ((!data.vote_ifvolunteered) && (data.vote_type == 'supported')))
@@ -758,7 +758,7 @@ $(document).ready( function() {
 						        url: url[0] + "//" + url[2] + '/get_idea_data_for_user/'+data_input.idea_proposal,
 						        type: 'GET',
 						        success: function(json){
-						        	//console.log(json);
+						        	////console.log(json);
 						        	var supp_percent = json.idea_data.supporters_num*100/json.idea_data.supporters_goal_num;
 						        	var volunt_percent = json.idea_data.volunteers_num*100/json.idea_data.volunteers_goal_num;
 						        	div_header.children('.newsfeed--goals').children('p').html('<p>'+json.idea_data.supporters_num+'/'+json.idea_data.supporters_goal_num+' supporters<br>'+json.idea_data.volunteers_num+'/'+json.idea_data.volunteers_goal_num+' volunteers</p>');
@@ -792,8 +792,8 @@ $(document).ready( function() {
 						        	
 						        },
 						        error: function(response){
-						        	console.log('error');
-						        	console.log(response);
+						        	//console.log('error');
+						        	//console.log(response);
 						        }
 		        			});
 		        			
@@ -813,14 +813,14 @@ $(document).ready( function() {
 
 			        },
 			        error: function(response){
-			          console.log('error');
-			          console.log(response);
+			          //console.log('error');
+			          //console.log(response);
 			        }
 		        });
 			},
 			error: function(response){
-				console.log('error');
-				console.log(response);
+				//console.log('error');
+				//console.log(response);
 			}
 		});
     });
@@ -834,7 +834,7 @@ function seaarch_participant(search){
 		url: url[0] + "//" + url[2] + '/get_participant_data_by_email_unrestricted/'+search,
 		type: 'GET',
 		success: function (json) {
-			//console.log(json);
+			////console.log(json);
 			var _exists = false;
 			$('.addproposal--step2').find('legend').find('li input').each(function(){
 				if($(this).val() == json.participant_data.id)
@@ -928,7 +928,7 @@ function follow_unfollow_participant(type, user){
 				url: url[0] + "//" + url[2] + '/get_participant_followings_info/'+current_email,
 				type: 'GET',
 				success: function (json) {
-			//console.log(json);
+			////console.log(json);
 				followingList = '';	
 				for(var i = 0; i < json.followings_num; i++){
 					followingList += '<li><input value="'+json.followings_info[i].email+'" class="checkbox check--followers" type="checkbox" name="check[]">';

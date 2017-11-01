@@ -86,7 +86,7 @@ $(document).ready(function(){
     if($('#cropme_bidea img').length)
       newData['image'] = $('#cropme_bidea img').attr('src');
     
-    console.log(newData);
+    //console.log(newData);
     if ($('#volunteers_goal_num').val() >= 0 ) {
       $.ajax({
         url: url[0] + "//" + url[2] + '/add_idea_to_user',
@@ -99,11 +99,11 @@ $(document).ready(function(){
         success: function (json) {
           alert(json.result_msg);
           window.location = '../home';
-          console.log(json);
+          //console.log(json);
         },
         error: function(response){
-          console.log('Error');
-          console.log(response);
+          //console.log('Error');
+          //console.log(response);
         }
       });
     }else{
@@ -117,7 +117,7 @@ $(document).ready(function(){
       url: url[0] + "//" + url[2] + '/get_participant_followers_info/'+current_email,
       type: 'GET',
       success: function (json){
-        //console.log(json);
+        ////console.log(json);
         if(json.followers_num > 0){
           followerproposal = '';  
           for(var i = 0; i < json.followers_num; i++){
@@ -217,8 +217,8 @@ $(document).ready(function(){
             }
           },
           error: function(response){
-            console.log('Error');
-            console.log(response);
+            //console.log('Error');
+            //console.log(response);
           }
         });
       }

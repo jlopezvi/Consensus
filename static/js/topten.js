@@ -7,7 +7,7 @@ $(document).ready( function() {
         url: url[0] + "//" + url[2] + '/get_topten_ideas',
         method: 'GET',
         success: function(data){
-            //console.log(data);
+            ////console.log(data);
             var newTop = '';
             var url_new = url[0] +'//'+ url[2] +'/static/';
             for (var i = 0; i < data.data.length; i++) {                      
@@ -126,8 +126,8 @@ $(document).ready( function() {
             
     },
         error: function(response){
-            console.log('error');
-            console.log(response);
+            //console.log('error');
+            //console.log(response);
         }
     });
     
@@ -162,7 +162,7 @@ $(document).ready( function() {
     
     $(document).on('click', '.edit', function(){
     	var propid = $(this).parent().parent().parent().children('input').val();
-    	console.log(propid);
+    	//console.log(propid);
     	$.ajax({
     		url: url[0] + "//" + url[2] + '/get_idea_node_data/'+propid,
     		type: 'GET',
@@ -171,7 +171,7 @@ $(document).ready( function() {
     		},
     		dataType: 'json',
     		success: function (json) {
-    			//console.log(json);
+    			////console.log(json);
     			$('#concern').val(''+json.concern+'');
     			$('#proposal').val(''+json.proposal+'');
     			$('#moreinfo_concern').val(''+json.moreinfo_concern+'');
@@ -232,8 +232,8 @@ $(document).ready( function() {
                     location.reload();
                 },
                 error: function(response){
-                    console.log('Error');
-                    console.log(response);
+                    //console.log('Error');
+                    //console.log(response);
                 }
          	});
     	}else{
