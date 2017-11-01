@@ -5,15 +5,17 @@ url = url.split("/");
 
 $(document).ready(function(){
   
-  $.ajax({
-    url: url[0] + "//" + url[2] + '/if_ideas_for_newsfeed',
-    type: 'GET',
-    success: function (json){
-      _if_newsfeed = json.result;
-      if(_if_newsfeed)
-        $('#middle--home--button').attr('href', '/newsfeed');
-    } 
-  });
+  if(url[4] != ''){
+    $.ajax({
+      url: url[0] + "//" + url[2] + '/if_ideas_for_newsfeed',
+      type: 'GET',
+      success: function (json){
+        _if_newsfeed = json.result;
+        if(_if_newsfeed)
+          $('#middle--home--button').attr('href', '/newsfeed');
+      } 
+    });
+  }
   
   $('#defultimg__bimage').attr('src', default_bimage);
   
