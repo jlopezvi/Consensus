@@ -615,51 +615,51 @@ $(document).ready( function() {
     $(document).on('click', '.edit--proposal--provisional', function(){
      	var propuestaid = $('#propoid').val(); 
      	var dataedit = {
-      			'concern': $('#concern').val(),
-      			'moreinfo_proposal': $('#moreinfo_proposal').val(),
-      			'moreinfo_concern': $('#moreinfo_concern').val(),
-      			'volunteers_goal_num': $('#volunteers_goal_num').val(),
-      			'supporters_goal_num': 200
-    		};    
-    		dataedit['current_proposal'] = propuestaid;
-			if ($('#proposal').val() != propuestaid) {
-    			dataedit['proposal'] = $('#proposal').val();
-			}		
-    		var opt = false;
-    		if ($('input[name=proposal-anon]').is(":checked") == true){
-        		opt = true;
-    		}
-   		 	dataedit['if_author_public'] = opt;
-	    	
-	    	dataedit['image'] = null;
-	    	if($('#cropme_bidea img').attr('src') != "/static/images/fondo-c.jpg"){
-	      		dataedit['image'] = $('#cropme_bidea img').attr('src');
-	    	}
+  			'concern': $('#concern').val(),
+  			'moreinfo_proposal': $('#moreinfo_proposal').val(),
+  			'moreinfo_concern': $('#moreinfo_concern').val(),
+  			'volunteers_goal_num': $('#volunteers_goal_num').val(),
+  			'supporters_goal_num': 200
+		};    
+		dataedit['current_proposal'] = propuestaid;
+		if ($('#proposal').val() != propuestaid) {
+			dataedit['proposal'] = $('#proposal').val();
+		}		
+		var opt = false;
+		if ($('input[name=proposal-anon]').is(":checked") == true){
+    		opt = true;
+		}
+   	 	dataedit['if_author_public'] = opt;
+    	
+    	//dataedit['image'] = null;
+    	if(!$('#cropme_bidea img').attr('style')){
+      		dataedit['image'] = $('#cropme_bidea img').attr('src');
+    	}
 
-	      	if ($('#volunteers_goal_num').val() >= 0 ) {
-	     	$.ajax({
-	     	   url: url[0] + "//" + url[2] + '/modify_idea',
-	     	   type: 'PUT',
-	     	   data: JSON.stringify(dataedit),
-	     	   headers: {
-	     	     'Content-Type': 'application/json'
-	     	   },
-	     	   dataType: 'json',
-	     	   success: function (json) {
-	     	     alert(json.result_msg);
-    			 //window.location = '../home';
-	     	     $('.close').click();
-	     	     location.reload(true);
-	     	     
-	     	   },
-	     	   error: function(response){
-	     	     console.log('Error');
-	     	     console.log(response);
-	     	   }
-	     	});
-	    	}else{
-	      		$('#volunteers_goal_num').css("border-color", "red");
-	    	}
+      	if ($('#volunteers_goal_num').val() >= 0 ) {
+     	$.ajax({
+     	   url: url[0] + "//" + url[2] + '/modify_idea',
+     	   type: 'PUT',
+     	   data: JSON.stringify(dataedit),
+     	   headers: {
+     	     'Content-Type': 'application/json'
+     	   },
+     	   dataType: 'json',
+     	   success: function (json) {
+     	     alert(json.result_msg);
+			 //window.location = '../home';
+     	     $('.close').click();
+     	     location.reload(true);
+     	     
+     	   },
+     	   error: function(response){
+     	     console.log('Error');
+     	     console.log(response);
+     	   }
+     	});
+    	}else{
+      		$('#volunteers_goal_num').css("border-color", "red");
+    	}
     });
     
     $(document).on('click', '.update--password', function(){
