@@ -394,9 +394,7 @@ $(document).ready( function() {
     $(document).on('click', '.addproposal--step2 li a', function(e){
     	e.preventDefault();
     	var redirect = $(this).parent().parent().children('input').val();
-    	if($(this).parent().parent().hasClass('participants__li__private'))
-    		//console.log('Not Allowed');
-    	else if($('#host_email').val() == redirect)
+    	if($('#host_email').val() == redirect)
     		window.location = '/participants';
     	else
     		window.location = '/participants/'+redirect;
