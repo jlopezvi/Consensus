@@ -253,7 +253,7 @@ $(document).ready(function(){
 
 });
 
-function showModal(id, _opt = true) {
+function showModal(id) {
     $('.modal').modal('hide');
     $("#" + id).modal();
   }
