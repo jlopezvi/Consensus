@@ -5,6 +5,24 @@ url = url.split("/");
 
 $(document).ready(function(){
   
+  $('#proposal').bind("cut copy paste",function(e) {
+    e.preventDefault();
+  });
+  
+  $('#proposal').on('keypress', function(e) {
+    var chr = String.fromCharCode(e.which);
+    if (" 1234567890qwertyuioplkjhgfdsazxcvbnmQWERTYUIOPLKJHGFDSAZXCVBNMÑñ?¿!¡.,:;-_()".indexOf(chr) < 0)
+     return false;
+  });
+  
+  var characterReg = /[`@#$%^&*_|+\-='"\{\}\[\]\\\/]/gi;
+  $('#proposal').bind("keyup", function(event){		
+  	var inputVal = $(this).val();		
+  	if(characterReg.test(inputVal)) {			
+  		$(this).val(inputVal.replace(/[`@#$%^&*_|+\-='"\{\}\[\]\\\/]/gi,''));			
+  	}
+	});
+  
   if(url[3] != ''){
     $.ajax({
       url: url[0] + "//" + url[2] + '/if_ideas_for_newsfeed',
