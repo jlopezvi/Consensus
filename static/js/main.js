@@ -5,7 +5,7 @@ url = url.split("/");
 
 $(document).ready(function(){
   
-  if(url[4] != ''){
+  if(url[3] != ''){
     $.ajax({
       url: url[0] + "//" + url[2] + '/if_ideas_for_newsfeed',
       type: 'GET',
