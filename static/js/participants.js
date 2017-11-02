@@ -430,7 +430,7 @@ $(document).ready( function() {
 			$('#p_confirm-e').val(''+json.data.email+'');
 			$('#p_position').val(''+json.data.position+'');
 			$('#p_group').val(''+json.data.group+'');
-			$('#cropme_profile_edit').append('<img src='+json.data.profilepic_url+'>');
+			$('#cropme_profile_edit').append('<img style="with:100px;height:100px;" src='+json.data.profilepic_url+'>');
 			img_validator = json.data.profilepic_url;
 			if(json.data.ifpublicprofile)
 				$('#Public--profile').prop('checked', true);
