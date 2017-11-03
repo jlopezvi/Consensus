@@ -268,25 +268,25 @@ $(document).ready( function() {
 	       		newParti += '<input type="hidden" value="'+json[i].email+'">';
 	       		newParti += '<input class="form-control invite__button" type="button" '+if_following+' id="btn-follow"></li>';
 
-	       		if (json[i].group == 'Governing Board') {
-	       			$('.governing').show();
-	       			$('.governing').append(newParti);
+	       		if (json[i].group == 'maitres') {
+	       			$('.maitres').show();
+	       			$('.maitres').append(newParti);
 	       		}	
-	       		if (json[i].group == 'Marketing') {
-	       			$('.marketing').show();
-	       			$('.marketing').append(newParti);
+	       		if (json[i].group == 'c1M01') {
+	       			$('.c1M01').show();
+	       			$('.c1M01').append(newParti);
 	       		}	
-	       		if (json[i].group == 'Sales') {
-	       			$('.sales').show();
-	       			$('.sales').append(newParti);
+	       		if (json[i].group == 'c1M05') {
+	       			$('.c1M05').show();
+	       			$('.c1M05').append(newParti);
 	       		}	
-	       		if (json[i].group == 'Technical') {
-	       			$('.technical').show();
-	       			$('.technical').append(newParti);
+	       		if (json[i].group == 'c1M10') {
+	       			$('.c1M10').show();
+	       			$('.c1M10').append(newParti);
 	       		}	
-	       		if (json[i].group == 'Human Resources') {
-	       			$('.human').show();
-	       			$('.human').append(newParti);
+	       		if (json[i].group == 'c3MOS') {
+	       			$('.c3MOS').show();
+	       			$('.c3MOS').append(newParti);
 	       		}	
 
 	       	}
@@ -855,35 +855,35 @@ function seaarch_participant(search){
                 	$('.spinner').hide();
 					$('.addproposal--step__div ul').find('li.participants__li__private').remove();	
 					
-	            	if (json.participant_data.group == 'Governing Board') {
-		       			$('.marketing, .sales, .governing, .technical, .human').hide();
-		       			$('.governing').show();
+	            	if (json.participant_data.group == 'maitres') {
+		       			$('.maitres, .c1M01, .c1M05, .c1M10, .c3MOS').hide();
+		       			$('.maitres').show();
 		       			if(!_exists)
-		       				$('.governing').append(newAppend);
+		       				$('.maitres').append(newAppend);
 		       		}	
-		       		if (json.participant_data.group == 'Marketing') {
-		       			$('.marketing, .sales, .governing, .technical, .human').hide();
-		       			$('.marketing').show();
+		       		if (json.participant_data.group == 'c1M01') {
+		       			$('.maitres, .c1M01, .c1M05, .c1M10, .c3MOS').hide();
+		       			$('.c1M01').show();
 		       			if(!_exists)
-		       				$('.marketing').append(newAppend);
+		       				$('.c1M01').append(newAppend);
 		       		}	
-		       		if (json.participant_data.group == 'Sales') {
-		       			$('.marketing, .sales, .governing, .technical, .human').hide();
-		       			$('.sales').show();
+		       		if (json.participant_data.group == 'c1M05') {
+		       			$('.maitres, .c1M01, .c1M05, .c1M10, .c3MOS').hide();
+		       			$('.c1M05').show();
 		       			if(!_exists)
-		       				$('.sales').append(newAppend);
+		       				$('.c1M05').append(newAppend);
 		       		}	
-		       		if (json.participant_data.group == 'Technical') {
-		       			$('.marketing, .sales, .governing, .technical, .human').hide();
-		       			$('.technical').show();
+		       		if (json.participant_data.group == 'c1M10') {
+		       			$('.maitres, .c1M01, .c1M05, .c1M10, .c3MOS').hide();
+		       			$('.c1M10').show();
 		       			if(!_exists)
-		       				$('.technical').append(newAppend);
+		       				$('.c1M10').append(newAppend);
 		       		}	
-		       		if (json.participant_data.group == 'Human Resources') {
-		       			$('.marketing, .sales, .governing, .technical, .human').hide();
-		       			$('.human').show();
+		       		if (json.participant_data.group == 'c3MOS') {
+		       			$('.maitres, .c1M01, .c1M05, .c1M10, .c3MOS').hide();
+		       			$('.c3MOS').show();
 		       			if(!_exists)
-		       				$('.human').append(newAppend);
+		       				$('.c3MOS').append(newAppend);
 		       		}	
 					//div.append(newAppend);
 				}, 2000);
@@ -894,7 +894,7 @@ function seaarch_participant(search){
 			$('#legend__board').hide();
 			setTimeout(function(){
 				$('.spinner').hide();
-				$('.marketing, .sales, .governing, .technical, .human').hide();
+				$('.maitres, .c1M01, .c1M05, .c1M10, .c3MOS').hide();
 				div.prepend('<legend id="legend__results">No results for: '+search+'</legend>');
 			}, 2000);
 		}
@@ -1047,14 +1047,14 @@ function isValidEmailAddress(emailAddress) {
 };
 
 function showHideGroups(){
-	if($('.sales li').length > 0)
-		$('.sales').show();
-	if($('.governing li').length > 0)
-		$('.governing').show();
-	if($('.marketing li').length > 0)
-		$('.marketing').show();
-	if($('.technical li').length > 0)
-		$('.technical').show();
-	if($('.human li').length > 0)
-		$('.human').show();
+	if($('.maitres li').length > 0)
+		$('.maitres').show();
+	if($('.c1M01 li').length > 0)
+		$('.c1M01').show();
+	if($('.c1M05 li').length > 0)
+		$('.c1M05').show();
+	if($('.c1M10 li').length > 0)
+		$('.c1M10').show();
+	if($('.c3MOS li').length > 0)
+		$('.c3MOS').show();
 }

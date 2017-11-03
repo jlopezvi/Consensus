@@ -413,9 +413,13 @@ def get_all_participants_admin():
 # Output  json {"email": "new@gmail.com", "position": "Employee", "group": "IT",
 #               "fullname": "jlopezvi", "profilepic_url": "static/.../pic.jpg", "if_following":True/False}
 @app.route('/get_all_public_participants_for_user', methods=['GET'])
-def get_all_public_participants_for_user():
-    user = flask_login.current_user.id
-    return json.dumps(get_all_public_participants_for_user_aux(user))
+@app.route('/get_all_public_participants_for_user/<user_email_DEBUG>', methods=['GET'])
+def get_all_public_participants_for_user(user_email_DEBUG=None):
+    if DEBUG and user_email_DEBUG is not None:
+        user_email = user_email_DEBUG
+    else:
+        user_email = flask_login.current_user.id
+    return json.dumps(get_all_public_participants_for_user_aux(user_email))
 
 
 ##### PARTICIPANT NOTIFICATIONS

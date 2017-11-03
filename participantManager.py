@@ -292,7 +292,7 @@ def get_all_public_participants_for_user_aux(user):
     allnodes = _getParticipantsIndex().query("email:*")
     participants = []
     for node in allnodes:
-        if node.get_properties()['ifpublicprofile'] == True and node.get_properties()['email'] != user:
+        if node.get_properties()['ifpublicprofile'] is True and node.get_properties()['email'] != user:
             participants.append(
                 {'email': node.get_properties()['email'], 'fullname': node.get_properties()['fullname'],
                  'position': node.get_properties()['position'], 'group': node.get_properties()['group'],
