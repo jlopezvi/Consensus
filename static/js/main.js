@@ -9,17 +9,11 @@ $(document).ready(function(){
     e.preventDefault();
   });
   
-  $('#proposal').on('keypress', function(e) {
-    var chr = String.fromCharCode(e.which);
-    if (" 1234567890qwertyuioplkjhgfdsazxcvbnmQWERTYUIOPLKJHGFDSAZXCVBNMÑñ?¿!¡.,:;-_()".indexOf(chr) < 0)
-     return false;
-  });
-  
-  var characterReg = /[`@#$%^&*_|+\-='"\{\}\[\]\\\/]/gi;
-  $('#proposal').bind("keyup", function(event){		
+  var characterReg = /[#$%&\{\}\[\]\\\/]/gi;
+  $('#proposal').bind("keyup keydown", function(event){		
   	var inputVal = $(this).val();		
   	if(characterReg.test(inputVal)) {			
-  		$(this).val(inputVal.replace(/[`@#$%^&*_|+\-='"\{\}\[\]\\\/]/gi,''));			
+  		$(this).val(inputVal.replace(/[#$%&\{\}\[\]\\\/]/gi,''));			
   	}
 	});
   
