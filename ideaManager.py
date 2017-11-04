@@ -380,7 +380,7 @@ def _if_ideaisinfirstphase(idea):
         if getGraph().match_one(start_node=idea_first_receiver, rel_type="HAS_VOTED_ON", end_node=idea) is None:
             return True
     # else False
-    return True
+    return False
 
 
 # <Used by  get_idea_data_admin  >
