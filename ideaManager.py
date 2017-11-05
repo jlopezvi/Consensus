@@ -23,6 +23,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 # Used By < add_idea_to_user >
 def add_idea_to_user_aux(user_email, idea_dict):
+    from app import SUPPORTERS_GOAL_NUM
     user = _get_participant_node(user_email)
     newidea_index = idea_dict.get('proposal')
     code_uuid = str(uuid.uuid4())
@@ -39,7 +40,7 @@ def add_idea_to_user_aux(user_email, idea_dict):
                                   "image_url": image_url, "uuid": code_uuid,
                                   "moreinfo_concern": idea_dict.get('moreinfo_concern'),
                                   "moreinfo_proposal": idea_dict.get('moreinfo_proposal'),
-                                  "supporters_goal_num": idea_dict.get('supporters_goal_num'),
+                                  "supporters_goal_num": SUPPORTERS_GOAL_NUM,
                                   "volunteers_goal_num": idea_dict.get('volunteers_goal_num'),
                                   "if_author_public": idea_dict.get('if_author_public')})
     newidea.add_labels("idea")
@@ -393,7 +394,7 @@ def _if_ideaisinfirstphase(idea):
 #             'uuid': 'unique_identifier_string',
 #             'moreinfo_concern': 'blah blah blah more info',
 #             'moreinfo_proposal': 'blah blah blah more info',
-#             'supporters_goal_num': 200,
+#             'supporters_goal_num': 50,
 #             'volunteers_goal_num': 5,
 #             'if_author_public': True / False
 #             'author_profilepic_url': 'static/.../pic.jpg'/None, 'author_username': 'daniela', 'author_email': 'a@gmail.com',
@@ -455,7 +456,7 @@ def _get_idea_data(idea):
 #             'uuid': 'unique_identifier_string',
 #             'moreinfo_concern': 'blah blah blah more info',
 #             'moreinfo_proposal': 'blah blah blah more info',
-#             'supporters_goal_num': 200,
+#             'supporters_goal_num': 50,
 #             'volunteers_goal_num': 5,
 #             'if_author_public': True / False
 #             'author_profilepic_url': 'static/.../pic.jpg'/None, 'author_username': 'daniela', 'author_email': 'a@gmail.com',
@@ -619,13 +620,14 @@ def _get_idea_score(idea):
     vote_statistics_for_idea = _get_vote_statistics_for_idea(idea['proposal'])
     supporters_num = vote_statistics_for_idea[0]
     rejectors_num = vote_statistics_for_idea[1]
+    # supporters_points in range [0, infinity]
     if supporters_num == 0:
         return 0
-    # volunteers ?
-    # supporters points in range [0, infinity]
     supporters_points = log10(supporters_num)
-    support_rate = supporters_num / (rejectors_num + supporters_num) * 100
     # support_rate_points in range [0,1]
+    support_rate = supporters_num / (rejectors_num + supporters_num) * 100
+    if support_rate < SUPPORT_RATE_MIN:
+        return 0
     support_rate_points = (10 ** ((support_rate - SUPPORT_RATE_MIN) / (100 - SUPPORT_RATE_MIN)) - 1.) / 9.
     # total number
     points = support_rate_points + supporters_points

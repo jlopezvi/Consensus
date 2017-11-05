@@ -79,7 +79,7 @@ $(document).ready(function(){
       'moreinfo_proposal': $('#moreinfo_proposal').val(),
       'moreinfo_concern': $('#moreinfo_concern').val(),
       'volunteers_goal_num': parseInt($('#volunteers_goal_num').val()),
-      'supporters_goal_num': 200
+      'supporters_goal_num': 50
     };
     
     var opt = false;
