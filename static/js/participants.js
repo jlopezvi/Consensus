@@ -284,6 +284,18 @@ $(document).ready( function() {
 	       			$('.c1M10').show();
 	       			$('.c1M10').append(newParti);
 	       		}	
+	       		if (json[i].group == 'c2M01') {
+	       			$('.c2M01').show();
+	       			$('.c2M01').append(newParti);
+	       		}
+	       		if (json[i].group == 'c2M06') {
+	       			$('.c2M06').show();
+	       			$('.c2M06').append(newParti);
+	       		}
+	       		if (json[i].group == 'c2M10') {
+	       			$('.c2M10').show();
+	       			$('.c2M10').append(newParti);
+	       		}
 	       		if (json[i].group == 'c3MOS') {
 	       			$('.c3MOS').show();
 	       			$('.c3MOS').append(newParti);
@@ -856,31 +868,49 @@ function seaarch_participant(search){
 					$('.addproposal--step__div ul').find('li.participants__li__private').remove();	
 					
 	            	if (json.participant_data.group == 'maitres') {
-		       			$('.maitres, .c1M01, .c1M05, .c1M10, .c3MOS').hide();
+		       			$('.maitres, .c1M01, .c1M05, .c1M10, .c2M01, .c2M06, .c2M10, .c3MOS').hide();
 		       			$('.maitres').show();
 		       			if(!_exists)
 		       				$('.maitres').append(newAppend);
 		       		}	
 		       		if (json.participant_data.group == 'c1M01') {
-		       			$('.maitres, .c1M01, .c1M05, .c1M10, .c3MOS').hide();
+		       			$('.maitres, .c1M01, .c1M05, .c1M10, .c2M01, .c2M06, .c2M10, .c3MOS').hide();
 		       			$('.c1M01').show();
 		       			if(!_exists)
 		       				$('.c1M01').append(newAppend);
 		       		}	
 		       		if (json.participant_data.group == 'c1M05') {
-		       			$('.maitres, .c1M01, .c1M05, .c1M10, .c3MOS').hide();
+		       			$('.maitres, .c1M01, .c1M05, .c1M10, .c2M01, .c2M06, .c2M10, .c3MOS').hide();
 		       			$('.c1M05').show();
 		       			if(!_exists)
 		       				$('.c1M05').append(newAppend);
 		       		}	
 		       		if (json.participant_data.group == 'c1M10') {
-		       			$('.maitres, .c1M01, .c1M05, .c1M10, .c3MOS').hide();
+		       			$('.maitres, .c1M01, .c1M05, .c1M10, .c2M01, .c2M06, .c2M10, .c3MOS').hide();
 		       			$('.c1M10').show();
 		       			if(!_exists)
 		       				$('.c1M10').append(newAppend);
-		       		}	
+		       		}
+		       		if (json.participant_data.group == 'c2M01') {
+		       			$('.maitres, .c1M01, .c1M05, .c1M10, .c2M01, .c2M06, .c2M10, .c3MOS').hide();
+		       			$('.c2M01').show();
+		       			if(!_exists)
+		       				$('.c2M01').append(newAppend);
+		       		}
+		       		if (json.participant_data.group == 'c2M06') {
+		       			$('.maitres, .c1M01, .c1M05, .c1M10, .c2M01, .c2M06, .c2M10, .c3MOS').hide();
+		       			$('.c2M06').show();
+		       			if(!_exists)
+		       				$('.c2M06').append(newAppend);
+		       		}
+		       		if (json.participant_data.group == 'c2M10') {
+		       			$('.maitres, .c1M01, .c1M05, .c1M10, .c2M01, .c2M06, .c2M10, .c3MOS').hide();
+		       			$('.c2M10').show();
+		       			if(!_exists)
+		       				$('.c2M10').append(newAppend);
+		       		}
 		       		if (json.participant_data.group == 'c3MOS') {
-		       			$('.maitres, .c1M01, .c1M05, .c1M10, .c3MOS').hide();
+		       			$('.maitres, .c1M01, .c1M05, .c1M10, .c2M01, .c2M06, .c2M10, .c3MOS').hide();
 		       			$('.c3MOS').show();
 		       			if(!_exists)
 		       				$('.c3MOS').append(newAppend);
@@ -894,7 +924,7 @@ function seaarch_participant(search){
 			$('#legend__board').hide();
 			setTimeout(function(){
 				$('.spinner').hide();
-				$('.maitres, .c1M01, .c1M05, .c1M10, .c3MOS').hide();
+				$('.maitres, .c1M01, .c1M05, .c1M10, .c2M01, .c2M06, .c2M10, .c3MOS').hide();
 				div.prepend('<legend id="legend__results">No results for: '+search+'</legend>');
 			}, 2000);
 		}
@@ -1055,6 +1085,12 @@ function showHideGroups(){
 		$('.c1M05').show();
 	if($('.c1M10 li').length > 0)
 		$('.c1M10').show();
+	if($('.c2M01 li').length > 0)
+		$('.c2M01').show();
+	if($('.c2M06 li').length > 0)
+		$('.c2M06').show();
+	if($('.c2M10 li').length > 0)
+		$('.c2M10').show();
 	if($('.c3MOS li').length > 0)
 		$('.c3MOS').show();
 }
