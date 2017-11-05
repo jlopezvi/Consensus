@@ -192,8 +192,8 @@ def do_cron_tasks_aux():
                                 remove_idea_aux(node['proposal'])
                                 send_email(author_email, subject, html)
                                 continue
-                            if support_ratio < 51:
-                                if active_voters_num >= 2:
+                            if support_ratio < 50:
+                                if active_voters_num >= 5:
                                     ideas_removed.append(node['proposal'])
                                     remove_idea_aux(node['proposal'])
                                     send_email(author_email, subject, html)
