@@ -147,6 +147,7 @@ def get_user_data_aux(user_email):
 def remove_user_aux(user_email) :
     from ideaManager import _remove_idea
     user = _get_participant_node(user_email, 'all')
+    if user is None: return jsonify({'result': 'Wrong: Participant does not exist'})
     created_ideas = [x.end_node for x in list(getGraph().match(start_node=user, rel_type="CREATED"))]
     for created_idea in created_ideas:
         _remove_idea(created_idea)
