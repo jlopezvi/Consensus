@@ -539,32 +539,7 @@ def get_ideas_created_by_participant(participant_email,user_email_DEBUG=None):
 #     "ifallowed": true,
 #     "ideas_data":
 #          [
-#            {
-#             'concern': 'Some text for the concern',
-#             'proposal': 'Some text for the proposal',
-#             'image_url': 'static/.../asdf.JPG'/null,
-#             'uuid': 'unique_identifier_string',
-#             'moreinfo_concern': 'blah blah blah more info',
-#             'moreinfo_proposal': 'blah blah blah more info',
-#             'supporters_goal_num': 200,
-#             'volunteers_goal_num': 5,
-#             'if_author_public': true / false
-#             'author_profilepic_url': 'static/.../pic.jpg'/null, 'author_username': 'daniela', 'author_email': 'a@gmail.com',
-#             'duration' : "4 hours/ days/ weeks",
-#             'supporters_num' : 5, 'volunteers_num' : 2, 'rejectors_num': 3,
-#             'support_rate' : 95, 'support_rate_MIN' : 90,
-#             'known_supporters': [
-#                { 'email': 'user', 'username': 'me' }, { 'email': 'c@gmail.com', 'username': 'Pedro' }
-#              ],
-#             'known_rejectors':[
-#                { 'email': 'd@', 'username': 'Elisa' }
-#              ],
-#             'vote_type': null / 'supported' / 'rejected' / 'ignored'
-#             'vote_ifvolunteered': null / true / false
-#            },
-#            {
-#              ...
-#            }
+#            { see _get_idea_data_for_user}, { }
 #          ]
 #    }
 # 2. {
@@ -664,25 +639,28 @@ def get_all_ideas_admin():
 #            {
 #             'concern': 'Some text for the concern',
 #             'proposal': 'Some text for the proposal',
-#             'image_url': 'static/.../asdf.JPG'/null,
+#             'image_url': 'static/.../asdf.JPG'/None,
 #             'uuid': 'unique_identifier_string',
 #             'moreinfo_concern': 'blah blah blah more info',
 #             'moreinfo_proposal': 'blah blah blah more info',
-#             'supporters_goal_num': 200,
 #             'volunteers_goal_num': 5,
-#             'if_author_public': true / false
-#             'author_profilepic_url': 'static/.../pic.jpg'/null, 'author_username': 'daniela', 'author_email': 'a@gmail.com',
+#             'if_author_public': True / False
+#             'author_profilepic_url': 'static/.../pic.jpg'/None, 'author_username': 'daniela', 'author_email': 'a@gmail.com',
 #             'duration' : "4 hours/ days/ weeks",
+#             'supporters_goal_num': 50,
 #             'supporters_num' : 5, 'volunteers_num' : 2, 'rejectors_num': 3,
 #             'support_rate' : 95, 'support_rate_MIN' : 90,
-#             'known_supporters': [
+#             'identified_supporters': [
 #                { 'email': 'user', 'username': 'me' }, { 'email': 'c@gmail.com', 'username': 'Pedro' }
 #              ],
-#             'known_rejectors':[
+#             'identified_rejectors':[
 #                { 'email': 'd@', 'username': 'Elisa' }
 #              ],
-#             'vote_type': null / 'supported' / 'rejected' / 'ignored'
-#             'vote_ifvolunteered': null / true / false
+#             'vote_type': None / 'supported' / 'rejected' / 'ignored'
+#             'vote_ifvolunteered': None / True / False
+#             'vote_duration': '<24h' / '<7days' / '<30days' / 'older'
+#             'unidentified_supporters_text': "+ 2 people"/"",
+#             'unidentified_rejectors_text': "+ 2 people"/""
 #            }
 #          }
 @app.route('/get_idea_data_for_user/<idea_index>',methods=['GET'])
@@ -784,7 +762,10 @@ def registration_receive_emailverification(token):
 # Input: user_email   (user logged in)
 # Output: json with fields 'result' and 'data'. 'data' contains array with all ideas for the newsfeed
 # {"result": "OK",
-#  "data": [ {*see /get_idea_data_for_user}, {*see /get_idea_data_for_user}  ]
+#  "data":
+#          [
+#            { see _get_idea_data_for_user}, { }
+#          ]
 # }
 @app.route('/ideas_for_newsfeed',methods=['GET'])
 @app.route('/ideas_for_newsfeed/<user_email_DEBUG>',methods=['GET'])
@@ -812,33 +793,9 @@ def if_ideas_for_newsfeed(user_email_DEBUG = None):
 # Input: user_email (user logged in) and JSON {"vote_type": "rejected/supported/ignored"}
 # Output: json with fields 'result' and 'data'. 'data' Array with all ideas that the user has voted according to << vote_type >>
 # {"result": "OK",
-#  "data": [
-#            {
-#             'concern': 'Some text for the concern',
-#             'proposal': 'Some text for the proposal',
-#             'image_url': 'static/.../asdf.JPG'/null,
-#             'uuid': 'unique_identifier_string',
-#             'moreinfo_concern': 'blah blah blah more info',
-#             'moreinfo_proposal': 'blah blah blah more info',
-#             'supporters_goal_num': 200,
-#             'volunteers_goal_num': 5,
-#             'if_author_public': true / false
-#             'author_profilepic_url': 'static/.../pic.jpg'/null, 'author_username': 'daniela', 'author_email': 'a@gmail.com',
-#             'duration' : "4 hours/ days/ weeks",
-#             'supporters_num' : 5, 'volunteers_num' : 2, 'rejectors_num': 3,
-#             'support_rate' : 95, 'support_rate_MIN' : 90,
-#             'known_supporters': [
-#                { 'email': 'user', 'username': 'me' }, { 'email': 'c@gmail.com', 'username': 'Pedro' }
-#              ],
-#             'known_rejectors':[
-#                { 'email': 'd@', 'username': 'Elisa' }
-#              ],
-#             'vote_type': null / 'supported' / 'rejected' / 'ignored'
-#             'vote_ifvolunteered': null / true / false
-#            },
-#            {
-#              ...
-#            }
+#  "data":
+#          [
+#            { see _get_idea_data_for_user}, { }
 #          ]
 # }
 @app.route('/ideas_for_home',methods=['POST'])
@@ -856,33 +813,9 @@ def ideas_for_home(user_email_DEBUG = None):
 # Input:  None
 # Output: json with fields 'result' and 'data'. 'data' Array with at most 10 ideas ranked from 1st to 10st in order
 # {"result": "OK",
-#  "data": [
-#            {
-#             'concern': 'Some text for the concern',
-#             'proposal': 'Some text for the proposal',
-#             'image_url': 'static/.../asdf.JPG'/null,
-#             'uuid': 'unique_identifier_string',
-#             'moreinfo_concern': 'blah blah blah more info',
-#             'moreinfo_proposal': 'blah blah blah more info',
-#             'supporters_goal_num': 200,
-#             'volunteers_goal_num': 5,
-#             'if_author_public': true / false
-#             'author_profilepic_url': 'static/.../pic.jpg'/null, 'author_username': 'daniela', 'author_email': 'a@gmail.com',
-#             'duration' : "4 hours/ days/ weeks",
-#             'supporters_num' : 5, 'volunteers_num' : 2, 'rejectors_num': 3,
-#             'support_rate' : 95, 'support_rate_MIN' : 90,
-#             'known_supporters': [
-#                { 'email': 'user', 'username': 'me' }, { 'email': 'c@gmail.com', 'username': 'Pedro' }
-#              ],
-#             'known_rejectors':[
-#                { 'email': 'd@', 'username': 'Elisa' }
-#              ],
-#             'vote_type': null / 'supported' / 'rejected' / 'ignored'
-#             'vote_ifvolunteered': null / true / false
-#            },
-#            {
-#              ...
-#            }
+#  "data":
+#          [
+#            { see _get_idea_data_for_user}, { }
 #          ]
 # }
 @app.route('/get_topten_ideas',methods=['GET'])

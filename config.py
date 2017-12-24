@@ -36,7 +36,7 @@ class BaseConfig(object):
     # Global variable support_rate_MIN = 80%
     SUPPORT_RATE_MIN = 80
     #
-    SUPPORTERS_GOAL_NUM = 50
+    SUPPORTERS_GOAL_NUM = 5
     #
     SUPPORTERS_CHAR_NUM_MAX = 35
     REJECTORS_CHAR_NUM_MAX = 80
