@@ -269,13 +269,13 @@ $(document).ready( function() {
 	       		newParti += '<input class="form-control invite__button" type="button" '+if_following+' id="btn-follow"></li>';
 
 				for (var index in myGroups) {
-					if(json[i].group == myGroups[index]){
-						$('.'+myGroups[index]).show();
-	       				$('.'+myGroups[index]).append(newParti);
+					if(json[i].group == index){
+						$('.'+index).show();
+	       				$('.'+index).append(newParti);
 					}
 				}
 	       	}
-	       	// console.log(newParti);
+	       	console.log(newParti);
 		}
 	});
 
@@ -841,13 +841,13 @@ function seaarch_participant(search){
 					$('.addproposal--step__div ul').find('li.participants__li__private').remove();	
 
 					for (var index2 in myGroups) {
-						$('.'+myGroups[index2]).hide();
+						$('.'+index2).hide();
 					}
 					for (var index in myGroups) {
-						if (json.participant_data.group == myGroups[index]) {
-	       					$('.'+myGroups[index]).show();
+						if (json.participant_data.group == index) {
+	       					$('.'+index).show();
 							if(!_exists)
-		       					$('.'+myGroups[index]).append(newAppend);
+		       					$('.'+index).append(newAppend);
 						}
 					}
 				}, 2000);
@@ -859,7 +859,7 @@ function seaarch_participant(search){
 			setTimeout(function(){
 				$('.spinner').hide();
 				for (var index2 in myGroups) {
-					$('.'+myGroups[index2]).hide();
+					$('.'+index2).hide();
 				}
 				div.prepend('<legend id="legend__results">No results for: '+search+'</legend>');
 			}, 2000);
@@ -1012,21 +1012,10 @@ function isValidEmailAddress(emailAddress) {
 	return pattern.test(emailAddress);
 };
 
+// TODO
 function showHideGroups(){
-	if($('.maitres li').length > 0)
-		$('.maitres').show();
-	if($('.c1M01 li').length > 0)
-		$('.c1M01').show();
-	if($('.c1M05 li').length > 0)
-		$('.c1M05').show();
-	if($('.c1M10 li').length > 0)
-		$('.c1M10').show();
-	if($('.c2M01 li').length > 0)
-		$('.c2M01').show();
-	if($('.c2M06 li').length > 0)
-		$('.c2M06').show();
-	if($('.c2M10 li').length > 0)
-		$('.c2M10').show();
-	if($('.c3MOS li').length > 0)
-		$('.c3MOS').show();
+	if($('.no_organization li').length > 0)
+		$('.no_organization').show();
+	if($('.ysfc li').length > 0)
+		$('.ysfc').show();
 }

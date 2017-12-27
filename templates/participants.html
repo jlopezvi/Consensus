@@ -48,14 +48,9 @@
         <p>Type name to search for public participants and full e-mail + search button for others. </p>
         <div class="addproposal--step__div"> 
             <ul id="id01" class="addproposal--step2">
-                <legend id="legend__board" class="maitres" hidden>Maitres</legend>
-                <legend id="legend__board" class="c1M01" hidden>1M01</legend>
-                <legend id="legend__board" class="c1M05" hidden>1M05</legend>
-                <legend id="legend__board" class="c1M10" hidden>1M10</legend>
-                <legend id="legend__board" class="c2M01" hidden>2M01</legend>
-                <legend id="legend__board" class="c2M06" hidden>2M06</legend>
-                <legend id="legend__board" class="c2M10" hidden>2M10</legend>
-                <legend id="legend__board" class="c3MOS" hidden>3MOS</legend>
+                <!-- TODO -->
+                <legend id="legend__board" class="no_organization" hidden>No Organization</legend>
+                <legend id="legend__board" class="ysfc" hidden>YSfC</legend>
                 <div class="spinner" hidden>
                     <div class="dot1"></div>
                     <div class="dot2"></div>
@@ -302,7 +297,7 @@
                                 <script type="text/javascript">
                                     var select = document.getElementById("p_group");
                                     for(var index in myGroups) {
-                                        select.options[select.options.length] = new Option(myGroups[index], myGroups[index]);
+                                        select.options[select.options.length] = new Option(myGroups[index], index);
                                     }
                                 </script>
                             </select>
