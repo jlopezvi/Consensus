@@ -298,15 +298,13 @@
                         </div>
                         <div class="p__div" style="padding-left: 35px;">
                             <span class="p__span">Group:</span><select class="form-control" id="p_group" name="p_group" placeholder="Group">Group
-                            <option selected disabled value="0">Select...</option>
-                            <option value="maitres">Maitres</option>
-                            <option value="c1M01">1M01</option>
-                            <option value="c1M05">1M05</option>
-                            <option value="c1M10">1M10</option>
-                            <option value="c2M01">2M01</option>
-                            <option value="c2M06">2M06</option>
-                            <option value="c2M10">2M10</option>
-                            <option value="c3MOS">3MOS</option>
+                                <option selected disabled value="0">Select...</option>
+                                <script type="text/javascript">
+                                    var select = document.getElementById("p_group");
+                                    for(var index in myGroups) {
+                                        select.options[select.options.length] = new Option(myGroups[index], myGroups[index]);
+                                    }
+                                </script>
                             </select>
                         </div>
                     </div>

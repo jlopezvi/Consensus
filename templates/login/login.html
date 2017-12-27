@@ -70,14 +70,12 @@
 					<div class="col-sm-6">
 						<select class="form-control" id="group_r"  name="group">
 							<option selected disabled value="0">Select...</option>
-							<option value="maitres">Maitres</option>
-							<option value="c1M01">1M01</option>
-							<option value="c1M05">1M05</option>
-							<option value="c1M10">1M10</option>
-							<option value="c2M01">2M01</option>
-							<option value="c2M06">2M06</option>
-							<option value="c2M10">2M10</option>
-							<option value="c3MOS">3MOS</option>
+                            <script type="text/javascript">
+                                var select = document.getElementById("group_r");
+                                for(var index in myGroups) {
+                                    select.options[select.options.length] = new Option(myGroups[index], myGroups[index]);
+                                }
+                            </script>
 						</select>
 					</div>
 				</div>

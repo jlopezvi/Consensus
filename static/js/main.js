@@ -2,6 +2,16 @@ var default_bimage = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA8EAAAIWCAMA
 var _if_newsfeed = false;
 var url = window.location.href;
 url = url.split("/");
+var myGroups = {
+	1: 'maitres',
+	2: 'c1M01',
+	3: 'c1M05',
+	4: 'c1M10',
+	5: 'c2M01',
+	6: 'c2M06',
+	7: 'c2M10',
+	8: 'c3MOS'
+};
 
 $(document).ready(function(){
   
