@@ -31,7 +31,6 @@ from utils import send_email
 #TODO: logging, sending emails when errors take place.
 #logging.basicConfig(level=logging.DEBUG)
 
-
 ################
 #### config ####
 ################
