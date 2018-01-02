@@ -7,10 +7,10 @@ from datetime import datetime
 
 
 def registration_from_invitation_aux(token, guest_email):
-    if not confirm_token(token, 10000):
+    if not confirm_token(token, 10000000):
         jsondata = {"type": "registration", "result": "Wrong", "result_msg": "The confirmation link is invalid or has expired"}
         return render_template('login/login.html', message=jsondata)
-    if confirm_token(token, 10000):
+    if confirm_token(token, 10000000):
         host_email = confirm_token(token)
         jsondata = {
             "result": "OK : With data", "result_msg": "Invitation OK",
