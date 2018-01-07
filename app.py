@@ -248,6 +248,7 @@ def get_user_data(user_email_DEBUG=None):
    return get_user_data_aux(user_email)
 
 
+
 # input:   user_email  (user logged in)
 # output: json {"result": "OK"}
 @app.route('/remove_user', methods=['DELETE'])
