@@ -59,8 +59,13 @@ def registration_aux(inputdict):
             raise NameError('PROBLEM')
     ifhost = False
     if inputdict.get('host_email') is not None:
-        # current_participant (verified/unverified) follows host
-        ifhost = _if_added_following_contact_to_user(inputdict.get('host_email'), email)
+        ifhost = True
+        # current_participant (following contact) gets followed by host
+        _if_added_following_contact_to_user(email, inputdict.get('host_email'))
+        _send_newfollower_notification_email_from_participant1_to_participant2(inputdict.get('host_email'), email)
+        # current_participant follows host (following contact)
+        _if_added_following_contact_to_user(inputdict.get('host_email'), email)
+        _send_newfollower_notification_email_from_participant1_to_participant2(email, inputdict.get('host_email'))
     return jsonify({"result": "OK", "ifhost": ifhost, "ifhost_msg": ifhost_msg[ifhost],
                     "ifemailverified": ifemailverified, "ifemailverified_msg": ifemailverified_msg[ifemailverified]})
 
@@ -508,7 +513,7 @@ def _add_newfollower_notification_from_participant1_to_participant2(participant1
 # "notification_type": "newfollower"
 def _send_newfollower_notification_email_from_participant1_to_participant2(participant1_email, participant2_email):
     participant1 = _get_participant_node(participant1_email)
-    subject = "Consensus, New Notifications"
+    subject = participant1['fullname'] + " is now following you"
     html = render_template('emails/participant_newfollower.html', msg_proposal=participant1['fullname'])
     send_email(participant2_email, subject, html)
     return
