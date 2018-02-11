@@ -87,7 +87,7 @@ $(document).ready( function() {
       'password': $('#password').val()
     };
     if(data.email == '' || data.password == ''){
-      $('.login--message').empty().append('All fields must be fills!').show();
+      $('.login--message').empty().append('All fields must be filled!').show();
     } else {
         $.ajax({
           url: url[0] + "//" + url[2] + '/login',
@@ -142,7 +142,7 @@ $(document).ready( function() {
     
     if(data.email == '' || data.password == '' || $('#password2_r').val() == '' || data.fullname == '' || data.username == '' || data.position == '' || data.group == '' || data.group == 0){
         $('.register--message').removeClass('alert-success').addClass('alert-danger');
-        $('.register--message').empty().append('All fields must be fills!').show();
+        $('.register--message').empty().append('All fields must be filled!').show();
     } else {
         if($('#password_r').val() == $('#password2_r').val()){
             $.ajax({
