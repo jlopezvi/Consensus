@@ -138,6 +138,17 @@ def modify_user_password_aux(user_password_data, user_email):
         return jsonify({"result": "Wrong: Wrong current password"})
 
 
+def recover_participant_password_aux(input):
+    user_to_check = _get_participant_node(input['email'])
+    if user_to_check is None :
+        return jsonify({"result": "Wrong"})
+    password = user_to_check['password']
+    html = render_template('emails/recover_password.html', msg_password=password)
+    subject = "Find here your lost password"
+    send_email(input['email'],subject, html)
+    return jsonify({"result": "OK"})
+
+
 def get_user_data_aux(user_email):
     user = _get_participant_node(user_email)
     user_data = user.get_properties()
