@@ -2,6 +2,13 @@ var default_bimage = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA8EAAAIWCAMA
 var _if_newsfeed = false;
 var url = window.location.href;
 url = url.split("/");
+var myGroups = {
+	no_organization: 'No organization',
+	earth_focus_foundation: 'Earth Focus Foundation',
+	greenpeace: 'Greenpeace',
+    ysfc: 'YSfC',
+    wwf: 'WWF'
+};
 
 $(document).ready(function(){
   
@@ -79,7 +86,7 @@ $(document).ready(function(){
       'moreinfo_proposal': $('#moreinfo_proposal').val(),
       'moreinfo_concern': $('#moreinfo_concern').val(),
       'volunteers_goal_num': parseInt($('#volunteers_goal_num').val()),
-      'supporters_goal_num': 200
+      'supporters_goal_num': 50
     };
     
     var opt = false;

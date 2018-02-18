@@ -10,7 +10,8 @@ from participantManager import _get_participant_node, remove_user_aux, get_all_p
     get_participant_followers_info_aux,get_participant_followings_info_aux, get_fullname_for_participant_unrestricted_aux,\
     get_fullname_for_participant_aux, registration_aux, get_participant_data_aux, modify_user_data_aux,  \
     get_participant_data_by_email_unrestricted_aux, get_all_public_participants_for_user_aux, if_participant_exists_by_email_aux, \
-    add_following_contact_to_user_aux, remove_following_contact_to_user_aux, get_user_data_aux, modify_user_password_aux
+    add_following_contact_to_user_aux, remove_following_contact_to_user_aux, get_user_data_aux, modify_user_password_aux, \
+    recover_participant_password_aux
 from participantManager import get_participantnotifications_for_user_aux, remove_notification_from_participant1_to_participant2_aux
 from ideaManager import get_ideas_data_created_by_participant_aux, get_ideas_created_by_participant_aux,\
     add_idea_to_user_aux, vote_on_idea_aux, modify_idea_aux, remove_idea_aux, _get_supporters_emails_for_idea_aux, \
@@ -45,10 +46,11 @@ try:
 except KeyError:
     pass
 
-MAIL_DEFAULT_SENDER=app.config['MAIL_DEFAULT_SENDER']
-SUPPORT_RATE_MIN=app.config['SUPPORT_RATE_MIN']
-SUPPORTERS_CHAR_NUM_MAX=app.config['SUPPORTERS_CHAR_NUM_MAX']
-REJECTORS_CHAR_NUM_MAX=app.config['REJECTORS_CHAR_NUM_MAX']
+MAIL_DEFAULT_SENDER = app.config['MAIL_DEFAULT_SENDER']
+SUPPORT_RATE_MIN = app.config['SUPPORT_RATE_MIN']
+SUPPORTERS_GOAL_NUM = app.config['SUPPORTERS_GOAL_NUM']
+SUPPORTERS_CHAR_NUM_MAX = app.config['SUPPORTERS_CHAR_NUM_MAX']
+REJECTORS_CHAR_NUM_MAX = app.config['REJECTORS_CHAR_NUM_MAX']
 
 ####################
 #### extensions ####
@@ -226,6 +228,16 @@ def modify_user_password(user_email_DEBUG=None):
        user_email = flask_login.current_user.id
    inputdict = request.get_json()
    return modify_user_password_aux(inputdict, user_email)
+
+
+# input: json {"email":"asdf@asdf"}
+# output:
+#   json {"result": "OK"/"Wrong"} + email
+@app.route('/recover_participant_password', methods=['POST'])
+def recover_participant_password():
+    input = request.get_json(force=True)
+    return recover_participant_password_aux(input)
+
 
 
 # input:   user_email  (user logged in)
@@ -538,32 +550,7 @@ def get_ideas_created_by_participant(participant_email,user_email_DEBUG=None):
 #     "ifallowed": true,
 #     "ideas_data":
 #          [
-#            {
-#             'concern': 'Some text for the concern',
-#             'proposal': 'Some text for the proposal',
-#             'image_url': 'static/.../asdf.JPG'/null,
-#             'uuid': 'unique_identifier_string',
-#             'moreinfo_concern': 'blah blah blah more info',
-#             'moreinfo_proposal': 'blah blah blah more info',
-#             'supporters_goal_num': 200,
-#             'volunteers_goal_num': 5,
-#             'if_author_public': true / false
-#             'author_profilepic_url': 'static/.../pic.jpg'/null, 'author_username': 'daniela', 'author_email': 'a@gmail.com',
-#             'duration' : "4 hours/ days/ weeks",
-#             'supporters_num' : 5, 'volunteers_num' : 2, 'rejectors_num': 3,
-#             'support_rate' : 95, 'support_rate_MIN' : 90,
-#             'known_supporters': [
-#                { 'email': 'user', 'username': 'me' }, { 'email': 'c@gmail.com', 'username': 'Pedro' }
-#              ],
-#             'known_rejectors':[
-#                { 'email': 'd@', 'username': 'Elisa' }
-#              ],
-#             'vote_type': null / 'supported' / 'rejected' / 'ignored'
-#             'vote_ifvolunteered': null / true / false
-#            },
-#            {
-#              ...
-#            }
+#            { see _get_idea_data_for_user}, { }
 #          ]
 #    }
 # 2. {
@@ -663,25 +650,28 @@ def get_all_ideas_admin():
 #            {
 #             'concern': 'Some text for the concern',
 #             'proposal': 'Some text for the proposal',
-#             'image_url': 'static/.../asdf.JPG'/null,
+#             'image_url': 'static/.../asdf.JPG'/None,
 #             'uuid': 'unique_identifier_string',
 #             'moreinfo_concern': 'blah blah blah more info',
 #             'moreinfo_proposal': 'blah blah blah more info',
-#             'supporters_goal_num': 200,
 #             'volunteers_goal_num': 5,
-#             'if_author_public': true / false
-#             'author_profilepic_url': 'static/.../pic.jpg'/null, 'author_username': 'daniela', 'author_email': 'a@gmail.com',
+#             'if_author_public': True / False
+#             'author_profilepic_url': 'static/.../pic.jpg'/None, 'author_username': 'daniela', 'author_email': 'a@gmail.com',
 #             'duration' : "4 hours/ days/ weeks",
+#             'supporters_goal_num': 50,
 #             'supporters_num' : 5, 'volunteers_num' : 2, 'rejectors_num': 3,
 #             'support_rate' : 95, 'support_rate_MIN' : 90,
-#             'known_supporters': [
+#             'identified_supporters': [
 #                { 'email': 'user', 'username': 'me' }, { 'email': 'c@gmail.com', 'username': 'Pedro' }
 #              ],
-#             'known_rejectors':[
+#             'identified_rejectors':[
 #                { 'email': 'd@', 'username': 'Elisa' }
 #              ],
-#             'vote_type': null / 'supported' / 'rejected' / 'ignored'
-#             'vote_ifvolunteered': null / true / false
+#             'vote_type': None / 'supported' / 'rejected' / 'ignored'
+#             'vote_ifvolunteered': None / True / False
+#             'vote_duration': '<24h' / '<7days' / '<30days' / 'older'
+#             'unidentified_supporters_text': "+ 2 people"/"",
+#             'unidentified_rejectors_text': "+ 2 people"/""
 #            }
 #          }
 @app.route('/get_idea_data_for_user/<idea_index>',methods=['GET'])
@@ -783,7 +773,10 @@ def registration_receive_emailverification(token):
 # Input: user_email   (user logged in)
 # Output: json with fields 'result' and 'data'. 'data' contains array with all ideas for the newsfeed
 # {"result": "OK",
-#  "data": [ {*see /get_idea_data_for_user}, {*see /get_idea_data_for_user}  ]
+#  "data":
+#          [
+#            { see _get_idea_data_for_user}, { }
+#          ]
 # }
 @app.route('/ideas_for_newsfeed',methods=['GET'])
 @app.route('/ideas_for_newsfeed/<user_email_DEBUG>',methods=['GET'])
@@ -811,33 +804,9 @@ def if_ideas_for_newsfeed(user_email_DEBUG = None):
 # Input: user_email (user logged in) and JSON {"vote_type": "rejected/supported/ignored"}
 # Output: json with fields 'result' and 'data'. 'data' Array with all ideas that the user has voted according to << vote_type >>
 # {"result": "OK",
-#  "data": [
-#            {
-#             'concern': 'Some text for the concern',
-#             'proposal': 'Some text for the proposal',
-#             'image_url': 'static/.../asdf.JPG'/null,
-#             'uuid': 'unique_identifier_string',
-#             'moreinfo_concern': 'blah blah blah more info',
-#             'moreinfo_proposal': 'blah blah blah more info',
-#             'supporters_goal_num': 200,
-#             'volunteers_goal_num': 5,
-#             'if_author_public': true / false
-#             'author_profilepic_url': 'static/.../pic.jpg'/null, 'author_username': 'daniela', 'author_email': 'a@gmail.com',
-#             'duration' : "4 hours/ days/ weeks",
-#             'supporters_num' : 5, 'volunteers_num' : 2, 'rejectors_num': 3,
-#             'support_rate' : 95, 'support_rate_MIN' : 90,
-#             'known_supporters': [
-#                { 'email': 'user', 'username': 'me' }, { 'email': 'c@gmail.com', 'username': 'Pedro' }
-#              ],
-#             'known_rejectors':[
-#                { 'email': 'd@', 'username': 'Elisa' }
-#              ],
-#             'vote_type': null / 'supported' / 'rejected' / 'ignored'
-#             'vote_ifvolunteered': null / true / false
-#            },
-#            {
-#              ...
-#            }
+#  "data":
+#          [
+#            { see _get_idea_data_for_user}, { }
 #          ]
 # }
 @app.route('/ideas_for_home',methods=['POST'])
@@ -855,33 +824,9 @@ def ideas_for_home(user_email_DEBUG = None):
 # Input:  None
 # Output: json with fields 'result' and 'data'. 'data' Array with at most 10 ideas ranked from 1st to 10st in order
 # {"result": "OK",
-#  "data": [
-#            {
-#             'concern': 'Some text for the concern',
-#             'proposal': 'Some text for the proposal',
-#             'image_url': 'static/.../asdf.JPG'/null,
-#             'uuid': 'unique_identifier_string',
-#             'moreinfo_concern': 'blah blah blah more info',
-#             'moreinfo_proposal': 'blah blah blah more info',
-#             'supporters_goal_num': 200,
-#             'volunteers_goal_num': 5,
-#             'if_author_public': true / false
-#             'author_profilepic_url': 'static/.../pic.jpg'/null, 'author_username': 'daniela', 'author_email': 'a@gmail.com',
-#             'duration' : "4 hours/ days/ weeks",
-#             'supporters_num' : 5, 'volunteers_num' : 2, 'rejectors_num': 3,
-#             'support_rate' : 95, 'support_rate_MIN' : 90,
-#             'known_supporters': [
-#                { 'email': 'user', 'username': 'me' }, { 'email': 'c@gmail.com', 'username': 'Pedro' }
-#              ],
-#             'known_rejectors':[
-#                { 'email': 'd@', 'username': 'Elisa' }
-#              ],
-#             'vote_type': null / 'supported' / 'rejected' / 'ignored'
-#             'vote_ifvolunteered': null / true / false
-#            },
-#            {
-#              ...
-#            }
+#  "data":
+#          [
+#            { see _get_idea_data_for_user}, { }
 #          ]
 # }
 @app.route('/get_topten_ideas',methods=['GET'])
@@ -947,6 +892,6 @@ def getAllCommunitiesForUser(email):
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     if os.environ.get('GRAPHENEDB_URL'):
-        app.run(host='0.0.0.0', port=port)
+        app.run(host='0.0.0.0', port=80)
     else:
         app.run(host='127.0.0.1', port=port)

@@ -48,11 +48,9 @@
         <p>Type name to search for public participants and full e-mail + search button for others. </p>
         <div class="addproposal--step__div"> 
             <ul id="id01" class="addproposal--step2">
-                <legend id="legend__board" class="maitres" hidden>Maitres</legend>
-                <legend id="legend__board" class="c1M01" hidden>1M01</legend>
-                <legend id="legend__board" class="c1M05" hidden>1M05</legend>
-                <legend id="legend__board" class="c1M10" hidden>1M10</legend>
-                <legend id="legend__board" class="c3MOS" hidden>3MOS</legend>
+                <!-- TODO -->
+                <legend id="legend__board" class="no_organization" hidden>No Organization</legend>
+                <legend id="legend__board" class="ysfc" hidden>YSfC</legend>
                 <div class="spinner" hidden>
                     <div class="dot1"></div>
                     <div class="dot2"></div>
@@ -183,10 +181,10 @@
                     <p><img src="{{ url_for('static',filename='images/invite-icon.png') }}">Invite people to benefit together from Consensus</p>
                 </div>
                 <div class="invite__body">
-                    <p>1. Suggestion tell them first all about Consensus and why you are using it going to user.</p>
-                    <p>2. Type your contacts e-mail to send them an invitation to connect with you:</p>
+                    <p>1. Suggestion: tell them first about Consensus and why you are using it or are going to use it.</p>
+                    <p>2. Type your contact(s) e-mail(s) to send them an invitation to connect with you:</p>
                     <input type="text" value="{{ message.participant }}" hidden id="participant_email">
-                    <textarea id="emails_input" placeholder="some e-mails here (example1@email.com, example2@email.com)"></textarea>
+                    <textarea id="emails_input" placeholder="example1@email.com, example2@email.com"></textarea>
                     <input class="form-control invite__button" type="button" id="send_invitation-btn" value="Send Invitation">
                 </div>
             </div>
@@ -295,12 +293,13 @@
                         </div>
                         <div class="p__div" style="padding-left: 35px;">
                             <span class="p__span">Group:</span><select class="form-control" id="p_group" name="p_group" placeholder="Group">Group
-                            <option selected disabled value="0">Select...</option>
-                            <option value="maitres">Maitres</option>
-                            <option value="c1M01">1M01</option>
-                            <option value="c1M05">1M05</option>
-                            <option value="c1M10">1M10</option>
-                            <option value="c3MOS">3MOS</option>
+                                <option selected disabled value="0">Select...</option>
+                                <script type="text/javascript">
+                                    var select = document.getElementById("p_group");
+                                    for(var index in myGroups) {
+                                        select.options[select.options.length] = new Option(myGroups[index], index);
+                                    }
+                                </script>
                             </select>
                         </div>
                     </div>

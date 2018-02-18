@@ -33,8 +33,10 @@ class BaseConfig(object):
     MAIL_DEFAULT_SENDER = 'consensus.info@gmail.com'
 
     # Consensus variables
-    # Global variable support_rate_MIN = 90%
-    SUPPORT_RATE_MIN = 90
+    # Global variable support_rate_MIN = 80%
+    SUPPORT_RATE_MIN = 80
+    #
+    SUPPORTERS_GOAL_NUM = 10
     #
     SUPPORTERS_CHAR_NUM_MAX = 35
     REJECTORS_CHAR_NUM_MAX = 80

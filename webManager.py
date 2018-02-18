@@ -7,10 +7,10 @@ from datetime import datetime
 
 
 def registration_from_invitation_aux(token, guest_email):
-    if not confirm_token(token, 10000):
+    if not confirm_token(token, 10000000):
         jsondata = {"type": "registration", "result": "Wrong", "result_msg": "The confirmation link is invalid or has expired"}
         return render_template('login/login.html', message=jsondata)
-    if confirm_token(token, 10000):
+    if confirm_token(token, 10000000):
         host_email = confirm_token(token)
         jsondata = {
             "result": "OK : With data", "result_msg": "Invitation OK",
@@ -154,23 +154,69 @@ def get_topten_ideas_aux(user_email):
 
 
 def do_cron_tasks_aux():
+    from ideaManager import _get_ideas_index, _get_vote_statistics_for_idea
+    from app import SUPPORT_RATE_MIN
+    allnodes = _get_ideas_index().query("proposal:*")
+    ideas_removed = []
+    for node in allnodes:
+        vote_statistics_for_idea = _get_vote_statistics_for_idea(node['proposal'])
+        supporters_num = vote_statistics_for_idea[0]
+        rejectors_num = vote_statistics_for_idea[1]
+        active_voters_num = supporters_num + rejectors_num
+        if active_voters_num > 0:
+            support_ratio = supporters_num * 100 / active_voters_num
+            if support_ratio < SUPPORT_RATE_MIN:
+                author_email = getGraph().match_one(end_node=node, rel_type="CREATED").start_node['email']
+                html = render_template('emails/idea_unsuccesful.html', proposal=node['proposal'])
+                subject = "Idea removed"
+                if active_voters_num > 45:
+                    ideas_removed.append(node['proposal'])
+                    remove_idea_aux(node['proposal'])
+                    send_email(author_email,subject,html)
+                    continue
+                if support_ratio < 75:
+                    if active_voters_num > 35:
+                        ideas_removed.append(node['proposal'])
+                        remove_idea_aux(node['proposal'])
+                        send_email(author_email, subject, html)
+                        continue
+                    if support_ratio < 70:
+                        if active_voters_num > 20:
+                            ideas_removed.append(node['proposal'])
+                            remove_idea_aux(node['proposal'])
+                            send_email(author_email, subject, html)
+                            continue
+                        if support_ratio < 65:
+                            if active_voters_num > 10:
+                                ideas_removed.append(node['proposal'])
+                                remove_idea_aux(node['proposal'])
+                                send_email(author_email, subject, html)
+                                continue
+                            if support_ratio < 50:
+                                if active_voters_num >= 5:
+                                    ideas_removed.append(node['proposal'])
+                                    remove_idea_aux(node['proposal'])
+                                    send_email(author_email, subject, html)
+                                    continue
+        continue
+    return jsonify({"result":"OK", "ideas_removed" : ideas_removed})
 
-    # see the warningfailure_ideas to check whether we have to erase ideas.
-    ideas_failurewarning = []
-    ideas_failurewarning_removed = []
-    rels = list(getGraph().match(rel_type="CREATED"))
-    for rel in rels:
-        if rel.end_node["failurewarning"] is True:
-            ideas_failurewarning.append(rel.end_node)
-    if len(ideas_failurewarning) > 0:
-        for idea in ideas_failurewarning:
-            if_failurewarning_timestamp = datetime.strptime(idea['if_failurewarning_timestamp'], '%d.%m.%Y %H:%M:%S')
-            days = (datetime.now() - if_failurewarning_timestamp).days
-            if (days > 7):
-                ideas_failurewarning_removed.append(idea['proposal'])
-                # TODO: add notifications 'failed' type
-                remove_idea_aux(idea['proposal'])
-    return jsonify({"result":"OK", "ideas_removed" : ideas_failurewarning_removed})
+    # # see the warningfailure_ideas to check whether we have to erase ideas.
+    # ideas_failurewarning = []
+    # ideas_failurewarning_removed = []
+    # rels = list(getGraph().match(rel_type="CREATED"))
+    # for rel in rels:
+    #     if rel.end_node["failurewarning"] is True:
+    #         ideas_failurewarning.append(rel.end_node)
+    # if len(ideas_failurewarning) > 0:
+    #     for idea in ideas_failurewarning:
+    #         if_failurewarning_timestamp = datetime.strptime(idea['if_failurewarning_timestamp'], '%d.%m.%Y %H:%M:%S')
+    #         days = (datetime.now() - if_failurewarning_timestamp).days
+    #         if (days > 7):
+    #             ideas_failurewarning_removed.append(idea['proposal'])
+    #             # TODO: add notifications 'failed' type
+    #             remove_idea_aux(idea['proposal'])
+    # return jsonify({"result":"OK", "ideas_removed" : ideas_failurewarning_removed})
 
 
 ####################
