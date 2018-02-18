@@ -219,14 +219,7 @@ $(document).ready(function(){
             } else if(url[3] == 'topten'){
               toptenVue.getToptenIdeas();
             } else if(url[3] == 'newsfeed'){
-                var id_newsfeed = $('#list__id').val();
-                removeElementFromList(id_newsfeed);
-                if(list.length == 0){
-                  $('.spinner').show();
-                  var answer = '<br><br>There are no more ideas left! <br>Redirecting to <strong>Home</strong>';
-                  $('#invitation-modal-info p#modal--invitation').empty().append(answer);
-                  $('#invitation-modal-info').modal('toggle');
-                }
+              newsfeedVue.redFlagCountIdeas();
             }
           },
           error: function(response){

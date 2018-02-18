@@ -274,6 +274,7 @@ newsfeedVue = new Vue({
             e.preventDefault();
             $('#redflag-modal').modal('toggle');
             $('#idea_index').val(this.idea.proposal);
+            
         },
         
         voteIdea: function(type){
@@ -333,6 +334,29 @@ newsfeedVue = new Vue({
               if(result == 'OK: User vote was created')
                 $('#invitation-modal-info p#modal--invitation').empty().append(answer);
               $('#invitation-modal-info').modal('toggle');
+            }
+          });
+        },
+        
+        redFlagCountIdeas: function(){
+          self = this;
+          $('#newsfeed__body').hide();
+          $('.spinner').show();
+          $.ajax({
+            url: self.path_set_count_ideas,
+            type: 'GET',
+            success: function(json){
+              if(json.result){
+                $('#newsfeed__body').show();
+                $('.spinner').hide();
+                self.getNewsfeedIdeas();
+              } else {
+                $('#invitation-modal-info h4.modal-title').empty().append('Operation Completed');
+                var answer = 'There are no more ideas left! <br>Redirecting to <strong>Home</strong>';
+                setTimeout(function(){ window.location = '/home'; }, 4000);
+                $('#invitation-modal-info p#modal--invitation').empty().append(answer);
+                $('#invitation-modal-info').modal('toggle');
+              }
             }
           });
         }
