@@ -14,7 +14,7 @@ $(document).ready(function(){
       e.preventDefault();
 	});
 	
-	
+	/*
 	$.ajax({
     url: url[0] + "//" + url[2] + '/ideas_for_newsfeed',
     type: 'GET',
@@ -45,6 +45,7 @@ $(document).ready(function(){
       }
     }
   });
+  */
   
   $(document).on('click', '.glyphicon', function(){
     var side = $(this).attr('id');
@@ -52,7 +53,7 @@ $(document).ready(function(){
     moveFeed(side, id);
   });
   
-  $(document).on('click', '.vote__idea--button', function(){
+  $(document).on('click', '.vote__idea--button_', function(){
       var vote_ifvolunteered = false;
       var type = $(this).attr('id');
       if(type == 'support__plus--button'){
@@ -226,12 +227,7 @@ function removeElementFromList(id){
   }
 }
 $(document).ready(function(){
-  $('input[name=more-info]').on('click', function(){
-    $('#more--info--modal').slideToggle('slow');
-    //if(modal.css('display') == 'none')
-    //  modal.slideDown('slow');
-    //else
-  }); 
+  
   $('.vote--on').on('click',function(){
     $('.vote--on span').toggleClass('rotated');
 	  $('.newsfeed--share').toggleClass('displayShare');
@@ -239,3 +235,108 @@ $(document).ready(function(){
   });
 });
 
+newsfeedVue = new Vue({
+    el: '#newsfeedContainer',
+    data: {
+        path_get_ideas: url[0] + "//" + url[2] + '/ideas_for_newsfeed',
+        path_vote_idea: url[0] + "//" + url[2] + '/vote_on_idea',
+        path_set_count_ideas: url[0] + "//" + url[2] + '/if_ideas_for_newsfeed',
+        idea: {},
+        logged_user: '',
+        if_ideas: true
+    },
+    mounted: function(){
+        this.getNewsfeedIdeas();
+    },
+    methods: {
+        
+        getNewsfeedIdeas: function(){
+            self = this;
+            $.ajax({
+                url: self.path_get_ideas,
+                method: 'GET',
+                success: function(data){
+                    self.idea = data.data[0];
+                    console.log(self.idea);
+                    self.logged_user = $('#host_email').val();
+                    $('#newsfeed__body').show();
+	                  $('.spinner').hide();
+                }
+            });
+        },
+        
+        showMoreInfoModal: function(){
+            self = this;
+            $('.more_info_div').slideToggle( "slow" );
+        },
+        
+        showRedFlagModal: function(e){
+            e.preventDefault();
+            $('#redflag-modal').modal('toggle');
+            $('#idea_index').val(this.idea.proposal);
+        },
+        
+        voteIdea: function(type){
+            self = this;
+            $('#newsfeed__body').hide();
+	          $('.spinner').show();
+            var vote_ifvolunteered = false;
+            if(type == 'support__plus--button'){
+              vote_ifvolunteered = true;
+              type = 'supported';
+            }
+            var data = {
+              'idea_proposal': self.idea.proposal,
+              'vote_ifvolunteered': vote_ifvolunteered,
+              'vote_type': type
+            };
+            
+            $.ajax({
+              url: self.path_vote_idea,
+              type: 'POST',
+              data: JSON.stringify(data),
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              dataType: 'json',
+              success: function(json){
+                self.setCountIdeas(data, json.result);
+              },
+              error: function(response){
+                console.log('error');
+                console.log(response);
+              }
+          	});
+        },
+        
+        setCountIdeas: function(data, result){
+          self = this;
+          $.ajax({
+            url: self.path_set_count_ideas,
+            type: 'GET',
+            success: function(json){
+              $('#invitation-modal-info h4.modal-title').empty().append('Operation Completed');
+              if(data.vote_type == 'supported'){
+                var answer = 'Now you are supporting this idea!';
+              } else if(data.vote_type == 'rejected'){
+                var answer = 'Idea rejected successfully!';
+              } else {
+                var answer = 'You ignored this idea!';
+              }
+              if(json.result){
+                self.getNewsfeedIdeas();
+              } else {
+                answer += '<br><br>There are no more ideas left! <br>Redirecting to <strong>Home</strong>';
+                setTimeout(function(){ window.location = '/home'; }, 4000);
+              }
+                
+              if(result == 'OK: User vote was created')
+                $('#invitation-modal-info p#modal--invitation').empty().append(answer);
+              $('#invitation-modal-info').modal('toggle');
+            }
+          });
+        }
+        
+    },
+    delimiters: ["<%","%>"]
+});

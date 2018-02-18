@@ -217,8 +217,7 @@ $(document).ready(function(){
               var active_p = $('.participant__active--p .activess').html();
               $('.participant__active--p .activess').html(active_p-1);
             } else if(url[3] == 'topten'){
-              red_flag_idea.remove();
-              location.reload();
+              toptenVue.getToptenIdeas();
             } else if(url[3] == 'newsfeed'){
                 var id_newsfeed = $('#list__id').val();
                 removeElementFromList(id_newsfeed);

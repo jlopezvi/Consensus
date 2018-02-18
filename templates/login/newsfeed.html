@@ -1,7 +1,7 @@
 {% extends 'new_template.html' %}
 
 {% block content %}
-<div class="row newsfeed--content">
+<div class="row newsfeed--content" id="newsfeedContainer">
 	
 	<!-- Modal -->
     <div class="modal fade" id="invitation-modal-info" role="dialog">
@@ -24,49 +24,92 @@
     </div>
 	
 	<div class="col-sm-8 col-sm-offset-2" id="newsfeed__body" hidden>
-        <div class="row newsfeed--header">
+		
+		<!-- PUCLIC AUTHOR -->
+        <div class="row newsfeed--header" v-if="idea.if_author_public">
         	<input type="hidden" id="list__id">
         	<input type="hidden" class="idea__id">
 			<div class="col-sm-1" style="padding-left: 0px;">
 				<div class="profile--picture">
-                    <img src="" id="picture__profile" hidden>
-					<!--<img src="{{ url_for('static',filename='assets/profile/perfil-mediano.png') }}">-->
+                    <img :src="idea.author_profilepic_url" id="picture__profile">
 				</div>
 			</div>
 			<div class="col-sm-3 newsfeed--name">
-				<a href="#"></a>
+				<a :href="'/participants'" v-if="idea.author_email == logged_user"><% idea.author_username %></a>
+				<a :href="'/participants/' + idea.author_email" v-else><% idea.author_username %></a>
 			</div>
 			<div class="col-sm-1 newsfeed--duration">
 				<p>
 					<img src="{{ url_for('static',filename='images/clock-icon.png') }}">&nbsp;
-					<p class="duration--info"></p>
+					<p class="duration--info"><% idea.duration %></p>
 				</p>
 			</div>
-			<div class="col-sm-2 newsfeed--charge">
+			<div class="col-sm-2 newsfeed--charge" v-bind:class="[idea.volunteers_goal_num == 0 ? 'one--progress__bar' : '']">
 				<div class="progress newsfeed--progress">
 					<input type="text" value="" id="supporters--percent" hidden>
-					<div class="progress-bar newsfeed--bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style=""></div>
+					<div class="progress-bar newsfeed--bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" 
+					aria-valuemax="100" v-bind:style="'width:'+idea.supporters_num*100/idea.supporters_goal_num+'%;'"></div>
 				</div>
 
-				<div class="progress newsfeed--progress2">
+				<div class="progress newsfeed--progress2" v-if="idea.volunteers_goal_num > 0">
 					<input type="text" value="" id="volunters--percent" hidden>
-					<div class="progress-bar newsfeed--bar2" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style=""></div>
+					<div class="progress-bar newsfeed--bar2" role="progressbar" aria-valuenow="50" aria-valuemin="0" 
+					aria-valuemax="100" v-bind:style="'width:'+idea.volunteers_num*100/idea.volunteers_goal_num+'%;'"></div>
 				</div>
 			</div>
 			<div class="col-sm-2 newsfeed--goals">
-				<p></p>
+				<p v-bind:class="[idea.volunteers_goal_num == 0 ? 'one--text__bar__newsfeed' : '']"> 
+                    <% idea.supporters_num %>/<% idea.supporters_goal_num %> supporters<br>
+                    <p v-if="idea.volunteers_goal_num > 0">
+                        <% idea.volunteers_num %>/<% idea.volunteers_goal_num %> volunteers
+                    </p>
+                </p>
 			</div>
 		</div>
 		
-        <div class="row newsfeed--body">
+		<!-- ANONIMOUS AUTHOR -->
+        <div class="row newsfeed--header" v-else>
+			<div class="col-sm-1 newsfeed--duration">
+				<p>
+					<img src="{{ url_for('static',filename='images/clock-icon.png') }}">&nbsp;
+					<p class="duration--info"><% idea.duration %></p>
+				</p>
+			</div>
+			<div class="col-sm-1" style="padding-left: 0px;"></div>
+			<div class="col-sm-3 newsfeed--name"></div>
+			<div class="col-sm-2 newsfeed--charge" v-bind:class="[idea.volunteers_goal_num == 0 ? 'one--progress__bar' : '']">
+				<div class="progress newsfeed--progress">
+					<input type="text" value="" id="supporters--percent" hidden>
+					<div class="progress-bar newsfeed--bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" 
+					aria-valuemax="100" v-bind:style="'width:'+idea.supporters_num*100/idea.supporters_goal_num+'%;'"></div>
+				</div>
+
+				<div class="progress newsfeed--progress2" v-if="idea.volunteers_goal_num > 0">
+					<input type="text" value="" id="volunters--percent" hidden>
+					<div class="progress-bar newsfeed--bar2" role="progressbar" aria-valuenow="50" aria-valuemin="0" 
+					aria-valuemax="100" v-bind:style="'width:'+idea.volunteers_num*100/idea.volunteers_goal_num+'%;'"></div>
+				</div>
+			</div>
+			<div class="col-sm-2 newsfeed--goals">
+				<p v-bind:class="[idea.volunteers_goal_num == 0 ? 'one--text__bar__newsfeed' : '']"> 
+                    <% idea.supporters_num %>/<% idea.supporters_goal_num %> supporters<br>
+                    <p v-if="idea.volunteers_goal_num > 0">
+                        <% idea.volunteers_num %>/<% idea.volunteers_goal_num %> volunteers
+                    </p>
+                </p>
+			</div>
+		</div>
+		
+        <div class="row newsfeed--body" v-bind:style="'background-image: url('+idea.image_url+')'">
 			
 			<div class="col-sm-12 newsfeed__concern" >
 				<div class="col-sm-8 newsfeed--problem">
+					<% idea.concern %>
 				</div>
 			</div>
 			<div class="col-sm-12" style="position:relative;top: -15px;">
 				<div class="col-sm-11 col-sm-offset-1 newsfeed--proposal">
-					<br><br>
+					<% idea.proposal %>
 				</div>
 			</div>
 			
@@ -75,34 +118,36 @@
 		
         <div class="row newsfeed--footer" style="padding: 0 15px;">
 			<div class="col-sm-10 modal--info" style="padding-right: 0px; padding-left: 0px;z-index:1;">
-				<div class="col-sm-1 vote--on" style="display:none;">
-					<b>VOTE <span class="glyphicon glyphicon-triangle-bottom"></span></b>
-				</div>
 				<div class="col-sm-8 newsfeed--support" style="padding-right:0;">
 					<div class="input--percent">
-						<label></label>
+						<label> Support Rate: <% idea.support_rate %>% </label>
 					</div>
 				</div>
 				<div class="col-sm-1 redflag--img">
-					<img class="redflag" src="{{ url_for('static',filename='images/redflag.png') }}">
+					<img class="redflag__newsfeed" src="{{ url_for('static',filename='images/redflag.png') }}"
+					  @click="showRedFlagModal($event)">
 				</div>
 				<div class="col-sm-2 neewsfeed--moreinfo">
-					<input type="button" name="more-info" class="newsfeed--button">
+					<input type="button" name="more-info" class="newsfeed--button" v-on:click="showMoreInfoModal()">
 				</div>
-				<div id="more--info--modal" hidden></div>
+				<div id="more--info--modal" :class="'more_info_div'" hidden>
+					<p>
+                        <h4>  More information about the problem: </h4> 
+                        <% idea.moreinfo_concern %></br></br>
+                        <h4> More information about the proposal: </h4>
+                        <% idea.moreinfo_proposal %>
+                    </p> 
+				</div>
 			</div>
 
 		<div class="row newsfeed--share">
             <div class="col-sm-6 newsfeed--share--icons">
                 <div class="col-sm-12" style="padding:4px;">
-                    <div id="rejected" class="vote__idea--button"></div>
-                    <div id="supported" class="vote__idea--button"></div>
-                    <div id="support__plus--button" class="vote__idea--button"></div>
-                    <div id="ignored" class="vote__idea--button"></div>
-                </div>
-                <div class="col-sm-6 newsfeed--followers hidden" >
-                    <i class="fa fa-share-alt"></i>
-                    <p >Share with: followers</p>
+                    <div id="rejected" class="vote__idea--button" @click="voteIdea('rejected')"></div>
+                    <div id="supported" class="vote__idea--button" @click="voteIdea('supported')"></div>
+                    <div id="support__plus--button" class="vote__idea--button" 
+                      v-if="idea.volunteers_goal_num > 0" @click="voteIdea('support__plus--button')"></div>
+                    <div id="ignored" class="vote__idea--button" @click="voteIdea('ignored')"></div>
                 </div>
             </div>
         </div>
@@ -114,6 +159,11 @@
 				</div>
 				<div class="col-sm-9 newsfeed--likes" id="newsfeed--supporters">
 					<ul>
+						<a :href="'/participants' + (supporter.email == logged_user ? '' : '/' + supporter.email)" 
+                          v-for="supporter in idea.identified_supporters">
+                            <li><% supporter.username %></li>
+                        </a>
+                        <a href="#" class="last--liked"><li><% idea.unidentified_supporters_text %></li></a>
 					</ul>
 				</div>
 			</div>
@@ -123,6 +173,11 @@
 				</div>
 				<div class="col-sm-9 newsfeed--likes" id="newsfeed--rejectors">
 					<ul>
+						<a :href="'/participants' + (rejector.email == logged_user ? '' : '/' + rejector.email)" 
+                          v-for="rejector in idea.identified_rejectors">
+                            <li><% rejector.username %></li>
+                        </a>
+                        <a href="#" class="last--liked"><li><% idea.unidentified_rejectors_text %></li></a>
 					</ul>
 				</div>
 			</div>
@@ -131,5 +186,8 @@
 	</div>
 
 </div>
+
+<script src="https://unpkg.com/vue"></script>
 <script src="{{ url_for('static',filename='js/newsfeed.js') }}"></script>
+
 {% endblock %}

@@ -674,6 +674,12 @@ a.add--proposal--button:hover, a.add--proposal--button:active, a.add--proposal--
 .home--header{
 	font-family: lato_bold;
 	font-size: 15px;
+	max-height: 62px;
+}
+p.duration--info {
+    width: 65px;
+    left: -10px;
+    position: relative;
 }
 .home--name a{
 	color: #1067fc;
@@ -1719,13 +1725,37 @@ a.edit--proposal--provisional {
     left: -20px;
 }
 .one--progress__bar{
-	top:15px!important;
+	top:16px!important;
 }
 .edit--proposal--hint{
 	position: relative;
 	top: 5px;
 	color: red;
 	display: none;
+}
+.one--text__bar{
+    top: 8px;
+    position: relative;
+}
+.one--text__bar__newsfeed{
+	top: 15px;
+    position: relative;
+}
+.redflag__topten{
+	top: 20px;
+	margin-left: 50px;
+	position: relative;
+	margin-top: -15px;
+	margin-left: 5px;
+	cursor: pointer;
+}
+.redflag__newsfeed{
+    width: auto;
+    height: auto;
+    cursor: pointer;
+    margin-top: -15px;
+    margin-left: 5px;
+    cursor: pointer;
 }
 
 

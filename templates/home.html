@@ -20,14 +20,23 @@
     </div>
 	
 	<div class="col-sm-12 home--voted">
-		<div class="col-sm-3" style="padding-right:0;width: 320px;">
+		<div class="col-sm-3" style="padding-right:0;width: 280px;">
 			<h2>You Voted:</h2>	<br>
 			<div class="home--select">
-				<label class="selected--option" ><img id="supported" src="{{ url_for('static',filename='images/check_volunteer-hover.png') }}">Supported + Volunteers ideas </label>
+				<label class="selected--option">
+					<img id="supported" src="{{ url_for('static',filename='images/check_volunteer-hover.png') }}">
+					See the supported ideas
+				</label>
 				<span class="glyphicon glyphicon-triangle-bottom select--triangle"></span>
 				<div class="select--options">
-					<label class="unselected--option"><img id="ignored" src="{{ url_for('static',filename='images/ignore-hover.png') }}">See the ignored ideas</label>
-					<label class="unselected--option" ><img id="rejected" src="{{ url_for('static',filename='images/reject-hover.png') }}">See the rejected ideas </label>
+					<label class="unselected--option" style="padding: 5px 0 0px 0px;">
+						<img id="ignored" src="{{ url_for('static',filename='images/ignore-hover.png') }}">
+						See the ignored ideas
+					</label>
+					<label class="unselected--option" style="padding: 5px 0 0px 0px;">
+						<img id="rejected" src="{{ url_for('static',filename='images/reject-hover.png') }}">
+						See the rejected ideas 
+					</label>
 				</div>
 			</div>
 		</div>

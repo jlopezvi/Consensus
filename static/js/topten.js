@@ -3,11 +3,12 @@ url = url.split("/");
 $('.cropme2').simpleCropper();
 
 $(document).ready( function() {
+    /*
     $.ajax({
         url: url[0] + "//" + url[2] + '/get_topten_ideas',
         method: 'GET',
         success: function(data){
-            ////console.log(data);
+            //console.log(data);
             var newTop = '';
             var url_new = url[0] +'//'+ url[2] +'/static/';
             for (var i = 0; i < data.data.length; i++) {                      
@@ -113,12 +114,12 @@ $(document).ready( function() {
                 newTop += '</div><div class="col-sm-6 home--followers hidden" style="width: 100%;">';
                 newTop += '</div></div></div></div>';
             }
-                $('#topten--proposals').append(newTop);
+                //$('#topten--proposals').append(newTop);
                 
-                setTimeout(function(){
+                //setTimeout(function(){
                     $('#topten--proposals').show();
                     $('.spinner').hide();
-                }, 3000);
+                //}, 3000);
                 
                 $(document).on('click', 'input[name="more-info"]', function(){
                     $(this).parent().next().slideToggle('slow');    
@@ -131,6 +132,7 @@ $(document).ready( function() {
             //console.log(response);
         }
     });
+    */
     
     $(document).on('click', '.trash', function(){
     	$('#delete-idea').modal('toggle');
@@ -242,4 +244,46 @@ $(document).ready( function() {
     	}
     });
     
+});
+
+toptenVue = new Vue({
+    el: '#toptenContainer',
+    data: {
+        path: url[0] + "//" + url[2] + '/get_topten_ideas',
+        ideas: {},
+        logged_user: ''
+    },
+    mounted: function(){
+        this.getToptenIdeas();
+    },
+    methods: {
+        
+        getToptenIdeas: function(){
+            self = this;
+            $.ajax({
+                url: self.path,
+                method: 'GET',
+                success: function(data){
+                    self.ideas = data.data;
+                    console.log(self.ideas);
+                    self.logged_user = $('#host_email').val();
+                    $('#topten--proposals').show();
+                    $('.spinner').hide();
+                }
+            });
+        },
+        
+        showMoreInfoModal: function(index){
+            self = this;
+            $('.more_info_div[info="'+index+'"]').slideToggle( "slow" );
+        },
+        
+        showRedFlagModal: function(index, e){
+            e.preventDefault();
+            $('#redflag-modal').modal('toggle');
+            $('#idea_index').val(this.ideas[index].proposal);
+        }
+        
+    },
+    delimiters: ["<%","%>"]
 });
