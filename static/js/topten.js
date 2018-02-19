@@ -265,7 +265,6 @@ toptenVue = new Vue({
                 method: 'GET',
                 success: function(data){
                     self.ideas = data.data;
-                    console.log(self.ideas);
                     self.logged_user = $('#host_email').val();
                     $('#topten--proposals').show();
                     $('.spinner').hide();

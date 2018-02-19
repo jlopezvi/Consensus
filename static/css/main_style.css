@@ -1757,7 +1757,19 @@ a.edit--proposal--provisional {
     margin-left: 5px;
     cursor: pointer;
 }
-
+.redflag__home{
+    width: 12px;
+    margin-top: -22px;
+    width: auto;
+    height: auto;
+    cursor: pointer;
+    margin-top: -15px;
+    margin-left: 5px;
+    cursor: pointer;
+}
+.more__info--home{
+	width: 535px!important;
+}
 
 /*************** NEW HOVER BUTTONS ***********************/
 div#rejected, div#supported, div#ignored, div#support__plus--button, div#supported-plus{
@@ -1767,8 +1779,8 @@ div#rejected, div#supported, div#ignored, div#support__plus--button, div#support
 div#rejected{
     background-image: url('/static/images/reject-unhover.png');
 }
-div#rejected:hover{
-	background-image: url('/static/images/reject-hover.png');
+div#rejected:hover, div.rejected--voted{
+	background-image: url('/static/images/reject-hover.png')!important;
 }
 div#supported, div#ignored, div#support__plus--button, div#supported-plus, div#rejected{
 	width: 30px;
@@ -1777,8 +1789,8 @@ div#supported, div#ignored, div#support__plus--button, div#supported-plus, div#r
 div#supported{
 	background-image: url('/static/images/check-unhover.png');
 }
-div#supported:hover{
-	background-image: url('/static/images/check-hover.png');
+div#supported:hover, div.supported--voted{
+	background-image: url('/static/images/check-hover.png')!important;
 }
 div#ignored{
 	background-image: url('/static/images/ignore-unhover.png');
@@ -1789,8 +1801,8 @@ div#ignored:hover{
 div#support__plus--button, div#supported-plus{
 	background-image: url('/static/images/check_volunteer-unhover.png');
 }
-div#support__plus--button:hover, div#supported-plus:hover{
-	background-image: url('/static/images/check_volunteer-hover.png');
+div#support__plus--button:hover, div#supported-plus:hover, div.supported__plus--voted{
+	background-image: url('/static/images/check_volunteer-hover.png')!important;
 }
 .update--password{
 	background-image: url(/static/images/update-password-btn.png);

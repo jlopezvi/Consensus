@@ -227,6 +227,8 @@ $(document).ready(function(){
               toptenVue.getToptenIdeas();
             } else if(url[3] == 'newsfeed'){
               newsfeedVue.redFlagCountIdeas();
+            } else if(url[3] == 'home'){
+              homeVue.redflagRemoveIdea(data.idea_index);
             }
           },
           error: function(response){

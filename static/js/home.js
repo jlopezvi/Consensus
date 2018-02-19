@@ -32,11 +32,11 @@ $(document).ready( function() {
     $('#tres').hide();
     $('#older').empty();
     $('#cuatro').hide();
-    loadHomeIdeas(type_vote);
+    homeVue.getHomeIdeas(type_vote);
+    homeVue.selected_view = type_vote;
   });
   
-  loadHomeIdeas('supported');
-  
+  /*
   $(document).on('click', '.home--share--button', function(){
     var vote_type = $(this).attr('id');
     var index_idea = $(this).parent().parent().children('input').val();
@@ -83,7 +83,8 @@ $(document).ready( function() {
       }
   	});
   });
-
+  */
+  
 }); 
 
 function loadHomeIdeas(type_vote){
@@ -216,6 +217,7 @@ function showIdeas(list, index){
 	
   code += '</ul></div></div></div>';
 	code += '</div>';
+	/*
 	if (list.vote_duration == '<24h') {
     $('#today').append(code);
   }else
@@ -235,8 +237,226 @@ function showIdeas(list, index){
     $('#tres').show();
   if($('#older').children().length>0)
     $('#cuatro').show();
+  */
 }
 
-$(document).on('click', '.neewsfeed--moreinfo', function(){
-  $(this).next('div').slideToggle('slow');
-}); 
+homeVue = new Vue({
+  el: '#homeContainer',
+  data: {
+    path_get_ideas: url[0] + '//' + url[2] + '/ideas_for_home',
+    path_vote_idea: url[0] + "//" + url[2] + '/vote_on_idea',
+    day_ideas: [],
+    week_ideas: [],
+    month_ideas: [],
+    older_ideas: [],
+    logged_user: '',
+    selected_view: 'supported'
+  },
+  mounted: function(){
+      this.getHomeIdeas('supported');
+  },
+  methods: {
+    
+    getHomeIdeas: function(vote_type){
+      self = this;
+      $('#home--proposals').hide();
+      $('.spinner').show();
+      $.ajax({
+        url: self.path_get_ideas,
+        type: 'POST',
+        data: JSON.stringify({'vote_type': vote_type}),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        success: function(json){
+          var ideas = json.data;
+          console.log(ideas);
+          self.logged_user = $('#host_email').val();
+          for(var i=0; i< ideas.length; i++){
+            if(ideas[i].vote_duration == '<24h'){
+              self.day_ideas.push(ideas[i]);
+              $('#uno').show();
+            } else if(ideas[i].vote_duration == '<7days'){
+              self.week_ideas.push(ideas[i]);
+              $('#dos').show();
+            } else if(ideas[i].vote_duration == '<30days'){
+              self.month_ideas.push(ideas[i]);
+              $('#tres').show();
+            } else {
+              self.older_ideas.push(ideas[i]);
+              $('#cuatro').show();
+            }
+          }
+          $('#home--proposals').show();
+          $('.spinner').hide();
+        }
+    	});
+    },
+        
+    showMoreInfoModal: function(index, container){
+      $('#'+container).find('.more_info_div[info="'+index+'"]').slideToggle( "slow" );
+    },
+    
+    showRedFlagModal: function(index, container, e){
+      e.preventDefault();
+      self = this;
+      var idea_index = '';
+      switch(container){
+        case 'today':
+          idea_index = self.day_ideas[index].proposal;
+          break;
+        case 'lastweek':
+          idea_index = self.week_ideas[index].proposal;
+          break;
+        case 'thismonth':
+          idea_index = self.month_ideas[index].proposal;
+          break;
+        case 'older':
+          idea_index = self.older_ideas[index].proposal;
+          break;
+      }
+      $('#idea_index').val(idea_index);
+      $('#redflag-modal').modal('toggle');
+    },
+    
+    redflagRemoveIdea: function(idea_index){
+      this.validateProposalInArray(this.day_ideas, idea_index);
+      this.validateProposalInArray(this.week_ideas, idea_index);
+      this.validateProposalInArray(this.month_ideas, idea_index);
+      this.validateProposalInArray(this.older_ideas, idea_index);
+    },
+    
+    validateProposalInArray: function(array, idea_index){
+      if(array.length > 0){
+        for(var i=0; i<array.length; i++){
+          if(array[i].proposal == idea_index){
+            array.splice(i, 1);
+          }
+        }
+      }
+    },
+    
+    voteIdea: function(type, proposal, vote_type, ifvolunteered, idea_type){
+      var vote_ifvolunteered = false;
+      if(type == 'supported-plus'){
+        vote_ifvolunteered = true;
+        type = 'supported';
+      }
+      if((vote_type != type) || ((vote_type == type) && (ifvolunteered != vote_ifvolunteered))){
+        self = this;
+        var data = {
+          'idea_proposal': proposal,
+          'vote_ifvolunteered': vote_ifvolunteered,
+          'vote_type': type
+        };
+        
+        $.ajax({
+          url: self.path_vote_idea,
+          type: 'POST',
+          data: JSON.stringify(data),
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          dataType: 'json',
+          success: function(json){
+            if(self.selected_view != data.vote_type){
+              self.validateProposalInArray(self.day_ideas, data.idea_proposal);
+              self.validateProposalInArray(self.week_ideas, data.idea_proposal);
+              self.validateProposalInArray(self.month_ideas, data.idea_proposal);
+              self.validateProposalInArray(self.older_ideas, data.idea_proposal);
+            } else {
+              self.changeCurrentIdeaData(idea_type, proposal, vote_ifvolunteered);
+            }
+          },
+          error: function(response){
+            console.log('error');
+            console.log(response);
+          }
+      	});
+      }
+    },
+    
+    showHoverButton: function(vote_type, if_volunteered, plus){
+      if((vote_type == 'supported') && if_volunteered && plus)
+        return true;
+      else if((vote_type == 'supported') && !if_volunteered && !plus)
+        return true;
+      return false;
+    },
+    
+    changeCurrentIdeaData: function(idea_type, proposal, ifvolunteered){
+      switch(idea_type){
+        case 'day':
+          if(ifvolunteered){
+            for(var i=0; i<this.day_ideas.length; i++){
+              if(this.day_ideas[i].proposal == proposal){
+                this.day_ideas[i].volunteers_num++;
+                this.day_ideas[i].vote_ifvolunteered = true;
+              }
+            }
+          } else {
+            for(var i=0; i<this.day_ideas.length; i++){
+              if(this.day_ideas[i].proposal == proposal){
+                this.day_ideas[i].volunteers_num--;
+                this.day_ideas[i].vote_ifvolunteered = false;
+              }
+            }
+          }
+          break;
+        case 'week':
+          if(ifvolunteered){
+            for(var i=0; i<this.week_ideas.length; i++){
+              if(this.week_ideas[i].proposal == proposal){
+                this.week_ideas[i].volunteers_num++;
+                this.week_ideas[i].vote_ifvolunteered = true;
+              }
+            }
+          } else {
+            for(var i=0; i<this.week_ideas.length; i++){
+              if(this.week_ideas[i].proposal == proposal){
+                this.week_ideas[i].volunteers_num--;
+                this.week_ideas[i].vote_ifvolunteered = false;
+              }
+            }
+          }
+          break;
+        case 'month':
+          if(ifvolunteered){
+            for(var i=0; i<this.month_ideas.length; i++){
+              if(this.month_ideas[i].proposal == proposal){
+                this.month_ideas[i].volunteers_num++;
+                this.month_ideas[i].vote_ifvolunteered = true;
+              }
+            }
+          } else {
+            for(var i=0; i<this.month_ideas.length; i++){
+              if(this.month_ideas[i].proposal == proposal){
+                this.month_ideas[i].volunteers_num--;
+                this.month_ideas[i].vote_ifvolunteered = false;
+              }
+            }
+          }
+          break;
+        case 'older':
+          if(ifvolunteered){
+            for(var i=0; i<this.older_ideas.length; i++){
+              if(this.older_ideas[i].proposal == proposal){
+                this.older_ideas[i].volunteers_num++;
+                this.older_ideas[i].vote_ifvolunteered = true;
+              }
+            }
+          } else {
+            for(var i=0; i<this.older_ideas.length; i++){
+              if(this.older_ideas[i].proposal == proposal){
+                this.older_ideas[i].volunteers_num--;
+                this.older_ideas[i].vote_ifvolunteered = false;
+              }
+            }
+          }
+          break;
+      }
+    }
+    
+  },
+  delimiters: ["<%","%>"]
+});
