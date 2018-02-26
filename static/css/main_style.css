@@ -895,11 +895,15 @@ p.duration--info {
     border-radius: 50%;
 }
 .addproposal--step2 li input {
-	display: inline-flex;
-	margin-right: 30px;
+	display: inline-grid;
+    margin-right: 0;
+    width: 120px;
+    vertical-align: middle;
+    font-size: 13px;
+    height: 30px;
 }
 .addproposal--step2 li {
-	margin-left: 30px;
+    margin: 0 30px 0 30px;
 }
 .addproposal--step2 li:not(:last-child) {
 	padding-bottom: 10px;
@@ -1365,8 +1369,6 @@ ul.nav-tabs li.active a:before {
     border-color: #3faf2e;
     width: 60px;
     height: 25px;
-    top: -8px;
-    position: relative;
 }
 #delete-idea div.modal-footer button:nth-child(3){
 	color: #fff;
@@ -1828,10 +1830,10 @@ div.home--share--button {
 div#supported {
     margin-left: 10px;
 }
-#delete-idea {
-	position: absolute;
-	top: 300px;
-    left: 550px;
+#delete-idea {    
+	position: fixed;
+    top: 100px;
+    left: 40%;
     min-width: 300px;
     max-width: 300px;
 }
@@ -1839,4 +1841,22 @@ div#supported {
 	min-width: 300px;
     position: absolute;
     max-width: 300px;
+}
+.edit-div, .trash-div{
+	display: inline-block;
+}
+.trash-div{
+	margin-left: 10px;
+}
+.edit, .trash{
+	font-size: 28px;
+	cursor: pointer;
+}
+.redflag__home{
+	width: 12px;
+    margin-top: -22px;
+    width: auto;
+    height: auto;
+    cursor: pointer;
+    margin-left: 5px;
 }

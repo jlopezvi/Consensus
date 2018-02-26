@@ -1,7 +1,6 @@
 var url = window.location.href;
 url = url.split("/");
 var current_vote = '';
-$('.cropme2').simpleCropper();
 var img_validator;
 
 
@@ -162,9 +161,10 @@ $(document).ready( function() {
 			}	
 		});
 	}
-	getIdeasCreatedByParticipant();
+	//getIdeasCreatedByParticipant();
 
 	//GET ALL INFORMATION OF CURRENT LOGGED USER OR SEARCHED
+	/*
 	function getCurrentUserInfo(){
 		$.ajax({
 			url: url[0] + "//" + url[2] + '/get_participant_data_by_email_unrestricted/'+current_email,
@@ -180,8 +180,9 @@ $(document).ready( function() {
 			}	
 		});
 	}
-	getCurrentUserInfo();
-	
+	*/
+	//getCurrentUserInfo();
+	/*
 	//GET ALL FOLLOWERS OF CURRENT LOGGED USER OR SEARCHED
 	$.ajax({
 		url: url[0] + "//" + url[2] + '/get_participant_followers_info/'+current_email,
@@ -213,9 +214,9 @@ $(document).ready( function() {
 		}
 
 	});
-
+	*/
 	//GET ALL FOLLOWINGS OF CURRENT LOGGED USER OR SEARCHED
-	
+/*	
 	$.ajax({
 		url: url[0] + "//" + url[2] + '/get_participant_followings_info/'+current_email,
 		type: 'GET',
@@ -245,7 +246,7 @@ $(document).ready( function() {
 			}					
 		}	
 	});
-    
+*/
 	$.ajax({
 		url: url[0] + "//" + url[2] + '/get_all_public_participants_for_user',
 		type: 'GET',
@@ -275,7 +276,6 @@ $(document).ready( function() {
 					}
 				}
 	       	}
-	       	console.log(newParti);
 		}
 	});
 
@@ -375,7 +375,7 @@ $(document).ready( function() {
             alert("This browser does not support FileReader.");
         }
     });
-    
+/*
     $(document).on('click', '.addproposal--step2 li a', function(e){
     	e.preventDefault();
     	var redirect = $(this).parent().parent().children('input').val();
@@ -385,7 +385,7 @@ $(document).ready( function() {
     		window.location = '/participants/'+redirect;
 
     });
-
+*/
     $(document).on('click', '.public--all', function(){
     	$('#Public--profile').prop("checked", true);
     	$('#Supporting--proposals--visible').prop("checked", true);
@@ -399,7 +399,7 @@ $(document).ready( function() {
     	$('#Rejecting--proposals--visible').prop("checked", false);
     	$('.public--all').prop("checked", false);
     });
-
+/*
     $.ajax({
 		url: url[0] + "//" + url[2] + '/get_user_data',
 		type: 'GET',
@@ -426,7 +426,7 @@ $(document).ready( function() {
 		}					
 				
 	});
-
+*/
     $(document).on('click', '#modify--user', function(){
     	
       	optionpro = false;
@@ -452,9 +452,8 @@ $(document).ready( function() {
       		'ifrejectingproposalsvisible' : optionRej,
       	};
       	
-   		if($('#cropme_profile_edit img').attr('src') != img_validator){
-      		newdata['profilepic'] = $('#cropme_profile_edit img').attr('src');
-    	}
+  		newdata['profilepic'] = $('#cropme_profile_edit img').attr('src');
+      		
     	if ($('#p_email').val() == $('#p_confirm-e').val()) {
 	      	$('#loader--general').show();
     		$.ajax({
@@ -467,30 +466,13 @@ $(document).ready( function() {
 		      dataType: 'json',
 		      success: function (json) {
 		      	$('.close').click();
-		      	alert('Edition Completed!');
-     	    	location.reload(true);
-		      	getCurrentUserInfo();
-		        $('.participant__newsfeed').empty();
-			    getIdeasCreatedByParticipant();
-			    var timer = 3000;
-		      	setTimeout(function(){
-			        if($('#cropme_profile_edit img').attr('src') != img_validator){
-			        	$('.participant__profile--pic div img').prop('src', newdata['profilepic']);
-			        	$('.home--profile--picture img').attr('src', newdata['profilepic']);
-			        	timer = 5000;
-			        }
-			        $('#loader--general').hide();
-			        $('#modify-user').modal('toggle');
-		      	}, timer);
-		        /*
-		        if($('#cropme_profile_edit img').attr('src') != img_validator){
-		        	$('.participant__profile--pic div img').prop('src',newdata['profilepic']);
-		        	img_validator = newdata['profilepic'];
-		        }
-		        */
-		      },
-		      error: function(response){
-		        //console.log(response);
+		      	participantsVue.getParticipantInfo();
+		      	var ideas = participantsVue.ideas.length;
+		      	for(var i=0;i<ideas;i++){
+		      		participantsVue.ideas[i].author_profilepic_url = newdata['profilepic'];
+		      		participantsVue.ideas[i].author_username = newdata['username'];
+		      	}
+		      	$('#loader--general').hide();
 		      }
 		    });
     	}else{
@@ -500,18 +482,13 @@ $(document).ready( function() {
 
      });
 
-    $(document).on('click', '.trash', function(){
-    	$('#delete-idea').modal('toggle');
-    	var propuestaid = $(this).parent().parent().parent().children().val();
-    	$('#delete_idea').next('input').val(propuestaid);
-    	$(this).parent().parent().parent().parent().parent().parent().addClass('this-idea');
-    });
-
     $(document).on('click', '#delete_idea', function(){
+      	$('#loader--general').show();
+		$('.close').click();
     	var proposal = {
-    		'proposal' : $(this).next('input').val()
+    		'proposal' : participantsVue.idea_to_delete.proposal
     	}
-    	var activepub = parseInt($('.activess').text());
+    	//var activepub = parseInt($('.activess').text());
     	$.ajax({
 			url: url[0] + "//" + url[2] + '/remove_idea',
 			type: 'DELETE',
@@ -521,8 +498,9 @@ $(document).ready( function() {
 		    },
 		    dataType: 'json',
 			success: function (json) {
-				alert(json.result_msg);
-				$('.close').click();
+      			$('#loader--general').hide();
+      			participantsVue.removeIdea(participantsVue.idea_to_delete.proposal);
+      			/*
 				$('.this-idea').remove();
 				$('.activess').empty();	
 				$('.activess').append(activepub-1);
@@ -530,7 +508,7 @@ $(document).ready( function() {
 				if (vali <= 0) {
 					$('#newIdea').append('<center><h3>You have no active publications</h3></center>');
 				}
-
+				*/
 			}	
 		});
 
@@ -560,7 +538,10 @@ $(document).ready( function() {
     });
     
     $(document).on('click', '.edit', function(){
-    	var propid = $(this).parent().parent().parent().children().val();
+    	var index = $(this).attr('index');
+    	var propid = participantsVue.ideas[index].proposal;
+    	$('.edit--proposal--provisional').attr('index', index);
+    	//var propid = $(this).parent().parent().parent().children().val();
     	$.ajax({
 		url: url[0] + "//" + url[2] + '/get_idea_node_data/'+propid,
 		type: 'GET',
@@ -596,6 +577,9 @@ $(document).ready( function() {
     });
 
     $(document).on('click', '.edit--proposal--provisional', function(){
+      	$('#loader--general').show();
+ 	    $('.close').click();
+    	//var index = $('.edit--proposal--provisional').attr(index);
      	var propuestaid = $('#propoid').val(); 
      	var dataedit = {
   			'concern': $('#concern').val(),
@@ -620,26 +604,22 @@ $(document).ready( function() {
     	}
 
       	if ($('#volunteers_goal_num').val() >= 0 ) {
-     	$.ajax({
-     	   url: url[0] + "//" + url[2] + '/modify_idea',
-     	   type: 'PUT',
-     	   data: JSON.stringify(dataedit),
-     	   headers: {
-     	     'Content-Type': 'application/json'
-     	   },
-     	   dataType: 'json',
-     	   success: function (json) {
-     	     alert(json.result_msg);
-			 //window.location = '../home';
-     	     $('.close').click();
-     	     location.reload(true);
-     	     
-     	   },
-     	   error: function(response){
-     	     //console.log('Error');
-     	     //console.log(response);
-     	   }
-     	});
+	     	$.ajax({
+	     	   url: url[0] + "//" + url[2] + '/modify_idea',
+	     	   type: 'PUT',
+	     	   data: JSON.stringify(dataedit),
+	     	   headers: {
+	     	     'Content-Type': 'application/json'
+	     	   },
+	     	   dataType: 'json',
+	     	   success: function (json) {
+					participantsVue.getParticipantIdeas(1);
+	     	   },
+	     	   error: function(response){
+	     	     //console.log('Error');
+	     	     //console.log(response);
+	     	   }
+	     	});
     	}else{
       		$('#volunteers_goal_num').css("border-color", "red");
     	}
@@ -935,6 +915,7 @@ function change_view(view){
 
 
 $(document).ready(function(){	
+	/*
     $('#unfollow-parti').on('click',function(){
         var selected = '';    
         $('#following li input[type=checkbox]').each(function(){
@@ -1003,7 +984,7 @@ $(document).ready(function(){
 			}
         }); 
     });  
-
+*/
 
 });
 
@@ -1019,3 +1000,250 @@ function showHideGroups(){
 	if($('.ysfc li').length > 0)
 		$('.ysfc').show();
 }
+
+participantsVue = new Vue({
+	el: '#participantsContainer',
+	data: {
+		path_get_ideas: url[0] + "//" + url[2] + '/get_ideas_data_created_by_participant/',
+		path_participant_data: url[0] + "//" + url[2] + '/get_participant_data_by_email_unrestricted/',
+		path_get_logged_user_data: url[0] + "//" + url[2] + '/get_user_data',
+    	path_vote_idea: url[0] + "//" + url[2] + '/vote_on_idea',
+    	path_get_idea: url[0] + "//" + url[2] + '/get_idea_node_data/',
+    	path_get_idea_data: url[0] + "//" + url[2] + '/get_idea_data_for_user/',
+    	path_get_participant_followers: url[0] + "//" + url[2] + '/get_participant_followers_info/',
+    	path_get_participant_followings: url[0] + "//" + url[2] + '/get_participant_followings_info/',
+    	path_stop_follow_participant: url[0] + "//" + url[2] + '/remove_following_contact_to_user/',
+    	path_follow_participant: url[0] + "//" + url[2] + '/add_following_contact_to_user/',
+		ideas: {},
+		current_user: '',
+		ifallowed: false,
+		ifself: true,
+		logged_user: '',
+		participant: {},
+		user: {},
+		idea_to_delete: {
+			proposal: '',
+			index: ''
+		},
+		followers: {
+			data: {},
+			ifallowed: ''
+		},
+		followings: {
+			data: {},
+			ifallowed: ''
+		}
+	},
+	mounted: function(){
+		$('.cropme2').simpleCropper();
+		this.getCurrentUser();
+		this.getParticipantPage();
+		this.getParticipantInfo();
+		this.getParticipantIdeas();
+		this.getParticipantFollowers();
+		this.getParticipantFollowings();
+	},
+	methods: {
+		
+		getParticipantInfo: function(){
+			self = this;
+			$.ajax({
+				url: self.path_participant_data + self.current_user,
+				type: 'GET',
+				success: function (json) {
+					self.participant = json.participant_data;
+				}	
+			});
+		},
+		
+		getParticipantIdeas: function(ifmodify = null){
+			self = this;
+			$.ajax({
+				url: self.path_get_ideas + self.current_user,
+				type: 'GET',
+				success: function(json) {
+					self.ideas = json.ideas_data;
+					self.ifallowed = json.ifallowed;
+					if(ifmodify)
+      					$('#loader--general').hide();
+				}
+			});
+		},
+		
+		getCurrentUser: function(){
+			if($('#participant_email').val() == 'None')
+				this.current_user = $('#host_email').val();
+			else {
+				this.current_user = $('#participant_email').val();
+			}
+		},
+		
+		getParticipantPage: function(){
+			this.logged_user = $('#host_email').val();
+			this.ifself = true;
+			if(url[4])
+				this.ifself = false;
+		},
+		
+		showHoverButton: function(vote_type, if_volunteered, plus){
+			if((vote_type == 'supported') && if_volunteered && plus)
+				return true;
+			else if((vote_type == 'supported') && !if_volunteered && !plus)
+				return true;
+			return false;
+		},
+        
+		showMoreInfoModal: function(index){
+			$('.more__info--participant[info="'+index+'"]').slideToggle( "slow" );
+		},
+    
+		showRedFlagModal: function(index, e){
+			e.preventDefault();
+			self = this;
+			$('#idea_index').val(self.ideas[index].proposal);
+			$('#redflag-modal').modal('toggle');
+		},
+		
+		removeIdea: function(proposal){
+			self = this;
+			for(var i=0; i<self.ideas.length;i++){
+				if(self.ideas[i].proposal == proposal){
+					self.ideas.splice(i, 1);
+					self.participant.ideas_num--;
+				}
+			}
+		},
+		
+		getIdeaData: function(index){
+			self = this;
+			$.ajax({
+		        url: self.path_get_idea_data + self.ideas[index].proposal,
+		        type: 'GET',
+		        success: function(json){
+		        	self.ideas[index].vote_type = json.idea_data.vote_type;
+		        	self.ideas[index].vote_ifvolunteered = json.idea_data.vote_ifvolunteered;
+		        	self.ideas[index].support_rate = json.idea_data.support_rate;
+		        	self.ideas[index].supporters_num = json.idea_data.supporters_num;
+		        	self.ideas[index].rejectors_num = json.idea_data.rejectors_num;
+		        	self.ideas[index].volunteers_num = json.idea_data.volunteers_num;
+		        	self.ideas[index].identified_rejectors = json.idea_data.identified_rejectors;
+		        	self.ideas[index].identified_supporters = json.idea_data.identified_supporters;
+		        	self.ideas[index].unidentified_supporters_text = json.idea_data.unidentified_supporters_text;
+		        	self.ideas[index].unidentified_rejectors_text = json.idea_data.unidentified_rejectors_text;
+		        }
+			});
+		},
+    
+		voteIdea: function(type, proposal, vote_type, ifvolunteered, index){
+			var vote_ifvolunteered = false;
+			var type_clicked = type;
+			if(type == 'supported-plus'){
+				vote_ifvolunteered = true;
+				type = 'supported';
+			}
+			if((vote_type != type) || ((vote_type == type) && (ifvolunteered != vote_ifvolunteered))){
+				self = this; 
+				var data = {
+					'idea_proposal': proposal,
+					'vote_ifvolunteered': vote_ifvolunteered,
+					'vote_type': type
+				};
+				
+				$.ajax({
+					url: self.path_vote_idea,
+					type: 'POST',
+					data: JSON.stringify(data),
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					dataType: 'json',
+					success: function(json){
+						self.getIdeaData(index);
+					},
+					error: function(response){
+						console.log('error');
+						console.log(response);
+					}
+				});
+			}
+		},
+		
+		editIdea: function(index){
+			
+		},
+		
+		deleteIdea: function(index){
+			$('#delete-idea').modal('toggle');
+	    	this.idea_to_delete.proposal = this.ideas[index].proposal;
+	    	this.idea_to_delete.index = index;
+		},
+		
+		editParticipant: function(){
+			self = this;
+			$.ajax({
+				url: self.path_get_logged_user_data,
+				type: 'GET',
+				headers: {
+				'Content-Type': 'application/json'
+				},
+				dataType: 'json',
+				success: function (json) {
+					self.user = json.data;
+				}
+			});
+		},
+		
+		getParticipantFollowers: function(){
+			self = this;
+			$.ajax({
+				url: self.path_get_participant_followers + self.current_user,
+				type: 'GET',
+				success: function (json) {
+					self.followers.data = json.followers_info;
+					self.followers.ifallowed = json.ifallowed;
+				}
+			});
+		},
+		
+		getParticipantFollowings: function(){
+			self = this;
+			$.ajax({
+				url: self.path_get_participant_followings + self.current_user,
+				type: 'GET',
+				success: function (json) {
+					self.followings.data = json.followings_info;
+					self.followings.ifallowed = json.ifallowed;
+					console.log(self.followings);
+				}
+			});
+		},
+		
+		stopFollowingParticipant: function(email){
+			self = this;
+			$.ajax({
+				url: self.path_stop_follow_participant + email,
+				type: 'GET',
+				success: function (json) {	
+					self.participant.followings_num--;
+					self.getParticipantFollowings();
+					self.getParticipantFollowers();
+				}
+			});
+		},
+		
+		followParticipant: function(email){
+			self = this;
+			$.ajax({
+				url: self.path_follow_participant + email,
+				type: 'GET',
+				success: function (json) {	
+					self.participant.followings_num++;
+					self.getParticipantFollowings();
+					self.getParticipantFollowers();
+				}
+			});
+		}
+		
+	},
+	delimiters: ['<%', '%>']
+});

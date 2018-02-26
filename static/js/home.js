@@ -1,7 +1,6 @@
 var url = window.location.href;
 url = url.split("/");
 var list;
-$('.cropme2').simpleCropper();
 
 $(document).ready( function() {
   $('.home--select div').slideUp();

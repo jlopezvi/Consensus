@@ -147,7 +147,7 @@
                     </div>
                     <div class="col-sm-11 newsfeed--likes">
                         <ul class="ul--liked">
-                            <a :href="'/participants' + (supporter.email == logged_user ? '' : '/' + supporter.email)" 
+                            <a :href="'/participants' + (supporter.email == 'user' ? '' : '/' + supporter.email)" 
                               v-for="supporter in idea.identified_supporters">
                                 <li><% supporter.username %></li>
                             </a>
@@ -161,7 +161,7 @@
                     </div>
                     <div class="col-sm-11 newsfeed--likes">
                         <ul class="ul--liked">
-                            <a :href="'/participants' + (rejector.email == logged_user ? '' : '/' + rejector.email)" 
+                            <a :href="'/participants' + (rejector.email == 'user' ? '' : '/' + rejector.email)" 
                               v-for="rejector in idea.identified_rejectors">
                                 <li><% rejector.username %></li>
                             </a>

@@ -220,9 +220,7 @@ $(document).ready(function(){
             alert(json.result_msg);
             $('#redflag-modal').modal('hide');
             if(url[3] == 'participants'){
-              red_flag_idea.remove();
-              var active_p = $('.participant__active--p .activess').html();
-              $('.participant__active--p .activess').html(active_p-1);
+              participantsVue.removeIdea(data.idea_index);
             } else if(url[3] == 'topten'){
               toptenVue.getToptenIdeas();
             } else if(url[3] == 'newsfeed'){
