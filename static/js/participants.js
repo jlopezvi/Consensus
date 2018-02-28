@@ -1213,7 +1213,6 @@ participantsVue = new Vue({
 				success: function (json) {
 					self.followings.data = json.followings_info;
 					self.followings.ifallowed = json.ifallowed;
-					console.log(self.followings);
 				}
 			});
 		},
