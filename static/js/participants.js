@@ -466,7 +466,7 @@ $(document).ready( function() {
 		      dataType: 'json',
 		      success: function (json) {
 		      	$('.close').click();
-		      	participantsVue.getParticipantInfo();
+		      	participantsVue.getParticipantInfo(1);
 		      	var ideas = participantsVue.ideas.length;
 		      	for(var i=0;i<ideas;i++){
 		      		participantsVue.ideas[i].author_profilepic_url = newdata['profilepic'];
@@ -539,18 +539,16 @@ $(document).ready( function() {
     
     $(document).on('click', '.edit', function(){
     	var index = $(this).attr('index');
-    	var propid = participantsVue.ideas[index].proposal;
+    	participantsVue.propodas_to_change = participantsVue.ideas[index].proposal;
     	$('.edit--proposal--provisional').attr('index', index);
-    	//var propid = $(this).parent().parent().parent().children().val();
     	$.ajax({
-		url: url[0] + "//" + url[2] + '/get_idea_node_data/'+propid,
+		url: url[0] + "//" + url[2] + '/get_idea_node_data/'+participantsVue.propodas_to_change,
 		type: 'GET',
 		headers: {
 		'Content-Type': 'application/json'
 		},
 		dataType: 'json',
 		success: function (json) {
-			////console.log(json);
 			$('#concern').val(''+json.concern+'');
 			$('#proposal').val(''+json.proposal+'');
 			$('#moreinfo_concern').val(''+json.moreinfo_concern+'');
@@ -573,14 +571,13 @@ $(document).ready( function() {
 
     	$('.add--proposal--provisional').hide();
     	$('.edit--proposal--provisional').show();
-    	$('.controlss').append('<input type="hidden" id="propoid" value="'+propid+'">')
     });
 
     $(document).on('click', '.edit--proposal--provisional', function(){
       	$('#loader--general').show();
  	    $('.close').click();
     	//var index = $('.edit--proposal--provisional').attr(index);
-     	var propuestaid = $('#propoid').val(); 
+     	var propuestaid = participantsVue.propodas_to_change;
      	var dataedit = {
   			'concern': $('#concern').val(),
   			'moreinfo_proposal': $('#moreinfo_proposal').val(),
@@ -1032,7 +1029,8 @@ participantsVue = new Vue({
 		followings: {
 			data: {},
 			ifallowed: ''
-		}
+		},
+		propodas_to_change: ''
 	},
 	mounted: function(){
 		$('.cropme2').simpleCropper();
@@ -1045,8 +1043,12 @@ participantsVue = new Vue({
 	},
 	methods: {
 		
-		getParticipantInfo: function(){
+		getParticipantInfo: function(modify = 0){
 			self = this;
+			if(modify){
+				if(self.logged_user != $('#p_confirm-e').val())
+					self.logged_user = self.current_user = $('#p_confirm-e').val();
+			}
 			$.ajax({
 				url: self.path_participant_data + self.current_user,
 				type: 'GET',
