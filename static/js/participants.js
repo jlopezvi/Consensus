@@ -452,12 +452,13 @@ $(document).ready( function() {
       		'ifrejectingproposalsvisible' : optionRej,
       	};
       	
-  		newdata['profilepic'] = $('#cropme_profile_edit img').attr('src');
+      	if(participantsVue.participant.profilepic_url != $('#cropme_profile_edit img').attr('src'))
+  			newdata['profilepic'] = $('#cropme_profile_edit img').attr('src');
       		
     	if ($('#p_email').val() == $('#p_confirm-e').val()) {
 	      	$('#loader--general').show();
     		$.ajax({
-		      url: url[0] + "//" + url[2] + '/modify_user_data/'+current_email,
+		      url: url[0] + "//" + url[2] + '/modify_user_data',
 		      type: 'PUT',
 		      data: JSON.stringify(newdata),
 		      headers: {
