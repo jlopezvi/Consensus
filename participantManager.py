@@ -249,7 +249,21 @@ def get_participant_followings_info_aux(participant_email, user_email):
             username = following['username']
             fullname = following['fullname']
             profilepic_url = following['profilepic_url']
-            followings_info.append({'email': email, 'username': username, 'fullname': fullname, 'profilepic_url': profilepic_url})
+            #three cases of (participant) following with respect to user:
+            if_button_stop_following = False
+            if_button_follow = False
+            #1. user following --> button "stop following"
+            if _getIfContactRelationshipExists(user, following):
+                if_button_stop_following = True
+            #2. not user following and (public participant or user follower)
+            else:
+                if (following['ifpublicprofile'] or _getIfContactRelationshipExists(following, user)):
+                    if_button_follow = True
+            #3. not user following and (private participant and not user follower)
+                else:
+                    pass
+            followings_info.append({'email': email, 'username': username, 'fullname': fullname, 'profilepic_url': profilepic_url,
+                                   'if_button_follow': if_button_follow, 'if_button_stop_following': if_button_stop_following})
     else:
         ifallowed = False
         followings = _get_participant_followings(participant_email)
@@ -272,7 +286,21 @@ def get_participant_followers_info_aux(participant_email, user_email):
             username = follower['username']
             fullname = follower['fullname']
             profilepic_url = follower['profilepic_url']
-            followers_info.append({'email' : email, 'username': username, 'fullname': fullname, 'profilepic_url': profilepic_url})
+            #three cases of (participant) follower with respect to user:
+            if_button_stop_following = False
+            if_button_follow = False
+            #1. user following --> button "stop following"
+            if _getIfContactRelationshipExists(user, follower):
+                if_button_stop_following = True
+            #2. not user following and (public participant or user follower)
+            else:
+                if (follower['ifpublicprofile'] or _getIfContactRelationshipExists(follower, user)):
+                    if_button_follow = True
+            #3. not user following and (private participant and not user follower)
+                else:
+                    pass
+            followers_info.append({'email': email, 'username': username, 'fullname': fullname, 'profilepic_url': profilepic_url,
+                                   'if_button_follow': if_button_follow, 'if_button_stop_following': if_button_stop_following})
     else:
         ifallowed = False
         followers = _get_participant_followers(participant_email)
