@@ -355,6 +355,7 @@ def get_fullname_for_participant_unrestricted(participant_email):
 # 		      "fullname": "alejandro perez",
 # 		      "username": "ale",
 #             "profilepic_url": "static/.../pic.jpg"
+#             "if_button_follow": true/false, "if_button_stop_following": true/false
 # 		    }
 # 		   ]
 # 		  }
@@ -379,6 +380,7 @@ def get_participant_followers_info(participant_email, user_email_DEBUG=None):
 # 		      "fullname": "alejandro perez",
 # 		      "username": "ale",
 #             "profilepic_url": "static/.../pic.jpg"
+#             "if_button_follow": true/false, "if_button_stop_following": true/false
 #  		    }
 # 		   ]
 # 		  }
