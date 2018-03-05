@@ -262,6 +262,11 @@ def get_participant_followings_info_aux(participant_email, user_email):
             #3. not user following and (private participant and not user follower)
                 else:
                     pass
+            #special case that participant following is user:
+            if following == user:
+                if_button_stop_following = False
+                if_button_follow = False
+            #
             followings_info.append({'email': email, 'username': username, 'fullname': fullname, 'profilepic_url': profilepic_url,
                                    'if_button_follow': if_button_follow, 'if_button_stop_following': if_button_stop_following})
     else:
@@ -299,6 +304,11 @@ def get_participant_followers_info_aux(participant_email, user_email):
             #3. not user following and (private participant and not user follower)
                 else:
                     pass
+            #special case that participant follower is user:
+            if follower == user:
+                if_button_stop_following = False
+                if_button_follow = False
+            #
             followers_info.append({'email': email, 'username': username, 'fullname': fullname, 'profilepic_url': profilepic_url,
                                    'if_button_follow': if_button_follow, 'if_button_stop_following': if_button_stop_following})
     else:
