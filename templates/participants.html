@@ -20,7 +20,7 @@
         
     </div>
     
-    <div class="container__participants" style="margin-top: 6%; margin-bottom: 8%;">
+    <div class="container__participants" style="margin-top: 6%; margin-bottom: 1%;">
         <h3 style="font-family: lato_bold;margin-bottom: -10px;margin-left: 40px;">Participants</h3>
         <div class="col-md-6 col-md-offset-3" style="margin-top: -2%;">
             <form role="form">
@@ -196,12 +196,12 @@
     
                 <div class="tab-content">
                     <div id="home" class="tab-pane active addproposal--step2__div">
-                        <center v-if="!followings.ifallowed"><h3 >User private</h3></center>
-                        <center v-if="participant.followings_num != 0 && current_user != logged_user">
+                        <center class="custom--messages" v-if="!followings.ifallowed"><h3 >User private</h3></center>
+                        <center class="custom--messages" v-else-if="participant.followings_num == 0 && current_user != logged_user">
                             <h3 >This user is not following any participant</h3>
                         </center>
-                        <center v-if="participant.followings_num == 0 && current_user == logged_user">
-                            <h3 >No one is following you</h3>
+                        <center class="custom--messages" v-else-if="participant.followings_num == 0 && current_user == logged_user">
+                            <h3 >You are following no one</h3>
                         </center>
                     
                         <ul id="following" class="addproposal--step2">
@@ -217,11 +217,11 @@
                         </ul>
                     </div>
                     <div  id="menu1" class="tab-pane addproposal--step2__div">
-                        <center v-if="!followers.ifallowed"><h3 >User private</h3></center>
-                        <center v-if="participant.followers_num != 0 && current_user != logged_user">
+                        <center class="custom--messages" v-if="!followers.ifallowed"><h3 >User private</h3></center>
+                        <center class="custom--messages" v-else-if="participant.followers_num == 0 && current_user != logged_user">
                             <h3 >This user has no followers</h3>
                         </center>
-                        <center v-if="participant.followers_num == 0 && current_user == logged_user">
+                        <center class="custom--messages" v-else-if="participant.followers_num == 0 && current_user == logged_user">
                             <h3 >No one is following you</h3>
                         </center>
                         
@@ -233,8 +233,11 @@
                                     <br><% follower.fullname %>
         					    </p>
                                 <input id="follow-parti" class="form-control invite__button" type="button" 
-                                  value="Follow" @click="followParticipant(follower.email)">
-                                <!--input id="unfollow-parti" class="form-control invite__button" type="button" value="Stop following" -->
+                                  value="Follow" @click="followParticipant(follower.email)" 
+                                  v-if="follower.if_button_follow">
+                                <input id="unfollow-parti" class="form-control invite__button" type="button" 
+                                  value="Stop following" @click="stopFollowingParticipant(follower.email)" 
+                                  v-if="follower.if_button_stop_following">
     					    </li>
                         </ul>
                     </div>
@@ -243,13 +246,13 @@
             </div>
     
     
-            <div class="col-sm-6 participant__newsfeed" id="newIdea" style="max-height: 900px;">
+            <div class="col-sm-6 participant__newsfeed" id="newIdea" style="max-height: 885px;">
                 
-                <center v-if="participant.ideas_num == 0 && current_user == logged_user && ifallowed"><h3>You have no active publications</h3></center>
-                <center v-if="participant.ideas_num == 0 && current_user != logged_user && ifallowed">
+                <center v-if="!ifallowed"><h3>User private</h3></center>
+                <center v-else-if="participant.ideas_num == 0 && current_user == logged_user"><h3>You have no active publications</h3></center>
+                <center v-else-if="participant.ideas_num == 0 && current_user != logged_user">
                     <h3>This user has no active publications</h3>
                 </center>
-                <center v-if="!ifallowed"><h3>User private</h3></center>
                 
                 <div class="col-sm-12" style="margin-top:25px;" v-for="(idea, index) in ideas">
                     <!-- IF AUTHOR PUBLIC -->

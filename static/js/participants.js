@@ -470,8 +470,8 @@ $(document).ready( function() {
 		      	participantsVue.getParticipantInfo(1);
 		      	var ideas = participantsVue.ideas.length;
 		      	for(var i=0;i<ideas;i++){
-		      		participantsVue.ideas[i].author_profilepic_url = newdata['profilepic'];
-		      		participantsVue.ideas[i].author_username = newdata['username'];
+		      		participantsVue.ideas[i].author_profilepic_url = $('#cropme_profile_edit img').attr('src');
+		      		participantsVue.ideas[i].author_username = $('#p_username').val();
 		      	}
 		      	$('#loader--general').hide();
 		      }
@@ -489,7 +489,7 @@ $(document).ready( function() {
     	var proposal = {
     		'proposal' : participantsVue.idea_to_delete.proposal
     	}
-    	//var activepub = parseInt($('.activess').text());
+    	
     	$.ajax({
 			url: url[0] + "//" + url[2] + '/remove_idea',
 			type: 'DELETE',
