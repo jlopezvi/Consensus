@@ -1217,7 +1217,6 @@ input.form-control.invite__button:focus {
 .search__participant ul li input[type="button"] {
 	float: right;
     text-align: center!important;
-    padding: 5px 45px;
 }
 .search__participant .addproposal--step2 {
 	padding: 30px 50px;
@@ -1748,7 +1747,6 @@ a.edit--proposal--provisional {
 	margin-left: 50px;
 	position: relative;
 	margin-top: -15px;
-	margin-left: 5px;
 	cursor: pointer;
 }
 .redflag__newsfeed{
@@ -1859,4 +1857,8 @@ div#supported {
     height: auto;
     cursor: pointer;
     margin-left: 5px;
+}
+.custom--messages{
+	top: 30px;
+	position: relative;
 }

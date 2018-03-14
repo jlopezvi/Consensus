@@ -8,8 +8,9 @@
                 <div class="row">
                     <div class="form-group">
                         <div class="input-group search__div--participants">
-                            <span class="span__search"><span class="glyphicon glyphicon-search search__icon--participants"></span><input  class="form-control"  oninput="w3.filterHTML('#id01', 'ul#id01 li', this.value)" type="text" name="search" placeholder="Search..." required/ id="search-input-participant2"></span>
-                            
+                            <span class="span__search"><span class="glyphicon glyphicon-search search__icon--participants"></span>
+                            <input  class="form-control" type="text" name="search" placeholder="Search..." required/ 
+                              id="search-input-participant2"></span>
                             </span>
                         </div>
                     </div>
@@ -23,25 +24,25 @@
     <div class="container__participants" style="margin-top: 6%; margin-bottom: 1%;">
         <h3 style="font-family: lato_bold;margin-bottom: -10px;margin-left: 40px;">Participants</h3>
         <div class="col-md-6 col-md-offset-3" style="margin-top: -2%;">
-            <form role="form">
-                <div class="row">
-                    <div class="form-group">
-                        <div class="input-group search__div--participants">
-                            <span class="span__search"><span class="glyphicon glyphicon-search search__icon--participants"></span><input class="form-control" type="text" oninput="w3.filterHTML('#id01', 'ul#id01 li', this.value)" name="search" placeholder="Search..." required id="search-input-participant"/></span>
-                            <span class="input-group-btn" style="padding-right: 10px;">
+            <div class="row">
+                <div class="form-group">
+                    <div class="input-group search__div--participants">
+                        <span class="span__search">
+                            <span class="glyphicon glyphicon-search search__icon--participants"></span>
+                            <input class="form-control" type="text" name="search" placeholder="Search..." 
+                              required id="search-input-participant" 
+                              @keyup="ifExists($event.keyCode)" v-model="search_bar" />
+                        </span>
+                        <span class="input-group-btn" style="padding-right: 10px;">
                             <div class="back__button" hidden>
-                            <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
-                            <span>Go Back</span>
+                                <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
+                                <span>Go Back</span>
                             </div>
-                                
-                            </span>
-                            </span>
-                        </div>
-                        <strong><span id="does-exist" hidden> </span></strong>
+                        </span>
                     </div>
+                    <strong><span id="does-exist" hidden> </span></strong>
                 </div>
-                
-            </form>
+            </div>
             <!-- End of Search Form -->            
         </div>
     
@@ -50,9 +51,42 @@
             <div class="addproposal--step__div"> 
                 <ul id="id01" class="addproposal--step2">
                     <!-- TODO -->
-                    <legend id="legend__board" class="no_organization" hidden>No Organization</legend>
-                    <legend id="legend__board" class="ysfc" hidden>YSfC</legend>
-                    <div class="spinner" hidden>
+                    <div v-for="group in myGroups">
+                        <legend class="legend__board" :data="group.index"> <% group.label %> </legend>
+                        <li v-for="(p_participant, index) in public_participants" 
+                          v-if="p_participant.group == group.index"
+                          v-show="p_participant.searched">
+                            <img class="new--user--icon--login" :src="p_participant.profilepic_url">
+                            <p>
+                                <a href="#"> <% p_participant.fullname %> </a>
+    	       		            <br><label> <% p_participant.position %> </label>
+           		            </p>
+    	       		        <input class="form-control invite__button" type="button" id="btn-follow" 
+    	       		          v-if="p_participant.if_following" value="Stop Following"
+    	       		          @click="followUnfollowPublicParticipant('unFollow',p_participant.email,index,$event)">
+    	       		        <input class="form-control invite__button" type="button" id="btn-follow" 
+    	       		          v-else value="Follow"
+    	       		          @click="followUnfollowPublicParticipant('Follow',p_participant.email,index,$event)">
+           		        </li>
+       		        </div>
+       		        <div v-if="private_user_searched">
+       		            <legend class="legend__board"> <% searched_user.group %> </legend>
+                        <li>
+                            <img class="new--user--icon--login" :src="searched_user.profilepic_url">
+                            <p>
+                                <a href="#"> <% searched_user.fullname %> </a>
+    	       		            <br><label> <% searched_user.position %> </label>
+           		            </p>
+    	       		        <input class="form-control invite__button" type="button" id="btn-follow" 
+    	       		          v-if="searched_user.if_following && logged_user != searched_user.id" 
+    	       		          value="Stop Following"
+    	       		          @click="followUnfollowPublicParticipant('unFollow',searched_user.id,index,$event)">
+    	       		        <input class="form-control invite__button" type="button" id="btn-follow" 
+    	       		          v-if="!searched_user.if_following && logged_user != searched_user.id" value="Follow"
+    	       		          @click="followUnfollowPublicParticipant('Follow',searched_user.id,index,$event)">
+           		        </li>
+       		        </div>
+                    <div class="spinner" v-if="loading_users">
                         <div class="dot1"></div>
                         <div class="dot2"></div>
                     </div> 
@@ -201,7 +235,7 @@
                             <h3 >This user is not following any participant</h3>
                         </center>
                         <center class="custom--messages" v-else-if="participant.followings_num == 0 && current_user == logged_user">
-                            <h3 >You are following no one</h3>
+                            <h3 >You have no followings</h3>
                         </center>
                     
                         <ul id="following" class="addproposal--step2">
@@ -212,7 +246,8 @@
                                     <br><% following.fullname %>
         					    </p>
                                 <input id="unfollow-parti" class="form-control invite__button" type="button" 
-                                  value="Stop following" @click="stopFollowingParticipant(following.email)">
+                                  value="Stop following" @click="stopFollowingParticipant(following.email)"
+                                  v-if="following.if_button_stop_following">
     					    </li>
                         </ul>
                     </div>
@@ -222,7 +257,7 @@
                             <h3 >This user has no followers</h3>
                         </center>
                         <center class="custom--messages" v-else-if="participant.followers_num == 0 && current_user == logged_user">
-                            <h3 >No one is following you</h3>
+                            <h3 >You have no followers</h3>
                         </center>
                         
                         <ul id="followers" class="addproposal--step2">
@@ -492,8 +527,11 @@
                                   placeholder="Position" :value="user.position">
                             </div>
                             <div class="p__div" style="padding-left: 35px;">
-                                <span class="p__span">Group:</span><select class="form-control" id="p_group" name="p_group" placeholder="Group">Group
-                                    <option selected disabled value="0">Select...</option>
+                                <span class="p__span">Group:</span>
+                                <select class="form-control" id="p_group" name="p_group" placeholder="Group">Group
+                                    <option v-for="(group, _index) in myGroups" :value="group.index" :selected="group.index == user.group"> 
+                                        <% group.label %> 
+                                    </option>
                                 </select>
                             </div>
                         </div>

@@ -247,6 +247,7 @@ $(document).ready( function() {
 		}	
 	});
 */
+/*
 	$.ajax({
 		url: url[0] + "//" + url[2] + '/get_all_public_participants_for_user',
 		type: 'GET',
@@ -278,7 +279,7 @@ $(document).ready( function() {
 	       	}
 		}
 	});
-
+*/
 	$('body').removeClass('container').addClass('container-fluid');
 	
 	$(document).on('click', '#send_invitation-btn', function(){
@@ -317,7 +318,7 @@ $(document).ready( function() {
 			},3000);
 		}
 	});
-
+/*
 	$('#search-input-participant').on('keydown', function(e){
 		var code = e.which;
 		var search = $('#search-input-participant').val();
@@ -330,7 +331,7 @@ $(document).ready( function() {
 			$('#legend__results').remove();
 		}
 	});
-
+*/
 	$('#search-input-participant').on('focus', function(){
 		change_view('search');
 	});
@@ -787,7 +788,7 @@ $(document).ready( function() {
     });
 });
 
-function seaarch_participant(search){
+function seaarch_participant2(search){
 	var div = $('.addproposal--step__div ul');
 	$('#legend__results').remove();
 	$('.addproposal--step__div ul').find('li.participants__li__private').remove();
@@ -844,7 +845,7 @@ function seaarch_participant(search){
 		}
 	});
 }
-
+/*
 function follow_unfollow_participant(type, user){
 	if(type == 'Follow'){
 		var finalUrl = '/add_following_contact_to_user/'+user;
@@ -894,7 +895,7 @@ function follow_unfollow_participant(type, user){
 		}
 	});
 }
-
+*/
 function change_view(view){
 	if(view == 'search'){
 		$('.participant__general').fadeOut(500);
@@ -1012,7 +1013,16 @@ participantsVue = new Vue({
     	path_get_participant_followings: url[0] + "//" + url[2] + '/get_participant_followings_info/',
     	path_stop_follow_participant: url[0] + "//" + url[2] + '/remove_following_contact_to_user/',
     	path_follow_participant: url[0] + "//" + url[2] + '/add_following_contact_to_user/',
+    	path_get_public_participants: url[0] + "//" + url[2] + '/get_all_public_participants_for_user',
 		ideas: {},
+		public_participants: {},
+		myGroups: {
+			0: { index: 'no_organization', label: 'No organization' },
+			1: { index: 'earth_focus_foundation', label: 'Earth Focus Foundation' },
+			2: { index: 'greenpeace', label: 'Greenpeace' },
+		    3: { index: 'ysfc', label: 'YSfC' },
+		    4: { index: 'wwf', label: 'WWF' }
+		},
 		current_user: '',
 		ifallowed: false,
 		ifself: true,
@@ -1031,7 +1041,11 @@ participantsVue = new Vue({
 			data: {},
 			ifallowed: ''
 		},
-		propodas_to_change: ''
+		propodas_to_change: '',
+		search_bar: '',
+		private_user_searched: false,
+		searched_user: {},
+		loading_users: false
 	},
 	mounted: function(){
 		$('.cropme2').simpleCropper();
@@ -1041,6 +1055,7 @@ participantsVue = new Vue({
 		this.getParticipantIdeas();
 		this.getParticipantFollowers();
 		this.getParticipantFollowings();
+		this.getPublicParticipants();
 	},
 	methods: {
 		
@@ -1242,6 +1257,115 @@ participantsVue = new Vue({
 					self.participant.followings_num++;
 					self.getParticipantFollowings();
 					self.getParticipantFollowers();
+				}
+			});
+		},
+		
+		followUnfollowPublicParticipant: function(type, email, index, elem){
+			self = this;
+			if(type == "Follow"){
+				var _url =  self.path_follow_participant + email;
+				var _string = "Stop Following";
+				var _status = true;
+			} else {
+				var _url =  self.path_stop_follow_participant + email;
+				var _string = "Follow";
+				var _status = false;
+			}
+			$.ajax({
+				url: _url,
+				type: 'GET',
+				success: function (json) {	
+					if(json.result == 'OK'){
+						$(elem.target).val(_string);
+						self.public_participants[index].if_following = _status;
+						self.getParticipantFollowings();
+						self.getParticipantFollowers();
+						if(_status)
+							self.participant.followings_num++;
+						else
+							self.participant.followings_num--;
+					}
+				}
+			});
+		},
+		
+		getPublicParticipants: function(){
+			self = this;
+			$.ajax({
+				url: self.path_get_public_participants,
+				type: 'GET',
+				headers: {
+				'Content-Type': 'application/json'
+				},
+				dataType: 'json',
+				success: function(json) {
+					self.public_participants = json;
+					for(let i=0; i<self.public_participants.length;i++){
+						//self.public_participants[i].searched = true;
+						Vue.set(self.public_participants[i], 'searched', true);
+					}
+					setTimeout(function(){
+						self.removeParticipantsTitle();
+					}, 500);
+					
+				}
+			});
+		},
+		
+		removeParticipantsTitle: function(){
+			$('.legend__board').each(function(){
+				if($(this).parent().children('li').length == 0)
+					$(this).parent().remove();
+			});
+		},
+		
+		showParticipantsTitle: function(){
+			$('.legend__board').parent().each(function(){
+				var let_hide = 0;
+				padre = $(this);
+				padre.children('li').each(function(){
+					if($(this).css('display') == 'none'){
+						let_hide = 1;
+					} else {
+						let_hide = 0;
+					}
+				});
+				if(let_hide) padre.hide();
+				else padre.show();
+			});
+		},
+		
+		ifExists : function(key){
+			self = this;
+			for(let i=0; i < self.public_participants.length; i++){
+				var c_fullname = self.public_participants[i].fullname.toLowerCase();
+				var c_search = self.search_bar.toLowerCase();
+				if(c_fullname.indexOf(c_search) === -1){
+					self.public_participants[i].searched = false;
+				} else {
+					self.public_participants[i].searched = true;
+				}
+			}
+			setTimeout(function(){ self.showParticipantsTitle(); },1);
+			self.private_user_searched = false;
+			if(key == 13){
+				self.searchPrivate();
+			}
+		},
+		
+		searchPrivate: function(){
+			self = this;
+			self.loading_users = true;
+			$.ajax({
+				url: url[0] + "//" + url[2] + '/get_participant_data_by_email_unrestricted/'+self.search_bar,
+				type: 'GET',
+				success: function (json) {
+					if(json.result == 'OK'){
+						self.private_user_searched = true;
+						self.searched_user = json.participant_data;
+						self.loading_users = false;
+					}
 				}
 			});
 		}
