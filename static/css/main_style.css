@@ -1076,7 +1076,7 @@ p.duration--info {
     margin-right: auto;
 }
 input.form-control.invite__button:focus {
-    border-color: transparent!important;
+    border: 1px solid #3faf2e;
     outline: transparent!important;
     box-shadow: none;
 }
