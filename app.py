@@ -307,7 +307,9 @@ def get_participant_data(participant_email, user_email_DEBUG=None):
 #            'group': 'Marketing'
 #            'ideas_num': 5,
 #            'followers_num': 5,
-#            'followings_num': 2
+#            'followings_num': 2,
+#            'if_button_stop_following': true/false,
+#            'if_button_follow': true/false
 #        }
 @app.route('/get_participant_data_by_email_unrestricted/<participant_email>')
 @app.route('/get_participant_data_by_email_unrestricted/<participant_email>/<user_email_DEBUG>')

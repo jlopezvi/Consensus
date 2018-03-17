@@ -479,17 +479,31 @@ def _if_removed_following_contact_to_user(followingcontact_email, user_email) :
 # <Used by /get_participant_data_by_email_unrestricted>
 def _get_participant_summary_data_unrestricted(participant_email, user_email):
     from ideaManager import _get_ideas_created_by_participant_for_user
+    user = _get_participant_node(participant_email)
     participant = _get_participant_node(participant_email)
     participant_data= {}
     followers_num = len(_get_participant_followers(participant_email))
     followings_num = len(_get_participant_followings(participant_email))
     ideas_num = len(_get_ideas_created_by_participant_for_user(participant_email, user_email)['ideas_indices'])
+    # buttons for follow, stop-following:
+    if_button_stop_following = False
+    if_button_follow = False
+    # 1. user following --> button "stop following"
+    if _getIfContactRelationshipExists(user, participant):
+        if_button_stop_following = True
+    elif participant == user:
+        pass
+    else:
+        if_button_follow = True
+    #
     participant_data.update({'id': participant_email,'profilepic_url': participant['profilepic_url'],
                              'username': participant['username'], 'fullname': participant['fullname'],
                              'position': participant['position'], 'group': participant['group'],
                              'ideas_num': ideas_num,
                              'followers_num': followers_num,
-                             'followings_num': followings_num})
+                             'followings_num': followings_num,
+                             'if_button_stop_following': if_button_stop_following,
+                             'if_button_follow':if_button_follow})
     return {"result": "OK", "participant_data": participant_data}
 
 
