@@ -1014,6 +1014,8 @@ participantsVue = new Vue({
     	path_stop_follow_participant: url[0] + "//" + url[2] + '/remove_following_contact_to_user/',
     	path_follow_participant: url[0] + "//" + url[2] + '/add_following_contact_to_user/',
     	path_get_public_participants: url[0] + "//" + url[2] + '/get_all_public_participants_for_user',
+    	path_private_user_info: url[0] + "//" + url[2] + '/get_participant_data_by_email_unrestricted/',
+    	path_validate_if_user_exists: url[0] + "//" + url[2] + '/if_participant_exists_by_email/',
 		ideas: {},
 		public_participants: {},
 		myGroups: {
@@ -1045,7 +1047,8 @@ participantsVue = new Vue({
 		search_bar: '',
 		private_user_searched: false,
 		searched_user: {},
-		loading_users: false
+		loading_users: false,
+		searched_error: true
 	},
 	mounted: function(){
 		$('.cropme2').simpleCropper();
@@ -1329,6 +1332,7 @@ participantsVue = new Vue({
 						let_hide = 1;
 					} else {
 						let_hide = 0;
+						return false;
 					}
 				});
 				if(let_hide) padre.hide();
@@ -1338,6 +1342,7 @@ participantsVue = new Vue({
 		
 		ifExists : function(key){
 			self = this;
+			self.private_user_searched = false;
 			for(let i=0; i < self.public_participants.length; i++){
 				var c_fullname = self.public_participants[i].fullname.toLowerCase();
 				var c_search = self.search_bar.toLowerCase();
@@ -1347,24 +1352,43 @@ participantsVue = new Vue({
 					self.public_participants[i].searched = true;
 				}
 			}
-			setTimeout(function(){ self.showParticipantsTitle(); },1);
-			self.private_user_searched = false;
+			setTimeout(function(){ self.showParticipantsTitle(); },50);
 			if(key == 13){
-				self.searchPrivate();
+				self.validateIfEmailExists();
+			}
+		},
+		
+		validateIfEmailExists: function(){
+			self = this;
+			if (self.search_bar.replace(/^\s+|\s+$/g, "").length != 0){
+				var _search = self.search_bar.trim();
+				self.private_user_searched = true;
+				self.loading_users = true;
+				$.ajax({
+					url: self.path_validate_if_user_exists + _search,
+					type: 'GET',
+					success: function(json) {
+						self.searched_error = json.result;
+						if(!json.result){
+							self.loading_users = false;
+						} else {
+							self.searchPrivate();
+						}
+					}
+				});
 			}
 		},
 		
 		searchPrivate: function(){
 			self = this;
-			self.loading_users = true;
+			var _search = self.search_bar.trim();
 			$.ajax({
-				url: url[0] + "//" + url[2] + '/get_participant_data_by_email_unrestricted/'+self.search_bar,
+				url: self.path_private_user_info + _search,
 				type: 'GET',
 				success: function (json) {
 					if(json.result == 'OK'){
-						self.private_user_searched = true;
 						self.searched_user = json.participant_data;
-						self.loading_users = false;
+						setTimeout(function(){ self.loading_users = false; },150);
 					}
 				}
 			});
