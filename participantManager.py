@@ -479,7 +479,7 @@ def _if_removed_following_contact_to_user(followingcontact_email, user_email) :
 # <Used by /get_participant_data_by_email_unrestricted>
 def _get_participant_summary_data_unrestricted(participant_email, user_email):
     from ideaManager import _get_ideas_created_by_participant_for_user
-    user = _get_participant_node(participant_email)
+    user = _get_participant_node(user_email)
     participant = _get_participant_node(participant_email)
     participant_data= {}
     followers_num = len(_get_participant_followers(participant_email))
