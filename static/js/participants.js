@@ -1264,13 +1264,13 @@ participantsVue = new Vue({
 			});
 		},
 		
-		followUnfollowPublicParticipant: function(type, email, index, elem){
+		followUnfollowPublicParticipant: function(type, email, index, elem, opt = null){
 			self = this;
-			if(type == "Follow"){
+			if($(elem.target).val() == 'Follow'){
 				var _url =  self.path_follow_participant + email;
 				var _string = "Stop Following";
 				var _status = true;
-			} else {
+			} else if($(elem.target).val() == 'Stop Following') {
 				var _url =  self.path_stop_follow_participant + email;
 				var _string = "Follow";
 				var _status = false;
@@ -1281,7 +1281,11 @@ participantsVue = new Vue({
 				success: function (json) {	
 					if(json.result == 'OK'){
 						$(elem.target).val(_string);
-						self.public_participants[index].if_following = _status;
+						if(opt != 1)
+							self.public_participants[index].if_following = _status;
+						else {
+							self.getPublicParticipants();
+						}
 						self.getParticipantFollowings();
 						self.getParticipantFollowers();
 						if(_status)

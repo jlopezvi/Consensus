@@ -57,16 +57,17 @@
                             <li>
                                 <img class="new--user--icon--login" :src="searched_user.profilepic_url">
                                 <p>
-                                    <a href="#"> <% searched_user.fullname %> </a>
+                                    <a :href="'/participants'" v-if="searched_user.id == logged_user"><% searched_user.fullname %></a>
+                                    <a :href="'/participants/' + searched_user.id" v-else><% searched_user.fullname %></a>
         	       		            <br><label> <% searched_user.position %> </label>
                		            </p>
         	       		        <input class="form-control invite__button" type="button" id="btn-follow" 
         	       		          v-if="searched_user.if_button_stop_following" 
         	       		          value="Stop Following"
-        	       		          @click="followUnfollowPublicParticipant('unFollow',searched_user.id,index,$event)">
+        	       		          @click="followUnfollowPublicParticipant('unFollow',searched_user.id,0,$event,1)">
         	       		        <input class="form-control invite__button" type="button" id="btn-follow" 
         	       		          v-if="searched_user.if_button_follow" value="Follow"
-        	       		          @click="followUnfollowPublicParticipant('Follow',searched_user.id,index,$event)">
+        	       		          @click="followUnfollowPublicParticipant('Follow',searched_user.id,0,$event,1)">
                		        </li>
            		        </div>
            		        <div v-show="searched_error == false">
@@ -83,7 +84,9 @@
                               v-show="p_participant.searched">
                                 <img class="new--user--icon--login" :src="p_participant.profilepic_url">
                                 <p>
-                                    <a href="#"> <% p_participant.fullname %> </a>
+                                    
+                                    <a :href="'/participants'" v-if="p_participant.email == logged_user"><% p_participant.fullname %></a>
+                                    <a :href="'/participants/' + p_participant.email" v-else><% p_participant.fullname %></a>
         	       		            <br><label> <% p_participant.position %> </label>
                		            </p>
         	       		        <input class="form-control invite__button" type="button" id="btn-follow" 
