@@ -996,8 +996,8 @@ function isValidEmailAddress(emailAddress) {
 function showHideGroups(){
 	if($('.no_organization li').length > 0)
 		$('.no_organization').show();
-	if($('.ysfc li').length > 0)
-		$('.ysfc').show();
+	if($('.syfc li').length > 0)
+		$('.syfc').show();
 }
 
 participantsVue = new Vue({
@@ -1022,7 +1022,7 @@ participantsVue = new Vue({
 			0: { index: 'no_organization', label: 'No organization' },
 			1: { index: 'earth_focus_foundation', label: 'Earth Focus Foundation' },
 			2: { index: 'greenpeace', label: 'Greenpeace' },
-		    3: { index: 'ysfc', label: 'YSfC' },
+		    3: { index: 'syfc', label: 'SYfC' },
 		    4: { index: 'wwf', label: 'WWF' }
 		},
 		current_user: '',

@@ -6,7 +6,7 @@ var myGroups = {
 	no_organization: 'No organization',
 	earth_focus_foundation: 'Earth Focus Foundation',
 	greenpeace: 'Greenpeace',
-    ysfc: 'YSfC',
+    syfc: 'SYfC',
     wwf: 'WWF'
 };
 
