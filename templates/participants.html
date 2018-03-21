@@ -64,10 +64,10 @@
         	       		        <input class="form-control invite__button" type="button" id="btn-follow" 
         	       		          v-if="searched_user.if_button_stop_following" 
         	       		          value="Stop Following"
-        	       		          @click="followUnfollowPublicParticipant('unFollow',searched_user.id,0,$event,1)">
+        	       		          @click="followUnfollowPublicParticipant(searched_user.id,0,$event,1)">
         	       		        <input class="form-control invite__button" type="button" id="btn-follow" 
         	       		          v-if="searched_user.if_button_follow" value="Follow"
-        	       		          @click="followUnfollowPublicParticipant('Follow',searched_user.id,0,$event,1)">
+        	       		          @click="followUnfollowPublicParticipant(searched_user.id,0,$event,1)">
                		        </li>
            		        </div>
            		        <div v-show="searched_error == false">
@@ -91,10 +91,10 @@
                		            </p>
         	       		        <input class="form-control invite__button" type="button" id="btn-follow" 
         	       		          v-if="p_participant.if_following" value="Stop Following"
-        	       		          @click="followUnfollowPublicParticipant('unFollow',p_participant.email,index,$event)">
+        	       		          @click="followUnfollowPublicParticipant(p_participant.email,index,$event,0)">
         	       		        <input class="form-control invite__button" type="button" id="btn-follow" 
         	       		          v-else value="Follow"
-        	       		          @click="followUnfollowPublicParticipant('Follow',p_participant.email,index,$event)">
+        	       		          @click="followUnfollowPublicParticipant(p_participant.email,index,$event,0)">
                		        </li>
            		        </div>
        		        </div>

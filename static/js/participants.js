@@ -161,125 +161,6 @@ $(document).ready( function() {
 			}	
 		});
 	}
-	//getIdeasCreatedByParticipant();
-
-	//GET ALL INFORMATION OF CURRENT LOGGED USER OR SEARCHED
-	/*
-	function getCurrentUserInfo(){
-		$.ajax({
-			url: url[0] + "//" + url[2] + '/get_participant_data_by_email_unrestricted/'+current_email,
-			type: 'GET',
-			success: function (json) {
-				////console.log(json);
-				$('.profile--picture img').attr('src', json.participant_data.profilepic_url);
-				$('.participant__name a').empty().append(json.participant_data.username);
-				$('.participant__name label').empty().append(json.participant_data.fullname);
-				$('.participant__active--p').children().first().empty().append(json.participant_data.ideas_num);
-				$('.participant__following').children().first().empty().append(json.participant_data.followings_num);
-				$('.participant__followers').children().first().empty().append(json.participant_data.followers_num);
-			}	
-		});
-	}
-	*/
-	//getCurrentUserInfo();
-	/*
-	//GET ALL FOLLOWERS OF CURRENT LOGGED USER OR SEARCHED
-	$.ajax({
-		url: url[0] + "//" + url[2] + '/get_participant_followers_info/'+current_email,
-		type: 'GET',
-		success: function (json) {
-				////console.log(json);
-				if (json.ifallowed == false) {
-					$('#menu1 ul').append('<center><h3 >User private</h3></center>');
-				}else{		
-				followerList = '';	
-				for(var i = 0; i < json.followers_num; i++){
-					followerList += '<li>';
-					var _if_show = 'inline';
-					if(url.length > 4)
-						_if_show = 'none';
-					followerList += '<input value="'+json.followers_info[i].email+'" class="checkbox check--followers" type="checkbox" name="check[]" style="display:'+_if_show+';">';
-					followerList += '<img class="new--user--icon--login" src="'+json.followers_info[i].profilepic_url+'">'
-					followerList += '<p><a href="#">'+json.followers_info[i].username+'</a>';					
-					followerList += '<br>'+json.followers_info[i].fullname+'</p></li>';
-				}
-				if ($('#participant_email').val() != 'None' && json.followers_num == 0){
-					$('#menu1 ul').append('<center><h3 >this user has no followers</h3></center>');
-				}else if (json.followers_num != 0) {
-					$('#menu1 ul').append(followerList);
-				}else{
-					$('#menu1 ul').append('<center><h3 >No one is following you</h3></center>');
-				}					
-			}
-		}
-
-	});
-	*/
-	//GET ALL FOLLOWINGS OF CURRENT LOGGED USER OR SEARCHED
-/*	
-	$.ajax({
-		url: url[0] + "//" + url[2] + '/get_participant_followings_info/'+current_email,
-		type: 'GET',
-		success: function (json) {
-			////console.log(json);
-				if (json.ifallowed == false){
-					$('#home ul').append('<center><h3>User private</h3></center>');
-				}else{
-				followingList = '';	
-				for(var i = 0; i < json.followings_num; i++){
-					followingList += '<li>';
-					var _if_show = 'inline';
-					if(url.length > 4)
-						_if_show = 'none';
-					followingList += '<input value="'+json.followings_info[i].email+'" class="checkbox check--followers" type="checkbox" name="check[]" style="display:'+_if_show+';">';
-					followingList += '<img class="new--user--icon--login" src="'+json.followings_info[i].profilepic_url+'">';
-					followingList += '<p><a href="#">'+json.followings_info[i].username+'</a>';					
-					followingList += '<br>'+json.followings_info[i].fullname+'</p></li>';
-				}
-				if ($('#participant_email').val() != 'None' && json.followings_num == 0){
-					$('#home ul').append('<center><h3 >this user has no followings</h3></center>');
-				}else if (json.followings_num != 0) {
-					$('#home ul').append(followingList);
-				}else{
-					$('#home ul').append('<center><h3 id="msg">You are following no one</h3></center>');
-				}
-			}					
-		}	
-	});
-*/
-/*
-	$.ajax({
-		url: url[0] + "//" + url[2] + '/get_all_public_participants_for_user',
-		type: 'GET',
-		headers: {
-		'Content-Type': 'application/json'
-		},
-		dataType: 'json',
-		success: function(json) {
-			// console.log(json);
-	       	for (var i = 0; i < json.length; i++) {
-	       		if_following = '';
-	       		if(json[i].if_following)
-	       			if_following = 'value="Unfollow"';
-	       		else
-	       			if_following = 'value="Follow"';
-	       		newParti = '';
-	       		newParti += '<li><img class="new--user--icon--login" src="'+json[i].profilepic_url+'"><p>'; 
-	       		newParti += '<a href="#">'+json[i].fullname+'</a>';
-	       		newParti += '<br><label>'+json[i].position+'</label></p>';
-	       		newParti += '<input type="hidden" value="'+json[i].email+'">';
-	       		newParti += '<input class="form-control invite__button" type="button" '+if_following+' id="btn-follow"></li>';
-
-				for (var index in myGroups) {
-					if(json[i].group == index){
-						$('.'+index).show();
-	       				$('.'+index).append(newParti);
-					}
-				}
-	       	}
-		}
-	});
-*/
 	$('body').removeClass('container').addClass('container-fluid');
 	
 	$(document).on('click', '#send_invitation-btn', function(){
@@ -318,20 +199,6 @@ $(document).ready( function() {
 			},3000);
 		}
 	});
-/*
-	$('#search-input-participant').on('keydown', function(e){
-		var code = e.which;
-		var search = $('#search-input-participant').val();
-		if(code == 13){
-			e.preventDefault();
-			seaarch_participant(search);
-		} else if(code == 8){
-			showHideGroups();
-			$('.addproposal--step__div ul').find('li.participants__li__private').remove();
-			$('#legend__results').remove();
-		}
-	});
-*/
 	$('#search-input-participant').on('focus', function(){
 		change_view('search');
 	});
@@ -346,16 +213,6 @@ $(document).ready( function() {
 	$(document).on('click', '.back__button', function(){
 		change_view('participant');
 	});
-
-	$(document).on('click', '#btn-follow', function(){
-		var type = $(this).val();
-		var user = $(this).prev().val();
-		follow_unfollow_participant(type, user);
-		if(type == 'Follow')
-			$(this).val('Unfollow');
-		else
-			$(this).val('Follow');
-	});	
 
 	$("#change-photo").on('change', function () {
         if (typeof (FileReader) != "undefined") {
@@ -376,17 +233,6 @@ $(document).ready( function() {
             alert("This browser does not support FileReader.");
         }
     });
-/*
-    $(document).on('click', '.addproposal--step2 li a', function(e){
-    	e.preventDefault();
-    	var redirect = $(this).parent().parent().children('input').val();
-    	if($('#host_email').val() == redirect)
-    		window.location = '/participants';
-    	else
-    		window.location = '/participants/'+redirect;
-
-    });
-*/
     $(document).on('click', '.public--all', function(){
     	$('#Public--profile').prop("checked", true);
     	$('#Supporting--proposals--visible').prop("checked", true);
@@ -400,34 +246,7 @@ $(document).ready( function() {
     	$('#Rejecting--proposals--visible').prop("checked", false);
     	$('.public--all').prop("checked", false);
     });
-/*
-    $.ajax({
-		url: url[0] + "//" + url[2] + '/get_user_data',
-		type: 'GET',
-		headers: {
-		'Content-Type': 'application/json'
-		},
-		dataType: 'json',
-		success: function (json) {
-			////console.log(json.data);
-			$('#p_fullname').val(''+json.data.fullname+'');
-			$('#p_username').val(''+json.data.username+'');
-			$('#p_email').val(''+json.data.email+'');
-			$('#p_confirm-e').val(''+json.data.email+'');
-			$('#p_position').val(''+json.data.position+'');
-			$('#p_group').val(''+json.data.group+'');
-			$('#cropme_profile_edit').append('<img style="with:100px;height:100px;" src='+json.data.profilepic_url+'>');
-			img_validator = json.data.profilepic_url;
-			if(json.data.ifpublicprofile)
-				$('#Public--profile').prop('checked', true);
-			if(json.data.ifrejectingproposalsvisible)
-				$('#Rejecting--proposals--visible').prop('checked', true);
-			if(json.data.ifsupportingproposalsvisible)
-				$('#Supporting--proposals--visible').prop('checked', true);
-		}					
-				
-	});
-*/
+    
     $(document).on('click', '#modify--user', function(){
     	
       	optionpro = false;
@@ -502,15 +321,6 @@ $(document).ready( function() {
 			success: function (json) {
       			$('#loader--general').hide();
       			participantsVue.removeIdea(participantsVue.idea_to_delete.proposal);
-      			/*
-				$('.this-idea').remove();
-				$('.activess').empty();	
-				$('.activess').append(activepub-1);
-				var vali = parseInt($('.activess').text());
-				if (vali <= 0) {
-					$('#newIdea').append('<center><h3>You have no active publications</h3></center>');
-				}
-				*/
 			}	
 		});
 
@@ -788,114 +598,6 @@ $(document).ready( function() {
     });
 });
 
-function seaarch_participant2(search){
-	var div = $('.addproposal--step__div ul');
-	$('#legend__results').remove();
-	$('.addproposal--step__div ul').find('li.participants__li__private').remove();
-	$.ajax({
-		url: url[0] + "//" + url[2] + '/get_participant_data_by_email_unrestricted/'+search,
-		type: 'GET',
-		success: function (json) {
-			////console.log(json);
-			var _exists = false;
-			$('.addproposal--step2').find('legend').find('li input').each(function(){
-				if($(this).val() == json.participant_data.id)
-					return _exists = true;
-			});
-			if(json.result == 'OK'){
-				$('.spinner').show();
-				var newAppend = '';
-            	newAppend += '<li class="participants__li__private">';
-            	newAppend += '<img class="new--user--icon--login" src="'+json.participant_data.profilepic_url+'"><p>';
-            	newAppend += '<a href="#">'+json.participant_data.fullname+'</a>'; 
-            	newAppend += '<br>'+json.participant_data.position+'</p>';
-            	newAppend += '<input type="hidden" value="'+json.participant_data.id+'">';
-            	if($('#host_email').val() != search)
-                	newAppend += '<input class="form-control invite__button" type="button" value="Follow" id="btn-follow"></li>';
-                else
-                	newAppend += '<input class="form-control invite__button" type="button" value="It´s you" disabled></li>';
-                
-                setTimeout(function(){
-                	$('.spinner').hide();
-					$('.addproposal--step__div ul').find('li.participants__li__private').remove();	
-
-					for (var index2 in myGroups) {
-						$('.'+index2).hide();
-					}
-					for (var index in myGroups) {
-						if (json.participant_data.group == index) {
-	       					$('.'+index).show();
-							if(!_exists)
-		       					$('.'+index).append(newAppend);
-						}
-					}
-				}, 2000);
-			}
-		},
-		error: function(response){
-			$('.spinner').show();
-			$('#legend__board').hide();
-			setTimeout(function(){
-				$('.spinner').hide();
-				for (var index2 in myGroups) {
-					$('.'+index2).hide();
-				}
-				div.prepend('<legend id="legend__results">No results for: '+search+'</legend>');
-			}, 2000);
-		}
-	});
-}
-/*
-function follow_unfollow_participant(type, user){
-	if(type == 'Follow'){
-		var finalUrl = '/add_following_contact_to_user/'+user;
-		$('#home ul li').remove();
-		$('#home ul center h3').remove();
-	}else{
-		var finalUrl = '/remove_following_contact_to_user/'+user;
-		$('#home ul li').remove();
-		$('#home ul center h3').remove();
-	}
-	$.ajax({
-		url: url[0] + "//" + url[2] + finalUrl,
-		type: 'GET',
-		success: function (json) {
-			var count = $('.participant__following').children().first().text();
-			if(type=='Follow')
-				count++;
-			else
-				count--;
-			$('.participant__following').children().first().text(count);
-			current_email = $('#host_email').val();
-			$.ajax({
-				url: url[0] + "//" + url[2] + '/get_participant_followings_info/'+current_email,
-				type: 'GET',
-				success: function (json) {
-			////console.log(json);
-				followingList = '';	
-				for(var i = 0; i < json.followings_num; i++){
-					followingList += '<li><input value="'+json.followings_info[i].email+'" class="checkbox check--followers" type="checkbox" name="check[]">';
-					followingList += '<img class="new--user--icon--login" src="'+json.followings_info[i].profilepic_url+'">';
-					followingList += '<p><a href="#">'+json.followings_info[i].username+'</a>';					
-					followingList += '<br>'+json.followings_info[i].fullname+'</p></li>';
-				}
-				if ($('#participant_email').val() != 'None' && json.followings_num == 0){
-					$('#home ul').append('<center><h3 >this user has no followings</h3></center>');
-				}else if (json.followings_num != 0) {
-					$('#home ul').append(followingList);
-				}else{
-					$('#home ul').append('<center><h3 id="msg">You are following no one</h3></center>');
-				}
-			}					
-				
-		});
-		},
-		error: function (response) {
-			alert('Sorry, something went wrong. Try again later.');		
-		}
-	});
-}
-*/
 function change_view(view){
 	if(view == 'search'){
 		$('.participant__general').fadeOut(500);
@@ -911,81 +613,6 @@ function change_view(view){
 		}, 500);
 	}
 }
-
-
-$(document).ready(function(){	
-	/*
-    $('#unfollow-parti').on('click',function(){
-        var selected = '';    
-        $('#following li input[type=checkbox]').each(function(){
-            if (this.checked) {
-                selected = $(this).val();          	            																															
-				$.ajax({
-					url: url[0] + "//" + url[2] + '/remove_following_contact_to_user/'+selected,
-					type: 'GET',
-					success: function (json) {	
-						$('#following li input:checked').parent().fadeOut('slow');
-						$('#following center h3').show('slow');
-					},
-					error: function (response) {
-						alert('you have to select a participant that you want stop follow');		
-					}
-				});
-			}		
-        }); 
-        alert('Has stopped following the participants');  
-        var resta = $('#following li input:checked').length;
-		var num = parseFloat($('.followingss').text());	
-		$('.followingss').empty();	
-		$('.followingss').append(num-resta);  
-    });         
-  
-    $('#follow-parti').on('click',function(){
-        var selectedfollow = '';   	 
-        $('#followers li input[type=checkbox]').each(function(){
-            if (this.checked) {
-                selectedfollow = $(this).val();                                																																
-				$.ajax({
-					url: url[0] + "//" + url[2] + '/add_following_contact_to_user/'+selectedfollow,
-					type: 'GET',
-					success: function (json) {
-						
-					},
-					error: function (response) {
-						alert('you have to select a participant that you want follow');		
-					}
-				});
-			}
-        }); 
-        alert('Participants have been followed');   
-        var resta = $('#followers li input:checked').length;
-		var num = parseFloat($('.followingss').text());	
-		$('.followingss').empty();	
-		$('.followingss').append(num+resta); 
-
-		$('#followers li input[type=checkbox]').each(function(){
-            if (this.checked) {
-                selectedfollow = $(this).val();                                																																
-				$.ajax({
-					url: url[0] + "//" + url[2] + '/get_participant_data_by_email_unrestricted/'+selectedfollow,
-					type: 'GET',
-					success: function (json) {	
-						var folloNew = '';
-						folloNew += '<li><input value="'+json.participant_data.id+'" class="checkbox check--followers" type="checkbox" name="check[]">';
-						folloNew += '<img class="new--user--icon--login" src="'+json.participant_data.profilepic_url+'">';
-						folloNew += '<p><a href="#">'+json.participant_data.username+'</a>';					
-						folloNew += '<br>'+json.participant_data.fullname+'</p></li>';			
-						$('#home ul').append(folloNew);
-						$('#msg').hide();
-
-					}		
-				});
-			}
-        }); 
-    });  
-*/
-
-});
 
 function isValidEmailAddress(emailAddress) {
 	var pattern = /^([a-z\d!#$%&'*+\-\/=?^_`{|}~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+(\.[a-z\d!#$%&'*+\-\/=?^_`{|}~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+)*|"((([ \t]*\r\n)?[ \t]+)?([\x01-\x08\x0b\x0c\x0e-\x1f\x7f\x21\x23-\x5b\x5d-\x7e\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|\\[\x01-\x09\x0b\x0c\x0d-\x7f\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))*(([ \t]*\r\n)?[ \t]+)?")@(([a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-z\d\-._~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]*[a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])\.)+([a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-z\d\-._~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]*[a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])\.?$/i;
@@ -1054,17 +681,17 @@ participantsVue = new Vue({
 		$('.cropme2').simpleCropper();
 		this.getCurrentUser();
 		this.getParticipantPage();
-		this.getParticipantInfo();
-		this.getParticipantIdeas();
+		this.getParticipantInfo(0);
+		this.getParticipantIdeas(0);
 		this.getParticipantFollowers();
 		this.getParticipantFollowings();
 		this.getPublicParticipants();
 	},
 	methods: {
 		
-		getParticipantInfo: function(modify = 0){
+		getParticipantInfo: function(modify){
 			self = this;
-			if(modify){
+			if(modify == 1){
 				if(self.logged_user != $('#p_confirm-e').val())
 					self.logged_user = self.current_user = $('#p_confirm-e').val();
 			}
@@ -1077,7 +704,7 @@ participantsVue = new Vue({
 			});
 		},
 		
-		getParticipantIdeas: function(ifmodify = null){
+		getParticipantIdeas: function(ifmodify){
 			self = this;
 			$.ajax({
 				url: self.path_get_ideas + self.current_user,
@@ -1085,7 +712,7 @@ participantsVue = new Vue({
 				success: function(json) {
 					self.ideas = json.ideas_data;
 					self.ifallowed = json.ifallowed;
-					if(ifmodify)
+					if(ifmodify == 1)
       					$('#loader--general').hide();
 				}
 			});
@@ -1264,7 +891,7 @@ participantsVue = new Vue({
 			});
 		},
 		
-		followUnfollowPublicParticipant: function(type, email, index, elem, opt = null){
+		followUnfollowPublicParticipant: function(email, index, elem, opt){
 			self = this;
 			if($(elem.target).val() == 'Follow'){
 				var _url =  self.path_follow_participant + email;
@@ -1275,6 +902,7 @@ participantsVue = new Vue({
 				var _string = "Follow";
 				var _status = false;
 			}
+			alert(_url + '\n' + _string + ' / '+ _status);
 			$.ajax({
 				url: _url,
 				type: 'GET',
@@ -1308,7 +936,7 @@ participantsVue = new Vue({
 				dataType: 'json',
 				success: function(json) {
 					self.public_participants = json;
-					for(let i=0; i<self.public_participants.length;i++){
+					for(var i=0; i<self.public_participants.length;i++){
 						//self.public_participants[i].searched = true;
 						Vue.set(self.public_participants[i], 'searched', true);
 					}
@@ -1347,7 +975,7 @@ participantsVue = new Vue({
 		ifExists : function(key){
 			self = this;
 			self.private_user_searched = false;
-			for(let i=0; i < self.public_participants.length; i++){
+			for(var i=0; i < self.public_participants.length; i++){
 				var c_fullname = self.public_participants[i].fullname.toLowerCase();
 				var c_search = self.search_bar.toLowerCase();
 				if(c_fullname.indexOf(c_search) === -1){
