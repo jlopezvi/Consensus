@@ -902,7 +902,6 @@ participantsVue = new Vue({
 				var _string = "Follow";
 				var _status = false;
 			}
-			alert(_url + '\n' + _string + ' / '+ _status);
 			$.ajax({
 				url: _url,
 				type: 'GET',
