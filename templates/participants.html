@@ -122,7 +122,7 @@
                             <label><% participant.fullname %></label>
                         </div>
                     </div>
-                    <div class="col-sm-3 info2__col info2__col--first">
+                    <div class="col-sm-2 info2__col info2__col--first">
                         <div class="participant__active--p">
                             <label class="activess"><% participant.ideas_num %></label><br>
                             <label> Active publications </label>
@@ -140,10 +140,18 @@
                             <label> Following </label>
                         </div>
                     </div>
-                    <div class="col-sm-1 setting__adapt" @click="editParticipant">
+                    <div class="col-sm-2 setting__adapt" @click="editParticipant" v-if="logged_user == current_user">
                         <div class="participant__setting">
                             <span data-toggle="modal" data-target="#modal_participant" class="glyphicon glyphicon-cog"></span>
                         </div>
+                    </div>
+                    <div class="col-sm-2 follow--another__participant" v-else>
+                        <input type="button" class="form-control invite__button non--self--participant__action" 
+                          value="Follow" v-if="participant.if_button_follow"
+                          @click="followAnotherParticipant(current_user,$event)">
+                        <input type="button" class="form-control invite__button non--self--participant__action" 
+                          value="Stop Following" v-if="participant.if_button_stop_following"
+                          @click="followAnotherParticipant(current_user,$event)">
                     </div>
                 </div>
             </div>

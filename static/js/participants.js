@@ -6,161 +6,6 @@ var img_validator;
 
 $(document).ready( function() {
 	
-	if($('#participant_email').val() == 'None')
-		var current_email = $('#host_email').val();
-	else {
-		var current_email = $('#participant_email').val();
-		$('.setting__adapt').hide();
-		$('.participant__invite').hide();
-		$('#follow-parti').hide();
-    	$('#unfollow-parti').hide();
-    	$('#newIdea').css('margin-top', '90px');
-	}
-	
-	//GET ALL INFORMATION OF ALL IDEAS CREATED BY PARTICIPANT
-	function getIdeasCreatedByParticipant(){
-		$.ajax({
-			url: url[0] + "//" + url[2] + '/get_ideas_data_created_by_participant/'+current_email,
-			type: 'GET',
-			success: function (json) {	
-				
-				////console.log(json);
-				var bars_wo_user = '';
-				var newIdea = '';
-				var url_new = url[0] +'//'+ url[2] +'/static/';
-				for (var i = 0; i < json.ideas_data.length; i++) {
-					newIdea += '<div class="col-sm-12" style="margin-top:25px;"><div class="row home--header home--header2">';
-					newIdea += '<input type="hidden" class="idea__id" value="'+json.ideas_data[i].proposal+'">';
-					// IF IDEA DOESNT HAVE ANONYMOUS AUTHOR 
-					if(json.ideas_data[i].if_author_public){
-						bars_wo_user = 'right: -40px;';
-						newIdea += '<div class="col-sm-1" style="padding-left: 0px;">';
-						newIdea += '<div class="home--profile--picture"><img class="img-circle new--user--icon--login" id="img-modify" src="'+json.ideas_data[i].author_profilepic_url+'"></div></div><div class="col-sm-3 home--name">';
-						newIdea += '<a href="#" id="name--modify">'+json.ideas_data[i].author_username+'</a>';
-						newIdea += '</div><div class="col-sm-3 newsfeed--duration participant__duration"><p><img style="width: 15px;position: relative;top: -3px;" src="'+url_new+'images/clock-icon.png">';
-						newIdea += '<p class="duration--info">'+json.ideas_data[i].duration+'</p></p></div>';
-					
-					} else {
-						newIdea += '<div class="col-sm-3 newsfeed--duration"><p><img style="width: 15px;position: relative;top: -3px;" src="'+url_new+'images/clock-icon.png">';
-						newIdea += '<p class="duration--info">'+json.ideas_data[i].duration+'</p></p></div>';
-						newIdea += '<div class="col-sm-1" style="padding-left: 0px;"></div>';
-						newIdea += '<div class="col-sm-3 home--name"></div>';
-					}
-					
-					
-					var supporters_percent = json.ideas_data[i].supporters_num*100/json.ideas_data[i].supporters_goal_num;
-					if (json.ideas_data[i].volunteers_goal_num > 0) {
-						newIdea += '<div class="col-sm-3 home--charge"><div class="progress home--progress home--new--bars">';
-						newIdea += '<div class="progress-bar newsfeed--bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:'+supporters_percent+'%;"></div></div>';
-						newIdea += '<div class="progress home--progress2 home--new--bars">';
-					}else{
-						newIdea += '<div class="col-sm-3 home--charge" style="top: 19px!important;"><div class="progress home--progress home--new--bars">';
-						newIdea += '<div class="progress-bar newsfeed--bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:'+supporters_percent+'%;"></div></div>';
-						newIdea += '<div>';
-					}
-					var volunteers_percent = json.ideas_data[i].volunteers_num*100/json.ideas_data[i].volunteers_goal_num;
-					newIdea += '<div class="progress-bar newsfeed--bar2" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:'+volunteers_percent+'%;"></div></div></div>';
-					
-					if (json.ideas_data[i].volunteers_goal_num > 0) {
-						newIdea += '<div class="col-sm-3 newsfeed--goals newsfeed--goals2" style="'+bars_wo_user+'"><p>'+json.ideas_data[i].supporters_num+'/'+json.ideas_data[i].supporters_goal_num+' supporters';
-						newIdea += '<br>'+json.ideas_data[i].volunteers_num+'/'+json.ideas_data[i].volunteers_goal_num+' volunteers';
-						newIdea += '</p></div></div><div class="row home--proposals--body home--proposals--body2" style="background-image: url('+json.ideas_data[i].image_url+'); padding-top:47.40%;"><div class="col-sm-12 concern__div">';
-					} else {
-						newIdea += '<div class="col-sm-3 newsfeed--goals newsfeed--goals2" style="top: 12px!important;'+bars_wo_user+'"><p>'+json.ideas_data[i].supporters_num+'/'+json.ideas_data[i].supporters_goal_num+' supporters';
-						newIdea += '</p></div></div><div class="row home--proposals--body home--proposals--body2" style="background-image: url('+json.ideas_data[i].image_url+'); padding-top:47.40%;"><div class="col-sm-12 concern__div">';
-						
-					}
-					
-					newIdea += '<div class="col-sm-11 newsfeed--problem">'+json.ideas_data[i].concern+'</div></div><div class="col-sm-12">';
-					newIdea += '<div class="col-sm-11 col-sm-offset-1 newsfeed--proposal">'+json.ideas_data[i].proposal+'</div></div></div> <input type="hidden" value="'+json.ideas_data[i].idea_id+'" id="idea__id">';
-					newIdea += '<div class="row newsfeed--footer"><div class="col-sm-12" style="padding-right: 0px; padding-left: 0px;">';
-					newIdea += '<div class="col-sm-9 newsfeed--support" style="padding-right:0;padding-left:30px;">';
-					
-					newIdea += '<input type="text" value="'+json.ideas_data[i].support_rate+'" id="percent" hidden><div class="input--percent">';
-					newIdea += '<label> Support Rate: '+json.ideas_data[i].support_rate+'% </label></div></div>';
-					newIdea += '<div class="col-sm-1 redflag--img"><input type="hidden" class="id" value="'+json.ideas_data[i].proposal+'"><img class="redflag" src="'+url_new+'images/redflag.png"></div>';
-					newIdea += '<div class="col-sm-2 neewsfeed--moreinfo" style="float:right;">';
-					newIdea += '<input type="button" name="more-info" class="home--button"></div><div id="more--info--modal" hidden><p><h4>  More information about the problem: </h4> '+json.ideas_data[i].moreinfo_concern+'</br></br><h4> More information about the proposal: </h4>'+json.ideas_data[i].moreinfo_proposal+'</p></div></div></div>';
-					
-					if(url.length == 4)
-						newIdea += '<div class="row home--share home--share2" style="top: -18px;"><div class="col-sm-12 home--share--icons">';
-					else
-						newIdea += '<div class="row home--share home--share2" style="top: -29px;"><div class="col-sm-12 home--share--icons">';
-					newIdea += '<input type="hidden" class="supporters--input" value="'+json.ideas_data[i].supporters_num+'">';
-					newIdea += '<input type="hidden" class="volunteers--input" value="'+json.ideas_data[i].volunteers_num+'">';
-					newIdea += '<input type="hidden" class="rejectors--input" value="'+json.ideas_data[i].identified_rejectors.length+'">';
-					newIdea += '<input type="hidden" class="supporters--goal--input" value="'+json.ideas_data[i].supporters_goal_num+'">';
-					newIdea += '<input type="hidden" class="volunteers--goal--input" value="'+json.ideas_data[i].volunteers_goal_num+'">';
-					newIdea += '<div class="col-sm-6" style="padding:0;width: 100%;"><input type="hidden" class="id" value="'+json.ideas_data[i].proposal+'">';
-					//MODIFY / DELETE IDEA, ONLY FOR CURRENT LOGGED USER
-					if(url.length == 4){
-						newIdea += '<div class="col-sm-12 idea--action--buttons"><div class="col-xs-1"><span class="glyphicon glyphicon-edit edit" style="top: 10px;"></span></div>';
-		    			newIdea += '<div class="col-xs-1"><span class="glyphicon glyphicon-trash trash"  style="top: 10px;"></span></div></div>';
-					}
-					//newIdea += '<img class="icons icons2" src="'+url_new+'images/x-icon.png" id="rejected" hidden><img class="icons icons2" style="width: 50px;" src="'+url_new+'images/check-icon.png" id="supported" hidden>';
-					newIdea += '<div id="rejected" class="icons icons2 icons2__participant" style="display:none;"></div>';
-					newIdea += '<div id="supported" class="icons icons2 icons2__participant" style="display:none;margin-left: 10px;"></div>';
-					if (json.ideas_data[i].volunteers_goal_num > 0) {
-						//newIdea += '<img class="icons icons2" style="width: 48px;" src="'+url_new+'images/checkmark.png" id="support__plus--button" hidden>';
-						newIdea += '<div id="support__plus--button" class="icons icons2 icons2__participant" style="display:none;"></div>';
-					}
-					
-					if(url.length != 4)
-						newIdea += '<div class="row newsfeed--persons" style="top:0px;"><div class="col-sm-12"><div class="col-sm-1" style="padding:0;">';
-					else
-						newIdea += '<div class="row newsfeed--persons newsfeed--persons2" style="top:10px;"><div class="col-sm-12"><div class="col-sm-1" style="padding:0;">';
-					newIdea += '<img src="'+url_new+'images/check-hover.png"></div><div class="col-sm-11 newsfeed--likes">';
-					newIdea += '<ul class="ul--liked" style="left:0;">';
-					if(json.ideas_data[i].identified_supporters.length > 0){
-						for(var f=0; f<json.ideas_data[i].identified_supporters.length; f++){
-							if(json.ideas_data[i].identified_supporters[f].email != 'user')
-								newIdea += '<a href="/participants/'+json.ideas_data[i].identified_supporters[f].email+'"><li>'+json.ideas_data[i].identified_supporters[f].username+'</li></a>';
-							else
-								newIdea += '<a href="/participants"><li>'+json.ideas_data[i].identified_supporters[f].username+'</li></a>';
-						}
-					}
-					newIdea += '<a href="#" class="last--liked"><li>'+json.ideas_data[i].unidentified_supporters_text+'</li></a>';
-					
-					newIdea += '</ul></div></div>';
-					newIdea += '<div class="col-sm-12"><div class="col-sm-1" style="padding:0;"><img src="'+url_new+'images/reject-hover.png">';
-					newIdea += '</div><div class="col-sm-11 newsfeed--likes"><ul class="ul--disliked" style="left:0;">';
-					if(json.ideas_data[i].identified_rejectors.length > 0){
-						for(var f=0; f<json.ideas_data[i].identified_rejectors.length; f++){
-							if(json.ideas_data[i].identified_rejectors[f].email != 'user')
-								newIdea += '<a href="/participants/'+json.ideas_data[i].identified_rejectors[f].email+'"><li>'+json.ideas_data[i].identified_rejectors[f].username+'</li></a>';
-							else
-								newIdea += '<a href="/participants"><li>'+json.ideas_data[i].identified_rejectors[f].username+'</li></a>';
-						}
-					} 
-					newIdea += '<a href="#" class="last--liked"><li>'+json.ideas_data[i].unidentified_rejectors_text+'</li></a>';
-					
-					newIdea += '</ul></div></div></div>';
-					
-				    newIdea += '</div><div class="col-sm-6 home--followers hidden" style="width: 100%;">';
-				    newIdea += '</div></div></div></div>';
-			    }
-			    if (json.ifallowed == false) {
-			    	$('#newIdea').append('<center><h3>User private</h3></center> ');  	
-			    }else if($('#participant_email').val() != 'None' && json.ideas_data.length == 0){
-			    	$('#newIdea').append('<center><h3>this user has no active publications</h3></center> ');
-			    }else if (json.ideas_data.length != 0) {
-			    	$('#newIdea').append(newIdea);
-			    }else{
-			    	$('#newIdea').append('<center><h3>You have no active publications</h3></center> ');
-			    }
-			    if($('#participant_email').val() != 'None' ){
-			    	$('.icons').show();
-			    	$('.home--followers').append('<i class="fa fa-share-alt"></i><p>Share with: followers</p>');
-			    }
-				
-				var left = 1;
-	  			$(document).on('click', '.neewsfeed--moreinfo', function(){
-	          		$(this).next('div').slideToggle('slow');
-	   			});	
-	   			
-			}	
-		});
-	}
 	$('body').removeClass('container').addClass('container-fluid');
 	
 	$(document).on('click', '#send_invitation-btn', function(){
@@ -686,6 +531,17 @@ participantsVue = new Vue({
 		this.getParticipantFollowers();
 		this.getParticipantFollowings();
 		this.getPublicParticipants();
+		
+		if($('#participant_email').val() == 'None')
+			var current_email = $('#host_email').val();
+		else {
+			var current_email = $('#participant_email').val();
+			$('.participant__invite').hide();
+			$('#follow-parti').hide();
+	    	$('#unfollow-parti').hide();
+	    	$('#newIdea').css('margin-top', '90px');
+		}
+	
 	},
 	methods: {
 		
@@ -1021,6 +877,24 @@ participantsVue = new Vue({
 						self.searched_user = json.participant_data;
 						setTimeout(function(){ self.loading_users = false; },150);
 					}
+				}
+			});
+		},
+		
+		followAnotherParticipant: function(email, elem){
+			self = this;
+			elem = $(elem.target);
+			if(elem.val() == 'Follow'){
+				var _url =  self.path_follow_participant + email;
+			} else if(elem.val() == 'Stop Following') {
+				var _url =  self.path_stop_follow_participant + email;
+			}
+			$.ajax({
+				url: _url,
+				type: 'GET',
+				success: function (json) {	
+					self.getParticipantInfo(0);
+					self.getParticipantFollowers();
 				}
 			});
 		}

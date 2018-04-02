@@ -1138,15 +1138,20 @@ input.form-control.invite__button:focus {
     line-height: 35px;
 }
 .participant__active--p, .participant__followers, .participant__following {
-	margin-top: -20px;
     line-height: 33px;
     text-align: center;
+}
+.setting__adapt{
+	height: 76px;
+}
+.participant__setting{
+	text-align: center;
 }
 .participant__setting span {
 	font-size: 33px;
 	color: #828282;
 	cursor: pointer;
-	top: -14px;
+	top: 15px;
 }
 .participant__invite {
 	border: 1px solid #3faf2e;
@@ -1861,4 +1866,12 @@ div#supported {
 .custom--messages{
 	top: 30px;
 	position: relative;
+}
+.non--self--participant__action{
+	top: 15px;
+    position: relative;
+    font-size: 14px;
+    width: 140px;
+    padding: 0px;
+    margin: 0px;
 }
