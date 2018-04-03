@@ -435,7 +435,7 @@ $(document).ready( function() {
 
 function change_view(view){
 	if(view == 'search'){
-		participantsVue.getPublicParticipants();
+		participantsVue.getPublicParticipants(false);
 		$('.participant__general').fadeOut(500);
 		setTimeout(function(){
 			$('.search__participant').fadeIn(500);
@@ -739,6 +739,7 @@ participantsVue = new Vue({
 		
 		followUnfollowPublicParticipant: function(email, index, elem, opt){
 			self = this;
+			$(elem.target).attr('disabled', true);
 			if($(elem.target).val() == 'Follow'){
 				var _url =  self.path_follow_participant + email;
 				var _string = "Stop Following";
@@ -757,7 +758,7 @@ participantsVue = new Vue({
 						if(opt != 1)
 							self.public_participants[index].if_following = _status;
 						else {
-							self.getPublicParticipants();
+							self.getPublicParticipants(true);
 						}
 						self.getParticipantFollowings();
 						self.getParticipantFollowers();
@@ -766,13 +767,18 @@ participantsVue = new Vue({
 						else
 							self.participant.followings_num--;
 					}
+					$(elem.target).attr('disabled', false);
 				}
 			});
 		},
 		
-		getPublicParticipants: function(){
+		getPublicParticipants: function(ifvote){
 			self = this;
-			self.loading_users = true;
+			
+			if(!ifvote){
+				self.loading_users = true;
+			}
+			
 			$.ajax({
 				url: self.path_get_public_participants,
 				type: 'GET',
@@ -785,11 +791,12 @@ participantsVue = new Vue({
 					for(var i=0; i<self.public_participants.length;i++){
 						Vue.set(self.public_participants[i], 'searched', true);
 					}
-					setTimeout(function(){
-						self.removeParticipantsTitle();
-						self.loading_users = false;
-					}, 500);
-					
+					if(!ifvote){
+						setTimeout(function(){
+							self.removeParticipantsTitle();
+							self.loading_users = false;
+						}, 500);
+					}
 				}
 			});
 		},
@@ -875,6 +882,7 @@ participantsVue = new Vue({
 		followAnotherParticipant: function(email, elem){
 			self = this;
 			elem = $(elem.target);
+			elem.attr('disabled', true);
 			if(elem.val() == 'Follow'){
 				var _url =  self.path_follow_participant + email;
 			} else if(elem.val() == 'Stop Following') {
@@ -886,6 +894,9 @@ participantsVue = new Vue({
 				success: function (json) {	
 					self.getParticipantInfo(0);
 					self.getParticipantFollowers();
+					setTimeout(function(){
+						elem.attr('disabled', false);
+					}, 1000);
 				}
 			});
 		}

@@ -1879,3 +1879,7 @@ div#supported {
     height: 17px!important;
     width: 45px!important;
 }
+.invite__button[disabled],
+.invite__button:disabled{
+	background-color: #c0ff00;
+}
