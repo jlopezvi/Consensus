@@ -51,7 +51,7 @@
             <div class="addproposal--step__div"> 
                 <ul id="id01" class="addproposal--step2">
                     <!-- TODO -->
-       		        <div v-show="private_user_searched == true">   
+       		        <div v-show="private_user_searched == true && !loading_users">   
    		                <div v-show="searched_error == true">
            		            <legend> <% searched_user.group %> </legend>
                             <li>
@@ -76,7 +76,7 @@
        		                </legend>
    		                </div>
        		        </div>
-       		        <div v-show="private_user_searched == false">
+       		        <div v-show="private_user_searched == false && !loading_users">
                         <div v-for="group in myGroups">
                             <legend class="legend__board" :data="group.index"> <% group.label %> </legend>
                             <li v-for="(p_participant, index) in public_participants" 

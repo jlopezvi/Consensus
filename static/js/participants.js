@@ -44,15 +44,9 @@ $(document).ready( function() {
 			},3000);
 		}
 	});
-	$('#search-input-participant').on('focus', function(){
-		change_view('search');
-	});
-
-	$(document).on('click', '.btn__search', function(e){
-		e.preventDefault();
-		change_view('search');
-		var search = $('#search-input-participant').val();
-		seaarch_participant(search);
+	$('#search-input-participant').on('click', function(){
+		if($('.search__participant').css('display') == 'none')
+			change_view('search');
 	});
 
 	$(document).on('click', '.back__button', function(){
@@ -434,10 +428,6 @@ $(document).ready( function() {
 			          //console.log(response);
 			        }
 		        });
-			},
-			error: function(response){
-				//console.log('error');
-				//console.log(response);
 			}
 		});
     });
@@ -445,6 +435,7 @@ $(document).ready( function() {
 
 function change_view(view){
 	if(view == 'search'){
+		participantsVue.getPublicParticipants();
 		$('.participant__general').fadeOut(500);
 		setTimeout(function(){
 			$('.search__participant').fadeIn(500);
@@ -530,7 +521,6 @@ participantsVue = new Vue({
 		this.getParticipantIdeas(0);
 		this.getParticipantFollowers();
 		this.getParticipantFollowings();
-		this.getPublicParticipants();
 		
 		if($('#participant_email').val() == 'None')
 			var current_email = $('#host_email').val();
@@ -761,7 +751,7 @@ participantsVue = new Vue({
 			$.ajax({
 				url: _url,
 				type: 'GET',
-				success: function (json) {	
+				success: function(json) {	
 					if(json.result == 'OK'){
 						$(elem.target).val(_string);
 						if(opt != 1)
@@ -782,6 +772,7 @@ participantsVue = new Vue({
 		
 		getPublicParticipants: function(){
 			self = this;
+			self.loading_users = true;
 			$.ajax({
 				url: self.path_get_public_participants,
 				type: 'GET',
@@ -792,11 +783,11 @@ participantsVue = new Vue({
 				success: function(json) {
 					self.public_participants = json;
 					for(var i=0; i<self.public_participants.length;i++){
-						//self.public_participants[i].searched = true;
 						Vue.set(self.public_participants[i], 'searched', true);
 					}
 					setTimeout(function(){
 						self.removeParticipantsTitle();
+						self.loading_users = false;
 					}, 500);
 					
 				}

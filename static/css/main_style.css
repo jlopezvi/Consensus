@@ -1875,3 +1875,7 @@ div#supported {
     padding: 0px;
     margin: 0px;
 }
+.check--share__proposal{
+    height: 17px!important;
+    width: 45px!important;
+}
