@@ -265,6 +265,9 @@
         					        <a :href="'/participants/'+following.email"><% following.username %></a>
                                     <br><% following.fullname %>
         					    </p>
+                                <input id="follow-parti" class="form-control invite__button" type="button" 
+                                  value="Follow" @click="followParticipant(following.email)"
+                                  v-if="following.if_button_follow">
                                 <input id="unfollow-parti" class="form-control invite__button" type="button" 
                                   value="Stop following" @click="stopFollowingParticipant(following.email)"
                                   v-if="following.if_button_stop_following">
