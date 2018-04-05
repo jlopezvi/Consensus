@@ -279,6 +279,7 @@ newsfeedVue = new Vue({
         
         voteIdea: function(type){
             self = this;
+            $('.more_info_div').hide();
             $('#newsfeed__body').hide();
 	          $('.spinner').show();
             var vote_ifvolunteered = false;
