@@ -188,7 +188,7 @@ $(document).ready( function() {
       'password': $('#password_r').val(),
       'ifpublicprofile': opt,
       'ifregistrationfromemail': false,
-      'host_email': 'none'
+      'host_email': null
     };
 
     hostEmail = $('#hostEmail').val();

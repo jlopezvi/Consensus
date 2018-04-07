@@ -762,10 +762,7 @@ participantsVue = new Vue({
 						}
 						self.getParticipantFollowings();
 						self.getParticipantFollowers();
-						if(_status)
-							self.participant.followings_num++;
-						else
-							self.participant.followings_num--;
+						self.getParticipantInfo(0);
 					}
 					$(elem.target).attr('disabled', false);
 				}
@@ -894,6 +891,7 @@ participantsVue = new Vue({
 				success: function (json) {	
 					self.getParticipantInfo(0);
 					self.getParticipantFollowers();
+					self.getParticipantInfo(0);
 					setTimeout(function(){
 						elem.attr('disabled', false);
 					}, 1000);
