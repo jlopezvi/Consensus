@@ -759,6 +759,7 @@ participantsVue = new Vue({
 							self.public_participants[index].if_following = _status;
 						else {
 							self.getPublicParticipants(true);
+							self.searchPrivate(true);
 						}
 						self.getParticipantFollowings();
 						self.getParticipantFollowers();
@@ -854,14 +855,14 @@ participantsVue = new Vue({
 						if(!json.result){
 							self.loading_users = false;
 						} else {
-							self.searchPrivate();
+							self.searchPrivate(false);
 						}
 					}
 				});
 			}
 		},
 		
-		searchPrivate: function(){
+		searchPrivate: function(action){
 			self = this;
 			var _search = self.search_bar.trim();
 			$.ajax({
@@ -870,7 +871,9 @@ participantsVue = new Vue({
 				success: function (json) {
 					if(json.result == 'OK'){
 						self.searched_user = json.participant_data;
-						setTimeout(function(){ self.loading_users = false; },150);
+						if(action != true){
+							setTimeout(function(){ self.loading_users = false; },150);
+						}
 					}
 				}
 			});
@@ -891,7 +894,6 @@ participantsVue = new Vue({
 				success: function (json) {	
 					self.getParticipantInfo(0);
 					self.getParticipantFollowers();
-					self.getParticipantInfo(0);
 					setTimeout(function(){
 						elem.attr('disabled', false);
 					}, 1000);
