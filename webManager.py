@@ -37,10 +37,10 @@ def registration_send_invitation_aux(host_email, guest_email):
 
 
 def registration_receive_emailverification_aux(token):
-    if not confirm_token(token, 3600):
+    if not confirm_token(token, 10000000):
         jsondata = {"type": "login", "result": "Wrong", "result_msg": "The confirmation link is invalid or has expired"}
         return render_template('login/login.html', message=jsondata)
-    if confirm_token(token, 3600):
+    if confirm_token(token, 10000000):
         email = confirm_token(token)
         result_dict = _verify_email(email)
         if result_dict['result'] == 'OK':
